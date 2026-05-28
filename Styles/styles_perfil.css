@@ -621,108 +621,22 @@ html.no-transparency #datos_usuario .btn-icon {
 	background: color-mix(in srgb, #ff5a7a 10%, transparent);
 }
 
-/* ========== LIQUID GLASS FOOTER ========== */
-/* Nos copiamos variables/propiedades solo si no están; en este archivo las declamamos también */
-@property --angle-1 {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: -75deg;
-}
-@property --angle-2 {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: -15deg;
-}
-
-footer.liquid-wrap{
-  --anim--hover-time: 300ms;
-  --anim--hover-ease: ease;
-  --border-width: clamp(1px, 0.0625em, 4px);
-  position: fixed;
-  z-index: 50;
-  border-radius: 999vw;
-  background: transparent;
-  pointer-events: none;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(12px + env(safe-area-inset-bottom));
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  overflow: visible;
-}
-
-.liquid-shadow {
-  --shadow-cuttoff-fix: 2em;
-  position: absolute;
-  width: calc(100% + var(--shadow-cuttoff-fix));
-  height: calc(100% + var(--shadow-cuttoff-fix));
-  top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  filter: blur(clamp(2px, 0.125em, 12px));
-  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-  overflow: visible;
-  pointer-events: none;
-}
-
-.liquid-shadow::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  border-radius: 999vw;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-  padding: 0.125em;
-  box-sizing: border-box;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  overflow: visible;
-  opacity: 1;
-}
-
-.liquid-wrap:has(.liquid-bar:hover) .liquid-shadow {
-  filter: blur(clamp(2px, 0.0625em, 6px));
-  -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
-  transition: filter var(--anim--hover-time) var(--anim--hover-ease);
-}
-.liquid-wrap:has(.liquid-bar:hover) .liquid-shadow::after {
-  top: calc(var(--shadow-cuttoff-fix) - 0.875em);
-  opacity: 1;
-}
-
-.liquid-wrap:has(a:active) {
-  transform: translateX(-50%) rotate3d(1, 0, 0, 25deg);
-}
-
-.liquid-wrap:has(a:active) .liquid-bar {
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.125em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-    0 0.225em 0.05em 0 rgba(0, 0, 0, 0.05),
-    0 0.25em 0 0 rgba(255, 255, 255, 0.75),
-    inset 0 0.25em 0.05em 0 rgba(0, 0, 0, 0.15);
-}
-
-.liquid-wrap:has(a:active) .liquid-shadow {
-  filter: blur(clamp(2px, 0.125em, 12px));
-  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-}
-.liquid-wrap:has(a:active) .liquid-shadow::after {
-  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-  opacity: 0.75;
+/* ========== TRANSLUCENT SURFACES ========== */
+footer.footer-wrap {
+	--anim--hover-time: 200ms;
+	--anim--hover-ease: ease;
+	position: fixed;
+	z-index: 50;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: calc(12px + env(safe-area-inset-bottom));
+	display: flex;
+	justify-content: center;
+	padding: 0;
+	border: none;
+	background: transparent;
+	pointer-events: none;
+	border-radius: 999px;
 }
 .titulos_head{
   display: flex;
@@ -735,103 +649,49 @@ footer.liquid-wrap{
 	letter-spacing: .15px;
 }
 
-/* ──────── Liquid Bar ──────── */
-.liquid-bar{
-  position: relative;
-  pointer-events: auto;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px 10px;
-  background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-  border-radius: 999vw;
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-    0 0 0 0 rgba(255, 255, 255, 1);
-  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  width: auto;
-  margin: 0;
+/* ──────── Translucent Bar ──────── */
+.translucent-bar {
+	pointer-events: auto;
+	position: relative;
+	z-index: 3;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 8px 10px;
+	border-radius: 999px;
+	background: var(--my-glass, color-mix(in srgb, var(--bg1) 68%, transparent));
+	border: 1px solid var(--my-glass-rim, color-mix(in srgb, #fff 12%, transparent));
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+	backdrop-filter: blur(14px) saturate(140%);
+	-webkit-backdrop-filter: blur(14px) saturate(140%);
+	transition: transform var(--anim--hover-time) var(--anim--hover-ease),
+		box-shadow var(--anim--hover-time) var(--anim--hover-ease),
+		background var(--anim--hover-time) var(--anim--hover-ease);
+	width: auto;
+	margin: 0;
 }
 
-.liquid-bar:hover{
-  transform: scale(0.975);
-  backdrop-filter: blur(0.01em);
-  -webkit-backdrop-filter: blur(0.01em);
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
-    0 0 0 0 rgba(255, 255, 255, 1);
+.translucent-bar:hover {
+	transform: scale(0.985);
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .liquid-highlight,
-  .liquid-bar:has(a:active) .liquid-highlight {
-    --angle-2: -45deg;
-  }
+.translucent-bar:active {
+	transform: translateY(1px);
 }
 
-.liquid-bar::after{
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  border-radius: 999vw;
-  width: calc(100% + var(--border-width));
-  height: calc(100% + var(--border-width));
-  top: calc(0% - var(--border-width) / 2);
-  left: calc(0% - var(--border-width) / 2);
-  padding: var(--border-width);
-  box-sizing: border-box;
-  background: conic-gradient(from var(--angle-1) at 50% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 5% 40%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 60% 95%, rgba(0, 0, 0, 0.5)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease), --angle-1 500ms ease;
-  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
-  pointer-events: none;
-}
-
-.liquid-bar:hover::after{
-  --angle-1: -125deg;
-}
-.liquid-bar:has(a:active)::after {
-  --angle-1: -75deg;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .liquid-bar::after,
-  .liquid-bar:hover::after,
-  .liquid-bar:has(a:active)::after {
-    --angle-1: -75deg;
-  }
-}
-
-.liquid-bar a.footer-btn {
-  position: relative;
-  z-index: 5;
+.translucent-bar a.footer-btn {
+	position: relative;
+	z-index: 1;
 }
 
 /* Fallback for no-transparency */
-html.no-transparency .liquid-bar {
-  background: color-mix(in srgb, #fff 10%, #000) !important;
-  box-shadow: none !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-html.no-transparency .liquid-bar::after,
-html.no-transparency .liquid-highlight,
-html.no-transparency .liquid-shadow {
-  display: none !important;
+html.no-transparency .translucent-bar {
+	background: color-mix(in srgb, #fff 10%, var(--bg1)) !important;
+	box-shadow: none !important;
+	border-color: rgba(255, 255, 255, 0.15) !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
 }
 
 /* Footer nav (botones inferiores) - en horizontal como dashboard */

@@ -80,8 +80,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
+            width: 44px;
+            height: 44px;
             border-radius: var(--my-radius-sm);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
@@ -98,8 +98,8 @@
         }
 
         #btn-ayuda-sheet img {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             opacity: .85;
         }
 
@@ -107,8 +107,8 @@
         #usuario {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 6px 14px 6px 6px;
+            gap: 12px;
+            padding: 8px 18px 8px 8px;
             border-radius: var(--my-radius-pill);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
@@ -116,7 +116,7 @@
             -webkit-backdrop-filter: blur(12px);
             transition: background .18s ease;
             min-width: 0;
-            max-width: 52vw;
+            max-width: 60vw;
             text-decoration: none;
         }
 
@@ -129,8 +129,8 @@
         }
 
         #icono_usuario {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: var(--my-radius-pill);
             border: 1.5px solid rgba(255, 255, 255, 0.18);
             object-fit: cover;
@@ -148,7 +148,7 @@
 
         #welcome_msg {
             margin: 0;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
             color: rgba(255, 255, 255, .50);
             line-height: 1;
@@ -159,7 +159,7 @@
         }
 
         #username {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: rgba(255, 255, 255, .92);
             line-height: 1;
@@ -174,7 +174,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
         }
         /* ── MAIN / sections ────────────────────────────────────────── */
@@ -464,7 +464,7 @@
             <!-- Help bottom-sheet trigger -->
             <!-- User profile pill -->
             <a id="usuario" href="/Templates/Inicio/perfil_usuario.html" aria-label="Ir a Perfil"
-            data-i18n-en-aria-label="Go to profile" class="liquid-bar">
+            data-i18n-en-aria-label="Go to profile" class="translucent-bar">
             <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar"
             id="icono_usuario">
             <div class="header-user-text">
@@ -473,7 +473,7 @@
             </div>
             </a>
             <a id="btn-ayuda-sheet" aria-label="Ayuda"
-            data-i18n-en-aria-label="Help" class="liquid-bar">
+            data-i18n-en-aria-label="Help" class="translucent-bar">
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyay1pY29uIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyayI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+"
                 alt="" aria-hidden="true">
                 <span class="sr-only" data-i18n-en="Help">Ayuda</span>
@@ -490,7 +490,7 @@
                     <div class="plan-topbar">
                         <h1 class="plan-title" data-i18n-en="Training plan" style="margin: 10px;">Plan de Entreno</h1>
                         <div role="group" aria-label="Acciones del plan"
-                            data-i18n-en-aria-label="Plan actions" class="liquid-bar">
+                            data-i18n-en-aria-label="Plan actions" class="translucent-bar">
                             <button id="boton_ejercicios">...</button>
                             <button id="boton_regenerar" class="btn-icon-sm" style="display: none;">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1yZWRvLWljb24gbHVjaWRlLXJlZG8iPjxwYXRoIGQ9Ik0yMSA3djZoLTYiLz48cGF0aCBkPSJNMyAxN2E5IDkgMCAwIDEgOS05IDkgOSAwIDAgMSA2IDIuM2wzIDIuNyIvPjwvc3ZnPg=="
@@ -549,8 +549,8 @@
         </div>
     </main>
 
-    <footer id="footer_dashboard" class="liquid-wrap">
-        <nav class="footer-nav liquid-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
+    <footer id="footer_dashboard" class="footer-wrap">
+        <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
 
             <!-- Entreno (active) -->
             <a class="footer-btn is-active" href="/Templates/Inicio/Dashboard.html" aria-label="Plan de Entreno"

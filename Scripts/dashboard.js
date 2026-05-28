@@ -1997,6 +1997,91 @@ function initDetallePorDiaPlan() {
         const registroPrevio = registrosDelDia.length ? registrosDelDia[registrosDelDia.length - 1] : null;
         const caloriasPrevias = "";
         const tiempoPrevio = "";
+        const WHEEL_ITEM_HEIGHT = 44;
+
+        const buildSheetWheel = ({
+            root,
+            field,
+            values,
+            format,
+            initialValue = "",
+            includeEmpty = true,
+            onChange,
+            inputSelector,
+        }) => {
+            const wheelEl = root.querySelector(`[data-pt-wheel="${field}"]`);
+            const inputEl = inputSelector
+                ? root.querySelector(inputSelector)
+                : root.querySelector(`[data-pt-${field}]`);
+            if (!(wheelEl instanceof HTMLElement) || !(inputEl instanceof HTMLInputElement)) return;
+
+            const normalizedValues = includeEmpty ? ["", ...values] : values.slice();
+            wheelEl.innerHTML = "";
+            wheelEl.dataset.index = "0";
+            wheelEl.dataset.length = String(normalizedValues.length);
+
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < normalizedValues.length; i++) {
+                const rawValue = normalizedValues[i];
+                const item = document.createElement("div");
+                item.className = "pt-wheel-item";
+                item.dataset.value = String(rawValue);
+                item.textContent = rawValue === ""
+                    ? tLang("Seleccionar", "Select")
+                    : (format ? format(rawValue) : String(rawValue));
+                frag.appendChild(item);
+            }
+            wheelEl.appendChild(frag);
+
+            const setActive = (index) => {
+                const clamped = Math.max(0, Math.min(normalizedValues.length - 1, index));
+                const nextValue = normalizedValues[clamped];
+                wheelEl.dataset.index = String(clamped);
+                inputEl.value = nextValue === "" ? "" : String(nextValue);
+                const items = wheelEl.querySelectorAll(".pt-wheel-item");
+                items.forEach((node, idx) => node.classList.toggle("is-active", idx === clamped));
+                if (typeof onChange === "function") onChange(nextValue);
+            };
+
+            let scrollTimer = null;
+            const onScroll = () => {
+                const idx = Math.round((wheelEl.scrollTop + 0.0001) / WHEEL_ITEM_HEIGHT);
+                setActive(idx);
+                if (scrollTimer) window.clearTimeout(scrollTimer);
+                scrollTimer = window.setTimeout(() => {
+                    wheelEl.scrollTo({
+                        top: Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT,
+                        behavior: "smooth",
+                    });
+                }, 80);
+            };
+
+            wheelEl.addEventListener("scroll", onScroll, { passive: true });
+            wheelEl.addEventListener("click", (e) => {
+                const item = e.target.closest(".pt-wheel-item");
+                if (!(item instanceof HTMLElement)) return;
+                const items = Array.from(wheelEl.querySelectorAll(".pt-wheel-item"));
+                const idx = items.indexOf(item);
+                setActive(idx);
+                wheelEl.scrollTo({ top: idx * WHEEL_ITEM_HEIGHT, behavior: "smooth" });
+            });
+
+            wheelEl.addEventListener("keydown", (e) => {
+                if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+                e.preventDefault();
+                const delta = e.key === "ArrowDown" ? 1 : -1;
+                const idx = Number(wheelEl.dataset.index || "0") + delta;
+                setActive(idx);
+                wheelEl.scrollTo({
+                    top: Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT,
+                    behavior: "smooth",
+                });
+            });
+
+            const initialIndex = Math.max(0, normalizedValues.findIndex((v) => String(v) === String(initialValue)));
+            setActive(initialIndex);
+            wheelEl.scrollTo({ top: initialIndex * WHEEL_ITEM_HEIGHT, behavior: "auto" });
+        };
 
         const sheetHtml = `
             <div class="pt-status pt-detalle-entreno">
@@ -2015,15 +2100,30 @@ function initDetallePorDiaPlan() {
                 </div>
 
                 <div class="pt-status-row" style="margin-top: 16px; display: grid; gap: 12px;">
-                    <label style="display:grid; gap:6px; text-align:left;">
+                    <div class="pt-wheel-group">
                         <span class="pt-detalle-label">${escapeHtml(tLang("Calorías quemadas", "Calories burned"))}</span>
-                        <input type="number" min="0" step="1" inputmode="numeric" data-pt-calorias class="pt-input pt-input--glass" placeholder="${escapeHtml(tLang("Ej: 350", "E.g. 350"))}" value="${escapeHtml(caloriasPrevias)}">
-                    </label>
+                        <div class="pt-wheel-row" role="group" aria-label="${escapeHtml(tLang("Calorías quemadas", "Calories burned"))}">
+                            <div class="pt-wheel" data-pt-wheel="calorias" tabindex="0" aria-label="${escapeHtml(tLang("Calorías", "Calories"))}"></div>
+                        </div>
+                        <input type="hidden" data-pt-calorias value="${escapeHtml(caloriasPrevias)}">
+                    </div>
 
-                    <label style="display:grid; gap:6px; text-align:left;">
-                        <span class="pt-detalle-label">${escapeHtml(tLang("Tiempo total de entreno (min)", "Total workout time (min)"))}</span>
-                        <input type="number" min="0" step="1" inputmode="numeric" data-pt-tiempo class="pt-input pt-input--glass" placeholder="${escapeHtml(tLang("Ej: 60", "E.g. 60"))}" value="${escapeHtml(tiempoPrevio)}">
-                    </label>
+                    <div class="pt-wheel-group">
+                        <span class="pt-detalle-label">${escapeHtml(tLang("Tiempo total de entreno", "Total workout time"))}</span>
+                        <div class="pt-wheel-row pt-wheel-row--time" role="group" aria-label="${escapeHtml(tLang("Tiempo total de entreno", "Total workout time"))}">
+                            <div class="pt-wheel-col">
+                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Horas", "Hours"))}</div>
+                                <div class="pt-wheel" data-pt-wheel="tiempo_horas" tabindex="0" aria-label="${escapeHtml(tLang("Horas", "Hours"))}"></div>
+                            </div>
+                            <div class="pt-wheel-col">
+                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Minutos", "Minutes"))}</div>
+                                <div class="pt-wheel" data-pt-wheel="tiempo_minutos" tabindex="0" aria-label="${escapeHtml(tLang("Minutos", "Minutes"))}"></div>
+                            </div>
+                        </div>
+                        <input type="hidden" data-pt-tiempo_horas value="0">
+                        <input type="hidden" data-pt-tiempo_minutos value="0">
+                        <input type="hidden" data-pt-tiempo value="${escapeHtml(tiempoPrevio)}">
+                    </div>
                 </div>
 
                 <div class="pt-status-actions" style="margin-top: 18px;">
@@ -2063,6 +2163,58 @@ function initDetallePorDiaPlan() {
                 if (tiempoEl instanceof HTMLInputElement && registroPrevio) {
                     tiempoEl.value = String(registroPrevio.tiempo_total_min ?? registroPrevio.tiempoTotalMin ?? "");
                 }
+
+                buildSheetWheel({
+                    root: sheet,
+                    field: "calorias",
+                    values: Array.from({ length: 1001 }, (_, i) => i * 5),
+                    format: (value) => `${value} kcal`,
+                    initialValue: caloriasEl?.value ?? "",
+                });
+
+                const horasEl = sheet.querySelector("[data-pt-tiempo_horas]");
+                const minutosEl = sheet.querySelector("[data-pt-tiempo_minutos]");
+                const totalMinInicial = Number.parseInt(String(tiempoEl?.value ?? "").trim(), 10);
+                const horasIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
+                    ? Math.floor(totalMinInicial / 60)
+                    : 0;
+                const minutosIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
+                    ? (totalMinInicial % 60)
+                    : 0;
+
+                const syncTiempoTotalMin = () => {
+                    const horas = Number.parseInt(String(horasEl?.value ?? "0").trim(), 10);
+                    const minutos = Number.parseInt(String(minutosEl?.value ?? "0").trim(), 10);
+                    const h = Number.isFinite(horas) && horas >= 0 ? horas : 0;
+                    const m = Number.isFinite(minutos) && minutos >= 0 ? minutos : 0;
+                    if (tiempoEl instanceof HTMLInputElement) {
+                        tiempoEl.value = String((h * 60) + m);
+                    }
+                };
+
+                buildSheetWheel({
+                    root: sheet,
+                    field: "tiempo_horas",
+                    values: Array.from({ length: 13 }, (_, i) => i),
+                    format: (value) => `${value} h`,
+                    initialValue: String(Math.min(12, Math.max(0, horasIniciales))),
+                    includeEmpty: false,
+                    onChange: syncTiempoTotalMin,
+                    inputSelector: "[data-pt-tiempo_horas]",
+                });
+
+                buildSheetWheel({
+                    root: sheet,
+                    field: "tiempo_minutos",
+                    values: Array.from({ length: 60 }, (_, i) => i),
+                    format: (value) => `${String(value).padStart(2, "0")} min`,
+                    initialValue: String(Math.min(59, Math.max(0, minutosIniciales))),
+                    includeEmpty: false,
+                    onChange: syncTiempoTotalMin,
+                    inputSelector: "[data-pt-tiempo_minutos]",
+                });
+
+                syncTiempoTotalMin();
 
                 btnConfirmar?.addEventListener("click", async () => {
                     const caloriasQuemadas = Number.parseInt(String(caloriasEl?.value ?? "").trim(), 10);
