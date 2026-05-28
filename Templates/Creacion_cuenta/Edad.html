@@ -43,15 +43,11 @@
 
         /* ── HEADER ── */
         body>header {
-            background-color: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(3px) saturate(100%);
-            -webkit-backdrop-filter: blur(3px) saturate(100%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.45),
-                inset 0 0 12px rgba(255, 255, 255, 0.1),
-                0 0 20px 2px rgba(130, 180, 255, 0.25),
-                0 0 5px 0px rgba(255, 255, 255, 0.3);
+            background-color: var(--my-glass, rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            border: 1px solid var(--my-glass-rim, rgba(255, 255, 255, 0.10));
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
             text-align: center;
             width: fit-content;
             gap: 14px;
@@ -254,39 +250,10 @@
         }
 
         .button-shadow {
-            --shadow-cuttoff-fix: 2em;
-            position: absolute;
-            width: calc(100% + var(--shadow-cuttoff-fix));
-            height: calc(100% + var(--shadow-cuttoff-fix));
-            top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-            left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-            filter: blur(clamp(2px, 0.125em, 12px));
-            overflow: visible;
-            pointer-events: none;
-        }
-
-        .button-shadow::after {
-            content: "";
-            position: absolute;
-            z-index: 0;
-            inset: 0;
-            border-radius: 999vw;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-            width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-            height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-            top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-            left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-            padding: 0.125em;
-            box-sizing: border-box;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-            transition: all var(--anim--hover-time) var(--anim--hover-ease);
-            overflow: visible;
-            opacity: 1;
+            display: none;
         }
 
         .btn-home {
-            --border-width: clamp(1px, 0.0625em, 4px);
             all: unset;
             cursor: pointer;
             position: relative;
@@ -296,42 +263,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-            border-radius: 999vw;
-            box-shadow:
-                inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-                0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-                0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-                0 0 0 0 rgba(255, 255, 255, 1);
-            backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-            -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+            background: var(--my-glass, rgba(255, 255, 255, 0.05));
+            border-radius: 999px;
+            border: 1px solid var(--my-glass-rim, rgba(255, 255, 255, 0.10));
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
             transition: all var(--anim--hover-time) var(--anim--hover-ease);
-            width: 52px;
-            height: 52px;
+            width: 60px;
+            height: 60px;
             text-decoration: none;
         }
 
         .btn-home::after {
-            content: "";
-            position: absolute;
-            z-index: 1;
-            inset: 0;
-            border-radius: 999vw;
-            width: calc(100% + var(--border-width));
-            height: calc(100% + var(--border-width));
-            top: calc(0% - var(--border-width) / 2);
-            left: calc(0% - var(--border-width) / 2);
-            padding: var(--border-width);
-            box-sizing: border-box;
-            background: conic-gradient(from var(--angle-1) at 50% 50%,
-                    rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 5% 40%,
-                    rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 60% 95%,
-                    rgba(0, 0, 0, 0.5)), linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-            transition: all var(--anim--hover-time) var(--anim--hover-ease), --angle-1 500ms ease;
-            box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
+            display: none;
         }
 
         .btn-home img {
@@ -349,24 +294,8 @@
             -webkit-backdrop-filter: blur(0.01em);
         }
 
-        .btn-home:hover::after {
-            --angle-1: -125deg;
-        }
-
-        .btn-home:active::after {
-            --angle-1: -75deg;
-        }
-
-        .button-wrap:has(.btn-home:hover) .button-shadow {
-            filter: blur(clamp(2px, 0.0625em, 6px));
-        }
-
-        .button-wrap:has(.btn-home:hover) .button-shadow::after {
-            top: calc(var(--shadow-cuttoff-fix) - 0.875em);
-        }
-
-        .button-wrap:has(.btn-home:active) {
-            transform: rotate3d(1, 0, 0, 25deg);
+        .btn-home:active {
+            transform: scale(0.95);
         }
 
         /* ── No-transparency fallback ── */
