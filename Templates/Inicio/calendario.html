@@ -65,9 +65,8 @@
         }
 
         #calendario {
-            flex: 1 1 60%;
-            min-height: calc(100vh - var(--header-fixed, 56px) - var(--footer-fixed, 56px) - 48px);
-            height: auto;
+            height: 100%;
+            width: 100%;
             overflow: auto;
             border-radius: var(--my-radius-sm);
             border: 1px solid var(--my-glass-rim);
@@ -99,10 +98,8 @@
             }
 
             #calendario {
-                flex: 1 1 auto;
-                order: 1;
                 height: 100%;
-                min-height: 0;
+                width: 100%;
                 overflow: auto;
                 border-radius: var(--my-radius-sm);
                 border: 1px solid var(--my-glass-rim);
@@ -557,6 +554,16 @@
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
             margin-bottom: 12px;
+            flex: 1 1 60%;
+            min-height: calc(100vh - var(--header-fixed, 56px) - var(--footer-fixed, 56px) - 48px);
+        }
+        @media (max-width: 900px) {
+            .pt-charts-swipe {
+                flex: 1 1 auto;
+                order: 1;
+                height: 100%;
+                min-height: 0;
+            }
         }
         .pt-charts-swipe::-webkit-scrollbar { display: none; }
 
@@ -575,6 +582,14 @@
             padding: 14px 12px 12px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pt-chart-canvas-wrap {
+            flex: 1;
+            position: relative;
         }
 
         .pt-chart-card-title {
@@ -811,7 +826,39 @@
 
     <main>
         <h1 data-i18n-en="Calendar">Calendario</h1>
-        <div id="calendario"></div>
+        <div id="pt-charts-swipe" class="pt-charts-swipe">
+            <!-- Panel 1: Calendario -->
+            <div class="pt-chart-panel" data-chart-idx="0" style="padding: 0;">
+                <div id="calendario"></div>
+            </div>
+
+            <!-- Panel 2: Bar chart — daily activity -->
+            <div class="pt-chart-panel" data-chart-idx="1">
+                <div class="pt-chart-card">
+                    <h3 class="pt-chart-card-title" data-i18n-en="Daily activity">Actividad diaria</h3>
+                    <div class="pt-chart-canvas-wrap">
+                        <canvas id="pt-chart-bar"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Donut chart — active vs rest -->
+            <div class="pt-chart-panel" data-chart-idx="2">
+                <div class="pt-chart-card">
+                    <h3 class="pt-chart-card-title" data-i18n-en="Active vs rest days">Días activos vs descanso</h3>
+                    <div class="pt-chart-canvas-wrap pt-chart-canvas-wrap--donut">
+                        <canvas id="pt-chart-donut"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dot indicators for swipe -->
+        <div id="pt-charts-dots" class="pt-charts-dots" style="margin-bottom: 24px;">
+            <button class="pt-charts-dot is-active" data-dot="0" aria-label="Calendar"></button>
+            <button class="pt-charts-dot" data-dot="1" aria-label="Chart 1"></button>
+            <button class="pt-charts-dot" data-dot="2" aria-label="Chart 2"></button>
+        </div>
 
         <!-- Estadísticas del mes -->
         <section id="estadisticas" class="pt-stats">
@@ -825,43 +872,6 @@
             </div>
 
             <h2 class="pt-stats-title" data-i18n-en="Statistics">Estadísticas</h2>
-
-            <!-- Chart carousel -->
-            <div id="pt-charts-swipe" class="pt-charts-swipe">
-                <!-- Panel 1: Bar chart — daily activity -->
-                <div class="pt-chart-panel" data-chart-idx="0">
-                    <div class="pt-chart-card">
-                        <h3 class="pt-chart-card-title" data-i18n-en="Daily activity">Actividad diaria</h3>
-                        <div class="pt-chart-canvas-wrap">
-                            <canvas id="pt-chart-bar"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <!-- Panel 2: Line chart — calorie/minute trend -->
-                <div class="pt-chart-panel" data-chart-idx="1">
-                    <div class="pt-chart-card">
-                        <h3 class="pt-chart-card-title" data-i18n-en="Calorie trend">Tendencia de calorías</h3>
-                        <div class="pt-chart-canvas-wrap">
-                            <canvas id="pt-chart-line"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <!-- Panel 3: Donut chart — active vs rest -->
-                <div class="pt-chart-panel" data-chart-idx="2">
-                    <div class="pt-chart-card">
-                        <h3 class="pt-chart-card-title" data-i18n-en="Active vs rest days">Días activos vs descanso</h3>
-                        <div class="pt-chart-canvas-wrap pt-chart-canvas-wrap--donut">
-                            <canvas id="pt-chart-donut"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Dot indicators -->
-            <div id="pt-charts-dots" class="pt-charts-dots">
-                <button class="pt-charts-dot is-active" data-dot="0" aria-label="Chart 1"></button>
-                <button class="pt-charts-dot" data-dot="1" aria-label="Chart 2"></button>
-                <button class="pt-charts-dot" data-dot="2" aria-label="Chart 3"></button>
-            </div>
 
             <div id="pt-stats-grid" class="pt-stats-grid">
                 <!-- Las tarjetas de estadísticas se renderizan dinámicamente desde Scripts/script_calendario.js -->

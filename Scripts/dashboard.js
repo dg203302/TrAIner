@@ -1220,6 +1220,19 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 };
 window.onload = async () => {
 
+    if (!window.__gifs_cache) {
+        try {
+            const res = await fetch("/Datos/correspondencia_gifs.json");
+            if (res.ok) {
+                window.__gifs_cache = await res.json();
+            } else {
+                window.__gifs_cache = {};
+            }
+        } catch (e) {
+            window.__gifs_cache = {};
+        }
+    }
+
     await recuperar_planes();
 
     initDynamicGreeting();
@@ -1695,13 +1708,48 @@ function mapear_plan(plan_entrenamiento_json) {
         const descripcion = escapeHtml(exNorm.descripcion || "");
         const series = escapeHtml(exNorm.series);
         const reps = escapeHtml(formatReps(exNorm.repeticiones));
+
+        let gifUrl = null;
+        let gifsDict = window.__gifs_cache;
+        if (gifsDict) {
+            const _normGif = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+            const searchName = _normGif(exNorm.nombre);
+            for (const [esKey, url] of Object.entries(gifsDict)) {
+                const esNorm = _normGif(esKey);
+                const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
+                if (searchName === esNorm || searchName === enNorm) {
+                    gifUrl = url;
+                    break;
+                }
+            }
+            if (!gifUrl) {
+                for (const [esKey, url] of Object.entries(gifsDict)) {
+                    const esNorm = _normGif(esKey);
+                    const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
+                    if (searchName.includes(esNorm) || searchName.includes(enNorm) || (esNorm.length > 5 && esNorm.includes(searchName))) {
+                        gifUrl = url;
+                        break;
+                    }
+                }
+            }
+        }
+
+        const imgHtml = gifUrl 
+            ? `<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 60%; pointer-events: none; z-index: 0; mask-image: linear-gradient(to right, transparent 0%, black 50%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 50%); border-top-right-radius: 17px; border-bottom-right-radius: 17px; overflow: hidden;">
+                   <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: right center; opacity: 0.5; mix-blend-mode: luminosity;" loading="lazy">
+               </div>`
+            : "";
+
         return `
-            <article class="plan-card" data-idx="${idx}" data-day-idx="${escapeHtml(dayIdx)}" role="button" tabindex="0">
-                <h3 class="plan-nombre" data-i18n-en="${nombreEn}">${nombreEs}</h3>
-                ${descripcion ? `<p class="plan-desc">${descripcion}</p>` : ""}
-                <div class="plan-meta">
-                    <span class="plan-chip"><span data-i18n-en="Sets:">Series:</span> <strong>${series}</strong></span>
-                    <span class="plan-chip"><span data-i18n-en="Reps:">Reps:</span> <strong>${reps}</strong></span>
+            <article class="plan-card" data-idx="${idx}" data-day-idx="${escapeHtml(dayIdx)}" role="button" tabindex="0" style="position: relative; overflow: hidden; padding-right: 30%;">
+                ${imgHtml}
+                <div style="position: relative; z-index: 1;">
+                    <h3 class="plan-nombre" data-i18n-en="${nombreEn}" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${nombreEs}</h3>
+                    ${descripcion ? `<p class="plan-desc" style="text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${descripcion}</p>` : ""}
+                    <div class="plan-meta">
+                        <span class="plan-chip" style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Sets:">Series:</span> <strong>${series}</strong></span>
+                        <span class="plan-chip" style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Reps:">Reps:</span> <strong>${reps}</strong></span>
+                    </div>
                 </div>
             </article>
         `;
@@ -1726,7 +1774,13 @@ function mapear_plan(plan_entrenamiento_json) {
                         <h2 class="plan-dia-titulo">${escapeHtml(diaLabel)}</h2>
                         ${enfoque ? `<div class="plan-dia-subtitle">${escapeHtml(enfoque)}</div>` : ""}
                     </div>
-                    <span class="plan-dia-chip"><span>${normalized.length}</span> <span data-i18n-en="exercises">ejercicios</span></span>
+                    <div class="plan-dia-chip" style="font-size: 13.5px; font-weight: 800; background: linear-gradient(135deg, rgba(157,243,255,0.15), rgba(182,168,255,0.15)); border: 1px solid rgba(157,243,255,0.25); color: #9DF3FF; padding: 8px 14px; box-shadow: 0 4px 14px rgba(157,243,255,0.1); border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 Z"></path>
+                        </svg>
+                        <span data-i18n-en="Log Workout">Registrar entreno</span>
+                    </div>
                 </div>
                 <div class="plan-grid">${cards}</div>
             </section>
@@ -2606,21 +2660,40 @@ function initDetallePorDiaPlan() {
         }
 
         const html = `
-            <div class="pt-detail">
-                <div class="pt-detail-hero">
-                    <div class="pt-detail-hero-row" style="margin-bottom:8px;">
-                        <div class="pt-detail-hero-title pt-detail-ex" data-i18n-en="${nombreEn}">${nombreEs}</div>
+            <div class="pt-detail" style="position: relative;">
+                ${gifUrl ? `
+                <div style="position: absolute; top: -40px; left: -30px; right: -30px; height: 380px; z-index: -1; pointer-events: none; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); border-top-left-radius: 28px; border-top-right-radius: 28px; overflow: hidden;">
+                    <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.6; mix-blend-mode: luminosity;" />
+                </div>
+                ` : ""}
+                <div class="pt-detail-hero" style="position: relative; z-index: 1; padding-top: ${gifUrl ? '150px' : '20px'}; text-align: center;">
+                    <div class="pt-detail-hero-row" style="margin-bottom:12px; justify-content: center;">
+                        <h2 class="pt-detail-hero-title pt-detail-ex" data-i18n-en="${nombreEn}" style="font-size: 32px; font-weight: 900; letter-spacing: -0.8px; line-height: 1.1; text-shadow: 0 4px 16px rgba(0,0,0,0.9); margin: 0;">${nombreEs}</h2>
                     </div>
-                    ${gifUrl ? `<img src="${gifUrl}" alt="${nombreEs}" style="width:100%; border-radius:12px; margin-bottom:12px; display:block; background-color:#fff;" loading="lazy" />` : ""}
-                    ${descripcion ? `<div class="pt-detail-hero-sub pt-detail-desc" style="white-space:normal;margin-bottom:12px;">${descripcion}</div>` : ""}
-                    <div class="plan-meta pt-detail-meta" style="flex-wrap:wrap;gap:8px;margin-bottom:4px;">
-                        <span class="plan-chip">${escapeHtml(tLang("Series", "Sets"))}: <strong>${series}</strong></span>
-                        <span class="plan-chip">${escapeHtml(tLang("Reps", "Reps"))}: <strong>${reps}</strong></span>
-                        <span class="plan-chip plan-chip--vertical"><span class="plan-chip-label">${escapeHtml(tLang("Descanso", "Rest"))}</span><span class="plan-chip-value">${descanso}</span></span>
+                    ${descripcion ? `<div class="pt-detail-hero-sub pt-detail-desc" style="white-space:normal; margin-bottom:24px; font-size: 15.5px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 8px rgba(0,0,0,0.9); max-width: 90%; margin-left: auto; margin-right: auto; line-height: 1.4;">${descripcion}</div>` : ""}
+                    
+                    <div class="plan-meta pt-detail-meta" style="display: flex; flex-wrap: nowrap; justify-content: space-evenly; margin-bottom: 28px; background: rgba(0,0,0,0.45); padding: 18px 12px; border-radius: 22px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
+                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🔄</span>
+                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${series}</strong>
+                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Series", "Sets"))}</span>
+                        </div>
+                        <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
+                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🎯</span>
+                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${reps}</strong>
+                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Reps", "Reps"))}</span>
+                        </div>
+                        <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
+                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">⏱️</span>
+                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${descanso}s</strong>
+                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Descanso", "Rest"))}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="pt-detail-body">
-                    <div class="plan-detalle-viewport pt-detail-viewport" style="overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:16px 0;">
+                <div class="pt-detail-body" style="position: relative; z-index: 1;">
+                    <div class="plan-detalle-viewport pt-detail-viewport" style="overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:0 8px 16px 8px;">
                         ${detailedHtml}
                     </div>
                 </div>

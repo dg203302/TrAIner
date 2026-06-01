@@ -637,7 +637,6 @@ async function initCalendario() {
         }
 
         drawBarChart(dailyMin, dim);
-        drawLineChart(dailyCal, dim);
         drawDonutChart(stats.daysTrained || 0, stats.daysRest ?? (dim - (stats.daysTrained || 0)));
     };
 
