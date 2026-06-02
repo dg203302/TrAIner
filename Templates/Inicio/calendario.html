@@ -32,15 +32,15 @@
         }
         /* ── Material You override layer (Dashboard only) ───────────── */
         :root {
-            --my-primary: #bce4ff;
-            --my-primary-dim: rgba(208, 188, 255, 0.14);
-            --my-primary-rim: rgba(208, 188, 255, 0.22);
-            --my-danger: #f2b8b5;
-            --my-danger-dim: rgba(242, 184, 181, 0.10);
-            --my-danger-rim: rgba(242, 184, 181, 0.22);
-            --my-glass: rgba(255, 255, 255, 0.05);
-            --my-glass-rim: rgba(255, 255, 255, 0.10);
-            --my-glass-hover: rgba(255, 255, 255, 0.08);
+            --my-primary: #ff073a;
+            --my-primary-dim: rgba(255, 7, 58, 0.14);
+            --my-primary-rim: rgba(255, 7, 58, 0.22);
+            --my-danger: #cc062e;
+            --my-danger-dim: rgba(204, 6, 46, 0.10);
+            --my-danger-rim: rgba(204, 6, 46, 0.22);
+            --my-glass: rgba(242, 234, 227, 0.05);
+            --my-glass-rim: rgba(242, 234, 227, 0.10);
+            --my-glass-hover: rgba(242, 234, 227, 0.08);
             --my-radius-card: 26px;
             --my-radius-sm: 16px;
             --my-radius-pill: 999px;
@@ -70,8 +70,158 @@
             overflow: auto;
             border-radius: var(--my-radius-sm);
             border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
             padding: 8px;
+        }
+
+        /* FullCalendar inner transparency overrides & Cinematic Styling */
+        .fc {
+            --fc-border-color: transparent !important;
+            --fc-page-bg-color: transparent !important;
+            --fc-neutral-bg-color: transparent !important;
+            --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
+            --fc-today-bg-color: rgba(255, 7, 58, 0.1) !important;
+        }
+
+        .fc-theme-standard td, .fc-theme-standard th, .fc-theme-standard .fc-scrollgrid {
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .fc .fc-view-harness, .fc-day {
+            background: transparent !important;
+        }
+
+        /* Toolbar / Header */
+        .fc .fc-toolbar.fc-header-toolbar {
+            margin-bottom: 24px;
+            padding: 0 10px;
+        }
+        .fc .fc-toolbar-title {
+            font-size: 22px !important;
+            font-weight: 800 !important;
+            letter-spacing: .3px;
+            color: #fff;
+            text-transform: capitalize;
+        }
+        .fc .fc-button-primary {
+            background-color: color-mix(in srgb, #fff 10%, transparent) !important;
+            border: 1px solid color-mix(in srgb, #fff 15%, transparent) !important;
+            color: rgba(255,255,255,0.9) !important;
+            border-radius: 14px !important;
+            box-shadow: none !important;
+            text-transform: capitalize;
+            padding: 8px 16px !important;
+            font-weight: 600 !important;
+            transition: all 0.2s ease;
+        }
+        .fc .fc-button-primary:hover {
+            background-color: color-mix(in srgb, #fff 18%, transparent) !important;
+        }
+        .fc .fc-button-primary:not(:disabled):active,
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: #ff073a !important;
+            border-color: #ff073a !important;
+            color: #000 !important;
+        }
+
+        /* Days of the week header */
+        .fc-col-header-cell-cushion {
+            font-weight: 700;
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            padding: 12px 0 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Day Cells */
+        .fc-daygrid-day-frame {
+            min-height: 85px !important;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 18px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            margin: 3px;
+            background: color-mix(in srgb, #fff 3%, transparent);
+            border: 1px solid color-mix(in srgb, #fff 4%, transparent);
+        }
+        .fc-daygrid-day-frame:hover {
+            background: color-mix(in srgb, #fff 8%, transparent);
+            transform: scale(0.98);
+            cursor: pointer;
+        }
+        
+        .fc .fc-daygrid-day-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 6px;
+            margin-top: 4px;
+            flex-direction: row;
+        }
+        
+        /* Centered day number */
+        .fc-daygrid-day-number {
+            font-weight: 700;
+            font-size: 15px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none !important;
+            color: rgba(255,255,255,0.85) !important;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        /* Today highlight */
+        .fc-day-today .fc-daygrid-day-number {
+            background: #ff073a !important;
+            color: #000 !important;
+            box-shadow: 0 4px 14px color-mix(in srgb, #ff073a 50%, transparent);
+        }
+
+        /* Other month days */
+        .fc-day-other .fc-daygrid-day-number {
+            opacity: 0.2;
+        }
+        .fc-day-other .fc-daygrid-day-frame {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        /* Events */
+        .fc-daygrid-day-events {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 4px !important;
+        }
+        .fc-daygrid-event-harness {
+            margin-bottom: 0 !important;
+        }
+        .fc-event {
+            border: none !important;
+            background: transparent !important;
+        }
+        
+        /* Scrollbar hides */
+        .fc-scroller::-webkit-scrollbar {
+            width: 4px;
+        }
+        .fc-scroller::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .fc-scroller::-webkit-scrollbar-thumb {
+            background: color-mix(in srgb, #fff 15%, transparent);
+            border-radius: 4px;
         }
 
         /* Hacer que el calendario ocupe el alto disponible (móvil y escritorio) */
@@ -79,8 +229,9 @@
 
         @media (max-width: 900px) {
             main {
-                padding: 12px 12px;
-                min-height: calc(100vh - var(--header-fixed, 56px) - var(--footer-fixed, 56px));
+                margin: 0; /* Override styles_dashboard.css margin */
+                padding: calc(var(--header-fixed, 72px) + 12px) 12px 12px;
+                height: calc(100vh - var(--footer-fixed, 56px));
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
@@ -103,7 +254,9 @@
                 overflow: auto;
                 border-radius: var(--my-radius-sm);
                 border: 1px solid var(--my-glass-rim);
-                background: var(--my-glass);
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(20px) saturate(140%);
+                -webkit-backdrop-filter: blur(20px) saturate(140%);
                 padding: 8px;
             }
 
@@ -116,7 +269,6 @@
         /* Font */
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #1a1c1e 0%, #0c0d0f 100%);
         }
 
         /* Brand textos */
@@ -174,7 +326,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 7px 18px 7px 7px;
+            padding: 7px 18px 7px 55px;
             height: 60px;
             border-radius: var(--my-radius-pill);
             border: 1px solid var(--my-glass-rim);
@@ -186,6 +338,8 @@
             max-width: 60vw;
             text-decoration: none;
             box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
 
         #usuario:hover {
@@ -197,13 +351,18 @@
         }
 
         #icono_usuario {
-            width: 46px;
-            height: 46px;
-            border-radius: var(--my-radius-pill);
-            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            width: 75px;
+            height: 100%;
             object-fit: cover;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.10);
+            position: absolute;
+            left: 0;
+            top: 0;
+            object-position: left center;
+            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);
+            mask-image: linear-gradient(to right, black 40%, transparent 100%);
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 0;
         }
 
         .header-user-text {
@@ -212,6 +371,9 @@
             align-items: flex-start;
             gap: 1px;
             min-width: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
 
         #welcome_msg {
@@ -392,18 +554,13 @@
             margin: 0 0 14px;
             padding: 14px 16px;
             border-radius: var(--my-radius-sm);
-            border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
-        }
-
-        /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        footer {
-            margin-top: 40px;
+            border: 1px solid rgba(242, 234, 227, 0.06);
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(20px) saturate(140%);
             -webkit-backdrop-filter: blur(20px) saturate(140%);
-            border-top: 1px solid var(--my-glass-rim);
         }
+
+        /* ── FOOTER NAV ─────────────────────────────────────────────── */
         /* Generic footer button reset */
         .footer-btn {
             display: flex;
@@ -527,11 +684,10 @@
             margin-top: 20px;
             padding: 14px;
             border-radius: var(--my-radius-sm);
-            border: 1px solid var(--my-glass-rim);
-            background:
-                radial-gradient(140% 80% at 0% 0%, rgba(188, 228, 255, 0.12), transparent 60%),
-                linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border: 1px solid rgba(242, 234, 227, 0.06);
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
             position: relative;
         }
 
@@ -543,45 +699,82 @@
             letter-spacing: .2px;
         }
 
-        /* ── Chart swipe carousel ─────────────────────────── */
+        /* ── Main Layout (Desktop & Mobile) ─────────────────────────── */
         .pt-charts-swipe {
             display: flex;
             flex-direction: row;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
+            gap: 16px;
             width: 100%;
             max-width: 100%;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            margin-bottom: 12px;
-            flex: 1 1 60%;
-            min-height: calc(100vh - var(--header-fixed, 56px) - var(--footer-fixed, 56px) - 48px);
+            flex: 1 1 100%;
+            align-items: stretch;
+            transition: height 0.3s ease;
         }
-        @media (max-width: 900px) {
-            .pt-charts-swipe {
-                flex: 1 1 auto;
-                order: 1;
-                height: 100%;
-                min-height: 0;
-            }
-        }
-        .pt-charts-swipe::-webkit-scrollbar { display: none; }
 
         .pt-chart-panel {
-            flex: 0 0 100%;
-            min-width: 100%;
-            scroll-snap-align: center;
-            padding: 0 2px;
             box-sizing: border-box;
+        }
+
+        .pt-chart-panel[data-chart-idx="0"] {
+            flex: 1 1 50%;
+            min-width: 0;
+        }
+
+        .pt-chart-panel[data-chart-idx="1"],
+        .pt-chart-panel[data-chart-idx="2"] {
+            flex: 0 0 25%;
+            max-width: 25%;
+            overflow-y: auto;
+            padding-right: 4px;
+            /* Hide scrollbar for a cleaner look */
+            scrollbar-width: none;
+        }
+        .pt-chart-panel[data-chart-idx="1"]::-webkit-scrollbar,
+        .pt-chart-panel[data-chart-idx="2"]::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pt-charts-dots {
+            display: none !important; /* Hidden on desktop */
+        }
+
+        @media (max-width: 900px) {
+            .pt-charts-swipe {
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                gap: 0;
+                flex: 1;
+                min-height: 0;
+            }
+            .pt-charts-swipe::-webkit-scrollbar { display: none; }
+
+            .pt-chart-panel[data-chart-idx="0"],
+            .pt-chart-panel[data-chart-idx="1"],
+            .pt-chart-panel[data-chart-idx="2"] {
+                flex: 0 0 100%;
+                min-width: 100%;
+                max-width: 100%;
+                scroll-snap-align: center;
+                padding: 0 4px;
+                height: 100%;
+                overflow-y: auto;
+            }
+            
+            .pt-charts-dots {
+                display: flex !important; /* Visible on mobile */
+            }
         }
 
         .pt-chart-card {
             border-radius: 14px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.09);
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(242,234,227,0.06);
             padding: 14px 12px 12px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -715,15 +908,15 @@
         .pt-stat-card {
             padding: 12px 12px;
             border-radius: 14px;
-            background: rgba(255,255,255,0.045);
-            border: 1px solid rgba(255,255,255,0.09);
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(242, 234, 227, 0.06);
             color: rgba(255,255,255,0.92);
             display: flex;
             flex-direction: column;
             gap: 6px;
             min-height: 94px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
             transition: transform .16s ease, border-color .16s ease, background .16s ease;
         }
 
@@ -747,23 +940,23 @@
         }
 
         .pt-stat-card--primary .pt-stat-value {
-            color: #bce4ff;
+            color: #ff073a;
         }
 
         .pt-stat-card--performance .pt-stat-value {
-            color: #9effcb;
+            color: #ff3b65;
         }
 
         .pt-stat-card--consistency .pt-stat-value {
-            color: #ffdca2;
+            color: #cc062e;
         }
 
         .pt-stat-card--progress .pt-stat-value {
-            color: #f8b3ff;
+            color: #ff073a;
         }
 
         .pt-stat-card--projection .pt-stat-value {
-            color: #ffb9a8;
+            color: #ff3b65;
         }
 
         @media (max-width: 400px) {
@@ -802,6 +995,10 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
 <body>
+    <video autoplay loop muted playsinline id="bg-video" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
+        <source src="../../Images/bg_dshh.mp4" type="video/mp4">
+    </video>
+
     <header>
         <div>
         <!-- Help bottom-sheet trigger -->
@@ -827,56 +1024,55 @@
     <main>
         <h1 data-i18n-en="Calendar">Calendario</h1>
         <div id="pt-charts-swipe" class="pt-charts-swipe">
-            <!-- Panel 1: Calendario -->
+            <!-- Panel 0: Calendario -->
             <div class="pt-chart-panel" data-chart-idx="0" style="padding: 0;">
                 <div id="calendario"></div>
             </div>
 
-            <!-- Panel 2: Bar chart — daily activity -->
-            <div class="pt-chart-panel" data-chart-idx="1">
-                <div class="pt-chart-card">
+            <!-- Panel 1: Gráficos de estadísticas -->
+            <div class="pt-chart-panel" data-chart-idx="1" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="pt-chart-card" style="min-height: 260px; flex-shrink: 0;">
                     <h3 class="pt-chart-card-title" data-i18n-en="Daily activity">Actividad diaria</h3>
                     <div class="pt-chart-canvas-wrap">
                         <canvas id="pt-chart-bar"></canvas>
                     </div>
                 </div>
-            </div>
 
-            <!-- Panel 3: Donut chart — active vs rest -->
-            <div class="pt-chart-panel" data-chart-idx="2">
-                <div class="pt-chart-card">
+                <div class="pt-chart-card" style="min-height: 260px; flex-shrink: 0;">
                     <h3 class="pt-chart-card-title" data-i18n-en="Active vs rest days">Días activos vs descanso</h3>
                     <div class="pt-chart-canvas-wrap pt-chart-canvas-wrap--donut">
                         <canvas id="pt-chart-donut"></canvas>
                     </div>
                 </div>
             </div>
+
+            <!-- Panel 2: Estadísticas textuales (Scrolling vertical) -->
+            <div class="pt-chart-panel" data-chart-idx="2">
+                <section id="estadisticas" class="pt-stats" style="margin-top: 0; flex-shrink: 0;">
+                    <!-- Empty state overlay (hidden by default, shown by JS when no data) -->
+                    <div id="pt-stats-empty" class="pt-stats-empty" style="display:none;">
+                        <div class="pt-stats-empty-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
+                        </div>
+                        <p class="pt-stats-empty-title" data-i18n-en="No training data found">No se encontraron datos de entreno</p>
+                        <p class="pt-stats-empty-sub" data-i18n-en="Complete workouts from your training plan to see your statistics and charts here.">Completá entrenamientos desde tu plan de entreno para ver tus estadísticas y gráficos acá.</p>
+                    </div>
+
+                    <h2 class="pt-stats-title" data-i18n-en="Statistics">Estadísticas</h2>
+
+                    <div id="pt-stats-grid" class="pt-stats-grid">
+                        <!-- Las tarjetas de estadísticas se renderizan dinámicamente desde Scripts/script_calendario.js -->
+                    </div>
+                </section>
+            </div>
         </div>
         
         <!-- Dot indicators for swipe -->
-        <div id="pt-charts-dots" class="pt-charts-dots" style="margin-bottom: 24px;">
+        <div id="pt-charts-dots" class="pt-charts-dots" style="margin-bottom: 24px; margin-top: 12px; width: 100%;">
             <button class="pt-charts-dot is-active" data-dot="0" aria-label="Calendar"></button>
-            <button class="pt-charts-dot" data-dot="1" aria-label="Chart 1"></button>
-            <button class="pt-charts-dot" data-dot="2" aria-label="Chart 2"></button>
+            <button class="pt-charts-dot" data-dot="1" aria-label="Charts"></button>
+            <button class="pt-charts-dot" data-dot="2" aria-label="Statistics"></button>
         </div>
-
-        <!-- Estadísticas del mes -->
-        <section id="estadisticas" class="pt-stats">
-            <!-- Empty state overlay (hidden by default, shown by JS when no data) -->
-            <div id="pt-stats-empty" class="pt-stats-empty" style="display:none;">
-                <div class="pt-stats-empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
-                </div>
-                <p class="pt-stats-empty-title" data-i18n-en="No training data found">No se encontraron datos de entreno</p>
-                <p class="pt-stats-empty-sub" data-i18n-en="Complete workouts from your training plan to see your statistics and charts here.">Completá entrenamientos desde tu plan de entreno para ver tus estadísticas y gráficos acá.</p>
-            </div>
-
-            <h2 class="pt-stats-title" data-i18n-en="Statistics">Estadísticas</h2>
-
-            <div id="pt-stats-grid" class="pt-stats-grid">
-                <!-- Las tarjetas de estadísticas se renderizan dinámicamente desde Scripts/script_calendario.js -->
-            </div>
-        </section>
     </main>
 
     <footer id="footer_dashboard" class="footer-wrap">

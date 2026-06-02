@@ -2662,38 +2662,38 @@ function initDetallePorDiaPlan() {
         const html = `
             <div class="pt-detail" style="position: relative;">
                 ${gifUrl ? `
-                <div style="position: absolute; top: -40px; left: -30px; right: -30px; height: 380px; z-index: -1; pointer-events: none; mask-image: linear-gradient(to bottom, black 40%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%); border-top-left-radius: 28px; border-top-right-radius: 28px; overflow: hidden;">
-                    <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.6; mix-blend-mode: luminosity;" />
+                <div style="position: absolute; top: -15px; left: -20px; right: -20px; height: 460px; z-index: -1; pointer-events: none; mask-image: linear-gradient(to bottom, black 30%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); border-top-left-radius: 24px; border-top-right-radius: 24px; overflow: hidden;">
+                    <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.65; mix-blend-mode: luminosity;" />
                 </div>
                 ` : ""}
-                <div class="pt-detail-hero" style="position: relative; z-index: 1; padding-top: ${gifUrl ? '150px' : '20px'}; text-align: center;">
+                <div class="pt-detail-hero" style="position: relative; z-index: 1; padding-top: ${gifUrl ? '240px' : '20px'}; text-align: center;">
                     <div class="pt-detail-hero-row" style="margin-bottom:12px; justify-content: center;">
                         <h2 class="pt-detail-hero-title pt-detail-ex" data-i18n-en="${nombreEn}" style="font-size: 32px; font-weight: 900; letter-spacing: -0.8px; line-height: 1.1; text-shadow: 0 4px 16px rgba(0,0,0,0.9); margin: 0;">${nombreEs}</h2>
                     </div>
                     ${descripcion ? `<div class="pt-detail-hero-sub pt-detail-desc" style="white-space:normal; margin-bottom:24px; font-size: 15.5px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 8px rgba(0,0,0,0.9); max-width: 90%; margin-left: auto; margin-right: auto; line-height: 1.4;">${descripcion}</div>` : ""}
                     
-                    <div class="plan-meta pt-detail-meta" style="display: flex; flex-wrap: nowrap; justify-content: space-evenly; margin-bottom: 28px; background: rgba(0,0,0,0.45); padding: 18px 12px; border-radius: 22px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🔄</span>
+                    <div class="plan-meta pt-detail-meta" style="display: flex; flex-wrap: wrap; justify-content: space-evenly; gap: 8px; margin-bottom: 28px; background: rgba(0,0,0,0.45); padding: 18px 8px; border-radius: 22px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><rect x="4" y="4" width="16" height="6" rx="2" /><rect x="4" y="14" width="16" height="6" rx="2" /></svg>
                             <strong style="font-size: 19px; color: #fff; line-height: 1;">${series}</strong>
-                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Series", "Sets"))}</span>
+                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Series", "Sets"))}</span>
                         </div>
                         <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">🎯</span>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" /></svg>
                             <strong style="font-size: 19px; color: #fff; line-height: 1;">${reps}</strong>
-                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Reps", "Reps"))}</span>
+                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Reps", "Reps"))}</span>
                         </div>
                         <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                            <span style="font-size: 20px; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">⏱️</span>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                             <strong style="font-size: 19px; color: #fff; line-height: 1;">${descanso}s</strong>
-                            <span style="font-size: 12.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Descanso", "Rest"))}</span>
+                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Descanso", "Rest"))}</span>
                         </div>
                     </div>
                 </div>
                 <div class="pt-detail-body" style="position: relative; z-index: 1;">
-                    <div class="plan-detalle-viewport pt-detail-viewport" style="overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:0 8px 16px 8px;">
+                    <div class="plan-detalle-viewport pt-detail-viewport" style="overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;flex:1;padding:0 8px 16px 8px;">
                         ${detailedHtml}
                     </div>
                 </div>

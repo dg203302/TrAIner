@@ -20,12 +20,12 @@
     <style>
         /* ── Material You overlay (perfil only) ────────────────────── */
         :root {
-            --my-primary: #bce4ff;
-            --my-primary-dim: rgba(208, 188, 255, 0.14);
-            --my-primary-rim: rgba(208, 188, 255, 0.22);
-            --my-danger: #f2b8b5;
-            --my-danger-dim: rgba(242, 184, 181, 0.10);
-            --my-danger-rim: rgba(242, 184, 181, 0.22);
+            --my-primary: #ff073a;
+            --my-primary-dim: rgba(255, 7, 58, 0.14);
+            --my-primary-rim: rgba(255, 7, 58, 0.22);
+            --my-danger: #ff073a;
+            --my-danger-dim: rgba(255, 7, 58, 0.10);
+            --my-danger-rim: rgba(255, 7, 58, 0.22);
             --my-glass: rgba(255, 255, 255, 0.05);
             --my-glass-rim: rgba(255, 255, 255, 0.10);
             --my-glass-hover: rgba(255, 255, 255, 0.08);
@@ -414,6 +414,10 @@
 </head>
 
 <body>
+    <video autoplay loop muted playsinline id="bg-video" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
+        <source src="/Images/bg_dshh.mp4" type="video/mp4">
+    </video>
+
     <header>
         <button class="footer-nav translucent-bar" type="button" aria-label="Desloguear" data-i18n-en-aria-label="Log out"
             style="width: 60px; height: 60px;">
@@ -490,6 +494,19 @@
 
         <section id="configuracion">
             <h2 data-i18n-en="Settings">Configuración</h2>
+
+            <div class="config-item">
+                <div class="config-text">
+                    <h4 class="config-title" data-i18n-en="Animated background">Fondo animado</h4>
+                    <p class="config-desc" data-i18n-en="Enable video background instead of static image.">Activa el fondo de video en lugar de una imagen estática.</p>
+                </div>
+                <label class="switch" for="toggle_fondo">
+                    <input id="toggle_fondo" type="checkbox" role="switch" aria-label="Activar fondo animado"
+                        data-i18n-en-aria-label="Enable animated background" />
+                    <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
+                </label>
+            </div>
+
 
             <div class="config-item">
                 <div class="config-text">

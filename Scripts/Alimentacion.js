@@ -581,7 +581,7 @@ const initDetallePorDiaPlanAliment = (contenedor) => {
                     <div class="pt-detail-hero-sub">${escapeHtml(tLang("Resumen del día y recomendaciones", "Day summary and recommendations"))}</div>
                 </div>
 
-                <div class="pt-detail-viewport">
+                <div class="pt-detail-viewport" style="overflow-x:hidden;">
                     <div style="padding:16px;">
                         <section style="margin-bottom:20px;">
                             <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Objetivo Diario", "Daily Goal"))}</h3>

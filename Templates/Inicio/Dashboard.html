@@ -50,7 +50,6 @@
         /* Font */
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #1a1c1e 0%, #0c0d0f 100%);
         }
 
         /* Brand textos */
@@ -108,7 +107,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 7px 18px 7px 7px;
+            padding: 7px 18px 7px 55px;
             height: 60px;
             border-radius: var(--my-radius-pill);
             border: 1px solid var(--my-glass-rim);
@@ -120,6 +119,8 @@
             max-width: 60vw;
             text-decoration: none;
             box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
 
         #usuario:hover {
@@ -131,13 +132,18 @@
         }
 
         #icono_usuario {
-            width: 46px;
-            height: 46px;
-            border-radius: var(--my-radius-pill);
-            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            width: 75px;
+            height: 100%;
             object-fit: cover;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.10);
+            position: absolute;
+            left: 0;
+            top: 0;
+            object-position: left center;
+            -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);
+            mask-image: linear-gradient(to right, black 40%, transparent 100%);
+            pointer-events: none;
+            opacity: 0.8;
+            z-index: 0;
         }
 
         .header-user-text {
@@ -146,6 +152,9 @@
             align-items: flex-start;
             gap: 1px;
             min-width: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
         }
 
         #welcome_msg {
@@ -326,18 +335,13 @@
             margin: 0 0 14px;
             padding: 14px 16px;
             border-radius: var(--my-radius-sm);
-            border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
-        }
-
-        /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        footer {
-            margin-top: 40px;
+            border: 1px solid rgba(242, 234, 227, 0.06);
             background: rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(20px) saturate(140%);
             -webkit-backdrop-filter: blur(20px) saturate(140%);
-            border-top: 1px solid var(--my-glass-rim);
         }
+
+        /* ── FOOTER NAV ─────────────────────────────────────────────── */
         /* Generic footer button reset */
         .footer-btn {
             display: flex;
@@ -461,6 +465,10 @@
 </head>
 
 <body>
+    <video autoplay loop muted playsinline id="bg-video" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
+        <source src="../../Images/bg_dshh.mp4" type="video/mp4">
+    </video>
+
     <header>
         <div>
             <!-- Help bottom-sheet trigger -->

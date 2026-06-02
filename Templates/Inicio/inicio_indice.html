@@ -21,9 +21,9 @@
     <style>
         /* ── Material You overlay (inicio_indice only) ──────────────── */
         :root {
-            --my-primary: #bce4ff;
-            --my-primary-dim: rgba(208, 188, 255, 0.14);
-            --my-primary-rim: rgba(208, 188, 255, 0.22);
+            --my-primary: #ff073a;
+            --my-primary-dim: rgba(255, 7, 58, 0.14);
+            --my-primary-rim: rgba(255, 7, 58, 0.22);
             --my-glass: rgba(255, 255, 255, 0.05);
             --my-glass-rim: rgba(255, 255, 255, 0.10);
             --my-glass-hover: rgba(255, 255, 255, 0.08);
@@ -34,7 +34,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #1a1c1e 0%, #0c0d0f 100%);
+            background: #000000;
             color: rgba(255, 255, 255, .88);
             margin: 0;
             min-height: 100svh;
@@ -363,7 +363,7 @@
             transform: translateY(0);
         }
 
-        .translucent-btn > span {
+        .translucent-btn>span {
             user-select: none;
         }
 
@@ -388,6 +388,11 @@
 </head>
 
 <body>
+    <!-- Cinematic Background -->
+    <video autoplay loop muted playsinline id="bg-video"
+        style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
+        <source src="/Images/bg_dshh.mp4" type="video/mp4">
+    </video>
     <header>
         <a href="/Templates/Creacion_cuenta/login_google.html" class="translucent-btn">
             <span style="font-size: 20px;" data-i18n-en="Get started!">Empecemos!</span>
@@ -396,7 +401,7 @@
 
     <main>
         <section id="presentacion">
-            <h1 style="font-size: 100px;">Tr<span>AI</span>ner</h1>
+            <h1 style="font-size: clamp(60px, 15vw, 100px);">Tr<span>AI</span>ner</h1>
             <h4 data-i18n-en="Your AI-powered personal trainer">Tu entrenador personal potenciado por IA</h4>
             <section id="secciones">
                 <ul>
@@ -408,7 +413,7 @@
                 </ul>
             </section>
         </section>
-        <!-- Configuración -->
+        <!-- Configuración
         <section id="configuración">
             <h2 data-i18n-en="Settings">Configuración</h2>
 
@@ -438,7 +443,7 @@
                 </label>
             </div>
         </section>
-
+         -->
         <hr class="section-divider">
 
         <!-- Ejercicios -->

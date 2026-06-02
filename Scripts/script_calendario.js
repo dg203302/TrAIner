@@ -661,8 +661,8 @@ async function initCalendario() {
 
         // Bars
         const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
-        grad.addColorStop(0, 'rgba(188,228,255,0.9)');
-        grad.addColorStop(1, 'rgba(188,228,255,0.25)');
+        grad.addColorStop(0, 'rgba(255, 7, 58, 0.9)');
+        grad.addColorStop(1, 'rgba(255, 7, 58, 0.25)');
 
         data.forEach((val, i) => {
             const barH = (val / maxVal) * plotH;
@@ -720,7 +720,7 @@ async function initCalendario() {
         ctx.fill();
 
         // Line
-        ctx.strokeStyle = '#9effcb';
+        ctx.strokeStyle = '#ff073a';
         ctx.lineWidth = 2;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -738,8 +738,8 @@ async function initCalendario() {
             const x = pad.l + i * stepX;
             const y = pad.t + plotH - (val / maxVal) * plotH;
             ctx.beginPath();
-            ctx.arc(x, y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = '#9effcb';
+            ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff073a';
             ctx.fill();
         });
 
@@ -775,9 +775,9 @@ async function initCalendario() {
             const startAngle = -Math.PI / 2;
             const endAngle = startAngle + pctActive * Math.PI * 2;
             const grad = ctx.createConicGradient(startAngle, cx, cy);
-            grad.addColorStop(0, '#bce4ff');
-            grad.addColorStop(pctActive * 0.7, '#9effcb');
-            grad.addColorStop(pctActive, '#ffdca2');
+            grad.addColorStop(0, '#ff073a');
+            grad.addColorStop(pctActive * 0.7, '#ff3b65');
+            grad.addColorStop(pctActive, '#cc062e');
             ctx.beginPath();
             ctx.arc(cx, cy, radius, startAngle, endAngle);
             ctx.lineWidth = lineW;
@@ -802,17 +802,16 @@ async function initCalendario() {
         ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
         // Active legend
-        ctx.fillStyle = '#bce4ff';
+        ctx.fillStyle = '#ff073a';
         ctx.beginPath(); ctx.arc(cx - 48, legY, 4, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.58)';
         ctx.textAlign = 'left';
         ctx.fillText(`${active} ${tLang('días', 'days')}`, cx - 40, legY + 3);
         // Rest legend
-        ctx.fillStyle = 'rgba(255,255,255,0.18)';
-        ctx.beginPath(); ctx.arc(cx + 18, legY, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.beginPath(); ctx.arc(cx + 8, legY, 4, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.58)';
-        ctx.textAlign = 'left';
-        ctx.fillText(`${rest}`, cx + 26, legY + 3);
+        ctx.fillText(`${rest} ${tLang('días', 'days')}`, cx + 16, legY + 3);
     };
 
     /* ── Swipe dot sync ────────────────────────────────── */
@@ -893,7 +892,7 @@ async function initCalendario() {
         locale: getIdiomaPreferido(),
         firstDay: 1,
         dayMaxEvents: true,
-        height: "auto",
+        height: "100%",
         events: eventos,
         eventDisplay: "block",
         datesSet: (info) => {
@@ -907,14 +906,13 @@ async function initCalendario() {
             }
         },
         eventContent: (arg) => {
-            const status = arg.event.extendedProps?.status;
-            const calories = arg.event.extendedProps?.calories_burnt;
-            const label = calories != null ? `${calories} kcal` : arg.event.title;
+            const status = arg.event.extendedProps.status || "otro";
+            const color = status === "completado" ? "#ff073a" : "#d0c9c3";
+            const shadow = status === "completado" ? "rgba(255,7,58,0.6)" : "rgba(208,201,195,0.6)";
             return {
                 html: `
-                    <div style="display:flex;align-items:center;gap:6px;padding:2px 4px;border-radius:10px;background:rgba(188,228,255,.16);border:1px solid rgba(188,228,255,.24);color:#fff;font-size:11px;line-height:1.2;">
-                        <span style="width:7px;height:7px;border-radius:999px;background:${status === "completado" ? "#8bd18b" : "#bce4ff"};flex:0 0 auto;"></span>
-                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(label)}</span>
+                    <div style="display:flex;justify-content:center;margin-top:2px;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:${color};box-shadow:0 0 8px ${shadow};"></span>
                     </div>
                 `,
             };

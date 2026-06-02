@@ -603,6 +603,49 @@ if (document.readyState === "loading") {
 	initLogoutSidebarPlacement();
 }
 
+
+const initFondoToggle = () => {
+    const BG_KEY = "ui_background";
+    const toggle = document.getElementById("toggle_fondo");
+    if (!toggle) return;
+
+    let bgPref = "video";
+    try {
+        bgPref = localStorage.getItem(BG_KEY) || "video";
+    } catch {}
+
+    toggle.checked = bgPref === "video";
+
+    toggle.addEventListener("change", () => {
+        const newPref = toggle.checked ? "video" : "static";
+        try {
+            localStorage.setItem(BG_KEY, newPref);
+        } catch {}
+        
+        let style = document.getElementById("dynamic-bg-style");
+        if (!style) {
+            style = document.createElement("style");
+            style.id = "dynamic-bg-style";
+            document.head.appendChild(style);
+        }
+        
+        if (newPref === "static") {
+            style.innerHTML = `
+                #bg-video { display: none !important; }
+                body { 
+                    background: #000 url('/Images/bg_dashboard.jpg') no-repeat center center fixed !important;
+                    background-size: cover !important;
+                }
+            `;
+        } else {
+            style.innerHTML = `
+                body { background: transparent !important; }
+                #bg-video { display: block !important; }
+            `;
+        }
+    });
+};
+
 window.onload = async () => {
 	document.getElementById("username").textContent = username;
 	document.getElementById("icono_usuario").src = avatar;
@@ -613,6 +656,7 @@ window.onload = async () => {
 
 	initIdiomaToggle();
 	initTransparenciaToggle();
+	initFondoToggle();
 	renderBMI();
 }
 
