@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/Scripts/ui_transparencia_apply.js"></script>
+    <script>window.PT_CANVAS_MODE = "aggressive";</script>
+    <script src="/Scripts/ui_canvas_bg.js"></script>
     <script src="/Scripts/ui_idioma.js"></script>
     <link rel="stylesheet" href="/Styles/styles_verifi_usu_n.css">
     <meta name="theme-color" content="#0A1226">
     <link rel="manifest" href="/manifest.json" />
     <title data-i18n-en="Verifying user">Verificando usuario</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
+
 <body>
-    <!-- Cinematic Background -->
-    <video autoplay loop muted playsinline id="bg-video" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
-        <source src="/Images/bg_load.mp4" type="video/mp4">
-    </video>
 
     <main style="display: grid; place-items: center; min-height: 100vh; position: relative; z-index: 1;">
         <div class="loader" role="status" aria-live="polite">
             <div class="loader-text">
-                <h1 class="loader-title" style="font-size: clamp(60px, 15vw, 100px); font-weight: 800; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin: 0;">Tr<span style="color: #ff073a;">AI</span>ner</h1>
+                <h1 class="loader-title"
+                    style="font-size: clamp(60px, 15vw, 100px); font-weight: 800; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin: 0;">
+                    Tr<span style="color: #ff073a;">AI</span>ner</h1>
                 <p class="loader-subtitle" data-i18n-en="Loading…">Cargando…</p>
             </div>
 
@@ -34,4 +36,5 @@
     </footer>
     <script src="/Scripts/verifi_usu_n.js" type="module"></script>
 </body>
+
 </html>

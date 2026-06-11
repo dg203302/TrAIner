@@ -351,6 +351,7 @@ async function initCalendario() {
     let registros = await obtenerRegistrosEntreno();
     let eventos = [];
     let recordsByDate = new Map();
+    let lastStats = null;
 
     const rebuildCalendarData = () => {
         eventos = registros
@@ -528,6 +529,7 @@ async function initCalendario() {
     const formatNumber = (v) => (typeof v === 'number' ? v.toLocaleString(getIdiomaPreferido()) : v);
 
     const renderEstadisticas = (stats) => {
+        lastStats = stats;
         try {
             const container = document.getElementById('pt-stats-grid');
             const section = document.getElementById('estadisticas');
@@ -942,6 +944,23 @@ async function initCalendario() {
         renderEstadisticas(stats);
     } catch (e) {
         console.warn('No se pudo renderizar estadísticas:', e);
+    }
+
+    // Setup ResizeObserver to redraw charts dynamically when container sizes change (prevents stretching)
+    try {
+        const resizeObserver = new ResizeObserver((entries) => {
+            if (lastStats) {
+                requestAnimationFrame(() => {
+                    renderCharts(lastStats);
+                });
+            }
+        });
+        const barWrap = document.getElementById('pt-chart-bar')?.parentElement;
+        const donutWrap = document.getElementById('pt-chart-donut')?.parentElement;
+        if (barWrap) resizeObserver.observe(barWrap);
+        if (donutWrap) resizeObserver.observe(donutWrap);
+    } catch (err) {
+        console.warn('ResizeObserver setup failed:', err);
     }
 }
 

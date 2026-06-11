@@ -622,26 +622,51 @@ const initFondoToggle = () => {
             localStorage.setItem(BG_KEY, newPref);
         } catch {}
         
-        let style = document.getElementById("dynamic-bg-style");
-        if (!style) {
-            style = document.createElement("style");
-            style.id = "dynamic-bg-style";
-            document.head.appendChild(style);
+        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
+            window.PT_CanvasBg.update(newPref);
         }
+    });
+};
+
+const initColorToggle = () => {
+    const COLOR_KEY = "ui_background_color";
+    const BG_KEY = "ui_background";
+    const select = document.getElementById("select_color_fondo");
+    const toggle = document.getElementById("toggle_fondo");
+    const colorContainer = document.getElementById("config_color_container");
+    if (!select) return;
+
+    let colorPref = "red";
+    try {
+        colorPref = localStorage.getItem(COLOR_KEY) || "red";
+    } catch {}
+
+    select.value = colorPref;
+
+    const updateVisibility = () => {
+        if (colorContainer && toggle) {
+            colorContainer.style.display = toggle.checked ? "flex" : "none";
+        }
+    };
+
+    updateVisibility();
+    if (toggle) {
+        toggle.addEventListener("change", updateVisibility);
+    }
+
+    select.addEventListener("change", () => {
+        const newColor = select.value;
+        try {
+            localStorage.setItem(COLOR_KEY, newColor);
+        } catch {}
         
-        if (newPref === "static") {
-            style.innerHTML = `
-                #bg-video { display: none !important; }
-                body { 
-                    background: #000 url('/Images/bg_dashboard.jpg') no-repeat center center fixed !important;
-                    background-size: cover !important;
-                }
-            `;
-        } else {
-            style.innerHTML = `
-                body { background: transparent !important; }
-                #bg-video { display: block !important; }
-            `;
+        let bgPref = "video";
+        try {
+            bgPref = localStorage.getItem(BG_KEY) || "video";
+        } catch {}
+
+        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
+            window.PT_CanvasBg.update(bgPref, newColor);
         }
     });
 };
@@ -657,6 +682,7 @@ window.onload = async () => {
 	initIdiomaToggle();
 	initTransparenciaToggle();
 	initFondoToggle();
+	initColorToggle();
 	renderBMI();
 }
 

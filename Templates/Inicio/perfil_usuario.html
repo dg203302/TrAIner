@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/Scripts/ui_transparencia_apply.js"></script>
+    <script src="/Scripts/ui_canvas_bg.js"></script>
     <script src="/Scripts/ui_idioma.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -409,14 +410,43 @@
         .footer-btn.is-active .footer-btn-label {
             color: rgba(255, 255, 255, .90);
         }
+
+        .pt-select-custom {
+            appearance: none;
+            -webkit-appearance: none;
+            background: color-mix(in srgb, #fff 8%, transparent);
+            border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 6px 32px 6px 12px;
+            font-size: 13.5px;
+            font-family: inherit;
+            font-weight: 650;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJtNiA5IDYgNiA2LTYiLz48L3N2Zz4=");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+        .pt-select-custom:hover {
+            background-color: color-mix(in srgb, #fff 12%, transparent);
+            border-color: color-mix(in srgb, #fff 24%, transparent);
+        }
+        .pt-select-custom:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .pt-select-custom option {
+            background-color: #12151A;
+            color: #fff;
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 
 <body>
-    <video autoplay loop muted playsinline id="bg-video" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 1;">
-        <source src="/Images/bg_dshh.mp4" type="video/mp4">
-    </video>
 
     <header>
         <button class="footer-nav translucent-bar" type="button" aria-label="Desloguear" data-i18n-en-aria-label="Log out"
@@ -498,13 +528,27 @@
             <div class="config-item">
                 <div class="config-text">
                     <h4 class="config-title" data-i18n-en="Animated background">Fondo animado</h4>
-                    <p class="config-desc" data-i18n-en="Enable video background instead of static image.">Activa el fondo de video en lugar de una imagen estática.</p>
+                    <p class="config-desc" data-i18n-en="Enable animated background instead of solid black.">Activa el fondo animado en lugar de un fondo negro sólido.</p>
                 </div>
                 <label class="switch" for="toggle_fondo">
                     <input id="toggle_fondo" type="checkbox" role="switch" aria-label="Activar fondo animado"
                         data-i18n-en-aria-label="Enable animated background" />
                     <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
                 </label>
+            </div>
+
+            <div class="config-item" id="config_color_container">
+                <div class="config-text">
+                    <h4 class="config-title" data-i18n-en="Background color">Color de fondo</h4>
+                    <p class="config-desc" data-i18n-en="Choose the color of the animated background bubbles.">Elegí el color de las burbujas del fondo animado.</p>
+                </div>
+                <div style="flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 44px;">
+                    <select id="select_color_fondo" class="pt-select-custom" aria-label="Color del fondo" data-i18n-en-aria-label="Background color">
+                        <option value="red" data-i18n-en="Red">Rojo</option>
+                        <option value="green" data-i18n-en="Green">Verde</option>
+                        <option value="blue" data-i18n-en="Blue">Azul</option>
+                    </select>
+                </div>
             </div>
 
 
