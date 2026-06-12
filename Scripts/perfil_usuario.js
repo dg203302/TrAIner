@@ -387,6 +387,7 @@ const openPerfilWheelSheet = async ({
 	init,
 	getValue,
 	validate,
+	triggerEl = null,
 }) => {
 	const bs = window.PTBottomSheet;
 	if (!bs || typeof bs.open !== "function" || typeof bs.close !== "function") {
@@ -401,6 +402,7 @@ const openPerfilWheelSheet = async ({
 		title: title || "",
 		ariaLabel: ariaLabel || title || "Modal",
 		className: "pt-perfil-sheet",
+		triggerEl,
 		html: `
 			<div class="pt-perfil-form">
 				<p class="pt-perfil-helper" data-i18n-en="${escapeHtml(helperTextEn || helperText || "")}">${escapeHtml(helperText || "")}</p>
@@ -686,12 +688,13 @@ window.onload = async () => {
 	renderBMI();
 }
 
-document.getElementById("editar_altura").addEventListener("click", async () => {
+document.getElementById("editar_altura").addEventListener("click", async (ev) => {
 	const currentAltura = parseInt(localStorage.getItem("altura_usuario") || "170", 10);
 
 	const nuevaAltura = await openPerfilWheelSheet({
 		title: "Editar altura",
 		ariaLabel: "Editar altura",
+		triggerEl: ev.currentTarget,
 		helperText: "Seleccioná tu altura. Podés deslizar, tocar o usar las flechas ↑ ↓.",
 		helperTextEn: "Select your height. You can scroll, tap or use ↑ ↓.",
 		html: `
@@ -721,12 +724,13 @@ document.getElementById("editar_altura").addEventListener("click", async () => {
 	await subirCambiosPerfil();
 })
 
-document.getElementById("editar_edad").addEventListener("click", async () => {
+document.getElementById("editar_edad").addEventListener("click", async (ev) => {
 	const currentEdad = parseInt(localStorage.getItem("edad_usuario") || "26", 10);
 
 	const fecha = await openPerfilWheelSheet({
 		title: "Editar edad",
 		ariaLabel: "Editar edad",
+		triggerEl: ev.currentTarget,
 		helperText: "Elegí tu fecha de nacimiento (día/mes/año). Luego calculamos tu edad automáticamente.",
 		helperTextEn: "Pick your birth date (day/month/year). We'll calculate your age automatically.",
 		html: `
@@ -775,7 +779,7 @@ document.getElementById("editar_edad").addEventListener("click", async () => {
 	await subirCambiosPerfil();
 })
 
-const openPesoModal = async ({ mode = "act" } = {}) => {
+const openPesoModal = async ({ mode = "act", triggerEl = null } = {}) => {
 	const currentPesoAct = parseInt(localStorage.getItem("peso_usuario") || "70", 10);
 	const currentPesoObj = parseInt(localStorage.getItem("peso_objetivo_usuario") || "75", 10);
 
@@ -790,6 +794,7 @@ const openPesoModal = async ({ mode = "act" } = {}) => {
 	const newValue = await openPerfilWheelSheet({
 		title: isObj ? "Editar peso objetivo" : "Editar peso actual",
 		ariaLabel: isObj ? "Editar peso objetivo" : "Editar peso actual",
+		triggerEl,
 		helperText: `Ajustá tu ${sectionTitle.toLowerCase()}. Podés deslizar, tocar o usar ↑ ↓.`,
 		helperTextEn: `Adjust your ${isObj ? "target weight" : "current weight"}. You can scroll, tap or use ↑ ↓.`,
 		html: `
@@ -833,24 +838,25 @@ const openPesoModal = async ({ mode = "act" } = {}) => {
 	await subirCambiosPerfil();
 };
 
-document.getElementById("editar_peso").addEventListener("click", async () => {
-	await openPesoModal({ mode: "act" });
+document.getElementById("editar_peso").addEventListener("click", async (ev) => {
+	await openPesoModal({ mode: "act", triggerEl: ev.currentTarget });
 })
-document.getElementById("editar_peso_objetivo").addEventListener("click", async () => {
-	await openPesoModal({ mode: "obj" });
-})
-
-
-document.getElementById("eliminar_cuenta").addEventListener("click", async () => {
-	await EliminarPerfil()
+document.getElementById("editar_peso_objetivo").addEventListener("click", async (ev) => {
+	await openPesoModal({ mode: "obj", triggerEl: ev.currentTarget });
 })
 
-async function EliminarPerfil() {
+
+document.getElementById("eliminar_cuenta").addEventListener("click", async (ev) => {
+	await EliminarPerfil(ev.currentTarget);
+})
+
+async function EliminarPerfil(triggerEl = null) {
 	const ok = await openConfirmSheet({
 		title: "¿Estás seguro?",
 		message: "Esta acción no se puede deshacer. Se eliminará toda tu información.",
 		confirmText: "Sí, eliminar mi cuenta",
 		cancelText: "Cancelar",
+		triggerEl,
 	});
 
 	if (!ok) return;

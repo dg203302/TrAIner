@@ -58,6 +58,7 @@ const openStatusSheet = async ({
     closeText = tLang("Cerrar", "Close"),
     didOpen,
     willClose,
+    triggerEl = null,
 } = {}) => {
     if (canUseBottomSheet()) {
         await globalThis.PTBottomSheet.open({
@@ -72,6 +73,7 @@ const openStatusSheet = async ({
             allowDragClose,
             didOpen,
             willClose,
+            triggerEl,
         });
         return;
     }
@@ -124,7 +126,7 @@ const showBlockingLoading = ({ title, text } = {}) => {
     };
 };
 
-const openConfirmSheet = ({ title, message, confirmText } = {}) => {
+const openConfirmSheet = ({ title, message, confirmText, triggerEl = null } = {}) => {
     const safeTitle = String(title || tLang("Confirmar", "Confirm"));
     const safeMessage = String(message || "");
     const safeConfirm = String(confirmText || tLang("Aceptar", "OK"));
@@ -138,7 +140,7 @@ const openConfirmSheet = ({ title, message, confirmText } = {}) => {
         }
     }
 
-    return new Promise((resolve) => {
+	return new Promise((resolve) => {
         let resolved = false;
         const safeResolve = (v) => {
             if (resolved) return;
@@ -149,6 +151,7 @@ const openConfirmSheet = ({ title, message, confirmText } = {}) => {
         void globalThis.PTBottomSheet.open({
             title: safeTitle,
             ariaLabel: safeTitle,
+            triggerEl,
             html: `
                 <div class="pt-status">
                     <div class="pt-status-row">
@@ -582,65 +585,69 @@ const initDetallePorDiaPlanAliment = (contenedor) => {
                 </div>
 
                 <div class="pt-detail-viewport" style="overflow-x:hidden;">
-                    <div style="padding:16px;">
-                        <section style="margin-bottom:20px;">
-                            <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Objetivo Diario", "Daily Goal"))}</h3>
-                            <div class="pt-sheet-item">
-                                <div class="pt-sheet-item-left">
-                                    <div class="pt-sheet-item-title">${escapeHtml(tLang("Calorías Totales", "Total Calories"))}</div>
-                                    <div class="pt-sheet-item-sub">${escapeHtml(tLang("Meta para hoy", "Goal for today"))}</div>
-                                </div>
-                                <div class="pt-sheet-item-right">${escapeHtml(diaInfo.calorias_objetivo)} kcal</div>
-                            </div>
-                        </section>
-
-                        ${(macros.carbohidratos || macros.proteinas || macros.grasas) ? `
-                        <section style="margin-bottom:20px;">
-                            <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Distribución de Macros", "Macro Distribution"))}</h3>
-                            <div class="pt-sheet-list">
+                    <div class="pt-detail-diet-layout" style="padding:16px;">
+                        <div class="pt-detail-diet-col1">
+                            <section style="margin-bottom:20px;">
+                                <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Objetivo Diario", "Daily Goal"))}</h3>
                                 <div class="pt-sheet-item">
-                                    <div class="pt-sheet-item-title">${escapeHtml(tLang("Carbohidratos", "Carbs"))}</div>
-                                    <div class="pt-sheet-item-right">${macros.carbohidratos}%</div>
+                                    <div class="pt-sheet-item-left">
+                                        <div class="pt-sheet-item-title">${escapeHtml(tLang("Calorías Totales", "Total Calories"))}</div>
+                                        <div class="pt-sheet-item-sub">${escapeHtml(tLang("Meta para hoy", "Goal for today"))}</div>
+                                    </div>
+                                    <div class="pt-sheet-item-right">${escapeHtml(diaInfo.calorias_objetivo)} kcal</div>
                                 </div>
-                                <div class="pt-sheet-item">
-                                    <div class="pt-sheet-item-title">${escapeHtml(tLang("Proteínas", "Proteins"))}</div>
-                                    <div class="pt-sheet-item-right">${macros.proteinas}%</div>
-                                </div>
-                                <div class="pt-sheet-item">
-                                    <div class="pt-sheet-item-title">${escapeHtml(tLang("Grasas", "Fats"))}</div>
-                                    <div class="pt-sheet-item-right">${macros.grasas}%</div>
-                                </div>
-                            </div>
-                        </section>
-                        ` : ""}
+                            </section>
 
-                        ${recoms.length ? `
-                        <section style="margin-bottom:20px;">
-                            <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Recomendaciones", "Recommendations"))}</h3>
-                            <ul class="pt-detail-list">
-                                ${recoms.map(r => `
-                                    <li>
-                                        <span class="pt-detail-tag">${escapeHtml(tLang("Tip", "Tip"))}</span>
-                                        <div class="pt-detail-text">${escapeHtml(r)}</div>
-                                    </li>
-                                `).join("")}
-                            </ul>
-                        </section>
-                        ` : ""}
+                            ${(macros.carbohidratos || macros.proteinas || macros.grasas) ? `
+                            <section style="margin-bottom:20px;">
+                                <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Distribución de Macros", "Macro Distribution"))}</h3>
+                                <div class="pt-sheet-list">
+                                    <div class="pt-sheet-item">
+                                        <div class="pt-sheet-item-title">${escapeHtml(tLang("Carbohidratos", "Carbs"))}</div>
+                                        <div class="pt-sheet-item-right">${macros.carbohidratos}%</div>
+                                    </div>
+                                    <div class="pt-sheet-item">
+                                        <div class="pt-sheet-item-title">${escapeHtml(tLang("Proteínas", "Proteins"))}</div>
+                                        <div class="pt-sheet-item-right">${macros.proteinas}%</div>
+                                    </div>
+                                    <div class="pt-sheet-item">
+                                        <div class="pt-sheet-item-title">${escapeHtml(tLang("Grasas", "Fats"))}</div>
+                                        <div class="pt-sheet-item-right">${macros.grasas}%</div>
+                                    </div>
+                                </div>
+                            </section>
+                            ` : ""}
+                        </div>
 
-                        ${tips.length ? `
-                        <section>
-                            <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Tips del Día", "Daily Tips"))}</h3>
-                            <ul class="pt-detail-list">
-                                ${tips.map(t => `
-                                    <li>
-                                        <span class="pt-detail-tag" style="background:rgba(182, 168, 255, 0.15); border-color:rgba(182, 168, 255, 0.3); color:#B6A8FF;">IDE</span>
-                                        <div class="pt-detail-text">${escapeHtml(t)}</div>
-                                    </li>
-                                `).join("")}
-                            </ul>
-                        </section>
-                        ` : ""}
+                        <div class="pt-detail-diet-col2">
+                            ${recoms.length ? `
+                            <section style="margin-bottom:20px;">
+                                <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Recomendaciones", "Recommendations"))}</h3>
+                                <ul class="pt-detail-list">
+                                    ${recoms.map(r => `
+                                        <li>
+                                            <span class="pt-detail-tag">${escapeHtml(tLang("Tip", "Tip"))}</span>
+                                            <div class="pt-detail-text">${escapeHtml(r)}</div>
+                                        </li>
+                                    `).join("")}
+                                </ul>
+                            </section>
+                            ` : ""}
+
+                            ${tips.length ? `
+                            <section>
+                                <h3 class="pt-sheet-section-title">${escapeHtml(tLang("Tips del Día", "Daily Tips"))}</h3>
+                                <ul class="pt-detail-list">
+                                    ${tips.map(t => `
+                                        <li>
+                                            <span class="pt-detail-tag" style="background:rgba(182, 168, 255, 0.15); border-color:rgba(182, 168, 255, 0.3); color:#B6A8FF;">IDE</span>
+                                            <div class="pt-detail-text">${escapeHtml(t)}</div>
+                                        </li>
+                                    `).join("")}
+                                </ul>
+                            </section>
+                            ` : ""}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -649,8 +656,10 @@ const initDetallePorDiaPlanAliment = (contenedor) => {
         await globalThis.PTBottomSheet.open({
             title: "",
             ariaLabel: `${tLang("Detalle del día", "Day detail")}: ${diaInfo.dia}`,
+            className: "pt-diet-day-detail-sheet",
             html,
             closeText: tLang("Cerrar", "Close"),
+            triggerEl: headerEl,
             didOpen: (sheet) => {
                 try { globalThis.UIIdioma?.translatePage?.(sheet); } catch {}
             },
@@ -700,8 +709,10 @@ const initDetallePorDiaPlanAliment = (contenedor) => {
         await globalThis.PTBottomSheet.open({
             title: titleText,
             ariaLabel: ariaLabelText,
+            className: "pt-food-detail-sheet",
             html,
             closeText,
+            triggerEl: cardEl,
             didOpen: (sheet) => {
                 try {
                     globalThis.UIIdioma?.translatePage?.(sheet);
@@ -938,7 +949,7 @@ const initPlanDiaPagerAliment = (scroller) => {
     };
 };
 
-const openGenerarPlanAlimentModal = async (ctx, planPrevioRaw = null) => {
+const openGenerarPlanAlimentModal = async (ctx, planPrevioRaw = null, triggerEl = null) => {
     const baseObjetivo = localStorage.getItem("dieta_objetivo") || "mantener";
     const baseIntensidad = localStorage.getItem("dieta_intensidad") || "media";
 
@@ -1000,6 +1011,7 @@ const openGenerarPlanAlimentModal = async (ctx, planPrevioRaw = null) => {
                 allowOutsideClose: true,
                 allowEscapeClose: true,
                 allowDragClose: true,
+                triggerEl,
                 didOpen: (sheet) => {
                     try {
                         globalThis.UIIdioma?.translatePage?.(sheet);
@@ -1007,11 +1019,13 @@ const openGenerarPlanAlimentModal = async (ctx, planPrevioRaw = null) => {
                         // ignore
                     }
 
-                    const header = sheet.querySelector(".pt-sheet-header");
-                    if (header) {
+                    const ptGen = sheet.querySelector(".pt-gen");
+                    if (ptGen) {
                         const btn = document.createElement("button");
                         btn.type = "button";
                         btn.className = "btn-primary";
+                        btn.style.width = "100%";
+                        btn.style.marginTop = "20px";
                         btn.textContent = tLang("Generar", "Generate");
                         btn.addEventListener("click", () => {
                             const objetivo = sheet.querySelector('input[name="objetivo"]:checked')?.value;
@@ -1042,7 +1056,7 @@ const openGenerarPlanAlimentModal = async (ctx, planPrevioRaw = null) => {
                             safeResolve({ objetivo, intensidad });
                             closeBottomSheetSafe();
                         });
-                        header.appendChild(btn);
+                        ptGen.appendChild(btn);
                     }
 
                     const obj = sheet.querySelector(`input[name="objetivo"][value="${CSS.escape(baseObjetivo)}"]`);
@@ -1269,7 +1283,7 @@ const verificacion_plan_alimentacion = (ctx) => {
             boton.style.width = "auto";
             boton.style.height = "auto";
             boton.onclick = async () => {
-                await openGenerarPlanAlimentModal(ctx);
+                await openGenerarPlanAlimentModal(ctx, null, boton);
             };
         }
     }
@@ -1560,6 +1574,7 @@ const bindUiHandlers = (ctx) => {
                 "The current plan will be deleted and a new one will be generated based on your previous settings."
             ),
             confirmText: tLang("Sí, regenerar", "Yes, regenerate"),
+            triggerEl: ctx?.botonRegenerar,
         });
         if (!ok) return;
 
@@ -1567,7 +1582,7 @@ const bindUiHandlers = (ctx) => {
             localStorage.setItem("plan_dieta_usuario", "Ninguno");
             await actualizar_cambios_plan_alimentacion("Ninguno");
             verificacion_plan_alimentacion(ctx);
-            await openGenerarPlanAlimentModal(ctx, null);
+            await openGenerarPlanAlimentModal(ctx, null, ctx?.botonRegenerar);
         } catch (e) {
             await openStatusSheet({
                 title: tLang("Error", "Error"),

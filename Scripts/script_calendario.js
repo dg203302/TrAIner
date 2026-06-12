@@ -42,6 +42,7 @@ const openConfirmSheet = async ({
     message,
     okText,
     cancelText,
+    triggerEl = null,
 }) => {
     const safeTitle = title || tLang("Confirmar", "Confirm");
     const safeMessage = message || "";
@@ -64,6 +65,7 @@ const openConfirmSheet = async ({
             title: safeTitle,
             subtitle: "",
             ariaLabel: safeTitle,
+            triggerEl,
             showClose: false,
             showHandle: true,
             allowOutsideClose: true,
@@ -247,7 +249,7 @@ const buildRegistroMeta = (registro, index) => {
     };
 };
 
-const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha) => {
+const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, triggerEl = null) => {
     const fechaLarga = formatearFechaLarga(fechaIso);
     const itemsHtml = registrosDelDia.length
         ? registrosDelDia.map((registro, index) => {
@@ -308,12 +310,14 @@ const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro,
         title: tLang("Detalle del día", "Day detail"),
         subtitle: fechaLarga,
         ariaLabel: tLang("Detalle del día", "Day detail"),
+        className: "pt-calendar-day-detail-sheet",
         html,
         showClose: false,
         showHandle: true,
         allowOutsideClose: true,
         allowEscapeClose: true,
         allowDragClose: true,
+        triggerEl,
         didOpen: (sheet) => {
             try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
 
@@ -328,6 +332,7 @@ const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro,
                         message: tLang("¿Eliminar este registro de entreno?", "Delete this workout record?"),
                         okText: tLang("Eliminar", "Delete"),
                         cancelText: tLang("Cancelar", "Cancel"),
+                        triggerEl: btn,
                     });
                     if (!ok) return;
 
@@ -337,7 +342,7 @@ const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro,
                     try { globalThis.PTBottomSheet?.close?.(); } catch { }
 
                     const nuevosRegistrosDia = getRegistrosByFecha(fechaIso);
-                    await renderDetalleEntreno(fechaIso, nuevosRegistrosDia, onDeleteRegistro, getRegistrosByFecha);
+                    await renderDetalleEntreno(fechaIso, nuevosRegistrosDia, onDeleteRegistro, getRegistrosByFecha, triggerEl);
                 });
             });
         },
@@ -922,7 +927,7 @@ async function initCalendario() {
         dateClick: async (info) => {
             const fechaIso = info.dateStr;
             const registrosDelDia = getRegistrosByFecha(fechaIso);
-            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha);
+            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, info.dayEl);
         },
         eventClick: async (info) => {
             info.jsEvent?.preventDefault?.();
@@ -934,7 +939,7 @@ async function initCalendario() {
                 start: fechaIso,
                 extendedProps: info.event.extendedProps,
             }, 0)];
-            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha);
+            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, info.el);
         },
     });
 

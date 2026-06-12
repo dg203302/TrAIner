@@ -1305,6 +1305,7 @@ function verificacion_plan_entrenamiento() {
                 await window.PTBottomSheet.open({
                     title,
                     ariaLabel: title,
+                    triggerEl: boton_ejercicios,
                     html: `
                         <div class="pt-status">
                             <div class="pt-status-row">
@@ -2173,9 +2174,14 @@ function initDetallePorDiaPlan() {
                                 <div class="pt-wheel-col-label">${escapeHtml(tLang("Minutos", "Minutes"))}</div>
                                 <div class="pt-wheel" data-pt-wheel="tiempo_minutos" tabindex="0" aria-label="${escapeHtml(tLang("Minutos", "Minutes"))}"></div>
                             </div>
+                            <div class="pt-wheel-col">
+                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Segundos", "Seconds"))}</div>
+                                <div class="pt-wheel" data-pt-wheel="tiempo_segundos" tabindex="0" aria-label="${escapeHtml(tLang("Segundos", "Seconds"))}"></div>
+                            </div>
                         </div>
                         <input type="hidden" data-pt-tiempo_horas value="0">
                         <input type="hidden" data-pt-tiempo_minutos value="0">
+                        <input type="hidden" data-pt-tiempo_segundos value="0">
                         <input type="hidden" data-pt-tiempo value="${escapeHtml(tiempoPrevio)}">
                     </div>
                 </div>
@@ -2198,7 +2204,9 @@ function initDetallePorDiaPlan() {
             title: tLang("Registrar entreno", "Register workout"),
             subtitle: dia_ent || tLang("Detalle del día", "Day detail"),
             ariaLabel: tLang("Registrar entreno", "Register workout"),
+            className: "pt-detalle-entreno-sheet",
             html: sheetHtml,
+            triggerEl: headerEl,
             showClose: false,
             showHandle: true,
             allowOutsideClose: true,
@@ -2221,28 +2229,34 @@ function initDetallePorDiaPlan() {
                 buildSheetWheel({
                     root: sheet,
                     field: "calorias",
-                    values: Array.from({ length: 1001 }, (_, i) => i * 5),
+                    values: Array.from({ length: 3001 }, (_, i) => i),
                     format: (value) => `${value} kcal`,
                     initialValue: caloriasEl?.value ?? "",
                 });
 
                 const horasEl = sheet.querySelector("[data-pt-tiempo_horas]");
                 const minutosEl = sheet.querySelector("[data-pt-tiempo_minutos]");
-                const totalMinInicial = Number.parseInt(String(tiempoEl?.value ?? "").trim(), 10);
+                const segundosEl = sheet.querySelector("[data-pt-tiempo_segundos]");
+                const totalMinInicial = Number.parseFloat(String(tiempoEl?.value ?? "").trim());
                 const horasIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
                     ? Math.floor(totalMinInicial / 60)
                     : 0;
                 const minutosIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
-                    ? (totalMinInicial % 60)
+                    ? Math.floor(totalMinInicial % 60)
+                    : 0;
+                const segundosIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
+                    ? Math.round((totalMinInicial % 1) * 60)
                     : 0;
 
                 const syncTiempoTotalMin = () => {
                     const horas = Number.parseInt(String(horasEl?.value ?? "0").trim(), 10);
                     const minutos = Number.parseInt(String(minutosEl?.value ?? "0").trim(), 10);
+                    const segundos = Number.parseInt(String(segundosEl?.value ?? "0").trim(), 10);
                     const h = Number.isFinite(horas) && horas >= 0 ? horas : 0;
                     const m = Number.isFinite(minutos) && minutos >= 0 ? minutos : 0;
+                    const s = Number.isFinite(segundos) && segundos >= 0 ? segundos : 0;
                     if (tiempoEl instanceof HTMLInputElement) {
-                        tiempoEl.value = String((h * 60) + m);
+                        tiempoEl.value = String((h * 60) + m + (s / 60));
                     }
                 };
 
@@ -2268,11 +2282,22 @@ function initDetallePorDiaPlan() {
                     inputSelector: "[data-pt-tiempo_minutos]",
                 });
 
+                buildSheetWheel({
+                    root: sheet,
+                    field: "tiempo_segundos",
+                    values: Array.from({ length: 60 }, (_, i) => i),
+                    format: (value) => `${String(value).padStart(2, "0")} s`,
+                    initialValue: String(Math.min(59, Math.max(0, segundosIniciales))),
+                    includeEmpty: false,
+                    onChange: syncTiempoTotalMin,
+                    inputSelector: "[data-pt-tiempo_segundos]",
+                });
+
                 syncTiempoTotalMin();
 
                 btnConfirmar?.addEventListener("click", async () => {
                     const caloriasQuemadas = Number.parseInt(String(caloriasEl?.value ?? "").trim(), 10);
-                    const tiempoTotalMin = Number.parseInt(String(tiempoEl?.value ?? "").trim(), 10);
+                    const tiempoTotalMin = Number.parseFloat(String(tiempoEl?.value ?? "").trim());
 
                     if (!Number.isFinite(caloriasQuemadas) || caloriasQuemadas < 0) {
                         await openStatusSheet({
@@ -2587,31 +2612,20 @@ function initDetallePorDiaPlan() {
             },
         };
 
-        const buildDetailedHtml = (nombreEjercicio) => {
-            const lang = tLang("es", "en");
-            const key = _stripKey(nombreEjercicio);
-            const detalle = EJERCICIOS_DETALLE[key];
+        const lang = tLang("es", "en");
+        const key = _stripKey(ex.nombre);
+        const detalle = EJERCICIOS_DETALLE[key];
 
-            let tecnica, sobrecarga, respiracion;
-            if (detalle && detalle[lang]) {
-                tecnica = detalle[lang].tecnica;
-                sobrecarga = detalle[lang].sobrecarga;
-                respiracion = detalle[lang].respiracion;
-            } else {
-                // Fallback genérico
-                tecnica = tLang("Mantener postura neutra, rango completo y control en la fase excéntrica.", "Maintain neutral posture, full range of motion, and control the eccentric phase.");
-                sobrecarga = tLang("Aumentar 2-5% de carga o 1-2 reps cuando completes el rango objetivo durante 1-2 sesiones.", "Add 2-5% weight or 1-2 reps once you hit the target range for 1-2 sessions.");
-                respiracion = tLang("Inhala en la fase excéntrica; exhala en la fase concéntrica.", "Inhale on the eccentric phase; exhale on the concentric phase.");
-            }
-
-            return `
-                        <ul class="plan-detailed-list pt-detail-list">
-                            <li><span class="pt-detail-tag">${escapeHtml(tLang("Técnica", "Technique"))}</span><span class="pt-detail-text">${escapeHtml(tecnica)}</span></li>
-                            <li><span class="pt-detail-tag">${escapeHtml(tLang("Sobrecarga", "Progression"))}</span><span class="pt-detail-text">${escapeHtml(sobrecarga)}</span></li>
-                            <li><span class="pt-detail-tag">${escapeHtml(tLang("Respiración", "Breathing"))}</span><span class="pt-detail-text">${escapeHtml(respiracion)}</span></li>
-                        </ul>
-                    `;
-        };
+        let tecnica, sobrecarga, respiracion;
+        if (detalle && detalle[lang]) {
+            tecnica = detalle[lang].tecnica;
+            sobrecarga = detalle[lang].sobrecarga;
+            respiracion = detalle[lang].respiracion;
+        } else {
+            tecnica = tLang("Mantener postura neutra, rango completo y control en la fase excéntrica.", "Maintain neutral posture, full range of motion, and control the eccentric phase.");
+            sobrecarga = tLang("Aumentar 2-5% de carga o 1-2 reps cuando completes el rango objetivo durante 1-2 sesiones.", "Add 2-5% weight or 1-2 reps once you hit the target range for 1-2 sessions.");
+            respiracion = tLang("Inhala en la fase excéntrica; exhala en la fase concéntrica.", "Inhale on the eccentric phase; exhale on the concentric phase.");
+        }
 
         const nombreEs = escapeHtml(ex.nombre);
         const nombreEn = escapeHtml(ex.nombre_en ?? ex.nombre);
@@ -2619,7 +2633,6 @@ function initDetallePorDiaPlan() {
         const series = escapeHtml(ex.series);
         const reps = escapeHtml(formatReps(ex.repeticiones));
         const descanso = escapeHtml(ex.descanso_segundos);
-        const detailedHtml = buildDetailedHtml(ex.nombre);
 
         let gifsDict = window.__gifs_cache;
         if (!gifsDict) {
@@ -2659,42 +2672,168 @@ function initDetallePorDiaPlan() {
             }
         }
 
+        // Helper to find muscle group category
+        const getMuscleGroupOfExercise = (name) => {
+            const norm = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+            const target = norm(name);
+            for (const [group, list] of Object.entries(globalThis.EJERCICIOS_INDICE || {})) {
+                if (Array.isArray(list)) {
+                    const found = list.some(exName => norm(exName) === target || target.includes(norm(exName)) || norm(exName).includes(target));
+                    if (found) return group;
+                }
+            }
+            return null;
+        };
+
+        const translateMuscleGroupToEnglish = (g) => {
+            const m = {
+                "Pecho": "Chest",
+                "Espalda": "Back",
+                "Piernas": "Legs",
+                "Hombros": "Shoulders",
+                "Brazos": "Arms",
+                "Triceps": "Triceps",
+                "Abdomen": "Abs",
+                "Cardio": "Cardio"
+            };
+            return m[g] ?? g;
+        };
+
+        const group = getMuscleGroupOfExercise(ex.nombre);
+        const tags = [];
+        if (group) {
+            tags.push(tLang(group, translateMuscleGroupToEnglish(group)));
+        } else {
+            tags.push(tLang("Fuerza", "Strength"));
+        }
+        const entorno = ex.entorno ?? (() => {
+            try {
+                return JSON.parse(localStorage.getItem("plan_entreno_usuario"))?.plan_entrenamiento_hipertrofia?.usuario?.entorno;
+            } catch {
+                return null;
+            }
+        })() ?? "gym";
+        tags.push(tLang(entorno === "gym" ? "Gimnasio" : "Casa", entorno === "gym" ? "Gym" : "Home"));
+
+        const formattedTitle = (() => {
+            const name = isEnglish() ? nombreEn : nombreEs;
+            const words = name.trim().split(/\s+/);
+            if (words.length <= 1) {
+                return `<span class="pt-new-title-accent">${name}.</span>`;
+            }
+            const lastWord = words.pop();
+            const remaining = words.join(" ");
+            return `${remaining} <br/><span class="pt-new-title-accent">${lastWord}.</span>`;
+        })();
+
+        const activeThemeColor = localStorage.getItem("ui_background_color") || "red";
+
         const html = `
-            <div class="pt-detail" style="position: relative;">
+            <div class="pt-new-detail theme-${activeThemeColor}">
                 ${gifUrl ? `
-                <div style="position: absolute; top: -15px; left: -20px; right: -20px; height: 460px; z-index: -1; pointer-events: none; mask-image: linear-gradient(to bottom, black 30%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%); border-top-left-radius: 24px; border-top-right-radius: 24px; overflow: hidden;">
-                    <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.65; mix-blend-mode: luminosity;" />
-                </div>
+                    <div class="pt-new-detail-gif-hero">
+                        <img src="${gifUrl}" alt="" class="pt-new-detail-hero-img" />
+                        <div class="pt-new-detail-hero-overlay"></div>
+                    </div>
                 ` : ""}
-                <div class="pt-detail-hero" style="position: relative; z-index: 1; padding-top: ${gifUrl ? '240px' : '20px'}; text-align: center;">
-                    <div class="pt-detail-hero-row" style="margin-bottom:12px; justify-content: center;">
-                        <h2 class="pt-detail-hero-title pt-detail-ex" data-i18n-en="${nombreEn}" style="font-size: 32px; font-weight: 900; letter-spacing: -0.8px; line-height: 1.1; text-shadow: 0 4px 16px rgba(0,0,0,0.9); margin: 0;">${nombreEs}</h2>
+
+                <div class="pt-new-detail-content-wrapper">
+                    <!-- Left Column -->
+                    <div class="pt-new-detail-left-col">
+                        <!-- Bento Box Grid - Horizontal Stats -->
+                        <div class="pt-bento-grid-horizontal">
+                            <!-- Series -->
+                            <div class="pt-bento-stat">
+                                <div class="pt-bento-stat-glow"></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-bento-stat-icon"><path d="m12 3-10 5 10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+                                <span class="pt-bento-stat-val">${series}</span>
+                                <span class="pt-bento-stat-label">${escapeHtml(tLang("Series", "Sets"))}</span>
+                            </div>
+
+                            <!-- Reps -->
+                            <div class="pt-bento-stat">
+                                <div class="pt-bento-stat-glow"></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-bento-stat-icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                                <span class="pt-bento-stat-val">${reps}</span>
+                                <span class="pt-bento-stat-label">${escapeHtml(tLang("Reps", "Reps"))}</span>
+                            </div>
+
+                            <!-- Descanso -->
+                            <div class="pt-bento-stat">
+                                <div class="pt-bento-stat-glow"></div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-bento-stat-icon"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="12" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+                                <span class="pt-bento-stat-val">${descanso}s</span>
+                                <span class="pt-bento-stat-label">${escapeHtml(tLang("Descanso", "Rest"))}</span>
+                            </div>
+                        </div>
+
+                        <!-- Tags Row -->
+                        <div class="pt-new-tags-row">
+                            ${tags.map(tag => `<span class="pt-bento-tag">${escapeHtml(tag)}</span>`).join("")}
+                        </div>
+
+                        <!-- Title & Description Section -->
+                        <div class="pt-new-title-section">
+                            <h1 class="pt-new-title">
+                                ${formattedTitle}
+                            </h1>
+                            ${descripcion ? `
+                                <p class="pt-new-desc">
+                                    ${descripcion}
+                                </p>
+                            ` : ""}
+                        </div>
                     </div>
-                    ${descripcion ? `<div class="pt-detail-hero-sub pt-detail-desc" style="white-space:normal; margin-bottom:24px; font-size: 15.5px; color: rgba(255,255,255,0.85); text-shadow: 0 2px 8px rgba(0,0,0,0.9); max-width: 90%; margin-left: auto; margin-right: auto; line-height: 1.4;">${descripcion}</div>` : ""}
-                    
-                    <div class="plan-meta pt-detail-meta" style="display: flex; flex-wrap: wrap; justify-content: space-evenly; gap: 8px; margin-bottom: 28px; background: rgba(0,0,0,0.45); padding: 18px 8px; border-radius: 22px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><rect x="4" y="4" width="16" height="6" rx="2" /><rect x="4" y="14" width="16" height="6" rx="2" /></svg>
-                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${series}</strong>
-                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Series", "Sets"))}</span>
+
+                    <!-- Right Column -->
+                    <div class="pt-new-detail-right-col">
+                        <!-- Info Modules Section -->
+                        <div class="pt-new-modules">
+                            <!-- Técnica Card -->
+                            <div class="pt-new-card">
+                                <div class="pt-new-card-icon-wrap">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-new-card-icon"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" x2="17" y1="12" y2="12"/></svg>
+                                </div>
+                                <div class="pt-new-card-content">
+                                    <h3 class="pt-new-card-title">
+                                        ${escapeHtml(tLang("Puntos de Técnica", "Technique Points"))}
+                                    </h3>
+                                    <p class="pt-new-card-text">
+                                        ${escapeHtml(tecnica)}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Sobrecarga Card -->
+                            <div class="pt-new-card">
+                                <div class="pt-new-card-icon-wrap accented">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-new-card-icon accented"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                                </div>
+                                <div class="pt-new-card-content">
+                                    <h3 class="pt-new-card-title accented">
+                                        ${escapeHtml(tLang("Progresión (Sobrecarga)", "Progression (Overload)"))}
+                                    </h3>
+                                    <p class="pt-new-card-text">
+                                        ${escapeHtml(sobrecarga)}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Respiración Card -->
+                            <div class="pt-new-card">
+                                <div class="pt-new-card-icon-wrap">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pt-new-card-icon"><path d="M9.59 4.59A2 2 0 1 1 11 8H2"/><path d="M12.59 19.41A2 2 0 1 0 14 16H2"/><path d="M15.73 9.73A2.5 2.5 0 1 1 18 14H2"/></svg>
+                                </div>
+                                <div class="pt-new-card-content">
+                                    <h3 class="pt-new-card-title">
+                                        ${escapeHtml(tLang("Respiración", "Breathing"))}
+                                    </h3>
+                                    <p class="pt-new-card-text">
+                                        ${escapeHtml(respiracion)}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="4" /></svg>
-                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${reps}</strong>
-                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Reps", "Reps"))}</span>
-                        </div>
-                        <div style="width: 1px; background: rgba(255,255,255,0.15); align-self: stretch;"></div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 80px;">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
-                            <strong style="font-size: 19px; color: #fff; line-height: 1;">${descanso}s</strong>
-                            <span style="font-size: 11.5px; color: rgba(255,255,255,0.65); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Descanso", "Rest"))}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-detail-body" style="position: relative; z-index: 1;">
-                    <div class="plan-detalle-viewport pt-detail-viewport" style="overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;flex:1;padding:0 8px 16px 8px;">
-                        ${detailedHtml}
                     </div>
                 </div>
             </div>
@@ -2718,8 +2857,10 @@ function initDetallePorDiaPlan() {
         await globalThis.PTBottomSheet.open({
             title: "",
             ariaLabel: `${tLang("Detalle", "Details")}: ${nombreEs}`,
+            className: "pt-new-detail-sheet",
             html,
             closeText,
+            triggerEl: cardEl,
             didOpen: (sheet) => {
                 const root = sheet instanceof HTMLElement ? sheet : document.body;
                 try {
