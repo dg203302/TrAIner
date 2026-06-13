@@ -6,6 +6,24 @@ const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession
 const username = localStorage.getItem("username_usuario");
 const avatar = localStorage.getItem("avatar_usuario");
 
+const getColorWithOpacity = (varName, alpha = 1, defaultHex = '#ff073a') => {
+    try {
+        const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || defaultHex;
+        const hex = val.replace(/^#/, '');
+        if (hex.length === 6) {
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            if (Number.isInteger(r) && Number.isInteger(g) && Number.isInteger(b)) {
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
+    return `rgba(255, 7, 58, ${alpha})`;
+};
+
 const getIdiomaPreferido = () => {
     try {
         const v = globalThis.UIIdioma?.getIdioma?.();
@@ -668,8 +686,8 @@ async function initCalendario() {
 
         // Bars
         const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
-        grad.addColorStop(0, 'rgba(255, 7, 58, 0.9)');
-        grad.addColorStop(1, 'rgba(255, 7, 58, 0.25)');
+        grad.addColorStop(0, getColorWithOpacity('--accent', 0.9, '#ff073a'));
+        grad.addColorStop(1, getColorWithOpacity('--accent', 0.25, '#ff073a'));
 
         data.forEach((val, i) => {
             const barH = (val / maxVal) * plotH;
@@ -712,8 +730,8 @@ async function initCalendario() {
 
         // Area fill
         const gradFill = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
-        gradFill.addColorStop(0, 'rgba(158,255,203,0.25)');
-        gradFill.addColorStop(1, 'rgba(158,255,203,0.02)');
+        gradFill.addColorStop(0, getColorWithOpacity('--accent2', 0.25, '#ff3b65'));
+        gradFill.addColorStop(1, getColorWithOpacity('--accent2', 0.02, '#ff3b65'));
         ctx.beginPath();
         ctx.moveTo(pad.l, pad.t + plotH);
         data.forEach((val, i) => {
@@ -727,7 +745,7 @@ async function initCalendario() {
         ctx.fill();
 
         // Line
-        ctx.strokeStyle = '#ff073a';
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
         ctx.lineWidth = 2;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -746,7 +764,7 @@ async function initCalendario() {
             const y = pad.t + plotH - (val / maxVal) * plotH;
             ctx.beginPath();
             ctx.arc(x, y, 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = '#ff073a';
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
             ctx.fill();
         });
 
@@ -782,9 +800,12 @@ async function initCalendario() {
             const startAngle = -Math.PI / 2;
             const endAngle = startAngle + pctActive * Math.PI * 2;
             const grad = ctx.createConicGradient(startAngle, cx, cy);
-            grad.addColorStop(0, '#ff073a');
-            grad.addColorStop(pctActive * 0.7, '#ff3b65');
-            grad.addColorStop(pctActive, '#cc062e');
+            const activeColor1 = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
+            const activeColor2 = getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#ff3b65';
+            const activeColor3 = getComputedStyle(document.documentElement).getPropertyValue('--accent3').trim() || '#cc062e';
+            grad.addColorStop(0, activeColor1);
+            grad.addColorStop(pctActive * 0.7, activeColor2);
+            grad.addColorStop(pctActive, activeColor3);
             ctx.beginPath();
             ctx.arc(cx, cy, radius, startAngle, endAngle);
             ctx.lineWidth = lineW;
@@ -809,7 +830,7 @@ async function initCalendario() {
         ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
         // Active legend
-        ctx.fillStyle = '#ff073a';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
         ctx.beginPath(); ctx.arc(cx - 48, legY, 4, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.58)';
         ctx.textAlign = 'left';
@@ -914,8 +935,8 @@ async function initCalendario() {
         },
         eventContent: (arg) => {
             const status = arg.event.extendedProps.status || "otro";
-            const color = status === "completado" ? "#ff073a" : "#d0c9c3";
-            const shadow = status === "completado" ? "rgba(255,7,58,0.6)" : "rgba(208,201,195,0.6)";
+            const color = status === "completado" ? (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#ff073a") : "#d0c9c3";
+            const shadow = status === "completado" ? getColorWithOpacity('--accent', 0.6, '#ff073a') : "rgba(208,201,195,0.6)";
             return {
                 html: `
                     <div style="display:flex;justify-content:center;margin-top:2px;">

@@ -123,8 +123,8 @@
         }
         .fc .fc-button-primary:not(:disabled):active,
         .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background-color: #ff073a !important;
-            border-color: #ff073a !important;
+            background-color: var(--my-primary) !important;
+            border-color: var(--my-primary) !important;
             color: #000 !important;
         }
 
@@ -182,9 +182,9 @@
 
         /* Today highlight */
         .fc-day-today .fc-daygrid-day-number {
-            background: #ff073a !important;
+            background: var(--my-primary) !important;
             color: #000 !important;
-            box-shadow: 0 4px 14px color-mix(in srgb, #ff073a 50%, transparent);
+            box-shadow: 0 4px 14px color-mix(in srgb, var(--my-primary) 50%, transparent);
         }
 
         /* Other month days */
@@ -562,124 +562,91 @@
         }
 
         /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        /* Generic footer button reset */
         .footer-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 0;
-            border: none;
-            background: transparent;
-            text-decoration: none;
-            cursor: pointer;
-            flex: 0 0 auto;
-            max-width: 90px;
-            transition: opacity .15s ease;
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0 !important;
+            padding: 8px 12px !important;
+            border-radius: 999px !important;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            max-width: none !important;
+            width: auto !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
         }
 
-        .footer-btn:active {
-            opacity: .72;
-            transform: scale(0.96);
-        }
-
-        /* Icon wrapper */
         .footer-btn-icon {
-            width: 48px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--my-radius-sm);
-            transition: background .18s ease;
+            width: 36px !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            transition: background 0.2s ease !important;
+            flex-shrink: 0 !important;
         }
 
         .footer-btn-icon img,
         .footer-btn-icon svg {
-            width: 22px;
-            height: 22px;
-            opacity: .55;
-            display: block;
-            transition: opacity .18s ease;
+            width: 20px !important;
+            height: 20px !important;
+            opacity: 0.6 !important;
+            transition: opacity 0.2s ease !important;
+            filter: none !important;
         }
 
-        /* Label */
+        /* Profile avatar circular styling */
+        .footer-btn-icon img#icono_usuario {
+            position: static !important;
+            width: 20px !important;
+            height: 20px !important;
+            opacity: 1 !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            -webkit-mask-image: none !important;
+            mask-image: none !important;
+            pointer-events: auto !important;
+            z-index: 1 !important;
+        }
+        /* Label styling */
         .footer-btn-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .3px;
-            color: rgba(255, 255, 255, .45);
-            line-height: 1;
-            transition: color .18s ease;
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            letter-spacing: .2px !important;
+            color: rgba(255, 255, 255, 0.95) !important;
+            max-width: 0 !important;
+            opacity: 0 !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+            transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, margin-left 0.3s ease !important;
+            margin-left: 0 !important;
+            line-height: 1 !important;
         }
 
-        /* Active state */
-        .footer-btn.is-active .footer-btn-icon {
-            background: rgba(255, 255, 255, 0.10);
+        /* Active button style (Pill layout) */
+        .footer-btn.is-active {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            padding: 8px 16px 8px 12px !important;
+            gap: 6px !important;
         }
 
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
-            opacity: 1;
-            filter: none;
+            opacity: 1 !important;
         }
 
         .footer-btn.is-active .footer-btn-label {
-            color: rgba(255, 255, 255, 0.90);
+            max-width: 100px !important;
+            opacity: 1 !important;
+            margin-left: 2px !important;
         }
 
-        /* Profile special item: show avatar + name side-by-side */
-        .footer-btn--profile {
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
-            justify-content: flex-start;
-            padding: 4px 10px 4px 4px;
-            border-radius: var(--my-radius-pill);
-            border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
-            max-width: 160px;
-            flex: 0 0 auto;
-            text-decoration: none;
-        }
 
-        .footer-btn--profile:hover {
-            background: var(--my-glass-hover);
-        }
-
-        .footer-profile-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--my-radius-pill);
-            border: 1.5px solid rgba(255, 255, 255, 0.18);
-            object-fit: cover;
-            flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.10);
-        }
-
-        .footer-profile-text {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            min-width: 0;
-        }
-
-        .footer-profile-name {
-            margin: 0;
-            font-size: 12px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, .88);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
-        }
-
-        .footer-profile-sub {
-            font-size: 10px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, .45);
-        }
         /* Estadísticas (tarjetas) */
         .pt-stats {
             margin-top: 20px;
@@ -733,6 +700,28 @@
         .pt-chart-panel[data-chart-idx="1"]::-webkit-scrollbar,
         .pt-chart-panel[data-chart-idx="2"]::-webkit-scrollbar {
             display: none;
+        }
+
+        @media (min-width: 901px) {
+            .pt-charts-swipe {
+                flex-wrap: wrap !important;
+            }
+            .pt-chart-panel[data-chart-idx="0"] {
+                flex: 1 1 calc(60% - 8px) !important;
+            }
+            .pt-chart-panel[data-chart-idx="1"] {
+                flex: 1 1 calc(40% - 8px) !important;
+            }
+            .pt-chart-panel[data-chart-idx="2"] {
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                overflow-y: visible !important;
+                padding-right: 0 !important;
+                margin-top: 16px !important;
+            }
+            .pt-stats-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
         }
 
         .pt-charts-dots {
@@ -935,23 +924,23 @@
         }
 
         .pt-stat-card--primary .pt-stat-value {
-            color: #ff073a;
+            color: var(--accent);
         }
 
         .pt-stat-card--performance .pt-stat-value {
-            color: #ff3b65;
+            color: var(--accent2);
         }
 
         .pt-stat-card--consistency .pt-stat-value {
-            color: #cc062e;
+            color: var(--accent3);
         }
 
         .pt-stat-card--progress .pt-stat-value {
-            color: #ff073a;
+            color: var(--accent);
         }
 
         .pt-stat-card--projection .pt-stat-value {
-            color: #ff3b65;
+            color: var(--accent2);
         }
 
         @media (max-width: 400px) {
@@ -1002,25 +991,7 @@
 <body>
 
     <header>
-        <div>
-        <!-- Help bottom-sheet trigger -->
-        <!-- User profile pill -->
-        <a id="usuario" href="/Templates/Inicio/perfil_usuario.html" aria-label="Ir a Perfil"
-        data-i18n-en-aria-label="Go to profile" class="translucent-bar">
-        <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar"
-        id="icono_usuario">
-        <div class="header-user-text">
-            <h2 id="welcome_msg">...</h2>
-            <span id="username">...</span>
-        </div>
-        </a>
-        <a id="btn-ayuda-sheet" aria-label="Ayuda"
-        data-i18n-en-aria-label="Help" class="translucent-bar">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyay1pY29uIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyayI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+"
-            alt="" aria-hidden="true">
-            <span class="sr-only" data-i18n-en="Help">Ayuda</span>
-        </a>
-    </div>
+        <div></div>
     </header>
 
     <main>
@@ -1078,27 +1049,47 @@
     </main>
 
     <footer id="footer_dashboard" class="footer-wrap">
-    <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
+        <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
 
-        <!-- Entreno -->
-        <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Plan de Entreno"
-            data-i18n-en-aria-label="Training plan">
-            <div class="footer-btn-icon">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ob3VzZS1pY29uIGx1Y2lkZS1ob3VzZSI+PHBhdGggZD0iTTE1IDIxdi04YTEgMSAwIDAgMC0xLTFoLTRhMSAxIDAgMCAwLTEgMXY4Ii8+PHBhdGggZD0iTTMgMTBhMiAyIDAgMCAxIC43MDktMS41MjhsNy02YTIgMiAwIDAgMSAyLjU4MiAwbDcgNkEyIDIgMCAwIDEgMjEgMTB2OWEyIDIgMCAwIDEtMiAySDVhMiAyIDAgMCAxLTItMnoiLz48L3N2Zz4="
-                    alt="" aria-hidden="true">
-            </div>
-        </a>
+            <!-- Inicio -->
+            <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
+                data-i18n-en-aria-label="Home">
+                <div class="footer-btn-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ob3VzZS1pY29uIGx1Y2lkZS1ob3VzZSI+PHBhdGggZD0iTTE1IDIxdi04YTEgMSAwIDAgMC0xLTFoLTRhMSAxIDAgMCAwLTEgMXY4Ii8+PHBhdGggZD0iTTMgMTBhMiAyIDAgMCAxIC43MDktMS41MjhsNy02YTIgMiAwIDAgMSAyLjU4MiAwbDcgNkEyIDIgMCAwIDEgMjEgMTB2OWEyIDIgMCAwIDEtMiAySDVhMiAyIDAgMCAxLTItMnoiLz48L3N2Zz4="
+                        alt="" aria-hidden="true">
+                </div>
+                <span class="footer-btn-label" data-i18n-en="Home">Inicio</span>
+            </a>
 
-        <!-- Calendario (active)-->
-        <a class="footer-btn is-active" href="/Templates/Inicio/calendario.html" aria-label="Calendario"
-            data-i18n-en-aria-label="Calendar">
-            <div class="footer-btn-icon">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYWxlbmRhci1kYXlzLWljb24gbHVjaWRlLWNhbGVuZGFyLWRheXMiPjxwYXRoIGQ9Ik04IDJ2NCIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjQiIHJ4PSIyIi8+PHBhdGggZD0iTTMgMTBoMTgiLz48cGF0aCBkPSJNOCAxNGguMDEiLz48cGF0aCBkPSJNMTIgMTRoLjAxIi8+PHBhdGggZD0iTTE2IDE0aC4wMSIvPjxwYXRoIGQ9Ik04IDE4aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMTYgMThoLjAxIi8+PC9zdmc+"
-                    alt="" aria-hidden="true">
-            </div>
-        </a>
+            <!-- Calendario (active) -->
+            <a class="footer-btn is-active" href="/Templates/Inicio/calendario.html" aria-label="Calendario"
+                data-i18n-en-aria-label="Calendar">
+                <div class="footer-btn-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYWxlbmRhci1kYXlzLWljb24gbHVjaWRlLWNhbGVuZGFyLWRheXMiPjxwYXRoIGQ9Ik04IDJ2NCIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjQiIHJ4PSIyIi8+PHBhdGggZD0iTTMgMTBoMTgiLz48cGF0aCBkPSJNOCAxNGguMDEiLz48cGF0aCBkPSJNMTIgMTRoLjAxIi8+PHBhdGggZD0iTTE2IDE0aC4wMSIvPjxwYXRoIGQ9Ik04IDE4aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMTYgMThoLjAxIi8+PC9zdmc+"
+                        alt="" aria-hidden="true">
+                </div>
+                <span class="footer-btn-label" data-i18n-en="Calendar">Calendario</span>
+            </a>
 
-    </nav>
+            <!-- Perfil -->
+            <a class="footer-btn" href="/Templates/Inicio/perfil_usuario.html" aria-label="Perfil"
+                data-i18n-en-aria-label="Profile">
+                <div class="footer-btn-icon">
+                    <img id="icono_usuario" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                </div>
+                <span class="footer-btn-label" data-i18n-en="Profile">Perfil</span>
+            </a>
+
+            <!-- Ayuda -->
+            <a id="btn-ayuda-sheet" class="footer-btn" aria-label="Ayuda"
+                data-i18n-en-aria-label="Help" style="cursor: pointer;">
+                <div class="footer-btn-icon">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyay1pY29uIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyayI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+"
+                        alt="" aria-hidden="true">
+                </div>
+                <span class="footer-btn-label" data-i18n-en="Help">Ayuda</span>
+            </a>
+        </nav>
     </footer>
     <script src="/Scripts/ui_bottom_sheet.js"></script>
     <script src="/Scripts/script_calendario.js" type="module"></script>

@@ -721,6 +721,40 @@ html.no-transparency .translucent-bar {
 		margin: calc(var(--header-fixed, 72px) + env(safe-area-inset-top)) 0 0;
 		min-height: calc(100svh - var(--header-fixed, 72px) - env(safe-area-inset-top));
 	}
+
+	/* Sidebar derecha: reutiliza el footer (centrado en el borde derecho, ocupa solo sus botones) */
+	footer.footer-wrap {
+		position: fixed !important;
+		bottom: auto !important;
+		top: 50% !important;
+		right: 24px !important;
+		left: auto !important;
+		transform: translateY(-50%) !important;
+		width: auto !important;
+		height: auto !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		padding: 0 !important;
+		pointer-events: auto !important;
+	}
+
+	.footer-nav.translucent-bar {
+		flex-direction: column !important;
+		width: auto !important;
+		height: auto !important;
+		padding: 16px 10px !important;
+		border-radius: 999px !important;
+		justify-content: center !important;
+		gap: 16px !important;
+		align-items: center !important;
+	}
+
+	.footer-btn {
+		flex: 0 0 auto !important;
+		width: auto !important;
+		max-width: none !important;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {

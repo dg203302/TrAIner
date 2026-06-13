@@ -21,7 +21,7 @@
 			align-items: center !important;
 			justify-content: center !important;
 			opacity: 0 !important;
-			transition: opacity 0.3s ease !important;
+			transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 			pointer-events: auto !important;
 		}
 		.pt-sheet-overlay.is-open {
@@ -32,7 +32,9 @@
 			width: 95% !important;
 			max-width: 500px !important;
 			max-height: 90vh !important;
-			background: rgba(20, 20, 20, 0.85) !important;
+			background: color-mix(in srgb, var(--bg0, #0c0d0f) 40%, transparent) !important;
+			backdrop-filter: blur(20px) !important;
+			-webkit-backdrop-filter: blur(20px) !important;
 			border: 1px solid rgba(255, 255, 255, 0.15) !important;
 			border-radius: 24px !important;
 			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 
@@ -59,7 +61,7 @@
 		.pt-sheet:has(.pt-new-detail),
 		.pt-sheet.pt-new-detail-sheet {
 			border: none !important;
-			background: rgba(10, 10, 10, 0.6) !important;
+			background: color-mix(in srgb, var(--bg0, #0c0d0f) 60%, transparent) !important;
 			backdrop-filter: blur(30px) !important;
 			-webkit-backdrop-filter: blur(30px) !important;
 			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9) !important;
@@ -70,7 +72,7 @@
 		}
 		.pt-sheet:has(.pt-new-detail) .pt-sheet-content,
 		.pt-sheet.pt-new-detail-sheet .pt-sheet-content {
-			padding: 0 !important;
+			padding: 64px 0 0 0 !important;
 		}
 		.pt-sheet-header {
 			display: none !important;
@@ -123,8 +125,39 @@
 		.pt-sheet-content {
 			flex: 1 !important;
 			overflow-y: auto !important;
-			padding: 24px !important;
+			padding: 64px 24px 24px 24px !important;
 			-webkit-overflow-scrolling: touch !important;
+		}
+		.pt-sheet-back-btn {
+			position: absolute !important;
+			top: 16px !important;
+			left: 50% !important;
+			transform: translateX(-50%) !important;
+			background: rgba(255, 255, 255, 0.08) !important;
+			border: 1px solid rgba(255, 255, 255, 0.1) !important;
+			color: #ffffff !important;
+			padding: 8px 18px !important;
+			border-radius: 999px !important;
+			font-size: 13px !important;
+			font-weight: 700 !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 6px !important;
+			cursor: pointer !important;
+			z-index: 2100 !important;
+			transition: all 0.2s ease !important;
+			pointer-events: auto !important;
+			backdrop-filter: blur(8px) !important;
+			-webkit-backdrop-filter: blur(8px) !important;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+		}
+		.pt-sheet-back-btn:hover {
+			background: rgba(255, 255, 255, 0.16) !important;
+			transform: translateX(-50%) scale(1.05) !important;
+		}
+		.pt-sheet-back-btn:active {
+			transform: translateX(-50%) scale(0.95) !important;
 		}
 		.pt-sheet-content::-webkit-scrollbar {
 			width: 6px !important;
@@ -252,6 +285,7 @@
 		const overlay = document.createElement("div");
 		overlay.className = "pt-sheet-overlay";
 		overlay.setAttribute("role", "presentation");
+		overlay.style.setProperty("transition", "opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
 
 		const sheet = document.createElement("section");
 		sheet.className = `pt-sheet${className ? ` ${className}` : ""}`;
@@ -299,6 +333,16 @@
 		content.className = "pt-sheet-content";
 		content.innerHTML = html;
 
+		const backBtn = (() => {
+			const btn = document.createElement("button");
+			btn.type = "button";
+			btn.className = "pt-sheet-back-btn";
+			btn.setAttribute("aria-label", "Volver");
+			btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="m15 18-6-6 6-6"/></svg><span style="vertical-align: middle;">Volver</span>`;
+			return btn;
+		})();
+
+		sheet.appendChild(backBtn);
 		sheet.appendChild(header);
 		sheet.appendChild(content);
 		overlay.appendChild(sheet);
@@ -334,15 +378,15 @@
 				const lastRect = sheet.getBoundingClientRect();
 				const deltaX = originRect.left + originRect.width / 2 - (lastRect.left + lastRect.width / 2);
 				const deltaY = originRect.top + originRect.height / 2 - (lastRect.top + lastRect.height / 2);
-				const scaleX = Math.max(0.01, originRect.width / lastRect.width);
-				const scaleY = Math.max(0.01, originRect.height / lastRect.height);
-				sheet.style.transition = "transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, border-radius 0.32s ease";
-				sheet.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+				const scaleX = 0.05;
+				const scaleY = 0.05;
+				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
+				sheet.style.setProperty("transform", `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`, "important");
 				sheet.style.opacity = "0";
 				sheet.style.borderRadius = "16px";
 			} else {
-				sheet.style.transition = "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease";
-				sheet.style.transform = "scale(0.85) translateY(20px)";
+				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
+				sheet.style.setProperty("transform", "scale(0.85) translateY(20px)", "important");
 				sheet.style.opacity = "0";
 			}
 			overlay.classList.remove("is-open");
@@ -376,7 +420,7 @@
 			t = window.setTimeout(() => {
 				cleanup();
 				finish();
-			}, 400);
+			}, 700);
 		};
 
 		activeCloseStack.push(close);
@@ -419,11 +463,13 @@
 			document.removeEventListener("keydown", onKeyDown);
 			overlay.removeEventListener("click", onOverlayClick);
 			if (closeBtn) closeBtn.removeEventListener("click", close);
+			backBtn.removeEventListener("click", close);
 		};
 
 		document.addEventListener("keydown", onKeyDown);
 		overlay.addEventListener("click", onOverlayClick);
 		if (closeBtn) closeBtn.addEventListener("click", close);
+		backBtn.addEventListener("click", close);
 
 		// ── Open animation: expand from origin ──
 		if (resolvedTrigger) {
@@ -434,24 +480,25 @@
 			});
 
 			sheet.style.opacity = "0";
-			sheet.style.transition = "none";
+			sheet.style.setProperty("transition", "none", "important");
+			sheet.style.setProperty("transform", "none", "important");
 			
 			const lastRect = sheet.getBoundingClientRect();
 			const deltaX = rect.left + rect.width / 2 - (lastRect.left + lastRect.width / 2);
 			const deltaY = rect.top + rect.height / 2 - (lastRect.top + lastRect.height / 2);
-			const scaleX = Math.max(0.01, rect.width / lastRect.width);
-			const scaleY = Math.max(0.01, rect.height / lastRect.height);
+			const scaleX = 0.05;
+			const scaleY = 0.05;
 			
 			sheet.style.transformOrigin = "center center";
-			sheet.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+			sheet.style.setProperty("transform", `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`, "important");
 			sheet.style.borderRadius = "16px";
 
 			// Force reflow
 			sheet.offsetHeight;
 
 			requestAnimationFrame(() => {
-				sheet.style.transition = "transform 0.42s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-radius 0.42s ease";
-				sheet.style.transform = "none";
+				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
+				sheet.style.setProperty("transform", "none", "important");
 				sheet.style.opacity = "1";
 				sheet.style.borderRadius = "24px";
 			});
@@ -461,14 +508,14 @@
 			});
 
 			sheet.style.opacity = "0";
-			sheet.style.transform = "scale(0.85) translateY(30px)";
-			sheet.style.transition = "none";
+			sheet.style.setProperty("transform", "scale(0.85) translateY(30px)", "important");
+			sheet.style.setProperty("transition", "none", "important");
 			
 			sheet.offsetHeight;
 			
 			requestAnimationFrame(() => {
-				sheet.style.transition = "transform 0.38s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease";
-				sheet.style.transform = "none";
+				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
+				sheet.style.setProperty("transform", "none", "important");
 				sheet.style.opacity = "1";
 			});
 		}

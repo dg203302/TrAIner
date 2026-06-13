@@ -15,20 +15,38 @@
                 return {
                     bubbleFill: "rgba(70, 255, 100, ",
                     bubbleStroke: "rgba(120, 255, 140, ",
-                    gradient: "linear-gradient(135deg, #024a14 0%, #001704 100%) !important"
+                    gradient: "linear-gradient(135deg, #024a14 0%, #001704 100%) !important",
+                    myPrimary: "#00e676",
+                    myPrimaryDim: "rgba(0, 230, 118, 0.14)",
+                    myPrimaryRim: "rgba(0, 230, 118, 0.22)",
+                    accent: "#00e676",
+                    accent2: "#69f0ae",
+                    accent3: "#00c853"
                 };
             case "blue":
                 return {
                     bubbleFill: "rgba(70, 150, 255, ",
                     bubbleStroke: "rgba(120, 190, 255, ",
-                    gradient: "linear-gradient(135deg, #02204a 0%, #000917 100%) !important"
+                    gradient: "linear-gradient(135deg, #02204a 0%, #000917 100%) !important",
+                    myPrimary: "#0a84ff",
+                    myPrimaryDim: "rgba(10, 132, 255, 0.14)",
+                    myPrimaryRim: "rgba(10, 132, 255, 0.22)",
+                    accent: "#0a84ff",
+                    accent2: "#40a9ff",
+                    accent3: "#0050b3"
                 };
             case "red":
             default:
                 return {
                     bubbleFill: "rgba(255, 70, 80, ",
                     bubbleStroke: "rgba(255, 120, 120, ",
-                    gradient: "linear-gradient(135deg, #4a0205 0%, #170000 100%) !important"
+                    gradient: "linear-gradient(135deg, #4a0205 0%, #170000 100%) !important",
+                    myPrimary: "#ff073a",
+                    myPrimaryDim: "rgba(255, 7, 58, 0.14)",
+                    myPrimaryRim: "rgba(255, 7, 58, 0.22)",
+                    accent: "#ff073a",
+                    accent2: "#ff3b65",
+                    accent3: "#cc062e"
                 };
         }
     };
@@ -43,8 +61,20 @@
         }
 
         const params = getColorParams(color);
+        const rootVars = `
+            :root {
+                --my-primary: ${params.myPrimary} !important;
+                --my-primary-dim: ${params.myPrimaryDim} !important;
+                --my-primary-rim: ${params.myPrimaryRim} !important;
+                --accent: ${params.accent} !important;
+                --accent2: ${params.accent2} !important;
+                --accent3: ${params.accent3} !important;
+            }
+        `;
+
         if (pref === "static") {
             style.innerHTML = `
+                ${rootVars}
                 #canvas-bg { display: none !important; }
                 body, html { 
                     background: #000000 !important;
@@ -52,6 +82,7 @@
             `;
         } else {
             style.innerHTML = `
+                ${rootVars}
                 body, html { 
                     background: ${params.gradient};
                 }

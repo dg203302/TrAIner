@@ -1186,7 +1186,7 @@ main {
 	scroll-snap-align: center;
 	min-width: 100%;
 	margin: 0;
-	padding: 10px 0px;
+	padding: 10px 0px 90px 0px; /* Evita superposición con la barra inferior fija en móvil/tablet */
 }
 
 section {
@@ -1261,7 +1261,9 @@ button:active {
 /* Cabecera del plan (título izquierda, acciones derecha) */
 .plan-topbar {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
 	gap: 12px;
 	flex-wrap: wrap;
 	flex: 1 1 100%;
@@ -1835,11 +1837,7 @@ html.no-transparency .plan-actions-pill.is-pill {
 	}
 }
 
-@media (min-width: 680px) {
-	.plan-grid {
-		grid-template-columns: 1fr 1fr;
-	}
-}
+
 
 /* ========== TRANSLUCENT SURFACES ========== */
 footer.footer-wrap {
@@ -2080,6 +2078,7 @@ html.no-transparency .translucent-bar {
 		grid-template-columns: 1fr 1fr;
 		align-items: start;
 		margin: calc(var(--header-fixed, 72px) + env(safe-area-inset-top)) 0 0;
+		position: relative !important;
 	}
 
 	/* Reordenar visualmente para que los anuncios queden debajo del plan */
@@ -2106,7 +2105,8 @@ html.no-transparency .translucent-bar {
 	}
 
 	/* Plan: sin overflow, todo visible */
-	#Plan_ejercicio {
+	#Plan_ejercicio,
+	#Plan_alimentacion {
 		overflow: visible;
 	}
 
@@ -2120,6 +2120,67 @@ html.no-transparency .translucent-bar {
 	.plan-container.plan-snap .plan-dia {
 		min-width: 0;
 		height: auto;
+	}
+
+	/* Cambio entre planes por botones solo en pantallas de escritorio (alineado a la derecha con los botones de acción) */
+	.pt-plan-selector-container {
+		display: flex !important;
+		position: absolute !important;
+		top: 24px !important;
+		right: 90px !important;
+		margin: 0 !important;
+		z-index: 100 !important;
+	}
+
+	.pt-plan-swipe {
+		display: block !important;
+		overflow-x: hidden !important;
+		scroll-snap-type: none !important;
+	}
+
+	.pt-plan-page {
+		flex: none !important;
+		min-width: 0 !important;
+		scroll-snap-align: unset !important;
+		display: none !important;
+	}
+
+	.pt-plan-page.active {
+		display: block !important;
+	}
+
+	/* Sidebar derecha: reutiliza el footer (centrado en el borde derecho, ocupa solo sus botones) */
+	footer.footer-wrap {
+		position: fixed !important;
+		bottom: auto !important;
+		top: 50% !important;
+		right: 24px !important;
+		left: auto !important;
+		transform: translateY(-50%) !important;
+		width: auto !important;
+		height: auto !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		padding: 0 !important;
+		pointer-events: auto !important;
+	}
+
+	.footer-nav.translucent-bar {
+		flex-direction: column !important;
+		width: auto !important;
+		height: auto !important;
+		padding: 16px 10px !important;
+		border-radius: 999px !important;
+		justify-content: center !important;
+		gap: 16px !important;
+		align-items: center !important;
+	}
+
+	.footer-btn {
+		flex: 0 0 auto !important;
+		width: auto !important;
+		max-width: none !important;
 	}
 }
 

@@ -675,7 +675,7 @@ const initColorToggle = () => {
 
 window.onload = async () => {
 	document.getElementById("username").textContent = username;
-	document.getElementById("icono_usuario").src = avatar;
+	document.querySelectorAll("#icono_usuario").forEach(el => el.src = avatar);
 	document.getElementById("altura_usuario").textContent = altura_usuario;
 	document.getElementById("edad_usuario").textContent = edad_usuario;
 	document.getElementById("peso_usuario").textContent = peso_usuario;
