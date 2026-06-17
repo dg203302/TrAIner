@@ -13,16 +13,16 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/Styles/styles_dashboard.css">
-    <link rel="stylesheet" href="/Styles/styles_ayuda.css">
     <meta name="theme-color" content="#0c0d0f">
     <title data-i18n-en="Home">Inicio</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202"
         crossorigin="anonymous"></script>
 
     <style>
-        section{
+        section {
             background: transparent !important;
         }
+
         .pt-plan-selector-container {
             display: none;
             align-items: center;
@@ -59,15 +59,17 @@
             background: var(--my-primary) !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
         }
+
         * {
             -webkit-tap-highlight-color: transparent !important;
-            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
             outline: none !important;
         }
 
         *:focus {
             outline: none !important;
         }
+
         /* ── Material You override layer (Dashboard only) ───────────── */
         :root {
             --my-primary: #bce4ff;
@@ -109,34 +111,6 @@
 
         #textos .brand-accent {
             color: var(--my-primary);
-        }
-
-        /* Help button */
-        #btn-ayuda-sheet {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 999px;
-            border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
-            transition: background .18s ease;
-            flex-shrink: 0;
-        }
-
-        #btn-ayuda-sheet:hover {
-            background: var(--my-glass-hover);
-        }
-
-        #btn-ayuda-sheet:active {
-            transform: scale(0.96);
-        }
-
-        #btn-ayuda-sheet img {
-            width: 28px;
-            height: 28px;
-            opacity: .85;
         }
 
         /* User pill */
@@ -191,7 +165,7 @@
             min-width: 0;
             position: relative;
             z-index: 1;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         #welcome_msg {
@@ -225,6 +199,7 @@
             gap: 10px;
             flex-shrink: 0;
         }
+
         /* ── MAIN / sections ────────────────────────────────────────── */
         .pt-plan-page {
             background: transparent;
@@ -234,13 +209,131 @@
             margin: 0px;
         }
 
-        /* Plan topbar */
-        .plan-topbar {
+        /* ── FLOATING PLAN HEADER ───────────────────────────────────── */
+        .plan-floating-header {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 960;
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 14px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: 1px solid transparent;
+            border-radius: 24px;
+            width: auto;
+            max-width: calc(100vw - 32px);
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .plan-floating-header.scrolled {
+            background: rgba(12, 13, 15, 0.75);
+            backdrop-filter: blur(28px) saturate(150%);
+            -webkit-backdrop-filter: blur(28px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        html.no-transparency .plan-floating-header.scrolled {
+            background: #12151a;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        /* Top Row containing Title & Toggle */
+        .pfh-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .plan-floating-header .pfh-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, .92);
+            margin: 0;
+            white-space: nowrap;
+            line-height: 1;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Container for action buttons (now below title) */
+        .plan-floating-header .pfh-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            overflow: hidden;
+            max-height: 40px;
+            max-width: 400px;
+            opacity: 1;
+            margin-top: 4px;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease,
+                margin-top 0.35s ease,
+                gap 0.35s ease;
+            width: 100%;
+        }
+
+        .plan-floating-header .pfh-actions.collapsed {
+            max-height: 0;
+            max-width: 0;
+            opacity: 0;
+            margin-top: 0;
+            gap: 0;
+        }
+
+        /* Force all buttons inside floating header to consistent pill style */
+        .plan-floating-header .pfh-actions button {
+            min-height: 34px !important;
+            height: 34px !important;
+            padding: 0 14px !important;
+            border-radius: 999px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            font-family: inherit !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            box-shadow: none !important;
+            transition: background 0.18s ease, transform 0.12s ease !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        /* Respect hidden state of buttons not yet generated */
+        .plan-floating-header .pfh-actions button[style*="display: none"],
+        .plan-floating-header .pfh-actions button[style*="display:none"] {
+            display: none !important;
+        }
+
+        /* Icon-only buttons inside header (regenerar, eliminar) */
+        .plan-floating-header .pfh-actions button.btn-icon-sm {
+            width: 34px !important;
+            padding: 0 !important;
+        }
+
+        .plan-floating-header .pfh-actions button.btn-icon-sm img {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        /* Plan topbar (legacy, hidden — buttons live here in DOM and get moved by JS) */
+        .plan-topbar {
+            display: none;
         }
 
         .plan-title {
@@ -256,6 +349,14 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        @media (min-width: 1024px) {
+            .plan-floating-header {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+            }
         }
 
         /* Main generate button */
@@ -378,21 +479,93 @@
             -webkit-backdrop-filter: blur(20px) saturate(140%);
         }
 
-        /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        .footer-btn {
-            display: inline-flex !important;
+        footer.footer-wrap {
+            position: fixed !important;
+            z-index: 900 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            transform: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            width: 100% !important;
+            height: 80px !important;
+            overflow: visible !important;
+        }
+
+        /* Inner nav bar */
+        footer .footer-nav {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 80px !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 24px !important;
+            /* Fixed padding to push buttons away from corners */
+            display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
+            justify-content: space-between !important;
+            position: relative !important;
+            overflow: visible !important;
+            pointer-events: auto !important;
+            box-shadow: none !important;
+        }
+
+        /* Real background container with cutout mask */
+        footer .footer-nav::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 20px !important;
+            /* leaves 20px at the top for the floating circle */
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: rgba(0, 0, 0, 0.45) !important;
+            /* Mantiene la transparencia actual */
+            backdrop-filter: blur(20px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 20px 20px 0 0 !important;
+            /* no flotante, fija al borde inferior */
+            z-index: -1 !important;
+            pointer-events: none !important;
+
+            /* Radial gradient cutout mask centered dynamically */
+            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            -webkit-mask-repeat: no-repeat !important;
+            mask-repeat: no-repeat !important;
+        }
+
+        html.no-transparency footer .footer-nav::before {
+            background: #0f151b !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* Footer buttons styling */
+        .footer-btn {
+            flex: 1 1 0 !important;
+            /* Take up equal space */
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
             justify-content: center !important;
-            gap: 0 !important;
-            padding: 8px 12px !important;
-            border-radius: 999px !important;
+            padding: 0 !important;
             background: transparent !important;
-            border: 1px solid transparent !important;
-            max-width: none !important;
-            width: auto !important;
-            transition: all 0.2s ease !important;
+            border: none !important;
+            height: 60px !important;
+            margin-top: 20px !important;
+            /* aligns buttons to the background bar */
             text-decoration: none !important;
+            position: relative !important;
+            z-index: 2 !important;
         }
 
         .footer-btn-icon {
@@ -403,8 +576,7 @@
             justify-content: center !important;
             border-radius: 50% !important;
             background: transparent !important;
-            transition: background 0.2s ease !important;
-            flex-shrink: 0 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         .footer-btn-icon img,
@@ -412,59 +584,137 @@
             width: 20px !important;
             height: 20px !important;
             opacity: 0.6 !important;
-            transition: opacity 0.2s ease !important;
-            filter: none !important;
+            transition: all 0.3s ease !important;
         }
 
-        /* Profile avatar circular styling */
-        .footer-btn-icon img#icono_usuario {
-            position: static !important;
-            width: 20px !important;
-            height: 20px !important;
-            opacity: 1 !important;
-            border-radius: 50% !important;
-            object-fit: cover !important;
-            -webkit-mask-image: none !important;
-            mask-image: none !important;
-            pointer-events: auto !important;
-            z-index: 1 !important;
-        }
-
-        /* Label styling */
-        .footer-btn-label {
-            font-size: 13.5px !important;
-            font-weight: 700 !important;
-            letter-spacing: .2px !important;
-            color: rgba(255, 255, 255, 0.95) !important;
-            max-width: 0 !important;
-            opacity: 0 !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, margin-left 0.3s ease !important;
-            margin-left: 0 !important;
-            line-height: 1 !important;
-        }
-
-        /* Active button style (Pill layout) */
+        /* Active button state */
         .footer-btn.is-active {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            padding: 8px 16px 8px 12px !important;
-            gap: 6px !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .footer-btn.is-active .footer-btn-icon {
+            background: var(--accent) !important;
+            /* Toma el color de fondo actual */
+            transform: translateY(-26px) !important;
+            /* Flota hacia arriba */
+            width: 46px !important;
+            height: 46px !important;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
         }
 
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
+            filter: brightness(0) !important;
+            /* Icono oscuro inside green circle */
         }
 
-        .footer-btn.is-active .footer-btn-label {
-            max-width: 100px !important;
-            opacity: 1 !important;
-            margin-left: 2px !important;
+        /* Profile avatar specific active override (never darken user photo) */
+        .footer-btn.is-active .footer-btn-icon img.footer-profile-avatar {
+            filter: none !important;
         }
 
+        .footer-profile-avatar {
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
 
+        /* ── DESKTOP STYLING OVERRIDE ───────────────────────────────── */
+        @media (min-width: 1024px) {
+            body {
+                padding-right: 0 !important;
+            }
+
+            body>header,
+            header {
+                right: 0 !important;
+            }
+
+            footer.footer-wrap {
+                left: auto !important;
+                right: 32px !important;
+                bottom: auto !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                width: 80px !important;
+                height: 320px !important;
+            }
+
+            footer .footer-nav {
+                flex-direction: column !important;
+                width: 80px !important;
+                height: 100% !important;
+                padding: 24px 0 !important;
+                border-radius: 999px !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            footer .footer-nav::before {
+                border-radius: 999px !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 20px !important;
+                right: 0 !important;
+
+                /* Vertical gradient cutout mask centered dynamically on the Y axis */
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+            }
+
+            .footer-btn {
+                margin-top: 0 !important;
+                margin-left: 20px !important;
+                width: 60px !important;
+                flex: 1 1 0 !important;
+                min-height: 0 !important;
+                height: auto !important;
+            }
+
+            .footer-btn.is-active .footer-btn-icon {
+                transform: translateX(-26px) !important;
+            }
+        }
+
+        .pt-select-custom {
+            appearance: none;
+            -webkit-appearance: none;
+            background: color-mix(in srgb, #fff 8%, transparent);
+            border: 1px solid color-mix(in srgb, #fff 16%, transparent);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 6px 32px 6px 12px;
+            font-size: 13.5px;
+            font-family: inherit;
+            font-weight: 650;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJtNiA5IDYgNiA2LTYiLz48L3N2Zz4=");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+
+        .pt-select-custom:hover {
+            background-color: color-mix(in srgb, #fff 12%, transparent);
+            border-color: color-mix(in srgb, #fff 24%, transparent);
+        }
+
+        .pt-select-custom:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .pt-select-custom option {
+            background-color: #12151A;
+            color: #fff;
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
@@ -476,21 +726,34 @@
     </header>
 
     <main>
-        <!-- Selector de planes (Entreno / Alimentación) -->
-        <div class="pt-plan-selector-container translucent-bar">
-            <button id="btn-show-entreno" class="pt-plan-selector-btn active" data-i18n-en="Workout Plan">Plan de Entreno</button>
-            <button id="btn-show-alimentacion" class="pt-plan-selector-btn" data-i18n-en="Meal Plan">Plan de Alimentación</button>
+        <!-- Floating Plan Header (fixed pill) -->
+        <div id="plan-floating-header" class="plan-floating-header">
+            <div class="pfh-top-row">
+                <span id="pfh-title" class="pfh-title">Plan de Entreno</span>
+            </div>
+            <div id="pfh-actions" class="pfh-actions">
+                <!-- Actions moved here by JS -->
+            </div>
         </div>
 
-        <div id="pt-plan-swipe" class="pt-plan-swipe" aria-label="Planes" data-i18n-en-aria-label="Plans">
+        <!-- Selector de planes (Entreno / Alimentación) -->
+        <div class="pt-plan-selector-container translucent-bar">
+            <button id="btn-show-entreno" class="pt-plan-selector-btn active" data-i18n-en="Workout Plan">Plan de
+                Entreno</button>
+            <button id="btn-show-alimentacion" class="pt-plan-selector-btn" data-i18n-en="Meal Plan">Plan de
+                Alimentación</button>
+        </div>
+
+        <div id="pt-plan-swipe" class="pt-plan-swipe" aria-label="Planes" data-i18n-en-aria-label="Plans"
+            style="margin-top: 70px;">
 
             <!-- ── Entreno ─────────────────────────────────────────── -->
             <section id="Ejercicios" class="pt-plan-page" tabindex="-1">
                 <div id="botones_accion" style="margin: 10px;">
                     <div class="plan-topbar">
                         <h1 class="plan-title" data-i18n-en="Training plan" style="margin: 10px;">Plan de Entreno</h1>
-                        <div role="group" aria-label="Acciones del plan"
-                            data-i18n-en-aria-label="Plan actions" class="translucent-bar">
+                        <div role="group" aria-label="Acciones del plan" data-i18n-en-aria-label="Plan actions"
+                            class="translucent-bar">
                             <button id="boton_ejercicios">...</button>
                             <button id="boton_regenerar" class="btn-icon-sm" style="display: none;">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1yZWRvLWljb24gbHVjaWRlLXJlZG8iPjxwYXRoIGQ9Ik0yMSA3djZoLTYiLz48cGF0aCBkPSJNMyAxN2E5IDkgMCAwIDEgOS05IDkgOSAwIDAgMSA2IDIuM2wzIDIuNyIvPjwvc3ZnPg=="
@@ -517,7 +780,7 @@
 
             <!-- ── Alimentación ───────────────────────────────────── -->
             <section id="Alimentacion" class="pt-plan-page" tabindex="-1">
-                <div id="botones_accion_alim" style="margin: 10px;">
+                <div id="botones_accion_alim" style="margin: 20px;">
                     <div class="plan-topbar">
                         <h1 class="plan-title" data-i18n-en="Meal plan" style="margin: 10px;">Plan de Alimentación</h1>
                         <div class="plan-actions-pill" role="group" aria-label="Acciones del plan"
@@ -550,7 +813,8 @@
     </main>
 
     <footer id="footer_dashboard" class="footer-wrap">
-        <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
+        <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation"
+            style="--active-x-pct: 16.67%;">
 
             <!-- Inicio (active) -->
             <a class="footer-btn is-active" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -559,7 +823,7 @@
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ob3VzZS1pY29uIGx1Y2lkZS1ob3VzZSI+PHBhdGggZD0iTTE1IDIxdi04YTEgMSAwIDAgMC0xLTFoLTRhMSAxIDAgMCAwLTEgMXY4Ii8+PHBhdGggZD0iTTMgMTBhMiAyIDAgMCAxIC43MDktMS41MjhsNy02YTIgMiAwIDAgMSAyLjU4MiAwbDcgNkEyIDIgMCAwIDEgMjEgMTB2OWEyIDIgMCAwIDEtMiAySDVhMiAyIDAgMCAxLTItMnoiLz48L3N2Zz4="
                         alt="" aria-hidden="true">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Home">Inicio</span>
+                <span class="footer-btn-label" data-i18n-en="Home"></span>
             </a>
 
             <!-- Calendario -->
@@ -569,26 +833,17 @@
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYWxlbmRhci1kYXlzLWljb24gbHVjaWRlLWNhbGVuZGFyLWRheXMiPjxwYXRoIGQ9Ik04IDJ2NCIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjQiIHJ4PSIyIi8+PHBhdGggZD0iTTMgMTBoMTgiLz48cGF0aCBkPSJNOCAxNGguMDEiLz48cGF0aCBkPSJNMTIgMTRoLjAxIi8+PHBhdGggZD0iTTE2IDE0aC4wMSIvPjxwYXRoIGQ9Ik04IDE4aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMTYgMThoLjAxIi8+PC9zdmc+"
                         alt="" aria-hidden="true">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Calendar">Calendario</span>
+                <span class="footer-btn-label" data-i18n-en="Calendar"></span>
             </a>
 
             <!-- Perfil -->
             <a class="footer-btn" href="/Templates/Inicio/perfil_usuario.html" aria-label="Perfil"
                 data-i18n-en-aria-label="Profile">
                 <div class="footer-btn-icon">
-                    <img id="icono_usuario" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    <img class="footer-profile-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Profile">Perfil</span>
-            </a>
-
-            <!-- Ayuda -->
-            <a id="btn-ayuda-sheet" class="footer-btn" aria-label="Ayuda"
-                data-i18n-en-aria-label="Help" style="cursor: pointer;">
-                <div class="footer-btn-icon">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyay1pY29uIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyayI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+"
-                        alt="" aria-hidden="true">
-                </div>
-                <span class="footer-btn-label" data-i18n-en="Help">Ayuda</span>
+                <span class="footer-btn-label" data-i18n-en="Profile"></span>
             </a>
         </nav>
     </footer>
@@ -596,249 +851,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/Scripts/ui_bottom_sheet.js"></script>
     <script src="/Scripts/dashboard.js" type="module"></script>
-    <script>
-        (function () {
-            var btn = document.getElementById('btn-ayuda-sheet');
-            if (!btn) return;
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                if (!window.PTBottomSheet) return;
 
-                var ayudaHTML = [
-                    '<div class="ayuda-sheet-wrap">',
-
-                    /* ── Índice ─────────────────────────────────────────── */
-                    '<section class="ayuda-box" aria-labelledby="sh_ayuda_indice_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_indice_title">Índice</h1>',
-                    '      <p class="ayuda-subtitle">Ir a una sección</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Ayuda</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <nav aria-label="Índice de ayuda">',
-                    '      <ul>',
-                    '        <li><a href="#sh-ayuda-entreno">Plan de Entreno</a></li>',
-                    '        <li><a href="#sh-ayuda-alimentacion">Plan de Alimentación</a></li>',
-                    '      </ul>',
-                    '    </nav>',
-                    '    <p class="ayuda-note">Nota: si ya existe un plan generado en otro idioma, cambiar el idioma de la app no lo traduce automáticamente. Para verlo en el idioma seleccionado, regenerá el plan.</p>',
-                    '  </div>',
-                    '</section>',
-
-                    /* ── Guía Entreno ────────────────────────────────────── */
-                    '<section id="sh-ayuda-entreno" class="ayuda-box" aria-labelledby="sh_ayuda_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_title">Guía del Plan de Ejercicio</h1>',
-                    '      <p class="ayuda-subtitle">Paso a paso y funciones</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Guía</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <p>Acá tenés una guía completa para <strong>generar</strong>, <strong>ver</strong> y <strong>gestionar</strong> tu plan semanal. El plan se arma con IA usando tu perfil (edad, altura, peso actual y objetivo) + las opciones que elijas.</p>',
-                    '    <div class="ayuda-grid" role="list">',
-                    '      <div class="ayuda-card" role="listitem"><h4>Requisito</h4><p>Tené tu perfil completo para mejores resultados.</p></div>',
-                    '      <div class="ayuda-card" role="listitem"><h4>Qué vas a ver</h4><p>Solo se muestran los días que tienen ejercicios asignados.</p></div>',
-                    '    </div>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>1) Generar el plan</h2>',
-                    '    <ol>',
-                    '      <li>Entrá a <strong>Plan de Entreno</strong> (el botón del footer).</li>',
-                    '      <li>Presioná el botón principal de arriba (Plan de Entreno / Generar).</li>',
-                    '      <li>Se abre una ventana con opciones: completalas y tocá <strong>Generar</strong>.</li>',
-                    '      <li>Cuando termine, el plan aparece en el recuadro <strong>Plan de Ejercicio</strong>.</li>',
-                    '    </ol>',
-                    '    <h2>2) Opciones disponibles (qué hace cada una)</h2>',
-                    '    <ul>',
-                    '      <li><strong>¿Dónde entrenás?</strong> Elegí <em>casa</em> o <em>gimnasio</em> para que el plan use ejercicios y equipo acordes.</li>',
-                    '      <li><strong>¿Qué priorizás?</strong> Elegí <em>pérdida de grasa</em> o <em>ganancia muscular</em> para ajustar el enfoque y la progresión.</li>',
-                    '      <li><strong>Intensidad</strong> Ajustá la cantidad de ejercicios por día:',
-                    '        <ul>',
-                    '          <li><em>Baja</em>: 4 ejercicios por día.</li>',
-                    '          <li><em>Media</em>: 6 ejercicios por día.</li>',
-                    '          <li><em>Alta</em>: 8 ejercicios por día.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '      <li><strong>Días de la semana</strong> Marcá L, M, X, J, V, S, D: esos serán tus días de entrenamiento.</li>',
-                    '      <li><strong>Ejercicios disponibles (índice)</strong> (opcional):',
-                    '        <ul>',
-                    '          <li>Si activás "Quiero elegir ejercicios" y <strong>seleccionás ejercicios</strong>, el plan se crea usando <strong>solo esos ejercicios</strong> (no agrega otros).</li>',
-                    '          <li>Si no seleccionás nada, la IA elige automáticamente del índice disponible.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Tip: si seleccionás muy pocos ejercicios para muchos días, algunos pueden repetirse para completar el plan.</p>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>3) Cómo leer el plan</h2>',
-                    '    <ul>',
-                    '      <li><strong>Día</strong>: cada "tarjeta" corresponde a un día (por ejemplo Lunes).</li>',
-                    '      <li><strong>Ejercicio</strong>: lista de ejercicios del día.</li>',
-                    '      <li><strong>Series</strong>: cuántas tandas hacés.</li>',
-                    '      <li><strong>Repeticiones</strong>: cuántas reps por serie (o rango sugerido).</li>',
-                    '      <li><strong>Descanso</strong>: tiempo recomendado entre series.</li>',
-                    '      <li><strong>Progresión</strong>: sugerencia para ir subiendo carga/reps/series con el tiempo.</li>',
-                    '    </ul>',
-                    '    <h2>4) Navegación por días (scroll por "pantallas")</h2>',
-                    '    <ul>',
-                    '      <li>En celular, deslizá <strong>arriba/abajo</strong> sobre el recuadro del plan para pasar de un día al siguiente.</li>',
-                    '      <li>En PC, usá la rueda del mouse sobre el recuadro para avanzar/retroceder día por día.</li>',
-                    '      <li>Si un día tiene muchos ejercicios, podés <strong>scrollear dentro del día</strong> para ver todo el contenido.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>5) Ver detalle por día</h2>',
-                    '    <ul>',
-                    '      <li>Tocá/clickeá el <strong>encabezado del día</strong> (por ejemplo "Martes").</li>',
-                    '      <li>Se abre un <strong>modal</strong> con el detalle de ese día (series, reps y descanso por ejercicio).</li>',
-                    '    </ul>',
-                    '    <h2>6) Gestionar tu plan</h2>',
-                    '    <ul>',
-                    '      <li><strong>Botón principal</strong>: genera el plan si no tenés uno; si ya existe, puede actualizar/refrescar según el estado.</li>',
-                    '      <li><strong>Regenerar Plan</strong>: crea un plan nuevo <em>basado en tu configuración previa</em>.',
-                    '        <ul>',
-                    '          <li>Te pide confirmación.</li>',
-                    '          <li>Al aceptar, elimina el plan actual.</li>',
-                    '          <li>Abre el modal con opciones <strong>precompletadas</strong> (lugar, objetivo, días y, si aplica, ejercicios) para que ajustes y generes de nuevo.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '      <li><strong>Eliminar Plan</strong>: borra el plan actual para empezar desde cero.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>7) Solución rápida de problemas</h2>',
-                    '    <ul>',
-                    '      <li><strong>No aparece el plan</strong>: revisá conexión, recargá la página y verificá que tu perfil esté completo.</li>',
-                    '      <li><strong>El plan no cambia</strong>: al regenerar, confirmá la acción y volvé a generar con nuevas opciones.</li>',
-                    '      <li><strong>Días "faltantes"</strong>: solo se muestran días con ejercicios asignados.</li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Atajo: desde el encabezado (arriba a la derecha) tocá <strong>Perfil</strong> para editar tus datos.</p>',
-                    '  </div>',
-                    '</section>',
-
-                    /* ── Guía Alimentación ───────────────────────────────── */
-                    '<section id="sh-ayuda-alimentacion" class="ayuda-box" aria-labelledby="sh_ayuda_aliment_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_aliment_title">Guía del Plan de Alimentación</h1>',
-                    '      <p class="ayuda-subtitle">Paso a paso y funciones</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Guía</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <p>Acá tenés una guía completa para <strong>generar</strong>, <strong>ver</strong> y <strong>gestionar</strong> tu plan semanal de alimentación. El plan se arma con IA usando tu perfil (edad, altura, peso actual y objetivo) + las opciones que elijas.</p>',
-                    '    <div class="ayuda-grid" role="list">',
-                    '      <div class="ayuda-card" role="listitem"><h4>Requisito</h4><p>Tené tu perfil completo para mejores resultados.</p></div>',
-                    '      <div class="ayuda-card" role="listitem"><h4>Qué vas a ver</h4><p>Vas a ver un resumen por día (calorías y comidas) y un detalle con macros, recomendaciones y tips.</p></div>',
-                    '    </div>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>1) Generar el plan</h2>',
-                    '    <ol>',
-                    '      <li>Entrá a <strong>Plan de Alimentación</strong> (desde Inicio).</li>',
-                    '      <li>Presioná el botón principal de arriba.</li>',
-                    '      <li>Se abre una ventana con opciones: completalas y tocá <strong>Generar</strong>.</li>',
-                    '      <li>Cuando termine, el plan aparece en el recuadro <strong>Plan de Alimentación</strong>.</li>',
-                    '    </ol>',
-                    '    <h2>2) Opciones disponibles (qué hace cada una)</h2>',
-                    '    <ul>',
-                    '      <li><strong>Objetivo</strong>: define el enfoque del plan.',
-                    '        <ul>',
-                    '          <li><em>Perder grasa</em>: prioriza déficit calórico y control de hambre.</li>',
-                    '          <li><em>Ganar masa muscular</em>: prioriza proteína y superávit calórico para entrenar.</li>',
-                    '          <li><em>Mantener peso</em>: busca equilibrio sin cambios significativos.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '      <li><strong>Intensidad</strong>: ajusta la cantidad de comidas por día y la distribución de macronutrientes.',
-                    '        <ul>',
-                    '          <li><em>Baja</em>: 3 comidas/día.</li>',
-                    '          <li><em>Media</em>: 4 comidas/día.</li>',
-                    '          <li><em>Alta</em>: 5 comidas/día.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Tip: si elegís una intensidad más alta, el plan reparte mejor la ingesta en el día (más comidas). Si preferís simple, usá baja/media.</p>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>3) Cómo leer el plan</h2>',
-                    '    <ul>',
-                    '      <li><strong>Día</strong>: cada "tarjeta" corresponde a un día de la semana.</li>',
-                    '      <li><strong>Resumen</strong>: calorías objetivo del día + cantidad de comidas.</li>',
-                    '      <li><strong>Comidas</strong>: lista de comidas sugeridas (con descripción y, a veces, kcal aproximadas).</li>',
-                    '      <li><strong>Detalle</strong>: al tocar el encabezado del día, se abre un modal con:</li>',
-                    '      <li><strong>Macros</strong>: distribución porcentual (carbohidratos, proteínas y grasas).</li>',
-                    '      <li><strong>Recomendaciones</strong>: alimentos sugeridos para ese día.</li>',
-                    '      <li><strong>Tips</strong>: consejos prácticos para sostener el plan.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>4) Navegación por días (scroll por "pantallas")</h2>',
-                    '    <ul>',
-                    '      <li>En celular, deslizá <strong>arriba/abajo</strong> sobre el recuadro del plan para pasar de un día al siguiente.</li>',
-                    '      <li>En PC, usá la rueda del mouse sobre el recuadro para avanzar/retroceder día por día.</li>',
-                    '      <li>Si un día tiene muchas comidas o texto, podés <strong>scrollear dentro del día</strong> para ver todo el contenido.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>5) Ver detalle por día</h2>',
-                    '    <ul>',
-                    '      <li>Tocá/clickeá el <strong>encabezado del día</strong> (por ejemplo "Miércoles").</li>',
-                    '      <li>Se abre un <strong>modal</strong> con el detalle: objetivo calórico, macros, comidas del día, recomendaciones y tips.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>6) Gestionar tu plan</h2>',
-                    '    <ul>',
-                    '      <li><strong>Botón principal</strong>:',
-                    '        <ul>',
-                    '          <li>Si no tenés plan: muestra <strong>Generar plan</strong> y abre el modal de opciones.</li>',
-                    '          <li>Si ya existe: aparece un ícono de <strong>recargar</strong> para refrescar el plan guardado.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '      <li><strong>Regenerar Plan</strong>: crea un plan nuevo <em>basado en tu configuración previa</em>.',
-                    '        <ul>',
-                    '          <li>Te pide confirmación.</li>',
-                    '          <li>Al aceptar, elimina el plan actual.</li>',
-                    '          <li>Abre el modal con opciones preseleccionadas para que ajustes y generes de nuevo.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '      <li><strong>Eliminar Plan</strong>: borra el plan actual para empezar desde cero.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>7) Solución rápida de problemas</h2>',
-                    '    <ul>',
-                    '      <li><strong>No aparece el plan</strong>: revisá conexión, recargá la página y verificá que tu perfil esté completo.</li>',
-                    '      <li><strong>El plan no cambia</strong>: usá <strong>Regenerar Plan</strong> y probá otra combinación de objetivo/intensidad.</li>',
-                    '      <li><strong>Detalle vacío</strong>: si el modal abre sin información, recargá el plan y volvé a intentar.</li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Atajo: desde el encabezado (arriba a la derecha) tocá <strong>Perfil</strong> para editar tus datos.</p>',
-                    '  </div>',
-                    '</section>',
-
-                    '</div>'
-                ].join('\n');
-
-                window.PTBottomSheet.open({
-                    title: 'Ayuda',
-                    subtitle: 'Personal TrAIner',
-                    html: ayudaHTML,
-                    showClose: false,
-                    showHandle: true,
-                    allowOutsideClose: true,
-                    allowEscapeClose: true,
-                    allowDragClose: true,
-                    className: 'pt-sheet--ayuda',
-                    didOpen: function (sheet) {
-                        var content = sheet.querySelector('.pt-sheet-content');
-                        if (!content) return;
-                        sheet.querySelectorAll('a[href^="#sh-"]').forEach(function (link) {
-                            link.addEventListener('click', function (ev) {
-                                ev.preventDefault();
-                                var target = content.querySelector(link.getAttribute('href'));
-                                if (target) {
-                                    content.scrollTo({ top: target.offsetTop - 12, behavior: 'smooth' });
-                                }
-                            });
-                        });
-                    }
-                });
-            });
-        }());
-    </script>
 
     <script>
         (function () {
@@ -862,14 +875,78 @@
 
     <script>
         (function () {
-            const btnEntreno = document.getElementById('btn-show-entreno');
-            const btnAlimentacion = document.getElementById('btn-show-alimentacion');
-            const secEjercicios = document.getElementById('Ejercicios');
-            const secAlimentacion = document.getElementById('Alimentacion');
+            var btnEntreno = document.getElementById('btn-show-entreno');
+            var btnAlimentacion = document.getElementById('btn-show-alimentacion');
+            var secEjercicios = document.getElementById('Ejercicios');
+            var secAlimentacion = document.getElementById('Alimentacion');
+            var pfhTitle = document.getElementById('pfh-title');
+            var pfhActions = document.getElementById('pfh-actions');
 
             if (!btnEntreno || !btnAlimentacion || !secEjercicios || !secAlimentacion) return;
 
+            var currentTab = 'entreno';
+
+            /* ── Sync floating header with the active plan ── */
+            function syncHeader(tab) {
+                if (!pfhActions) return;
+
+                // Return buttons to their original containers first
+                returnButtonsHome();
+
+                var src = tab === 'entreno'
+                    ? document.getElementById('botones_accion')
+                    : document.getElementById('botones_accion_alim');
+                if (!src) return;
+
+                var pill = src.querySelector('[role="group"], .plan-actions-pill');
+                if (!pill) return;
+
+                // Move buttons into the floating header
+                while (pill.firstChild) {
+                    pfhActions.appendChild(pill.firstChild);
+                }
+
+                // Update title
+                if (pfhTitle) {
+                    pfhTitle.textContent = tab === 'entreno' ? 'Plan de Entreno' : 'Plan de Alimentaci\u00f3n';
+                }
+                if (window.applyI18n) window.applyI18n();
+            }
+
+            /* Return buttons back to their original section containers */
+            function returnButtonsHome() {
+                if (!pfhActions || !pfhActions.children.length) return;
+
+                // Figure out where the current buttons came from
+                var srcEntreno = document.getElementById('botones_accion');
+                var srcAlim = document.getElementById('botones_accion_alim');
+                var pillEntreno = srcEntreno ? srcEntreno.querySelector('[role="group"]') : null;
+                var pillAlim = srcAlim ? srcAlim.querySelector('.plan-actions-pill') : null;
+
+                // Check which buttons are in the header and return them
+                var btns = Array.from(pfhActions.children);
+                btns.forEach(function (btn) {
+                    var id = btn.id || '';
+                    if (id.includes('_alim') || id === 'boton_alimentacion') {
+                        if (pillAlim) pillAlim.appendChild(btn);
+                    } else {
+                        if (pillEntreno) pillEntreno.appendChild(btn);
+                    }
+                });
+            }
+
+            /* ── Toggle collapse/expand ── */
+            if (pfhTitle) {
+                pfhTitle.addEventListener('click', function () {
+                    if (pfhActions) {
+                        pfhActions.classList.toggle('collapsed');
+                    }
+                });
+            }
+
+            /* ── Tab switching ── */
             function showTab(tab) {
+                currentTab = tab;
                 if (tab === 'entreno') {
                     secEjercicios.classList.add('active');
                     secAlimentacion.classList.remove('active');
@@ -881,14 +958,42 @@
                     btnEntreno.classList.remove('active');
                     btnAlimentacion.classList.add('active');
                 }
-                // Repaint charts and other components
+                syncHeader(tab);
                 window.dispatchEvent(new Event('resize'));
             }
 
-            btnEntreno.addEventListener('click', () => showTab('entreno'));
-            btnAlimentacion.addEventListener('click', () => showTab('alimentacion'));
+            /* ── Swipe detection (mobile) ── */
+            var swipeContainer = document.getElementById('pt-plan-swipe');
+            if (swipeContainer) {
+                var scrollTimer = null;
+                swipeContainer.addEventListener('scroll', function () {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(function () {
+                        var sl = swipeContainer.scrollLeft;
+                        var w = swipeContainer.offsetWidth;
+                        var idx = Math.round(sl / w);
+                        var newTab = idx === 0 ? 'entreno' : 'alimentacion';
+                        if (newTab !== currentTab) showTab(newTab);
+                    }, 80);
+                }, { passive: true });
+            }
 
-            // Default state
+            btnEntreno.addEventListener('click', function () { showTab('entreno'); });
+            btnAlimentacion.addEventListener('click', function () { showTab('alimentacion'); });
+
+            /* ── Scroll detection for floating header background ── */
+            var headerEl = document.getElementById('plan-floating-header');
+            function checkScroll() {
+                if (!headerEl) return;
+                if (window.scrollY > 15) {
+                    headerEl.classList.add('scrolled');
+                } else {
+                    headerEl.classList.remove('scrolled');
+                }
+            }
+            window.addEventListener('scroll', checkScroll, { passive: true });
+            checkScroll(); // run once initially
+
             showTab('entreno');
         })();
     </script>

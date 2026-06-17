@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,25 +13,26 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/Styles/styles_dashboard.css">
-    <link rel="stylesheet" href="/Styles/styles_ayuda.css">
     <meta name="theme-color" content="#0c0d0f">
     <title data-i18n-en="Calendar">Calendario</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202"
         crossorigin="anonymous"></script>
 
     <style>
-        section{
+        section {
             background: transparent !important;
         }
+
         * {
             -webkit-tap-highlight-color: transparent !important;
-            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
             outline: none !important;
         }
 
         *:focus {
             outline: none !important;
         }
+
         /* ── Material You override layer (Dashboard only) ───────────── */
         :root {
             --my-primary: #ff073a;
@@ -46,7 +48,8 @@
             --my-radius-sm: 16px;
             --my-radius-pill: 999px;
         }
-        main{
+
+        main {
             margin: 0px;
             padding: 24px 16px;
             display: flex;
@@ -55,7 +58,7 @@
             align-items: flex-start;
         }
 
-        main > h1 {
+        main>h1 {
             width: 100%;
             order: -1;
         }
@@ -86,12 +89,15 @@
             --fc-today-bg-color: rgba(255, 7, 58, 0.1) !important;
         }
 
-        .fc-theme-standard td, .fc-theme-standard th, .fc-theme-standard .fc-scrollgrid {
+        .fc-theme-standard td,
+        .fc-theme-standard th,
+        .fc-theme-standard .fc-scrollgrid {
             border: none !important;
             background: transparent !important;
         }
 
-        .fc .fc-view-harness, .fc-day {
+        .fc .fc-view-harness,
+        .fc-day {
             background: transparent !important;
         }
 
@@ -100,6 +106,7 @@
             margin-bottom: 24px;
             padding: 0 10px;
         }
+
         .fc .fc-toolbar-title {
             font-size: 22px !important;
             font-weight: 800 !important;
@@ -107,10 +114,11 @@
             color: #fff;
             text-transform: capitalize;
         }
+
         .fc .fc-button-primary {
             background-color: color-mix(in srgb, #fff 10%, transparent) !important;
             border: 1px solid color-mix(in srgb, #fff 15%, transparent) !important;
-            color: rgba(255,255,255,0.9) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             border-radius: 14px !important;
             box-shadow: none !important;
             text-transform: capitalize;
@@ -118,9 +126,11 @@
             font-weight: 600 !important;
             transition: all 0.2s ease;
         }
+
         .fc .fc-button-primary:hover {
             background-color: color-mix(in srgb, #fff 18%, transparent) !important;
         }
+
         .fc .fc-button-primary:not(:disabled):active,
         .fc .fc-button-primary:not(:disabled).fc-button-active {
             background-color: var(--my-primary) !important;
@@ -132,7 +142,7 @@
         .fc-col-header-cell-cushion {
             font-weight: 700;
             font-size: 13px;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             padding: 12px 0 !important;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -150,12 +160,13 @@
             background: color-mix(in srgb, #fff 3%, transparent);
             border: 1px solid color-mix(in srgb, #fff 4%, transparent);
         }
+
         .fc-daygrid-day-frame:hover {
             background: color-mix(in srgb, #fff 8%, transparent);
             transform: scale(0.98);
             cursor: pointer;
         }
-        
+
         .fc .fc-daygrid-day-top {
             display: flex;
             justify-content: center;
@@ -164,7 +175,7 @@
             margin-top: 4px;
             flex-direction: row;
         }
-        
+
         /* Centered day number */
         .fc-daygrid-day-number {
             font-weight: 700;
@@ -176,7 +187,7 @@
             justify-content: center;
             border-radius: 50%;
             text-decoration: none !important;
-            color: rgba(255,255,255,0.85) !important;
+            color: rgba(255, 255, 255, 0.85) !important;
             transition: background 0.2s ease, color 0.2s ease;
         }
 
@@ -191,6 +202,7 @@
         .fc-day-other .fc-daygrid-day-number {
             opacity: 0.2;
         }
+
         .fc-day-other .fc-daygrid-day-frame {
             background: transparent;
             border-color: transparent;
@@ -205,40 +217,48 @@
             align-items: center !important;
             gap: 4px !important;
         }
+
         .fc-daygrid-event-harness {
             margin-bottom: 0 !important;
         }
+
         .fc-event {
             border: none !important;
             background: transparent !important;
         }
-        
+
         /* Scrollbar hides */
         .fc-scroller::-webkit-scrollbar {
             width: 4px;
         }
+
         .fc-scroller::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .fc-scroller::-webkit-scrollbar-thumb {
             background: color-mix(in srgb, #fff 15%, transparent);
             border-radius: 4px;
         }
 
         /* Hacer que el calendario ocupe el alto disponible (móvil y escritorio) */
-        html, body { height: 100%; }
+        html,
+        body {
+            height: 100%;
+        }
 
         @media (max-width: 900px) {
             main {
-                margin: 0; /* Override styles_dashboard.css margin */
-                padding: calc(var(--header-fixed, 72px) + 12px) 12px 12px;
+                margin: 0;
+                /* Override styles_dashboard.css margin */
+                padding: 24px 16px;
                 height: calc(100vh - var(--footer-fixed, 56px));
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
             }
 
-            main > h1 {
+            main>h1 {
                 order: 0;
                 width: 100%;
             }
@@ -262,11 +282,14 @@
             }
 
             /* Asegurar que FullCalendar y sus contenedores internos se estiren */
-            .fc, .fc .fc-view-harness, .fc-scroller {
+            .fc,
+            .fc .fc-view-harness,
+            .fc-scroller {
                 height: 100% !important;
                 min-height: 0 !important;
             }
         }
+
         /* Font */
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -292,34 +315,6 @@
 
         #textos .brand-accent {
             color: var(--my-primary);
-        }
-
-        /* Help button */
-        #btn-ayuda-sheet {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 999px;
-            border: 1px solid var(--my-glass-rim);
-            background: var(--my-glass);
-            transition: background .18s ease;
-            flex-shrink: 0;
-        }
-
-        #btn-ayuda-sheet:hover {
-            background: var(--my-glass-hover);
-        }
-
-        #btn-ayuda-sheet:active {
-            transform: scale(0.96);
-        }
-
-        #btn-ayuda-sheet img {
-            width: 28px;
-            height: 28px;
-            opacity: .85;
         }
 
         /* User pill */
@@ -374,7 +369,7 @@
             min-width: 0;
             position: relative;
             z-index: 1;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
         }
 
         #welcome_msg {
@@ -408,6 +403,7 @@
             gap: 8px;
             flex-shrink: 0;
         }
+
         /* ── MAIN / sections ────────────────────────────────────────── */
         .pt-plan-page {
             background: transparent;
@@ -561,21 +557,101 @@
             -webkit-backdrop-filter: blur(20px) saturate(140%);
         }
 
-        /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        .footer-btn {
-            display: inline-flex !important;
+        /* ── FOOTER NAV CUTOUT & ACTIVE STYLE ───────────────────────── */
+
+        /* Hide labels completely */
+        .footer-btn-label {
+            display: none !important;
+        }
+
+        /* Container of footer */
+        footer.footer-wrap {
+            position: fixed !important;
+            z-index: 900 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            transform: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            width: 100% !important;
+            height: 80px !important;
+            overflow: visible !important;
+        }
+
+        /* Inner nav bar */
+        footer .footer-nav {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 80px !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 24px !important;
+            /* Fixed padding to push buttons away from corners */
+            display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
+            justify-content: space-between !important;
+            position: relative !important;
+            overflow: visible !important;
+            pointer-events: auto !important;
+            box-shadow: none !important;
+        }
+
+        /* Real background container with cutout mask */
+        footer .footer-nav::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 20px !important;
+            /* leaves 20px at the top for the floating circle */
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: rgba(0, 0, 0, 0.45) !important;
+            /* Mantiene la transparencia actual */
+            backdrop-filter: blur(20px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 20px 20px 0 0 !important;
+            /* no flotante, fija al borde inferior */
+            z-index: -1 !important;
+            pointer-events: none !important;
+
+            /* Radial gradient cutout mask centered dynamically */
+            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            -webkit-mask-repeat: no-repeat !important;
+            mask-repeat: no-repeat !important;
+        }
+
+        html.no-transparency footer .footer-nav::before {
+            background: #0f151b !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* Footer buttons styling */
+        .footer-btn {
+            flex: 1 1 0 !important;
+            /* Take up equal space */
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
             justify-content: center !important;
-            gap: 0 !important;
-            padding: 8px 12px !important;
-            border-radius: 999px !important;
+            padding: 0 !important;
             background: transparent !important;
-            border: 1px solid transparent !important;
-            max-width: none !important;
-            width: auto !important;
-            transition: all 0.2s ease !important;
+            border: none !important;
+            height: 60px !important;
+            margin-top: 20px !important;
+            /* aligns buttons to the background bar */
             text-decoration: none !important;
+            position: relative !important;
+            z-index: 2 !important;
         }
 
         .footer-btn-icon {
@@ -586,8 +662,7 @@
             justify-content: center !important;
             border-radius: 50% !important;
             background: transparent !important;
-            transition: background 0.2s ease !important;
-            flex-shrink: 0 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         .footer-btn-icon img,
@@ -595,55 +670,139 @@
             width: 20px !important;
             height: 20px !important;
             opacity: 0.6 !important;
-            transition: opacity 0.2s ease !important;
-            filter: none !important;
+            transition: all 0.3s ease !important;
         }
 
-        /* Profile avatar circular styling */
-        .footer-btn-icon img#icono_usuario {
-            position: static !important;
-            width: 20px !important;
-            height: 20px !important;
-            opacity: 1 !important;
-            border-radius: 50% !important;
-            object-fit: cover !important;
-            -webkit-mask-image: none !important;
-            mask-image: none !important;
-            pointer-events: auto !important;
-            z-index: 1 !important;
-        }
-        /* Label styling */
-        .footer-btn-label {
-            font-size: 13.5px !important;
-            font-weight: 700 !important;
-            letter-spacing: .2px !important;
-            color: rgba(255, 255, 255, 0.95) !important;
-            max-width: 0 !important;
-            opacity: 0 !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, margin-left 0.3s ease !important;
-            margin-left: 0 !important;
-            line-height: 1 !important;
-        }
-
-        /* Active button style (Pill layout) */
+        /* Active button state */
         .footer-btn.is-active {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            padding: 8px 16px 8px 12px !important;
-            gap: 6px !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .footer-btn.is-active .footer-btn-icon {
+            background: var(--accent) !important;
+            /* Toma el color de fondo actual */
+            transform: translateY(-26px) !important;
+            /* Flota hacia arriba */
+            width: 46px !important;
+            height: 46px !important;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
         }
 
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
+            filter: brightness(0) !important;
+            /* Icono oscuro inside green circle */
         }
 
-        .footer-btn.is-active .footer-btn-label {
-            max-width: 100px !important;
-            opacity: 1 !important;
-            margin-left: 2px !important;
+        /* Profile avatar specific active override (never darken user photo) */
+        .footer-btn.is-active .footer-btn-icon img.footer-profile-avatar {
+            filter: none !important;
+        }
+
+        .footer-profile-avatar {
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        /* Floating Help Button */
+        .floating-help-btn {
+            position: fixed !important;
+            bottom: 100px !important;
+            /* Above the 80px footer */
+            right: 20px !important;
+            width: 50px !important;
+            height: 50px !important;
+            background: rgba(0, 0, 0, 0.45) !important;
+            backdrop-filter: blur(20px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 1000 !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            transition: transform 0.2s ease !important;
+        }
+
+        .floating-help-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        .floating-help-btn img,
+        .floating-help-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            opacity: 0.8 !important;
+        }
+
+        /* ── DESKTOP STYLING OVERRIDE ───────────────────────────────── */
+        @media (min-width: 1024px) {
+            .floating-help-btn {
+                bottom: 120px !important;
+                right: calc(50vw - 225px) !important;
+            }
+
+            body {
+                padding-right: 0 !important;
+            }
+
+            body>header,
+            header {
+                right: 0 !important;
+            }
+
+            footer.footer-wrap {
+                left: auto !important;
+                right: 32px !important;
+                bottom: auto !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                width: 80px !important;
+                height: 320px !important;
+            }
+
+            footer .footer-nav {
+                flex-direction: column !important;
+                width: 80px !important;
+                height: 100% !important;
+                padding: 24px 0 !important;
+                border-radius: 999px !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            footer .footer-nav::before {
+                border-radius: 999px !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 20px !important;
+                right: 0 !important;
+
+                /* Vertical gradient cutout mask centered dynamically on the Y axis */
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+            }
+
+            .footer-btn {
+                margin-top: 0 !important;
+                margin-left: 20px !important;
+                width: 60px !important;
+                flex: 1 1 0 !important;
+                min-height: 0 !important;
+                height: auto !important;
+            }
+
+            .footer-btn.is-active .footer-btn-icon {
+                transform: translateX(-26px) !important;
+            }
         }
 
 
@@ -663,7 +822,7 @@
             margin: 0 0 12px 0;
             font-size: 18px;
             font-weight: 800;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
             letter-spacing: .2px;
         }
 
@@ -697,6 +856,7 @@
             /* Hide scrollbar for a cleaner look */
             scrollbar-width: none;
         }
+
         .pt-chart-panel[data-chart-idx="1"]::-webkit-scrollbar,
         .pt-chart-panel[data-chart-idx="2"]::-webkit-scrollbar {
             display: none;
@@ -706,12 +866,15 @@
             .pt-charts-swipe {
                 flex-wrap: wrap !important;
             }
+
             .pt-chart-panel[data-chart-idx="0"] {
                 flex: 1 1 calc(60% - 8px) !important;
             }
+
             .pt-chart-panel[data-chart-idx="1"] {
                 flex: 1 1 calc(40% - 8px) !important;
             }
+
             .pt-chart-panel[data-chart-idx="2"] {
                 flex: 1 1 100% !important;
                 max-width: 100% !important;
@@ -719,13 +882,15 @@
                 padding-right: 0 !important;
                 margin-top: 16px !important;
             }
+
             .pt-stats-grid {
                 grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
             }
         }
 
         .pt-charts-dots {
-            display: none !important; /* Hidden on desktop */
+            display: none !important;
+            /* Hidden on desktop */
         }
 
         @media (max-width: 900px) {
@@ -739,7 +904,10 @@
                 flex: 1;
                 min-height: 0;
             }
-            .pt-charts-swipe::-webkit-scrollbar { display: none; }
+
+            .pt-charts-swipe::-webkit-scrollbar {
+                display: none;
+            }
 
             .pt-chart-panel[data-chart-idx="0"],
             .pt-chart-panel[data-chart-idx="1"],
@@ -752,16 +920,17 @@
                 height: 100%;
                 overflow-y: auto;
             }
-            
+
             .pt-charts-dots {
-                display: flex !important; /* Visible on mobile */
+                display: flex !important;
+                /* Visible on mobile */
             }
         }
 
         .pt-chart-card {
             border-radius: 14px;
             background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(242,234,227,0.06);
+            border: 1px solid rgba(242, 234, 227, 0.06);
             padding: 14px 12px 12px;
             backdrop-filter: blur(20px) saturate(140%);
             -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -773,7 +942,7 @@
             margin: 0 0 10px;
             font-size: 13px;
             font-weight: 800;
-            color: rgba(255,255,255,0.72);
+            color: rgba(255, 255, 255, 0.72);
             letter-spacing: .3px;
             text-transform: uppercase;
         }
@@ -783,6 +952,7 @@
             width: 100%;
             aspect-ratio: 16 / 10;
         }
+
         .pt-chart-canvas-wrap canvas {
             display: block;
             width: 100%;
@@ -803,11 +973,12 @@
             gap: 8px;
             margin-bottom: 14px;
         }
+
         .pt-charts-dot {
             width: 8px;
             height: 8px;
             border-radius: 999px;
-            background: rgba(255,255,255,0.18);
+            background: rgba(255, 255, 255, 0.18);
             border: none;
             padding: 0;
             cursor: pointer;
@@ -815,6 +986,7 @@
             box-shadow: none;
             min-height: 0;
         }
+
         .pt-charts-dot.is-active {
             background: var(--my-primary);
             transform: scale(1.25);
@@ -831,43 +1003,57 @@
             justify-content: center;
             gap: 14px;
             border-radius: var(--my-radius-sm);
-            background: rgba(12,13,15,0.88);
+            background: rgba(12, 13, 15, 0.88);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 32px 24px;
             text-align: center;
         }
+
         .pt-stats-empty-icon {
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: rgba(188,228,255,0.08);
-            border: 1px solid rgba(188,228,255,0.18);
+            background: rgba(188, 228, 255, 0.08);
+            border: 1px solid rgba(188, 228, 255, 0.18);
             display: flex;
             align-items: center;
             justify-content: center;
             animation: pt-empty-pulse 2.4s ease-in-out infinite;
         }
+
         .pt-stats-empty-icon svg {
             width: 28px;
             height: 28px;
             stroke: var(--my-primary);
             opacity: .72;
         }
+
         @keyframes pt-empty-pulse {
-            0%, 100% { transform: scale(1); opacity: .72; }
-            50% { transform: scale(1.08); opacity: 1; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: .72;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
         }
+
         .pt-stats-empty-title {
             font-size: 16px;
             font-weight: 800;
-            color: rgba(255,255,255,0.88);
+            color: rgba(255, 255, 255, 0.88);
             margin: 0;
         }
+
         .pt-stats-empty-sub {
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255,255,255,0.48);
+            color: rgba(255, 255, 255, 0.48);
             margin: 0;
             max-width: 260px;
             line-height: 1.45;
@@ -886,7 +1072,7 @@
             font-weight: 800;
             letter-spacing: .7px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.58);
+            color: rgba(255, 255, 255, 0.58);
         }
 
         .pt-stat-card {
@@ -894,7 +1080,7 @@
             border-radius: 14px;
             background: rgba(0, 0, 0, 0.45);
             border: 1px solid rgba(242, 234, 227, 0.06);
-            color: rgba(255,255,255,0.92);
+            color: rgba(255, 255, 255, 0.92);
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -910,7 +1096,7 @@
 
         .pt-stat-key {
             font-size: 12px;
-            color: rgba(255,255,255,0.68);
+            color: rgba(255, 255, 255, 0.68);
             font-weight: 700;
             line-height: 1.25;
         }
@@ -983,11 +1169,11 @@
             backdrop-filter: none !important;
             -webkit-backdrop-filter: none !important;
         }
-
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 </head>
+
 <body>
 
     <header>
@@ -1025,10 +1211,19 @@
                     <!-- Empty state overlay (hidden by default, shown by JS when no data) -->
                     <div id="pt-stats-empty" class="pt-stats-empty" style="display:none;">
                         <div class="pt-stats-empty-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 4-6"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 3v18h18" />
+                                <path d="M7 16l4-8 4 4 4-6" />
+                            </svg>
                         </div>
-                        <p class="pt-stats-empty-title" data-i18n-en="No training data found">No se encontraron datos de entreno</p>
-                        <p class="pt-stats-empty-sub" data-i18n-en="Complete workouts from your training plan to see your statistics and charts here.">Completá entrenamientos desde tu plan de entreno para ver tus estadísticas y gráficos acá.</p>
+                        <p class="pt-stats-empty-title" data-i18n-en="No training data found">No se encontraron datos de
+                            entreno</p>
+                        <p class="pt-stats-empty-sub"
+                            data-i18n-en="Complete workouts from your training plan to see your statistics and charts here.">
+                            Completá entrenamientos desde tu plan de entreno para ver tus estadísticas y gráficos acá.
+                        </p>
                     </div>
 
                     <h2 class="pt-stats-title" data-i18n-en="Statistics">Estadísticas</h2>
@@ -1039,7 +1234,7 @@
                 </section>
             </div>
         </div>
-        
+
         <!-- Dot indicators for swipe -->
         <div id="pt-charts-dots" class="pt-charts-dots" style="margin-bottom: 24px; margin-top: 12px; width: 100%;">
             <button class="pt-charts-dot is-active" data-dot="0" aria-label="Calendar"></button>
@@ -1049,7 +1244,8 @@
     </main>
 
     <footer id="footer_dashboard" class="footer-wrap">
-        <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
+        <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation"
+            style="--active-x-pct: 50%;">
 
             <!-- Inicio -->
             <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -1075,232 +1271,17 @@
             <a class="footer-btn" href="/Templates/Inicio/perfil_usuario.html" aria-label="Perfil"
                 data-i18n-en-aria-label="Profile">
                 <div class="footer-btn-icon">
-                    <img id="icono_usuario" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    <img class="footer-profile-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
                 </div>
                 <span class="footer-btn-label" data-i18n-en="Profile">Perfil</span>
             </a>
 
-            <!-- Ayuda -->
-            <a id="btn-ayuda-sheet" class="footer-btn" aria-label="Ayuda"
-                data-i18n-en-aria-label="Help" style="cursor: pointer;">
-                <div class="footer-btn-icon">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyay1pY29uIGx1Y2lkZS1jaXJjbGUtcXVlc3Rpb24tbWFyayI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJNOS4wOSA5YTMgMyAwIDAgMSA1LjgzIDFjMCAyLTMgMy0zIDMiLz48cGF0aCBkPSJNMTIgMTdoLjAxIi8+PC9zdmc+"
-                        alt="" aria-hidden="true">
-                </div>
-                <span class="footer-btn-label" data-i18n-en="Help">Ayuda</span>
-            </a>
         </nav>
+
     </footer>
     <script src="/Scripts/ui_bottom_sheet.js"></script>
     <script src="/Scripts/script_calendario.js" type="module"></script>
-    <script>
-        (function () {
-            var btn = document.getElementById('btn-ayuda-sheet');
-            if (!btn) return;
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
-                if (!window.PTBottomSheet) return;
-
-                var ayudaHTML = [
-                    '<div class="ayuda-sheet-wrap">',
-
-                    /* ── Índice ─────────────────────────────────────────── */
-                    '<section class="ayuda-box" aria-labelledby="sh_ayuda_indice_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_indice_title">Índice</h1>',
-                    '      <p class="ayuda-subtitle">Ir a una sección</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Ayuda</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <nav aria-label="Índice de ayuda">',
-                    '      <ul>',
-                    '        <li><a href="#sh-ayuda-calendario">Usando el Calendario</a></li>',
-                    '        <li><a href="#sh-ayuda-estadisticas">Entender Estadísticas</a></li>',
-                    '        <li><a href="#sh-ayuda-registros">Gestionar Registros</a></li>',
-                    '      </ul>',
-                    '    </nav>',
-                    '    <p class="ayuda-note">El calendario es tu herramienta para rastrear tus entrenamientos completados, ver calorías quemadas y analizar tu progreso a lo largo del tiempo.</p>',
-                    '  </div>',
-                    '</section>',
-
-                    /* ── Guía Calendario ────────────────────────────────── */
-                    '<section id="sh-ayuda-calendario" class="ayuda-box" aria-labelledby="sh_ayuda_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_title">Usando el Calendario</h1>',
-                    '      <p class="ayuda-subtitle">Rastrear y gestionar entrenamientos</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Guía</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <p>El calendario te permite ver todos tus entrenamientos completados, rastrear calorías quemadas y analizar tu consistencia a lo largo del tiempo.</p>',
-                    '    <div class="ayuda-grid" role="list">',
-                    '      <div class="ayuda-card" role="listitem"><h4>Qué ves</h4><p>Entrenamientos completados en el calendario con calorías e información del entrenamiento.</p></div>',
-                    '      <div class="ayuda-card" role="listitem"><h4>Estados</h4><p>Cada evento muestra su estado (completado/pendiente) con un indicador de color.</p></div>',
-                    '    </div>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>1) Ver entrenamientos en el calendario</h2>',
-                    '    <ul>',
-                    '      <li>El calendario muestra todos los meses. Navegá entre meses usando los controles de arriba.</li>',
-                    '      <li>Cada <strong>punto o evento</strong> en el calendario representa un entrenamiento completado.</li>',
-                    '      <li>Los eventos muestran:',
-                    '        <ul>',
-                    '          <li><strong>Calorías quemadas</strong> (si están registradas).</li>',
-                    '          <li><strong>Indicador de estado</strong>: punto verde para completados, azul para otros.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '    </ul>',
-                    '    <h2>2) Ver detalle de un día</h2>',
-                    '    <ul>',
-                    '      <li>Tocá/clickeá en <strong>cualquier fecha</strong> del calendario para ver el detalle de ese día.</li>',
-                    '      <li>También podés clickear en un <strong>evento específico</strong> (entrenamiento) para ver su información.</li>',
-                    '      <li>Se abrirá un <strong>panel emergente</strong> con:',
-                    '        <ul>',
-                    '          <li><strong>Fecha</strong>: día seleccionado.</li>',
-                    '          <li><strong>Entrenamientos completados</strong>: lista de todos los entrenamientos de ese día.</li>',
-                    '          <li><strong>Detalles de cada entrenamiento</strong>: estado, calorías, tiempo total, hora de confirmación.</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '    </ul>',
-                    '    <h2>3) Información de cada entrenamiento</h2>',
-                    '    <ul>',
-                    '      <li><strong>Título</strong>: nombre del entrenamiento (ej: "Pecho y Tríceps").</li>',
-                    '      <li><strong>Estado</strong>: completado o en progreso.</li>',
-                    '      <li><strong>Calorías</strong>: calorías estimadas quemadas durante el entrenamiento.</li>',
-                    '      <li><strong>Tiempo</strong>: duración total del entrenamiento en minutos.</li>',
-                    '      <li><strong>Hora</strong>: hora en que se confirmó el entrenamiento.</li>',
-                    '      <li><strong>Descripción</strong>: notas adicionales sobre el entrenamiento (si existen).</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>4) Eliminar registros</h2>',
-                    '    <ul>',
-                    '      <li>En el detalle de cada entrenamiento, hay un botón <strong>"Limpiar registro"</strong>.</li>',
-                    '      <li>Al presionarlo, se te pedirá confirmación antes de eliminar el registro.</li>',
-                    '      <li>Una vez eliminado, el entrenamiento desaparecerá del calendario.</li>',
-                    '      <li>Este cambio se sincronizará con tu perfil automáticamente.</li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Atajo: tocá tu <strong>Perfil</strong> en el header para ir directamente a tu página de perfil.</p>',
-                    '  </div>',
-                    '</section>',
-                    /* ── Entender Estadísticas ──────────────────────────── */,
-                    '<section id="sh-ayuda-estadisticas" class="ayuda-box" aria-labelledby="sh_ayuda_stats_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_stats_title">Entender Estadísticas</h1>',
-                    '      <p class="ayuda-subtitle">Métricas de tu progreso</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Análisis</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <p>Las estadísticas te muestran un resumen de tu desempeño durante el mes actual, ayudándote a evaluar tu consistencia y progreso.</p>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>1) Métricas principales</h2>',
-                    '    <ul>',
-                    '      <li><strong>Total de entrenamientos (mes)</strong>: cantidad de entrenamientos completados en el mes actual.</li>',
-                    '      <li><strong>Total de calorías (mes)</strong>: suma total de calorías quemadas en todos tus entrenamientos del mes.</li>',
-                    '      <li><strong>Promedio diario de calorías</strong>: calorías promedio por día (total del mes ÷ días activos).</li>',
-                    '      <li><strong>Consistencia</strong>: racha de días consecutivos con entrenamientos (útil para ver tu disciplina).</li>',
-                    '      <li><strong>Performance</strong>: evaluación de cómo te ha ido este mes comparado con tu capacidad.</li>',
-                    '      <li><strong>Proyección</strong>: estimación de tus calorías totales si mantienes el ritmo actual hasta fin de mes.</li>',
-                    '    </ul>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>2) Cómo leer las tarjetas de estadísticas</h2>',
-                    '    <ul>',
-                    '      <li>Cada <strong>tarjeta</strong> muestra una métrica diferente.</li>',
-                    '      <li>El <strong>número grande</strong> es el valor principal de la métrica.</li>',
-                    '      <li>El <strong>color</strong> de cada tarjeta ayuda a identificar el tipo de métrica:',
-                    '        <ul>',
-                    '          <li><strong>Azul claro</strong>: métricas principales (entrenamientos, calorías).</li>',
-                    '          <li><strong>Verde</strong>: performance (desempeño).</li>',
-                    '          <li><strong>Naranja</strong>: consistencia (racha de días).</li>',
-                    '          <li><strong>Rosa/Morado</strong>: progreso (proyecciones).</li>',
-                    '        </ul>',
-                    '      </li>',
-                    '    </ul>',
-                    '    <h2>3) Consejos para mejorar tus métricas</h2>',
-                    '    <ul>',
-                    '      <li><strong>Aumentar entrenamientos</strong>: intenta entrenar más días a la semana.</li>',
-                    '      <li><strong>Mejorar intensidad</strong>: entrenamientos más intensos queman más calorías.</li>',
-                    '      <li><strong>Mantener consistencia</strong>: una racha larga de días consecutivos es muy motivante.</li>',
-                    '      <li><strong>Revisar proyecciones</strong>: si tu proyección es baja, acelera el ritmo para lograr tus metas.</li>',
-                    '    </ul>',
-                    '  </div>',
-                    '</section>',
-
-                    /* ── Gestionar Registros ───────────────────────────── */
-                    '<section id="sh-ayuda-registros" class="ayuda-box" aria-labelledby="sh_ayuda_reg_title">',
-                    '  <div class="ayuda-header">',
-                    '    <div class="ayuda-title">',
-                    '      <h1 id="sh_ayuda_reg_title">Gestionar Registros</h1>',
-                    '      <p class="ayuda-subtitle">Editar y eliminar entrenamientos</p>',
-                    '    </div>',
-                    '    <span class="ayuda-chip">Gestión</span>',
-                    '  </div>',
-                    '  <div class="ayuda-content">',
-                    '    <p>Los registros de entrenamientos son la base de tu calendario y estadísticas. Acá te mostramos cómo gestionar tus datos.</p>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>1) Cómo se generan los registros</h2>',
-                    '    <ul>',
-                    '      <li>Los registros se crean automáticamente cuando <strong>completás un entrenamiento</strong> desde tu plan de ejercicio.</li>',
-                    '      <li>Se sincronizan con tu perfil automáticamente.</li>',
-                    '      <li>Cada registro contiene: calorías estimadas, tiempo total, hora de confirmación, estado.</li>',
-                    '    </ul>',
-                    '    <h2>2) Eliminar un registro</h2>',
-                    '    <ol>',
-                    '      <li>Abrí el calendario y hacé click en la fecha del entrenamiento.</li>',
-                    '      <li>Se abrirá un panel con los detalles de ese día.</li>',
-                    '      <li>En cada entrenamiento, encontrarás el botón <strong>"Limpiar registro"</strong>.</li>',
-                    '      <li>Presioná el botón y <strong>confirma</strong> la eliminación.</li>',
-                    '      <li>El registro desaparecerá del calendario y las estadísticas se actualizarán automáticamente.</li>',
-                    '    </ol>',
-                    '    <div class="ayuda-divider" aria-hidden="true"></div>',
-                    '    <h2>3) Sincronización automática</h2>',
-                    '    <ul>',
-                    '      <li>Todos los cambios (agregar o eliminar registros) se guardan en tu base de datos automáticamente.</li>',
-                    '      <li>Si desconectás y te conectás de nuevo, tus datos estarán sincronizados.</li>',
-                    '      <li>Las estadísticas se recalculan automáticamente con cada cambio.</li>',
-                    '    </ul>',
-                    '    <h2>4) Solución de problemas</h2>',
-                    '    <ul>',
-                    '      <li><strong>No veo mis entrenamientos</strong>: recargá la página o sincronizá desde tu perfil.</li>',
-                    '      <li><strong>Registro no se elimina</strong>: comprobá tu conexión a internet e intentá de nuevo.</li>',
-                    '      <li><strong>Estadísticas incorrectas</strong>: recargá la página para actualizar.</li>',
-                    '    </ul>',
-                    '    <p class="ayuda-note">Tip: Revisá tu calendario regularmente para ver tu progreso y mantente motivado.</p>',
-                    '  </div>',
-                    '</section>',
-
-                    '</div>'
-                ].join('\n');
-
-                window.PTBottomSheet.open({
-                    title: 'Ayuda',
-                    subtitle: 'Personal TrAIner',
-                    html: ayudaHTML,
-                    showClose: false,
-                    showHandle: true,
-                    allowOutsideClose: true,
-                    allowEscapeClose: true,
-                    allowDragClose: true,
-                    className: 'pt-sheet--ayuda',
-                    didOpen: function (sheet) {
-                        var content = sheet.querySelector('.pt-sheet-content');
-                        if (!content) return;
-                        sheet.querySelectorAll('a[href^="#sh-"]').forEach(function (link) {
-                            link.addEventListener('click', function (ev) {
-                                ev.preventDefault();
-                                var target = content.querySelector(link.getAttribute('href'));
-                                if (target) {
-                                    content.scrollTo({ top: target.offsetTop - 12, behavior: 'smooth' });
-                                }
-                            });
-                        });
-                    }
-                });
-            });
-        }());
-    </script>
 </body>
+
 </html>

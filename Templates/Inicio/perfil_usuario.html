@@ -338,35 +338,95 @@
             font-size: 12px !important;
         }
 
-        /* ── FOOTER NAV ─────────────────────────────────────────────── */
-        footer {
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(20px) saturate(140%);
-            -webkit-backdrop-filter: blur(20px) saturate(140%);
-            border-top: 1px solid var(--my-glass-rim);
+        /* ── FOOTER NAV CUTOUT & ACTIVE STYLE ───────────────────────── */
+        
+        /* Hide labels completely */
+        .footer-btn-label {
+            display: none !important;
         }
 
-        .footer-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+        /* Container of footer */
+        footer.footer-wrap {
+            position: fixed !important;
+            z-index: 900 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            transform: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            background: transparent !important;
+            pointer-events: none !important;
+            width: 100% !important;
+            height: 80px !important;
+            overflow: visible !important;
         }
 
-        .footer-btn {
-            display: inline-flex !important;
+        /* Inner nav bar */
+        footer .footer-nav {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 80px !important;
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 24px !important; /* Fixed padding to push buttons away from corners */
+            display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
+            justify-content: space-between !important;
+            position: relative !important;
+            overflow: visible !important;
+            pointer-events: auto !important;
+            box-shadow: none !important;
+        }
+
+        /* Real background container with cutout mask */
+        footer .footer-nav::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 20px !important; /* leaves 20px at the top for the floating circle */
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: rgba(0, 0, 0, 0.45) !important; /* Mantiene la transparencia actual */
+            backdrop-filter: blur(20px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 20px 20px 0 0 !important; /* no flotante, fija al borde inferior */
+            z-index: -1 !important;
+            pointer-events: none !important;
+            
+            /* Radial gradient cutout mask centered dynamically */
+            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            -webkit-mask-repeat: no-repeat !important;
+            mask-repeat: no-repeat !important;
+        }
+
+        html.no-transparency footer .footer-nav::before {
+            background: #0f151b !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* Footer buttons styling */
+        .footer-btn {
+            flex: 1 1 0 !important; /* Take up equal space */
+            min-width: 0 !important;
+            display: flex !important;
+            align-items: center !important;
             justify-content: center !important;
-            gap: 0 !important;
-            padding: 8px 12px !important;
-            border-radius: 999px !important;
+            padding: 0 !important;
             background: transparent !important;
-            border: 1px solid transparent !important;
-            max-width: none !important;
-            width: auto !important;
-            transition: all 0.2s ease !important;
+            border: none !important;
+            height: 60px !important;
+            margin-top: 20px !important; /* aligns buttons to the background bar */
             text-decoration: none !important;
+            position: relative !important;
+            z-index: 2 !important;
         }
 
         .footer-btn-icon {
@@ -377,8 +437,7 @@
             justify-content: center !important;
             border-radius: 50% !important;
             background: transparent !important;
-            transition: background 0.2s ease !important;
-            flex-shrink: 0 !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         .footer-btn-icon img,
@@ -386,55 +445,97 @@
             width: 20px !important;
             height: 20px !important;
             opacity: 0.6 !important;
-            transition: opacity 0.2s ease !important;
-            filter: none !important;
+            transition: all 0.3s ease !important;
         }
 
-        /* Profile avatar circular styling */
-        .footer-btn-icon img#icono_usuario {
-            position: static !important;
-            width: 20px !important;
-            height: 20px !important;
-            opacity: 1 !important;
-            border-radius: 50% !important;
-            object-fit: cover !important;
-            -webkit-mask-image: none !important;
-            mask-image: none !important;
-            pointer-events: auto !important;
-            z-index: 1 !important;
-        }
-        /* Label styling */
-        .footer-btn-label {
-            font-size: 13.5px !important;
-            font-weight: 700 !important;
-            letter-spacing: .2px !important;
-            color: rgba(255, 255, 255, 0.95) !important;
-            max-width: 0 !important;
-            opacity: 0 !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            transition: max-width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, margin-left 0.3s ease !important;
-            margin-left: 0 !important;
-            line-height: 1 !important;
-        }
-
-        /* Active button style (Pill layout) */
+        /* Active button state */
         .footer-btn.is-active {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            padding: 8px 16px 8px 12px !important;
-            gap: 6px !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .footer-btn.is-active .footer-btn-icon {
+            background: var(--accent) !important; /* Toma el color de fondo actual */
+            transform: translateY(-26px) !important; /* Flota hacia arriba */
+            width: 46px !important;
+            height: 46px !important;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
         }
 
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
+            filter: brightness(0) !important; /* Icono oscuro inside green circle */
         }
 
-        .footer-btn.is-active .footer-btn-label {
-            max-width: 100px !important;
-            opacity: 1 !important;
-            margin-left: 2px !important;
+        /* Profile avatar specific active override (never darken user photo) */
+        .footer-btn.is-active .footer-btn-icon img.footer-profile-avatar {
+            filter: none !important;
+        }
+
+        .footer-profile-avatar {
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        /* ── DESKTOP STYLING OVERRIDE ───────────────────────────────── */
+        @media (min-width: 1024px) {
+            body {
+                padding-right: 0 !important;
+            }
+
+            body > header, header {
+                right: 0 !important;
+            }
+
+            footer.footer-wrap {
+                left: auto !important;
+                right: 32px !important;
+                bottom: auto !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                width: 80px !important;
+                height: 320px !important;
+            }
+
+            footer .footer-nav {
+                flex-direction: column !important;
+                width: 80px !important;
+                height: 100% !important;
+                padding: 24px 0 !important;
+                border-radius: 999px !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            footer .footer-nav::before {
+                border-radius: 999px !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 20px !important;
+                right: 0 !important;
+
+                /* Vertical gradient cutout mask centered dynamically on the Y axis */
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+            }
+
+            .footer-btn {
+                margin-top: 0 !important;
+                margin-left: 20px !important;
+                width: 60px !important;
+                flex: 1 1 0 !important;
+                min-height: 0 !important;
+                height: auto !important;
+            }
+
+            .footer-btn.is-active .footer-btn-icon {
+                transform: translateX(-26px) !important;
+            }
         }
 
         .pt-select-custom {
@@ -475,8 +576,8 @@
 <body>
 
     <header>
-        <button class="footer-nav translucent-bar" type="button" aria-label="Desloguear" data-i18n-en-aria-label="Log out"
-            style="width: 60px; height: 60px;">
+        <button class="translucent-bar" type="button" aria-label="Desloguear" data-i18n-en-aria-label="Log out"
+            style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
             <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 aria-hidden="true" focusable="false">
@@ -621,7 +722,7 @@
     </main>
 
     <footer class="footer-wrap">
-        <nav class="footer-nav translucent-bar" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation">
+        <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation" style="--active-x-pct: 83.33%;">
 
             <!-- Inicio -->
             <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -630,7 +731,6 @@
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1ob3VzZS1pY29uIGx1Y2lkZS1ob3VzZSI+PHBhdGggZD0iTTE1IDIxdi04YTEgMSAwIDAgMC0xLTFoLTRhMSAxIDAgMCAwLTEgMXY4Ii8+PHBhdGggZD0iTTMgMTBhMiAyIDAgMCAxIC43MDktMS41MjhsNy02YTIgMiAwIDAgMSAyLjU4MiAwbDcgNkEyIDIgMCAwIDEgMjEgMTB2OWEyIDIgMCAwIDEtMiAySDVhMiAyIDAgMCAxLTItMnoiLz48L3N2Zz4="
                         alt="" aria-hidden="true">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Home">Inicio</span>
             </a>
 
             <!-- Calendario -->
@@ -640,16 +740,14 @@
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYWxlbmRhci1kYXlzLWljb24gbHVjaWRlLWNhbGVuZGFyLWRheXMiPjxwYXRoIGQ9Ik04IDJ2NCIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cmVjdCB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHg9IjMiIHk9IjQiIHJ4PSIyIi8+PHBhdGggZD0iTTMgMTBoMTgiLz48cGF0aCBkPSJNOCAxNGguMDEiLz48cGF0aCBkPSJNMTIgMTRoLjAxIi8+PHBhdGggZD0iTTE2IDE0aC4wMSIvPjxwYXRoIGQ9Ik04IDE4aC4wMSIvPjxwYXRoIGQ9Ik0xMiAxOGguMDEiLz48cGF0aCBkPSJNMTYgMThoLjAxIi8+PC9zdmc+"
                         alt="" aria-hidden="true">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Calendar">Calendario</span>
             </a>
 
             <!-- Perfil (active) -->
             <a class="footer-btn is-active" href="/Templates/Inicio/perfil_usuario.html" aria-label="Perfil"
                 data-i18n-en-aria-label="Profile">
                 <div class="footer-btn-icon">
-                    <img id="icono_usuario" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    <img class="footer-profile-avatar" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
                 </div>
-                <span class="footer-btn-label" data-i18n-en="Profile">Perfil</span>
             </a>
         </nav>
     </footer>

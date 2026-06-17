@@ -997,6 +997,10 @@ window.onload = async () => {
     if (userEl) userEl.textContent = username || "";
     if (avatarEl && avatar) avatarEl.src = avatar;
     
+    document.querySelectorAll(".footer-profile-avatar").forEach(el => {
+        if (avatar) el.src = avatar;
+    });
+    
     const userSidebarEl = document.getElementById("username_sidebar");
     const avatarSidebarEl = document.getElementById("icono_usuario_sidebar");
     if (userSidebarEl) userSidebarEl.textContent = username || "";
