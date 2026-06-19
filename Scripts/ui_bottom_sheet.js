@@ -7,6 +7,10 @@
 	const style = document.createElement("style");
 	style.id = "pt-floating-sheet-override";
 	style.textContent = `
+		::view-transition-group(pt-sheet-hero) {
+			animation-duration: 0.5s;
+			animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+		}
 		.pt-sheet-overlay {
 			position: fixed !important;
 			top: 0 !important;
@@ -21,7 +25,6 @@
 			align-items: center !important;
 			justify-content: center !important;
 			opacity: 0 !important;
-			transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 			pointer-events: auto !important;
 		}
 		.pt-sheet-overlay.is-open {
@@ -45,7 +48,8 @@
 			transform-origin: center center !important;
 			margin: 0 !important;
 			bottom: auto !important;
-			transition: max-width 0.3s ease, width 0.3s ease, max-height 0.3s ease !important;
+			transform: none !important;
+			transition: none !important;
 		}
 		@media (min-width: 768px) {
 			.pt-sheet:has(.pt-detail),
@@ -286,7 +290,7 @@
 		const overlay = document.createElement("div");
 		overlay.className = "pt-sheet-overlay";
 		overlay.setAttribute("role", "presentation");
-		overlay.style.setProperty("transition", "opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
+
 
 		const sheet = document.createElement("section");
 		sheet.className = `pt-sheet${className ? ` ${className}` : ""}`;
@@ -351,7 +355,6 @@
 		sheet.appendChild(header);
 		sheet.appendChild(content);
 		overlay.appendChild(sheet);
-		document.body.appendChild(overlay);
 
 		let resolvePromise;
 		const done = new Promise((resolve) => {
@@ -359,7 +362,7 @@
 		});
 
 		let closed = false;
-		let removeListeners = () => {};
+		let removeListeners = () => { };
 
 		const close = () => {
 			if (closed) return;
@@ -372,43 +375,34 @@
 				// ignore
 			}
 
-			// ── Close animation: Slide down and tilt ──
-			sheet.style.setProperty("transition", "transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1)", "important");
-			sheet.style.transformOrigin = "bottom center";
-			sheet.style.setProperty("transform", "perspective(1200px) translateY(100vh) rotateX(15deg)", "important");
-			sheet.style.opacity = "0";
-			overlay.classList.remove("is-open");
+			const supportsVT = document.startViewTransition && resolvedTrigger;
 
 			const finish = () => {
 				removeListeners();
-				try {
-					overlay.remove();
-				} catch {
-					// ignore
-				}
-				try {
-					unlock();
-				} catch {
-					// ignore
-				}
+				try { overlay.remove(); } catch { }
+				try { unlock(); } catch { }
 				resolvePromise();
 			};
 
-			let t = null;
-			const onEnd = (ev) => {
-				if (ev && ev.target !== sheet) return;
-				cleanup();
+			console.log("PTBottomSheet.open: supportsVT=", supportsVT, "trigger=", resolvedTrigger); if (supportsVT) {
+				sheet.style.viewTransitionName = "pt-sheet-hero";
+				const oldVTName = resolvedTrigger.style.viewTransitionName;
+
+				const transition = document.startViewTransition(() => {
+					sheet.style.viewTransitionName = "";
+					resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
+					overlay.classList.remove("is-open");
+					sheet.style.display = "none";
+				});
+
+				transition.finished.finally(() => {
+					resolvedTrigger.style.viewTransitionName = oldVTName;
+					finish();
+				});
+			} else {
+				overlay.classList.remove("is-open");
 				finish();
-			};
-			const cleanup = () => {
-				if (t) window.clearTimeout(t);
-				sheet.removeEventListener("transitionend", onEnd);
-			};
-			sheet.addEventListener("transitionend", onEnd);
-			t = window.setTimeout(() => {
-				cleanup();
-				finish();
-			}, 700);
+			}
 		};
 
 		activeCloseStack.push(close);
@@ -459,24 +453,34 @@
 		if (closeBtn) closeBtn.addEventListener("click", close);
 		if (backBtn) backBtn.addEventListener("click", close);
 
-		// ── Open animation: Slide up and tilt (iOS card style) ──
-		requestAnimationFrame(() => {
-			overlay.classList.add("is-open");
-		});
+		const supportsVT = document.startViewTransition && resolvedTrigger;
 
-		sheet.style.opacity = "0";
-		sheet.style.transformOrigin = "bottom center";
-		sheet.style.setProperty("transform", "perspective(1200px) translateY(100vh) rotateX(15deg)", "important");
-		sheet.style.setProperty("transition", "none", "important");
-		
-		// Force reflow
-		sheet.offsetHeight;
-		
-		requestAnimationFrame(() => {
-			sheet.style.setProperty("transition", "transform 0.65s cubic-bezier(0.2, 0.8, 0.1, 1), opacity 0.65s cubic-bezier(0.2, 0.8, 0.1, 1)", "important");
-			sheet.style.setProperty("transform", "none", "important");
+		const doOpenFallback = () => {
+			document.body.appendChild(overlay);
+			overlay.classList.add("is-open");
 			sheet.style.opacity = "1";
-		});
+			sheet.style.transform = "none";
+		};
+
+		console.log("PTBottomSheet.open: supportsVT=", supportsVT, "trigger=", resolvedTrigger); if (supportsVT) {
+			const oldVTName = resolvedTrigger.style.viewTransitionName;
+			resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
+
+			const transition = document.startViewTransition(() => {
+				resolvedTrigger.style.viewTransitionName = oldVTName;
+				document.body.appendChild(overlay);
+				sheet.style.viewTransitionName = "pt-sheet-hero";
+				overlay.classList.add("is-open");
+				sheet.style.opacity = "1";
+				sheet.style.transform = "none";
+			});
+
+			transition.finished.finally(() => {
+				sheet.style.viewTransitionName = "";
+			});
+		} else {
+			doOpenFallback();
+		}
 
 		setTimeout(() => {
 			try {
