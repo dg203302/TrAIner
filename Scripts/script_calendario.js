@@ -86,6 +86,7 @@ const openConfirmSheet = async ({
             triggerEl,
             showClose: false,
             showHandle: true,
+            showBack: false,
             allowOutsideClose: true,
             allowEscapeClose: true,
             allowDragClose: true,
@@ -676,14 +677,6 @@ async function initCalendario() {
         const gap = (plotW - barW * days) / (days - 1 || 1);
         const maxVal = Math.max(...data, 1);
 
-        // Grid lines
-        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= 3; i++) {
-            const y = pad.t + plotH * (1 - i / 3);
-            ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-        }
-
         // Bars
         const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
         grad.addColorStop(0, getColorWithOpacity('--accent', 0.9, '#ff073a'));
@@ -719,14 +712,6 @@ async function initCalendario() {
         const plotH = h - pad.t - pad.b;
         const maxVal = Math.max(...data, 1);
         const stepX = plotW / (days - 1 || 1);
-
-        // Grid lines
-        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= 3; i++) {
-            const y = pad.t + plotH * (1 - i / 3);
-            ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
-        }
 
         // Area fill
         const gradFill = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
@@ -895,15 +880,13 @@ async function initCalendario() {
             registros = prev;
             localStorage.setItem("Dias_cale", JSON.stringify(registros));
             rebuildCalendarData();
-            calendar.removeAllEvents();
-            calendar.addEventSource(eventos);
+            renderCustomCalendar();
             alert(tLang("No se pudo eliminar el registro. Intenta de nuevo.", "Could not delete the record. Please try again."));
             return false;
         }
 
         rebuildCalendarData();
-        calendar.removeAllEvents();
-        calendar.addEventSource(eventos);
+        renderCustomCalendar();
         try {
             const stats = computeStatsFromEventos(eventos, currentViewDate);
             renderEstadisticas(stats);
@@ -915,56 +898,99 @@ async function initCalendario() {
 
     rebuildCalendarData();
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "dayGridMonth",
-        locale: getIdiomaPreferido(),
-        firstDay: 1,
-        dayMaxEvents: true,
-        height: "100%",
-        events: eventos,
-        eventDisplay: "block",
-        datesSet: (info) => {
-            // Update currentViewDate when month/view changes
-            currentViewDate = new Date(info.view.currentStart);
-            try {
-                const stats = computeStatsFromEventos(eventos, currentViewDate);
-                renderEstadisticas(stats);
-            } catch (e) {
-                console.warn('No se pudo actualizar estadísticas al cambiar de mes:', e);
-            }
-        },
-        eventContent: (arg) => {
-            const status = arg.event.extendedProps.status || "otro";
-            const color = status === "completado" ? (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#ff073a") : "#d0c9c3";
-            const shadow = status === "completado" ? getColorWithOpacity('--accent', 0.6, '#ff073a') : "rgba(208,201,195,0.6)";
-            return {
-                html: `
-                    <div style="display:flex;justify-content:center;margin-top:2px;">
-                        <span style="width:6px;height:6px;border-radius:50%;background:${color};box-shadow:0 0 8px ${shadow};"></span>
-                    </div>
-                `,
-            };
-        },
-        dateClick: async (info) => {
-            const fechaIso = info.dateStr;
-            const registrosDelDia = getRegistrosByFecha(fechaIso);
-            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, info.dayEl);
-        },
-        eventClick: async (info) => {
-            info.jsEvent?.preventDefault?.();
-            const fechaIso = info.event.startStr || info.event.start?.toISOString?.().slice(0, 10);
-            if (!fechaIso) return;
-            const registrosDelDia = getRegistrosByFecha(fechaIso) || [buildRegistroMeta({
-                id_registro: info.event.id,
-                title: info.event.title,
-                start: fechaIso,
-                extendedProps: info.event.extendedProps,
-            }, 0)];
-            await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, info.el);
-        },
-    });
+    const renderCustomCalendar = () => {
+        const year = currentViewDate.getFullYear();
+        const month = currentViewDate.getMonth();
+        
+        const firstDay = new Date(year, month, 1).getDay();
+        const startDayIndex = firstDay === 0 ? 6 : firstDay - 1; // Monday=0
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        const monthNames = isEnglish() 
+            ? ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            : ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        
+        const weekdays = isEnglish() ? ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] : ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
 
-    calendar.render();
+        let html = `
+            <div class="custom-cal">
+                <div class="custom-cal-header">
+                    <button class="custom-cal-btn" id="custom-cal-prev"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+                    <h2 class="custom-cal-title">${monthNames[month]} ${year}</h2>
+                    <button class="custom-cal-btn" id="custom-cal-next"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+                </div>
+                <div class="custom-cal-weekdays">
+                    ${weekdays.map(d => `<span>${d}</span>`).join("")}
+                </div>
+                <div class="custom-cal-grid" id="custom-cal-grid">
+        `;
+
+        for (let i = 0; i < startDayIndex; i++) {
+            html += `<div class="custom-cal-cell is-empty"></div>`;
+        }
+
+        const todayIso = new Date().toLocaleDateString('en-CA');
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isToday = dateStr === todayIso;
+            
+            const dayEvents = eventos.filter(e => e.start.startsWith(dateStr));
+            let dotsHtml = "";
+            if (dayEvents.length > 0) {
+                dotsHtml = '<div class="custom-cal-dots">';
+                dayEvents.forEach(e => {
+                    const status = e.extendedProps?.status || "otro";
+                    const color = status === "completado" ? (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#ff073a") : "#d0c9c3";
+                    dotsHtml += `<div class="custom-cal-dot" style="background:${color}"></div>`;
+                });
+                dotsHtml += '</div>';
+            }
+
+            html += `
+                <div class="custom-cal-cell ${isToday ? 'is-today' : ''}" data-date="${dateStr}">
+                    <span class="custom-cal-num">${d}</span>
+                    ${dotsHtml}
+                </div>
+            `;
+        }
+
+        html += `</div></div>`;
+        calendarEl.innerHTML = html;
+
+        document.getElementById("custom-cal-prev").onclick = () => {
+            currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+            onMonthChange();
+        };
+        document.getElementById("custom-cal-next").onclick = () => {
+            currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+            onMonthChange();
+        };
+
+        const cells = calendarEl.querySelectorAll(".custom-cal-cell:not(.is-empty)");
+        cells.forEach(cell => {
+            cell.onclick = async () => {
+                const fechaIso = cell.getAttribute("data-date");
+                let registrosDelDia = getRegistrosByFecha(fechaIso);
+                if (!registrosDelDia || registrosDelDia.length === 0) {
+                    registrosDelDia = [];
+                }
+                await renderDetalleEntreno(fechaIso, registrosDelDia, onDeleteRegistro, getRegistrosByFecha, cell);
+            };
+        });
+    };
+
+    const onMonthChange = () => {
+        renderCustomCalendar();
+        try {
+            const stats = computeStatsFromEventos(eventos, currentViewDate);
+            renderEstadisticas(stats);
+        } catch (e) {
+            console.warn('No se pudo actualizar estadísticas:', e);
+        }
+    };
+
+    renderCustomCalendar();
     try {
         const stats = computeStatsFromEventos(eventos, currentViewDate);
         renderEstadisticas(stats);

@@ -256,6 +256,40 @@
             transition: background .18s ease, transform .12s ease;
         }
 
+        @media (max-width: 900px) {
+            .dynamic-title {
+                width: max-content;
+                max-width: 100%;
+                margin: 0;
+                padding: 10px 20px;
+                position: relative; /* Not sticky, so it doesn't get clipped by parent height */
+                z-index: 20;
+                border-radius: var(--my-radius-pill, 999px);
+                background: transparent;
+                backdrop-filter: blur(0px) saturate(100%);
+                -webkit-backdrop-filter: blur(0px) saturate(100%);
+                border: 1px solid transparent;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .dynamic-title.is-scrolled {
+                position: fixed;
+                top: 16px;
+                left: 16px; /* Align to the left padding of main */
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(20px) saturate(140%);
+                -webkit-backdrop-filter: blur(20px) saturate(140%);
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                transform: translateY(0); /* Reset jump if any */
+            }
+
+            /* Prevent content jump when title becomes fixed */
+            .dynamic-title.is-scrolled + p {
+                margin-top: 110px; /* ~90px title height + 20px padding */
+            }
+        }
+
         #eliminar_cuenta:hover {
             background: rgba(242, 184, 181, .18);
         }
@@ -339,7 +373,7 @@
         }
 
         /* ── FOOTER NAV CUTOUT & ACTIVE STYLE ───────────────────────── */
-        
+
         /* Hide labels completely */
         .footer-btn-label {
             display: none !important;
@@ -359,51 +393,75 @@
             background: transparent !important;
             pointer-events: none !important;
             width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             overflow: visible !important;
+            box-sizing: border-box !important;
+            transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        footer.footer-wrap.is-floating {
+            bottom: 20px !important;
+            padding: 0 16px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav {
+            border-radius: 35px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav::before {
+            border-radius: 35px !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
 
         /* Inner nav bar */
         footer .footer-nav {
             width: 100% !important;
             max-width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
             margin: 0 !important;
-            padding: 0 24px !important; /* Fixed padding to push buttons away from corners */
+            padding: 0 24px !important;
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
+            gap: 0 !important;
             position: relative !important;
             overflow: visible !important;
             pointer-events: auto !important;
             box-shadow: none !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* Real background container with cutout mask */
+        /* Real background container with concave notch mask */
         footer .footer-nav::before {
             content: '' !important;
             position: absolute !important;
-            top: 20px !important; /* leaves 20px at the top for the floating circle */
+            top: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            background: rgba(0, 0, 0, 0.45) !important; /* Mantiene la transparencia actual */
+            background: rgba(0, 0, 0, 0.45) !important;
             backdrop-filter: blur(20px) saturate(140%) !important;
             -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 20px 20px 0 0 !important; /* no flotante, fija al borde inferior */
+            border: 0px solid rgba(255, 255, 255, 0.08) !important;
+            border-top-width: 1px !important;
+            border-radius: 0 !important;
             z-index: -1 !important;
             pointer-events: none !important;
-            
-            /* Radial gradient cutout mask centered dynamically */
-            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
-            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+
+            /* Concave notch mask — bar deforms around active icon */
+            -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            -webkit-mask-size: 1000px 100% !important;
+            mask-size: 1000px 100% !important;
             -webkit-mask-repeat: no-repeat !important;
             mask-repeat: no-repeat !important;
+            -webkit-mask-position: calc(83.333% + 317.33px) 0 !important;
+            mask-position: calc(83.333% + 317.33px) 0 !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1), border 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         html.no-transparency footer .footer-nav::before {
@@ -414,7 +472,7 @@
 
         /* Footer buttons styling */
         .footer-btn {
-            flex: 1 1 0 !important; /* Take up equal space */
+            flex: 1 1 0 !important;
             min-width: 0 !important;
             display: flex !important;
             align-items: center !important;
@@ -422,8 +480,8 @@
             padding: 0 !important;
             background: transparent !important;
             border: none !important;
-            height: 60px !important;
-            margin-top: 20px !important; /* aligns buttons to the background bar */
+            height: 70px !important;
+            margin-top: 0 !important;
             text-decoration: none !important;
             position: relative !important;
             z-index: 2 !important;
@@ -438,6 +496,10 @@
             border-radius: 50% !important;
             background: transparent !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .footer-btn-label {
+            display: none !important;
         }
 
         .footer-btn-icon img,
@@ -456,8 +518,12 @@
         }
 
         .footer-btn.is-active .footer-btn-icon {
-            background: var(--accent) !important; /* Toma el color de fondo actual */
-            transform: translateY(-26px) !important; /* Flota hacia arriba */
+            background: rgba(26, 31, 38, 0.85) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 2px solid var(--accent) !important;
+            box-sizing: border-box !important;
+            transform: none !important;
             width: 46px !important;
             height: 46px !important;
             box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
@@ -466,7 +532,8 @@
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
-            filter: brightness(0) !important; /* Icono oscuro inside green circle */
+            width: 22px !important;
+            height: 22px !important;
         }
 
         /* Profile avatar specific active override (never darken user photo) */
@@ -487,7 +554,8 @@
                 padding-right: 0 !important;
             }
 
-            body > header, header {
+            body>header,
+            header {
                 right: 0 !important;
             }
 
@@ -520,8 +588,12 @@
                 right: 0 !important;
 
                 /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-size: auto !important;
+                mask-size: auto !important;
+                -webkit-mask-position: 0 0 !important;
+                mask-position: 0 0 !important;
             }
 
             .footer-btn {
@@ -557,14 +629,17 @@
             background-size: 12px;
             transition: background-color 0.15s, border-color 0.15s;
         }
+
         .pt-select-custom:hover {
             background-color: color-mix(in srgb, #fff 12%, transparent);
             border-color: color-mix(in srgb, #fff 24%, transparent);
         }
+
         .pt-select-custom:focus {
             outline: none;
             border-color: var(--accent);
         }
+
         .pt-select-custom option {
             background-color: #12151A;
             color: #fff;
@@ -591,7 +666,7 @@
     <main>
         <div class="titulos_head">
             <div style="padding-top: 50px;">
-                <h1 style="font-size: 70px;">
+                <h1 class="dynamic-title" style="font-size: 70px;">
                     <span>Tr<span style="color: var(--my-primary);">AI</span>ner</span>
                 </h1>
                 <p>
@@ -655,7 +730,8 @@
             <div class="config-item">
                 <div class="config-text">
                     <h4 class="config-title" data-i18n-en="Animated background">Fondo animado</h4>
-                    <p class="config-desc" data-i18n-en="Enable animated background instead of solid black.">Activa el fondo animado en lugar de un fondo negro sólido.</p>
+                    <p class="config-desc" data-i18n-en="Enable animated background instead of solid black.">Activa el
+                        fondo animado en lugar de un fondo negro sólido.</p>
                 </div>
                 <label class="switch" for="toggle_fondo">
                     <input id="toggle_fondo" type="checkbox" role="switch" aria-label="Activar fondo animado"
@@ -667,10 +743,12 @@
             <div class="config-item" id="config_color_container">
                 <div class="config-text">
                     <h4 class="config-title" data-i18n-en="Background color">Color de fondo</h4>
-                    <p class="config-desc" data-i18n-en="Choose the color of the animated background bubbles.">Elegí el color de las burbujas del fondo animado.</p>
+                    <p class="config-desc" data-i18n-en="Choose the color of the animated background bubbles.">Elegí el
+                        color de las burbujas del fondo animado.</p>
                 </div>
                 <div style="flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 44px;">
-                    <select id="select_color_fondo" class="pt-select-custom" aria-label="Color del fondo" data-i18n-en-aria-label="Background color">
+                    <select id="select_color_fondo" class="pt-select-custom" aria-label="Color del fondo"
+                        data-i18n-en-aria-label="Background color">
                         <option value="red" data-i18n-en="Red">Rojo</option>
                         <option value="green" data-i18n-en="Green">Verde</option>
                         <option value="blue" data-i18n-en="Blue">Azul</option>
@@ -722,7 +800,8 @@
     </main>
 
     <footer class="footer-wrap">
-        <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation" style="--active-x-pct: 83.33%;">
+        <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation"
+            style="--active-x: 0.8333%;">
 
             <!-- Inicio -->
             <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -746,13 +825,14 @@
             <a class="footer-btn is-active" href="/Templates/Inicio/perfil_usuario.html" aria-label="Perfil"
                 data-i18n-en-aria-label="Profile">
                 <div class="footer-btn-icon">
-                    <img class="footer-profile-avatar" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
+                    <img class="footer-profile-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" alt="avatar">
                 </div>
             </a>
         </nav>
     </footer>
 
-    <script src="/Scripts/ui_bottom_sheet.js"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=3"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/Scripts/perfil_usuario.js" type="module"></script>
     <script src="/Scripts/logout.js" type="module"></script>

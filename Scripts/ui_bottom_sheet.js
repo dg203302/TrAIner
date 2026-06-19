@@ -263,6 +263,7 @@
 		className = "",
 		showClose = false,
 		showHandle = false,
+		showBack = true,
 		allowOutsideClose = true,
 		allowEscapeClose = true,
 		allowDragClose = false,
@@ -333,16 +334,20 @@
 		content.className = "pt-sheet-content";
 		content.innerHTML = html;
 
-		const backBtn = (() => {
-			const btn = document.createElement("button");
-			btn.type = "button";
-			btn.className = "pt-sheet-back-btn";
-			btn.setAttribute("aria-label", "Volver");
-			btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="m15 18-6-6 6-6"/></svg><span style="vertical-align: middle;">Volver</span>`;
-			return btn;
-		})();
+		const backBtn = showBack
+			? (() => {
+				const btn = document.createElement("button");
+				btn.type = "button";
+				btn.className = "pt-sheet-back-btn";
+				btn.setAttribute("aria-label", "Volver");
+				btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="m15 18-6-6 6-6"/></svg><span style="vertical-align: middle;">Volver</span>`;
+				return btn;
+			})()
+			: null;
 
-		sheet.appendChild(backBtn);
+		if (backBtn) {
+			sheet.appendChild(backBtn);
+		}
 		sheet.appendChild(header);
 		sheet.appendChild(content);
 		overlay.appendChild(sheet);
@@ -367,28 +372,11 @@
 				// ignore
 			}
 
-			// ── Close animation: collapse back to origin ──
-			let originRect = null;
-			if (resolvedTrigger && typeof resolvedTrigger.getBoundingClientRect === "function") {
-				const r = resolvedTrigger.getBoundingClientRect();
-				if (r.width > 0 && r.height > 0) originRect = r;
-			}
-
-			if (originRect) {
-				const lastRect = sheet.getBoundingClientRect();
-				const deltaX = originRect.left + originRect.width / 2 - (lastRect.left + lastRect.width / 2);
-				const deltaY = originRect.top + originRect.height / 2 - (lastRect.top + lastRect.height / 2);
-				const scaleX = 0.05;
-				const scaleY = 0.05;
-				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
-				sheet.style.setProperty("transform", `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`, "important");
-				sheet.style.opacity = "0";
-				sheet.style.borderRadius = "16px";
-			} else {
-				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
-				sheet.style.setProperty("transform", "scale(0.85) translateY(20px)", "important");
-				sheet.style.opacity = "0";
-			}
+			// ── Close animation: Slide down and tilt ──
+			sheet.style.setProperty("transition", "transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1)", "important");
+			sheet.style.transformOrigin = "bottom center";
+			sheet.style.setProperty("transform", "perspective(1200px) translateY(100vh) rotateX(15deg)", "important");
+			sheet.style.opacity = "0";
 			overlay.classList.remove("is-open");
 
 			const finish = () => {
@@ -463,62 +451,32 @@
 			document.removeEventListener("keydown", onKeyDown);
 			overlay.removeEventListener("click", onOverlayClick);
 			if (closeBtn) closeBtn.removeEventListener("click", close);
-			backBtn.removeEventListener("click", close);
+			if (backBtn) backBtn.removeEventListener("click", close);
 		};
 
 		document.addEventListener("keydown", onKeyDown);
 		overlay.addEventListener("click", onOverlayClick);
 		if (closeBtn) closeBtn.addEventListener("click", close);
-		backBtn.addEventListener("click", close);
+		if (backBtn) backBtn.addEventListener("click", close);
 
-		// ── Open animation: expand from origin ──
-		if (resolvedTrigger) {
-			const rect = resolvedTrigger.getBoundingClientRect();
+		// ── Open animation: Slide up and tilt (iOS card style) ──
+		requestAnimationFrame(() => {
+			overlay.classList.add("is-open");
+		});
 
-			requestAnimationFrame(() => {
-				overlay.classList.add("is-open");
-			});
-
-			sheet.style.opacity = "0";
-			sheet.style.setProperty("transition", "none", "important");
+		sheet.style.opacity = "0";
+		sheet.style.transformOrigin = "bottom center";
+		sheet.style.setProperty("transform", "perspective(1200px) translateY(100vh) rotateX(15deg)", "important");
+		sheet.style.setProperty("transition", "none", "important");
+		
+		// Force reflow
+		sheet.offsetHeight;
+		
+		requestAnimationFrame(() => {
+			sheet.style.setProperty("transition", "transform 0.65s cubic-bezier(0.2, 0.8, 0.1, 1), opacity 0.65s cubic-bezier(0.2, 0.8, 0.1, 1)", "important");
 			sheet.style.setProperty("transform", "none", "important");
-			
-			const lastRect = sheet.getBoundingClientRect();
-			const deltaX = rect.left + rect.width / 2 - (lastRect.left + lastRect.width / 2);
-			const deltaY = rect.top + rect.height / 2 - (lastRect.top + lastRect.height / 2);
-			const scaleX = 0.05;
-			const scaleY = 0.05;
-			
-			sheet.style.transformOrigin = "center center";
-			sheet.style.setProperty("transform", `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`, "important");
-			sheet.style.borderRadius = "16px";
-
-			// Force reflow
-			sheet.offsetHeight;
-
-			requestAnimationFrame(() => {
-				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
-				sheet.style.setProperty("transform", "none", "important");
-				sheet.style.opacity = "1";
-				sheet.style.borderRadius = "24px";
-			});
-		} else {
-			requestAnimationFrame(() => {
-				overlay.classList.add("is-open");
-			});
-
-			sheet.style.opacity = "0";
-			sheet.style.setProperty("transform", "scale(0.85) translateY(30px)", "important");
-			sheet.style.setProperty("transition", "none", "important");
-			
-			sheet.offsetHeight;
-			
-			requestAnimationFrame(() => {
-				sheet.style.setProperty("transition", "transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)", "important");
-				sheet.style.setProperty("transform", "none", "important");
-				sheet.style.opacity = "1";
-			});
-		}
+			sheet.style.opacity = "1";
+		});
 
 		setTimeout(() => {
 			try {
@@ -548,4 +506,40 @@
 	};
 
 	window.PTBottomSheet = { open, close };
+
+	// Floating footer and sticky title logic
+	const updateScrollStates = () => {
+		// Footer floating logic
+		const footerWrap = document.querySelector('footer.footer-wrap');
+		if (footerWrap) {
+			const scrollPosition = window.innerHeight + window.scrollY;
+			const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+
+			if (docHeight <= window.innerHeight + 10) {
+				footerWrap.classList.add('is-floating');
+			} else if (docHeight - scrollPosition <= 25) {
+				footerWrap.classList.remove('is-floating');
+			} else {
+				footerWrap.classList.add('is-floating');
+			}
+		}
+
+		// Sticky title floating logic
+		const mainTitle = document.querySelector('.dynamic-title');
+		if (mainTitle) {
+			if (window.scrollY > 20) {
+				mainTitle.classList.add('is-scrolled');
+			} else {
+				mainTitle.classList.remove('is-scrolled');
+			}
+		}
+	};
+
+	window.addEventListener('scroll', updateScrollStates, { passive: true });
+	window.addEventListener('resize', updateScrollStates, { passive: true });
+
+	const domObserver = new MutationObserver(updateScrollStates);
+	domObserver.observe(document.body, { childList: true, subtree: true });
+
+	setTimeout(updateScrollStates, 100);
 })();

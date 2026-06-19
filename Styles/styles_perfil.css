@@ -28,7 +28,7 @@ input {
 	--content-max: 860px;
 	/* Header/Footer son fijos; estas variables controlan el espacio útil. */
 	--header-fixed: 72px;
-	--footer-fixed: 92px;
+	--footer-fixed: 70px;
 }
 
 *,

@@ -51,7 +51,7 @@
 
         main {
             margin: 0px;
-            padding: 24px 16px;
+            padding: 14px 16px !important;
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
@@ -80,165 +80,157 @@
             padding: 8px;
         }
 
-        /* FullCalendar inner transparency overrides & Cinematic Styling */
-        .fc {
-            --fc-border-color: transparent !important;
-            --fc-page-bg-color: transparent !important;
-            --fc-neutral-bg-color: transparent !important;
-            --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
-            --fc-today-bg-color: rgba(255, 7, 58, 0.1) !important;
+        /* Custom Calendar Styling */
+        .custom-cal {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding: 12px 8px;
         }
 
-        .fc-theme-standard td,
-        .fc-theme-standard th,
-        .fc-theme-standard .fc-scrollgrid {
-            border: none !important;
-            background: transparent !important;
-        }
-
-        .fc .fc-view-harness,
-        .fc-day {
-            background: transparent !important;
-        }
-
-        /* Toolbar / Header */
-        .fc .fc-toolbar.fc-header-toolbar {
+        .custom-cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 24px;
-            padding: 0 10px;
+            padding: 0 4px;
         }
 
-        .fc .fc-toolbar-title {
-            font-size: 22px !important;
-            font-weight: 800 !important;
-            letter-spacing: .3px;
+        .custom-cal-title {
+            font-size: 20px;
+            font-weight: 800;
             color: #fff;
             text-transform: capitalize;
+            margin: 0;
+            letter-spacing: .3px;
         }
 
-        .fc .fc-button-primary {
-            background-color: color-mix(in srgb, #fff 10%, transparent) !important;
-            border: 1px solid color-mix(in srgb, #fff 15%, transparent) !important;
-            color: rgba(255, 255, 255, 0.9) !important;
-            border-radius: 14px !important;
-            box-shadow: none !important;
-            text-transform: capitalize;
-            padding: 8px 16px !important;
-            font-weight: 600 !important;
+        .custom-cal-btn {
+            background-color: color-mix(in srgb, #fff 10%, transparent);
+            border: 1px solid color-mix(in srgb, #fff 15%, transparent);
+            color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .fc .fc-button-primary:hover {
-            background-color: color-mix(in srgb, #fff 18%, transparent) !important;
+        .custom-cal-btn:hover {
+            background-color: color-mix(in srgb, #fff 18%, transparent);
         }
 
-        .fc .fc-button-primary:not(:disabled):active,
-        .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background-color: var(--my-primary) !important;
-            border-color: var(--my-primary) !important;
-            color: #000 !important;
+        .custom-cal-btn:active {
+            background-color: var(--my-primary);
+            border-color: var(--my-primary);
+            color: #000;
+            transform: scale(0.95);
         }
 
-        /* Days of the week header */
-        .fc-col-header-cell-cushion {
+        .custom-cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .custom-cal-weekdays span {
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.5);
-            padding: 12px 0 !important;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Day Cells */
-        .fc-daygrid-day-frame {
-            min-height: 85px !important;
-            padding: 6px;
+        .custom-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            flex: 1;
+            align-content: start;
+        }
+
+        .custom-cal-cell {
+            aspect-ratio: 1 / 1;
             display: flex;
             flex-direction: column;
-            border-radius: 18px;
-            transition: background 0.2s ease, transform 0.2s ease;
-            margin: 3px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
             background: color-mix(in srgb, #fff 3%, transparent);
             border: 1px solid color-mix(in srgb, #fff 4%, transparent);
-        }
-
-        .fc-daygrid-day-frame:hover {
-            background: color-mix(in srgb, #fff 8%, transparent);
-            transform: scale(0.98);
             cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            position: relative;
         }
 
-        .fc .fc-daygrid-day-top {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 6px;
-            margin-top: 4px;
-            flex-direction: row;
+        .custom-cal-cell:hover {
+            background: color-mix(in srgb, #fff 8%, transparent);
+            transform: scale(0.96);
         }
 
-        /* Centered day number */
-        .fc-daygrid-day-number {
+        .custom-cal-cell.is-empty {
+            background: transparent;
+            border-color: transparent;
+            cursor: default;
+        }
+
+        .custom-cal-cell.is-empty:hover {
+            transform: none;
+        }
+
+        .custom-cal-num {
             font-weight: 700;
             font-size: 15px;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            text-decoration: none !important;
-            color: rgba(255, 255, 255, 0.85) !important;
-            transition: background 0.2s ease, color 0.2s ease;
+            color: rgba(255, 255, 255, 0.85);
+            z-index: 2;
         }
 
-        /* Today highlight */
-        .fc-day-today .fc-daygrid-day-number {
-            background: var(--my-primary) !important;
-            color: #000 !important;
+        .custom-cal-cell.is-today .custom-cal-num {
+            color: #000;
+        }
+
+        .custom-cal-cell.is-today::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            background: var(--my-primary);
+            border-radius: 12px;
+            z-index: 1;
             box-shadow: 0 4px 14px color-mix(in srgb, var(--my-primary) 50%, transparent);
         }
 
-        /* Other month days */
-        .fc-day-other .fc-daygrid-day-number {
-            opacity: 0.2;
+        .custom-cal-dots {
+            display: flex;
+            gap: 3px;
+            margin-top: 4px;
+            height: 6px;
+            z-index: 2;
         }
 
-        .fc-day-other .fc-daygrid-day-frame {
-            background: transparent;
-            border-color: transparent;
+        .custom-cal-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
         }
 
-        /* Events */
-        .fc-daygrid-day-events {
-            display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            align-items: center !important;
-            gap: 4px !important;
-        }
+        @media (max-width: 900px) {
+            .custom-cal-grid {
+                gap: 6px;
+            }
 
-        .fc-daygrid-event-harness {
-            margin-bottom: 0 !important;
-        }
+            .custom-cal-cell {
+                border-radius: 12px;
+            }
 
-        .fc-event {
-            border: none !important;
-            background: transparent !important;
-        }
-
-        /* Scrollbar hides */
-        .fc-scroller::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .fc-scroller::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .fc-scroller::-webkit-scrollbar-thumb {
-            background: color-mix(in srgb, #fff 15%, transparent);
-            border-radius: 4px;
+            .custom-cal-cell.is-today::before {
+                inset: 4px;
+                border-radius: 10px;
+            }
         }
 
         /* Hacer que el calendario ocupe el alto disponible (móvil y escritorio) */
@@ -251,16 +243,37 @@
             main {
                 margin: 0;
                 /* Override styles_dashboard.css margin */
-                padding: 24px 16px;
-                height: calc(100vh - var(--footer-fixed, 56px));
+                padding: 24px 16px 80px 16px !important;
+                min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
             }
 
-            main>h1 {
+            .dynamic-title {
                 order: 0;
-                width: 100%;
+                width: max-content;
+                max-width: 100%;
+                margin: 0 auto 16px 0;
+                padding: 10px 20px;
+                position: sticky;
+                top: 16px;
+                z-index: 20;
+                border-radius: var(--my-radius-pill, 999px);
+                background: transparent;
+                backdrop-filter: blur(0px) saturate(100%);
+                -webkit-backdrop-filter: blur(0px) saturate(100%);
+                border: 1px solid transparent;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .dynamic-title.is-scrolled {
+                background: rgba(0, 0, 0, 0.45);
+                backdrop-filter: blur(20px) saturate(140%);
+                -webkit-backdrop-filter: blur(20px) saturate(140%);
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                transform: translateY(-8px);
             }
 
             #estadisticas {
@@ -578,55 +591,75 @@
             background: transparent !important;
             pointer-events: none !important;
             width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             overflow: visible !important;
+            box-sizing: border-box !important;
+            transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        footer.footer-wrap.is-floating {
+            bottom: 20px !important;
+            padding: 0 16px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav {
+            border-radius: 35px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav::before {
+            border-radius: 35px !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
 
         /* Inner nav bar */
         footer .footer-nav {
             width: 100% !important;
             max-width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
             margin: 0 !important;
             padding: 0 24px !important;
-            /* Fixed padding to push buttons away from corners */
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
+            gap: 0 !important;
             position: relative !important;
             overflow: visible !important;
             pointer-events: auto !important;
             box-shadow: none !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* Real background container with cutout mask */
+        /* Real background container with concave notch mask */
         footer .footer-nav::before {
             content: '' !important;
             position: absolute !important;
-            top: 20px !important;
-            /* leaves 20px at the top for the floating circle */
+            top: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             background: rgba(0, 0, 0, 0.45) !important;
-            /* Mantiene la transparencia actual */
             backdrop-filter: blur(20px) saturate(140%) !important;
             -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 20px 20px 0 0 !important;
-            /* no flotante, fija al borde inferior */
+            border: 0px solid rgba(255, 255, 255, 0.08) !important;
+            border-top-width: 1px !important;
+            border-radius: 0 !important;
             z-index: -1 !important;
             pointer-events: none !important;
 
-            /* Radial gradient cutout mask centered dynamically */
-            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
-            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            /* Concave notch mask — bar deforms around active icon */
+            -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            -webkit-mask-size: 1000px 100% !important;
+            mask-size: 1000px 100% !important;
             -webkit-mask-repeat: no-repeat !important;
             mask-repeat: no-repeat !important;
+            -webkit-mask-position: 50% 0 !important;
+            mask-position: 50% 0 !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1), border 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         html.no-transparency footer .footer-nav::before {
@@ -638,7 +671,6 @@
         /* Footer buttons styling */
         .footer-btn {
             flex: 1 1 0 !important;
-            /* Take up equal space */
             min-width: 0 !important;
             display: flex !important;
             align-items: center !important;
@@ -646,9 +678,8 @@
             padding: 0 !important;
             background: transparent !important;
             border: none !important;
-            height: 60px !important;
-            margin-top: 20px !important;
-            /* aligns buttons to the background bar */
+            height: 70px !important;
+            margin-top: 0 !important;
             text-decoration: none !important;
             position: relative !important;
             z-index: 2 !important;
@@ -663,6 +694,10 @@
             border-radius: 50% !important;
             background: transparent !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .footer-btn-label {
+            display: none !important;
         }
 
         .footer-btn-icon img,
@@ -681,10 +716,12 @@
         }
 
         .footer-btn.is-active .footer-btn-icon {
-            background: var(--accent) !important;
-            /* Toma el color de fondo actual */
-            transform: translateY(-26px) !important;
-            /* Flota hacia arriba */
+            background: rgba(26, 31, 38, 0.85) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 2px solid var(--accent) !important;
+            box-sizing: border-box !important;
+            transform: none !important;
             width: 46px !important;
             height: 46px !important;
             box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
@@ -693,8 +730,8 @@
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
-            filter: brightness(0) !important;
-            /* Icono oscuro inside green circle */
+            width: 22px !important;
+            height: 22px !important;
         }
 
         /* Profile avatar specific active override (never darken user photo) */
@@ -737,8 +774,8 @@
 
         .floating-help-btn img,
         .floating-help-btn svg {
-            width: 24px !important;
-            height: 24px !important;
+            width: 22px !important;
+            height: 22px !important;
             opacity: 0.8 !important;
         }
 
@@ -787,8 +824,12 @@
                 right: 0 !important;
 
                 /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-size: auto !important;
+                mask-size: auto !important;
+                -webkit-mask-position: 0 0 !important;
+                mask-position: 0 0 !important;
             }
 
             .footer-btn {
@@ -895,35 +936,28 @@
 
         @media (max-width: 900px) {
             .pt-charts-swipe {
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
-                scroll-behavior: smooth;
-                gap: 0;
-                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                overflow: visible;
+                flex: none;
                 min-height: 0;
-            }
-
-            .pt-charts-swipe::-webkit-scrollbar {
-                display: none;
             }
 
             .pt-chart-panel[data-chart-idx="0"],
             .pt-chart-panel[data-chart-idx="1"],
             .pt-chart-panel[data-chart-idx="2"] {
-                flex: 0 0 100%;
-                min-width: 100%;
+                flex: none;
+                width: 100%;
+                min-width: 0;
                 max-width: 100%;
-                scroll-snap-align: center;
-                padding: 0 4px;
-                height: 100%;
-                overflow-y: auto;
+                padding: 0;
+                height: auto;
+                overflow-y: visible;
             }
 
             .pt-charts-dots {
-                display: flex !important;
-                /* Visible on mobile */
+                display: none !important;
             }
         }
 
@@ -1181,7 +1215,7 @@
     </header>
 
     <main>
-        <h1 data-i18n-en="Calendar">Calendario</h1>
+        <h1 class="dynamic-title" data-i18n-en="Calendar">Calendario</h1>
         <div id="pt-charts-swipe" class="pt-charts-swipe">
             <!-- Panel 0: Calendario -->
             <div class="pt-chart-panel" data-chart-idx="0" style="padding: 0;">
@@ -1245,7 +1279,7 @@
 
     <footer id="footer_dashboard" class="footer-wrap">
         <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation"
-            style="--active-x-pct: 50%;">
+            style="--active-x: 0.5;">
 
             <!-- Inicio -->
             <a class="footer-btn" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -1280,8 +1314,8 @@
         </nav>
 
     </footer>
-    <script src="/Scripts/ui_bottom_sheet.js"></script>
-    <script src="/Scripts/script_calendario.js" type="module"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=2"></script>
+    <script src="/Scripts/script_calendario.js?v=2" type="module"></script>
 </body>
 
 </html>

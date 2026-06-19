@@ -238,7 +238,6 @@
             backdrop-filter: blur(28px) saturate(150%);
             -webkit-backdrop-filter: blur(28px) saturate(150%);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         html.no-transparency .plan-floating-header.scrolled {
@@ -257,7 +256,7 @@
         }
 
         .plan-floating-header .pfh-title {
-            font-size: 14.5px;
+            font-size: 24.5px;
             font-weight: 700;
             color: rgba(255, 255, 255, .92);
             margin: 0;
@@ -492,55 +491,75 @@
             background: transparent !important;
             pointer-events: none !important;
             width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             overflow: visible !important;
+            box-sizing: border-box !important;
+            transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        footer.footer-wrap.is-floating {
+            bottom: 20px !important;
+            padding: 0 16px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav {
+            border-radius: 35px !important;
+        }
+
+        footer.footer-wrap.is-floating .footer-nav::before {
+            border-radius: 35px !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
         }
 
         /* Inner nav bar */
         footer .footer-nav {
             width: 100% !important;
             max-width: 100% !important;
-            height: 80px !important;
+            height: 70px !important;
             background: transparent !important;
             border: none !important;
             border-radius: 0 !important;
             margin: 0 !important;
             padding: 0 24px !important;
-            /* Fixed padding to push buttons away from corners */
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             justify-content: space-between !important;
+            gap: 0 !important;
             position: relative !important;
             overflow: visible !important;
             pointer-events: auto !important;
             box-shadow: none !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* Real background container with cutout mask */
+        /* Real background container with concave notch mask */
         footer .footer-nav::before {
             content: '' !important;
             position: absolute !important;
-            top: 20px !important;
-            /* leaves 20px at the top for the floating circle */
+            top: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             background: rgba(0, 0, 0, 0.45) !important;
-            /* Mantiene la transparencia actual */
             backdrop-filter: blur(20px) saturate(140%) !important;
             -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-radius: 20px 20px 0 0 !important;
-            /* no flotante, fija al borde inferior */
+            border: 0px solid rgba(255, 255, 255, 0.08) !important;
+            border-top-width: 1px !important;
+            border-radius: 0 !important;
             z-index: -1 !important;
             pointer-events: none !important;
 
-            /* Radial gradient cutout mask centered dynamically */
-            -webkit-mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
-            mask-image: radial-gradient(circle 28px at calc(24px + var(--active-x-pct, 50%) * (100% - 48px)) 0px, transparent 28px, black 29px) !important;
+            /* Concave notch mask — bar deforms around active icon */
+            -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
+            -webkit-mask-size: 1000px 100% !important;
+            mask-size: 1000px 100% !important;
             -webkit-mask-repeat: no-repeat !important;
             mask-repeat: no-repeat !important;
+            -webkit-mask-position: calc(16.666% - 317.33px) 0 !important;
+            mask-position: calc(16.666% - 317.33px) 0 !important;
+            transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1), border 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
         html.no-transparency footer .footer-nav::before {
@@ -552,7 +571,6 @@
         /* Footer buttons styling */
         .footer-btn {
             flex: 1 1 0 !important;
-            /* Take up equal space */
             min-width: 0 !important;
             display: flex !important;
             align-items: center !important;
@@ -560,9 +578,8 @@
             padding: 0 !important;
             background: transparent !important;
             border: none !important;
-            height: 60px !important;
-            margin-top: 20px !important;
-            /* aligns buttons to the background bar */
+            height: 70px !important;
+            margin-top: 0 !important;
             text-decoration: none !important;
             position: relative !important;
             z-index: 2 !important;
@@ -577,6 +594,10 @@
             border-radius: 50% !important;
             background: transparent !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .footer-btn-label {
+            display: none !important;
         }
 
         .footer-btn-icon img,
@@ -595,10 +616,12 @@
         }
 
         .footer-btn.is-active .footer-btn-icon {
-            background: var(--accent) !important;
-            /* Toma el color de fondo actual */
-            transform: translateY(-26px) !important;
-            /* Flota hacia arriba */
+            background: rgba(26, 31, 38, 0.85) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 2px solid var(--accent) !important;
+            box-sizing: border-box !important;
+            transform: none !important;
             width: 46px !important;
             height: 46px !important;
             box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
@@ -607,8 +630,8 @@
         .footer-btn.is-active .footer-btn-icon img,
         .footer-btn.is-active .footer-btn-icon svg {
             opacity: 1 !important;
-            filter: brightness(0) !important;
-            /* Icono oscuro inside green circle */
+            width: 22px !important;
+            height: 22px !important;
         }
 
         /* Profile avatar specific active override (never darken user photo) */
@@ -663,8 +686,12 @@
                 right: 0 !important;
 
                 /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x-pct, 50%) * (100% - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
+                -webkit-mask-size: auto !important;
+                mask-size: auto !important;
+                -webkit-mask-position: 0 0 !important;
+                mask-position: 0 0 !important;
             }
 
             .footer-btn {
@@ -814,7 +841,7 @@
 
     <footer id="footer_dashboard" class="footer-wrap">
         <nav class="footer-nav" aria-label="Navegación inferior" data-i18n-en-aria-label="Bottom navigation"
-            style="--active-x-pct: 16.67%;">
+            style="--active-x: 0.1667;">
 
             <!-- Inicio (active) -->
             <a class="footer-btn is-active" href="/Templates/Inicio/Dashboard.html" aria-label="Inicio"
@@ -849,7 +876,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/Scripts/ui_bottom_sheet.js"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=3"></script>
     <script src="/Scripts/dashboard.js" type="module"></script>
 
 
