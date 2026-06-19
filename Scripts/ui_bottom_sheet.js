@@ -51,17 +51,6 @@
 			transform: none !important;
 			transition: none !important;
 		}
-		@media (min-width: 768px) {
-			.pt-sheet:has(.pt-detail),
-			.pt-sheet:has(.pt-new-detail),
-			.pt-sheet:has(.pt-gen),
-			.pt-sheet:has(.pt-cal-detalle-sheet),
-			.pt-sheet.pt-perfil-sheet,
-			.pt-sheet.pt-sheet--large {
-				max-width: 1100px !important;
-				width: 92% !important;
-				max-height: 90vh !important;
-		}
 		.pt-sheet:has(.pt-new-detail),
 		.pt-sheet.pt-new-detail-sheet {
 			border: none !important;
