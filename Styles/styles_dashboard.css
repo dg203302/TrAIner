@@ -2636,8 +2636,8 @@ html.no-transparency .translucent-bar {
 	}
 }
 
-.dashboard-swal.is-ej-disabled .swal-ejercicios,
-.pt-gen.is-ej-disabled .swal-ejercicios {
+.dashboard-swal.is-ej-disabled #pt-gen-ia-container .swal-ejercicios,
+.pt-gen.is-ej-disabled #pt-gen-ia-container .swal-ejercicios {
 	opacity: .55;
 	filter: grayscale(.15);
 }

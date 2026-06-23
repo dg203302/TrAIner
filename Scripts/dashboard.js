@@ -750,8 +750,8 @@ const renderListaEjerciciosSelectable = (inputName = "ejercicios") => {
                 }
 
                 const imgHtml = gifUrl
-                    ? `<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 60%; pointer-events: none; z-index: 0; mask-image: linear-gradient(to right, transparent 0%, black 50%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 50%); border-top-right-radius: 11px; border-bottom-right-radius: 11px; overflow: hidden;">
-                           <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: right center; opacity: 0.45; mix-blend-mode: luminosity;" loading="lazy">
+                    ? `<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 70%; pointer-events: none; z-index: 0; mask-image: linear-gradient(to right, transparent 0%, black 40%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%); border-top-right-radius: 11px; border-bottom-right-radius: 11px; overflow: hidden;">
+                           <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: right center; opacity: 1;" loading="lazy">
                        </div>`
                     : "";
 
@@ -1737,7 +1737,7 @@ async function crearPlanEntreno(lugar, objetivo, diasSeleccionados, ejerciciosSe
 async function recuperar_planes() {
     const { user } = await supabase.auth.getUser().then(({ data: { user } }) => user);
     if (user) {
-        const { datos2, error2 } = await supabase
+        const { data: datos2, error: error2 } = await supabase
             .from("Planes").select("Plan_entreno, Plan_alimenta").eq("ID_user", user.id).single();
         if (error2) {
             await openStatusSheet({
