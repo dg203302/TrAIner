@@ -1,6 +1,4 @@
-import { GoogleGenAI } from "https://esm.sh/@google/genai@1.38.0";
-
-const APIkey = Deno.env.get('API_Key_Gemini')
+const APIkey = Deno.env.get('API_Key_Gen_Plan');
 
 const normalizeKey = (s) =>
 	String(s ?? "")
@@ -10,108 +8,9 @@ const normalizeKey = (s) =>
 		.trim()
 		.toLowerCase();
 
-const EJERCICIOS_INDICE = {
-	"Pecho": [
-		"Press de banca plano con barra",
-		"Press de banca inclinado con barra",
-		"Press de banca inclinado con mancuernas",
-		"Flexiones de brazos (peso corporal)",
-		"Aperturas con mancuernas",
-		"Fondos en paralelas (pecho bajo/tríceps)",
-		"Cruce de poleas",
-	],
-	"Espalda": [
-		"Dominadas (peso corporal)",
-		"Jalón al pecho en polea",
-		"Remo con barra",
-		"Remo unilateral con mancuerna",
-		"Remo sentado en polea",
-		"Pull-over con mancuerna",
-		"Remo en T",
-		"Hiperextensiones lumbares",
-	],
-	"Piernas": [
-		"Sentadilla libre",
-		"Prensa de piernas",
-		"Zancadas / estocadas",
-		"Peso muerto rumano",
-		"Hip thrust (empuje de cadera)",
-		"Extensión de cuádriceps en máquina",
-		"Curl femoral tumbado o sentado",
-		"Elevación de talones",
-		"Sentadilla búlgara",
-		"Peso muerto sumo con barra",
-		"Step-ups con mancuernas",
-	],
-	"Hombros": [
-		"Press militar con barra o mancuernas",
-		"Elevaciones laterales con mancuernas",
-		"Pájaros / vuelos posteriores",
-		"Elevaciones frontales",
-		"Face pull (salud del hombro)",
-		"Press Arnold",
-		"Encogimientos de hombros con barra reversa",
-	],
-	"Brazos": [
-		"Curl de bíceps con barra",
-		"Curl martillo con mancuernas",
-		"Curl predicador",
-		"Fondos entre bancos",
-	],
-	"Tríceps": [
-		"Press francés",
-		"Extensión de triceps en polea alta",
-		"Fondos entre bancos",
-		"Extensión de tríceps con mancuerna sobre la cabeza",
-		"Patada de tríceps con mancuerna",
-	],
-	"Antebrazos": [
-		"Curl de muñeca con barra",
-		"Curl de muñeca con mancuerna",
-		"Curl invertido con barra",
-		"Farmer's walk (caminata del granjero)",
-	],
-	"Abdomen / core": [
-		"Plancha abdominal",
-		"Crunch abdominal clásico",
-		"Elevación de piernas colgado o en suelo",
-		"Giros rusos",
-		"Rueda abdominal",
-		"Dragon flag",
-	],
-	"Cardio / acondicionamiento": [
-		"Burpees",
-		"Saltos de tijera",
-		"Salto a la cuerda",
-	],
-};
 
-const allowedExercisesByKey = (() => {
-	const map = new Map();
-	for (const items of Object.values(EJERCICIOS_INDICE)) {
-		for (const ex of items) {
-			map.set(normalizeKey(ex), ex);
-		}
-	}
-	return map;
-})();
 
-const normalizeSelectedExercises = (value) => {
-	if (!Array.isArray(value)) return [];
-	const out = [];
-	const seen = new Set();
-	for (const item of value) {
-		const key = normalizeKey(item);
-		if (!key) continue;
-		const canonical = allowedExercisesByKey.get(key);
-		if (!canonical) continue;
-		if (seen.has(canonical)) continue;
-		seen.add(canonical);
-		out.push(canonical);
-		if (out.length >= 40) break;
-	}
-	return out;
-};
+
 
 const extractLikelyJson = (text) => {
 	const s = String(text ?? "").trim();
@@ -155,8 +54,6 @@ const validatePlanShape = (obj) => {
 		for (const ex of dia.ejercicios) {
 			if (!ex || typeof ex !== "object") return "Cada ejercicio debe ser un objeto";
 			if (typeof ex.nombre !== "string" || !ex.nombre.trim()) return "Cada ejercicio debe tener nombre (string)";
-			if (typeof ex.descripcion !== "string" || !ex.descripcion.trim()) return "Cada ejercicio debe tener descripcion (string)";
-			if (typeof ex.descripcion_detallada !== "string" || !ex.descripcion_detallada.trim()) return "Cada ejercicio debe tener descripcion_detallada (string)";
 			if (typeof ex.series !== "number" || Number.isNaN(ex.series)) return "Cada ejercicio debe tener series (number)";
 			if (typeof ex.repeticiones !== "string" || !ex.repeticiones.trim()) return "Cada ejercicio debe tener repeticiones (string)";
 			if (typeof ex.descanso_segundos !== "number" || Number.isNaN(ex.descanso_segundos)) {
@@ -267,7 +164,7 @@ const canonicalDayKey = (dayLabel) => {
 	return stripAccents(dayLabel).toLowerCase();
 };
 
-const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, intensidadNorm, ejerciciosPorDiaObjetivo, diasSeleccionados, ejerciciosSeleccionados }) => {
+const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, intensidadNorm, ejerciciosPorDiaObjetivo, diasSeleccionados, ejerciciosSeleccionados, catalogFlat }) => {
 	if (!planObj || typeof planObj !== "object") return planObj;
 	const root = planObj.plan_entrenamiento_hipertrofia;
 	if (!root || typeof root !== "object") return planObj;
@@ -299,29 +196,15 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 		return k && selectedExerciseKeySet.has(k);
 	};
 
+
+
 	const normalizeExercise = (ex) => {
 		if (!ex || typeof ex !== "object") return null;
 		const nombre = typeof ex.nombre === "string" ? ex.nombre : String(ex.nombre ?? "").trim();
 		if (!nombre) return null;
-		if (!isAllowedExerciseName(nombre)) return null;
 
-		const descripcionRaw = (typeof ex.descripcion === "string" && ex.descripcion.trim())
-			? ex.descripcion.trim()
-			: (typeof ex.description === "string" && ex.description.trim())
-				? ex.description.trim()
-				: t(
-					"Realizá el movimiento controlado, con técnica correcta y rango completo.",
-					"Perform the movement in a controlled manner, with proper form and full range of motion."
-				);
-
-		const descripcionDetalladaRaw = (typeof ex.descripcion_detallada === "string" && ex.descripcion_detallada.trim())
-			? ex.descripcion_detallada.trim()
-			: (typeof ex.detailed_description === "string" && ex.detailed_description.trim())
-				? ex.detailed_description.trim()
-				: descripcionRaw + t(
-					" Técnica: mantén la postura, rango completo y control en la fase excéntrica. Respiración: inspira en la fase excéntrica y exhala en la fase concéntrica. Progresión: recomendaciones de sobrecarga progresiva (p.ej. aumentar 2-5% de carga o 1-2 repeticiones cuando completes el rango objetivo durante 1-2 sesiones).",
-					" Technique: maintain posture, full range of motion, and control the eccentric phase. Breathing: inhale on the eccentric, exhale on the concentric. Progression: use progressive overload (e.g., +2–5% weight or +1–2 reps once you hit the target range for 1–2 sessions)."
-				);
+		const norm = normalizeKey(nombre);
+		const baseEx = catalogFlat[norm] || {};
 
 		const seriesNum = Number(ex.series);
 		const descansoNum = Number(ex.descanso_segundos);
@@ -330,16 +213,18 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 			: String(ex.repeticiones ?? ex.reps ?? "10-12").trim() || "10-12";
 
 		return {
-			nombre,
-			descripcion: descripcionRaw,
-			descripcion_detallada: descripcionDetalladaRaw,
+			nombre: baseEx.nombre || nombre,
 			series: Number.isFinite(seriesNum) ? seriesNum : 4,
 			repeticiones,
 			descanso_segundos: Number.isFinite(descansoNum) ? descansoNum : 90,
 		};
 	};
 
-	const allExercises = Object.values(EJERCICIOS_INDICE).flat();
+
+
+
+	const allExercises = Object.values(catalogFlat).map(e => e.nombre);
+
 	const pickFallbackPool = () => {
 		if (soloEjerciciosSeleccionados) return ejerciciosSeleccionados;
 		const entornoKey = normalizeKey(lugar);
@@ -353,20 +238,18 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 	};
 	const fallbackPool = pickFallbackPool();
 
-	const makeFallbackExercise = (nombre) => ({
-		nombre,
-		descripcion: t(
-			"Movimiento controlado, técnica correcta, rango completo. Ajustá carga según tu nivel.",
-			"Controlled movement, proper form, full range of motion. Adjust load to your level."
-		),
-		descripcion_detallada: t(
-			"Ejecución detallada: postura neutra, respiración (inspira en la fase de bajada/excéntrica y exhala en la fase de empuje/concéntrica), tempo recomendado 2-1-2. Recomendación de sobrecarga progresiva: intenta aumentar ligeramente la carga (2-5%) o añadir 1-2 repeticiones cuando completes el rango objetivo durante 1-2 sesiones, priorizando siempre la técnica. Ajustá la carga para completar las repeticiones con buena técnica.",
-			"Detailed execution: neutral posture, breathing (inhale on the lowering/eccentric, exhale on the lifting/concentric), suggested tempo 2-1-2. Progressive overload: try to increase load slightly (2–5%) or add 1–2 reps once you hit the target range for 1–2 sessions—always prioritizing form. Adjust load so you can complete reps with good technique."
-		),
-		series: 4,
-		repeticiones: "10-12",
-		descanso_segundos: 90,
-	});
+
+	const makeFallbackExercise = (nombre) => {
+		const norm = normalizeKey(nombre);
+		const baseEx = catalogFlat[norm] || {};
+		return {
+			nombre,
+			series: 4,
+			repeticiones: "10-12",
+			descanso_segundos: 90,
+		};
+	};
+
 
 	const semanalFixed = ALL_DIAS.map((diaCanonical) => {
 		const key = canonicalDayKey(diaCanonical);
@@ -446,8 +329,49 @@ const generatePlanEntreno = async (payload, request) => {
 	const diasSeleccionados = normalizeSelectedDays({ dias: payload?.dias, dias_semana: payload?.dias_semana, idiomaNorm });
 	const diasSeleccionadosJson = JSON.stringify(diasSeleccionados);
 
+
+	const origin = request?.headers?.get("origin") || request?.headers?.get("referer") || "https://aipersonaltrainer.netlify.app";
+	let catalogGroups = {};
+	let catalogFlat = {};
+	try {
+		const catRes = await fetch(origin.replace(/\/$/, "") + "/Datos/entrenamientos.json");
+		if (catRes.ok) {
+			catalogGroups = await catRes.json();
+			for (const group of Object.values(catalogGroups)) {
+				for (const ex of group) {
+					catalogFlat[normalizeKey(ex.nombre)] = ex;
+				}
+			}
+		}
+	} catch (e) {
+		console.warn("Failed to fetch catalog", e);
+	}
+
+	const normalizeSelectedExercises = (value) => {
+		if (!Array.isArray(value)) return [];
+		const out = [];
+		const seen = new Set();
+		for (const item of value) {
+			const key = normalizeKey(item);
+			if (!key) continue;
+			const canonical = catalogFlat[key] ? catalogFlat[key].nombre : null;
+			if (!canonical) continue;
+			if (seen.has(canonical)) continue;
+			seen.add(canonical);
+			out.push(canonical);
+			if (out.length >= 40) break;
+		}
+		return out;
+	};
+
 	const ejerciciosSeleccionados = normalizeSelectedExercises(payload?.ejercicios_seleccionados);
 	const ejerciciosSeleccionadosJson = JSON.stringify(ejerciciosSeleccionados);
+
+	const isAllowedExerciseName = (name) => {
+		if (ejerciciosSeleccionados.length === 0) return !!catalogFlat[normalizeKey(name)];
+		return ejerciciosSeleccionados.some(e => normalizeKey(e) === normalizeKey(name));
+	};
+
 
 	const ALL_DIAS = idiomaNorm === "en" ? ALL_DIAS_EN : ALL_DIAS_ES;
 	const diaEjemplo = ALL_DIAS[0];
@@ -473,15 +397,15 @@ Cardio: Burpees, Saltos de tijera, Salto a la cuerda.`;
 
 	const prompt = `JSON válido (RFC 8259) únicamente. Sin texto extra, markdown ni comentarios.
 
-Idioma valores: ${idiomaLabel}. Claves JSON: sin traducir. Nombres de ejercicios: siempre en español canónico.
+Idioma valores: ${idiomaLabel}. Claves JSON: sin traducir.
+Nombres de ejercicios: USA EXACTAMENTE los nombres literales de la lista proporcionada, NO cambies plurales ni alteres palabras (ej. usa "mancuernas", nunca "mancuerno").
 Días: ${idiomaNorm === "en" ? "Monday–Sunday" : "Lunes–Domingo"}.
 
 Esquema exacto:
-{"plan_entrenamiento_hipertrofia":{"usuario":{"edad":${Number(payload?.Edad)||0},"estatura_cm":${Number(payload?.Altura)||0},"peso_objetivo_kg":${Number(payload?.Peso_objetivo)||0},"entorno":"${entornoValue}","objetivo":"${objetivoValue}","intensidad":"${intensidadNorm}","ejercicios_por_dia":${ejerciciosPorDiaObjetivo}},"configuracion_semanal":[{"dia":"${diaEjemplo}","enfoque":"<str>","ejercicios":[{"nombre":"<str>","descripcion":"<str 1-2 oraciones>","series":4,"repeticiones":"10-12","descanso_segundos":90}]},"...6 días más..."],"progresion_sugerida":{"metodo":"${progresionMetodoValue}","descripcion":"<str>"}}}
+{"plan_entrenamiento_hipertrofia":{"usuario":{"edad":${Number(payload?.Edad) || 0},"estatura_cm":${Number(payload?.Altura) || 0},"peso_objetivo_kg":${Number(payload?.Peso_objetivo) || 0},"entorno":"${entornoValue}","objetivo":"${objetivoValue}","intensidad":"${intensidadNorm}","ejercicios_por_dia":${ejerciciosPorDiaObjetivo}},"configuracion_semanal":[{"dia":"${diaEjemplo}","enfoque":"<str>","ejercicios":[{"nombre":"<str>","series":4,"repeticiones":"10-12","descanso_segundos":90}]},"...6 días más..."],"progresion_sugerida":{"metodo":"${progresionMetodoValue}","descripcion":"<str>"}}}
 
 Reglas:
 - series y descanso_segundos: número. repeticiones: string.
-- descripcion: 1-2 oraciones breves con instrucción de ejecución.
 - configuracion_semanal: exactamente 7 días.
 - Días seleccionados → EXACTAMENTE ${ejerciciosPorDiaObjetivo} ejercicios, enfoque coherente.
 - Días NO seleccionados → enfoque "${descansoLabel}", ejercicios [].
@@ -491,24 +415,37 @@ Entorno: ${entornoValue} | Objetivo: ${objetivoValue} | Edad: ${payload?.Edad} |
 
 ${ejerciciosContexto}`;
 
-	const ai = new GoogleGenAI({ apiKey: APIkey });
-	const response = await ai.models.generateContent({
-		model: "gemini-3-flash-preview",
-		contents: prompt,
-		config: { thinkingConfig: { thinkingBudget: 0 } },
+	const apiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+		method: "POST",
+		headers: {
+			"Authorization": `Bearer ${APIkey}`,
+			"HTTP-Referer": origin,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			model: "openrouter/free",
+			messages: [
+				{ role: "system", content: "You are an API that ONLY returns valid JSON. No markdown, no conversational text." },
+				{ role: "user", content: prompt }
+			]
+		})
 	});
 
-	const planFromParts = response?.candidates?.[0]?.content?.parts
-		?.map((p) => (typeof p?.text === "string" ? p.text : ""))
-		.join("")
-		.trim();
-	const planText = (typeof response?.text === "string" && response.text.trim()) ? response.text.trim() : (planFromParts || "");
+	if (!apiResponse.ok) {
+		const errorText = await apiResponse.text();
+		throw new Error(`OpenRouter error: ${apiResponse.status} ${errorText}`);
+	}
+
+	const data = await apiResponse.json();
+	const planText = data.choices?.[0]?.message?.content || "";
 	const jsonCandidate = extractLikelyJson(planText);
 
 	let planObj;
 	try {
 		planObj = JSON.parse(jsonCandidate);
-	} catch {
+	} catch (e) {
+		console.error("=== RAW AI OUTPUT ===", planText);
+		console.error("=== JSON CANDIDATE ===", jsonCandidate);
 		throw new Error("La IA no devolvió un JSON parseable.");
 	}
 
@@ -521,6 +458,7 @@ ${ejerciciosContexto}`;
 		ejerciciosPorDiaObjetivo,
 		diasSeleccionados,
 		ejerciciosSeleccionados,
+		catalogFlat
 	});
 
 	const validationError = validatePlanShape(planObj);

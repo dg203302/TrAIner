@@ -1,6 +1,4 @@
-import { GoogleGenAI } from "https://esm.sh/@google/genai@1.38.0";
-
-const APIkey = Deno.env.get('API_Key_Gemini')
+const APIkey = Deno.env.get('API_Key_Gen_Plan');
 const stripAccents = (s) =>
 	String(s ?? "")
 		.normalize("NFD")
@@ -274,20 +272,40 @@ ${schemaDays}
 }
 No agregues texto fuera del JSON.`;
 
-	const ai = new GoogleGenAI({ apiKey: APIkey });
-	const response = await ai.models.generateContent({
-		model: "gemini-3-flash-preview",
-		contents: prompt,
+	const origin = request?.headers?.get("origin") || request?.headers?.get("referer") || "https://aipersonaltrainer.netlify.app";
+	const apiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+		method: "POST",
+		headers: {
+			"Authorization": `Bearer ${APIkey}`,
+			"HTTP-Referer": origin,
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			model: "openrouter/free",
+			messages: [
+				{ role: "system", content: "You are an API that ONLY returns valid JSON. No markdown, no conversational text." },
+				{ role: "user", content: prompt }
+			]
+		})
 	});
 
-	const text =
-		response?.text ??
-		response?.choices?.[0]?.content?.parts?.[0]?.text ??
-		response?.choices?.[0]?.content?.parts?.[0] ??
-		"";
+	if (!apiResponse.ok) {
+		const errorText = await apiResponse.text();
+		throw new Error(`OpenRouter error: ${apiResponse.status} ${errorText}`);
+	}
+
+	const data = await apiResponse.json();
+	const text = data.choices?.[0]?.message?.content || "";
 
 	const extracted = extractLikelyJson(text);
 	let parsed = safeJsonParse(extracted);
+	
+	if (!parsed) {
+		console.error("=== RAW AI OUTPUT ===", text);
+		console.error("=== JSON CANDIDATE ===", extracted);
+		throw new Error("La IA no devolvió un JSON parseable.");
+	}
+	
 	parsed = normalizePlanDays({ parsed, idiomaNorm, objetivoPrompt, intensidadPrompt });
 	const validationError = validatePlanShape(parsed);
 	if (validationError) {

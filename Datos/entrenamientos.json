@@ -1,0 +1,405 @@
+{
+    "Pecho": [
+        {
+            "nombre": "Press de banca plano con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bench-Press.gif",
+            "descripcion": "Retrae las escápulas y mantén los pies firmes en el suelo. Baja la barra hasta rozar el pecho (línea...",
+            "descripcion_detallada": "Técnica: Retrae las escápulas y mantén los pies firmes en el suelo. Baja la barra hasta rozar el pecho (línea del esternón), codos a ~75° del tronco. Rango completo sin rebotar.\nSobrecarga: Sube 2,5 kg cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar la barra; exhala con fuerza al empujar.",
+            "descripcion_guia": "Retrae las escápulas y mantén los pies firmes en el suelo. Baja la barra hasta rozar el pecho (línea del esternón), codos a ~75° del tronco. Rango completo sin rebotar."
+        },
+        {
+            "nombre": "Press de banca inclinado con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Barbell-Bench-Press.gif",
+            "descripcion": "Banco inclinado a 30-45°. Agarre ligeramente más ancho que los hombros. Baja la barra de forma contr...",
+            "descripcion_detallada": "Técnica: Banco inclinado a 30-45°. Agarre ligeramente más ancho que los hombros. Baja la barra de forma controlada hasta la parte alta del pecho (clavícula). Empuja la barra hacia arriba en un movimiento vertical.\nSobrecarga: Sube 2,5 kg cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar la barra; exhala al empujar.",
+            "descripcion_guia": "Banco inclinado a 30-45°. Agarre ligeramente más ancho que los hombros. Baja la barra de forma controlada hasta la parte alta del pecho (clavícula). Empuja la barra hacia arriba en un movimiento vertical."
+        },
+        {
+            "nombre": "Press de banca inclinado con mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Dumbbell-Press.gif",
+            "descripcion": "Banco a 30-45°. Empuja las mancuernas hacia arriba y ligeramente hacia adentro. Controla la bajada 2...",
+            "descripcion_detallada": "Técnica: Banco a 30-45°. Empuja las mancuernas hacia arriba y ligeramente hacia adentro. Controla la bajada 2-3 seg; no dejes que los codos caigan por debajo del plano del banco.\nSobrecarga: Sube de peso cuando puedas hacer el rango completo de reps con técnica sólida en 2 sesiones seguidas.\nRespiración: Inhala en la bajada; exhala al empujar las mancuernas.",
+            "descripcion_guia": "Banco a 30-45°. Empuja las mancuernas hacia arriba y ligeramente hacia adentro. Controla la bajada 2-3 seg; no dejes que los codos caigan por debajo del plano del banco."
+        },
+        {
+            "nombre": "Flexiones de brazos (peso corporal)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Clap-Push-Up.gif",
+            "descripcion": "Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta ca...",
+            "descripcion_detallada": "Técnica: Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta casi tocar el suelo; codos a ~45° del torso.\nSobrecarga: Aumenta las reps hasta llegar a 20; luego añade dificultad (pies elevados, chaleco con peso o pausa de 2 seg abajo).\nRespiración: Inhala al bajar; exhala al empujar.",
+            "descripcion_guia": "Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta casi tocar el suelo; codos a ~45° del torso."
+        },
+        {
+            "nombre": "Aperturas con mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Fly.gif",
+            "descripcion": "Banco plano o inclinado. Baja las mancuernas en arco con codos ligeramente flexionados hasta sentir ...",
+            "descripcion_detallada": "Técnica: Banco plano o inclinado. Baja las mancuernas en arco con codos ligeramente flexionados hasta sentir estiramiento en el pecho. No exageres el rango para proteger los hombros.\nSobrecarga: Incrementa el peso cuando completes todas las reps sin perder el arco controlado durante 2 sesiones.\nRespiración: Inhala al abrir; exhala al cerrar y contraer el pecho.",
+            "descripcion_guia": "Banco plano o inclinado. Baja las mancuernas en arco con codos ligeramente flexionados hasta sentir estiramiento en el pecho. No exageres el rango para proteger los hombros."
+        },
+        {
+            "nombre": "Fondos en paralelas (pecho bajo/tríceps)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/04/CHAIR-DIPS.gif",
+            "descripcion": "Para priorizar pecho: inclínate ligeramente hacia adelante, codos hacia afuera. Baja hasta que los h...",
+            "descripcion_detallada": "Técnica: Para priorizar pecho: inclínate ligeramente hacia adelante, codos hacia afuera. Baja hasta que los hombros queden por debajo de los codos. Sube sin bloquear los codos.\nSobrecarga: Añade peso con cinturón o mochila en cuanto superes 12 reps con buena técnica.\nRespiración: Inhala al bajar; exhala al subir.",
+            "descripcion_guia": "Para priorizar pecho: inclínate ligeramente hacia adelante, codos hacia afuera. Baja hasta que los hombros queden por debajo de los codos. Sube sin bloquear los codos."
+        },
+        {
+            "nombre": "Cruce de poleas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/High-Cable-Crossover.gif",
+            "descripcion": "Poleas a la altura de los hombros o por encima. Lleva las manos hacia el centro y cruza ligeramente,...",
+            "descripcion_detallada": "Técnica: Poleas a la altura de los hombros o por encima. Lleva las manos hacia el centro y cruza ligeramente, apretando el pecho al final del movimiento. Movimiento controlado en todo momento.\nSobrecarga: Sube el peso cuando logres el tope de reps apretando bien en la contracción durante 2 sesiones.\nRespiración: Inhala en la apertura; exhala al hacer el cruce y la contracción.",
+            "descripcion_guia": "Poleas a la altura de los hombros o por encima. Lleva las manos hacia el centro y cruza ligeramente, apretando el pecho al final del movimiento. Movimiento controlado en todo momento."
+        }
+    ],
+    "Espalda": [
+        {
+            "nombre": "Dominadas (peso corporal)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Pull-up.gif",
+            "descripcion": "Agarre prono, manos a la anchura de los hombros. Inicia el movimiento retrayendo las escápulas. Sube...",
+            "descripcion_detallada": "Técnica: Agarre prono, manos a la anchura de los hombros. Inicia el movimiento retrayendo las escápulas. Sube hasta que la barbilla supere la barra; baja de forma controlada.\nSobrecarga: Añade peso con cinturón cuando hagas 10 reps limpias. Si no llegas a 5, usa banda de asistencia.\nRespiración: Exhala al subir; inhala de forma controlada al bajar.",
+            "descripcion_guia": "Agarre prono, manos a la anchura de los hombros. Inicia el movimiento retrayendo las escápulas. Sube hasta que la barbilla supere la barra; baja de forma controlada."
+        },
+        {
+            "nombre": "Jalón al pecho en polea",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Lat-Pulldown.gif",
+            "descripcion": "Agarre prono a la anchura de los hombros. Inclínate ligeramente hacia atrás (10-15°) y lleva la barr...",
+            "descripcion_detallada": "Técnica: Agarre prono a la anchura de los hombros. Inclínate ligeramente hacia atrás (10-15°) y lleva la barra hasta la clavícula, apretando los dorsales. Controla la subida.\nSobrecarga: Aumenta el peso cuando completes el rango completo de reps con retracción escapular durante 2 sesiones.\nRespiración: Exhala al tirar hacia abajo; inhala al dejar subir la barra.",
+            "descripcion_guia": "Agarre prono a la anchura de los hombros. Inclínate ligeramente hacia atrás (10-15°) y lleva la barra hasta la clavícula, apretando los dorsales. Controla la subida."
+        },
+        {
+            "nombre": "Remo con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bent-Over-Row.gif",
+            "descripcion": "Espalda plana, bisagra de cadera hasta ~45°. Tira la barra hacia el ombligo, codos cerca del cuerpo....",
+            "descripcion_detallada": "Técnica: Espalda plana, bisagra de cadera hasta ~45°. Tira la barra hacia el ombligo, codos cerca del cuerpo. Retrae y deprime las escápulas al final. No redondees la zona lumbar.\nSobrecarga: Sube 2,5-5 kg cuando completes todas las series manteniendo espalda plana durante 2 sesiones.\nRespiración: Exhala al tirar; inhala al extender los brazos.",
+            "descripcion_guia": "Espalda plana, bisagra de cadera hasta ~45°. Tira la barra hacia el ombligo, codos cerca del cuerpo. Retrae y deprime las escápulas al final. No redondees la zona lumbar."
+        },
+        {
+            "nombre": "Remo unilateral con mancuerna",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif",
+            "descripcion": "Apoya mano y rodilla en el banco. Espalda paralela al suelo. Tira la mancuerna hacia la cadera, rota...",
+            "descripcion_detallada": "Técnica: Apoya mano y rodilla en el banco. Espalda paralela al suelo. Tira la mancuerna hacia la cadera, rotando ligeramente el torso. Al bajar, extiende bien la escápula.\nSobrecarga: Sube el peso cuando domines el rango completo en todas las reps con rotación controlada durante 2 sesiones.\nRespiración: Exhala al tirar hacia arriba; inhala al bajar la mancuerna.",
+            "descripcion_guia": "Apoya mano y rodilla en el banco. Espalda paralela al suelo. Tira la mancuerna hacia la cadera, rotando ligeramente el torso. Al bajar, extiende bien la escápula."
+        },
+        {
+            "nombre": "Remo sentado en polea",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Seated-Cable-Row.gif",
+            "descripcion": "Siéntate erguido, agarra el cable con codos cerca del cuerpo. Tira hasta que el mango toque el abdom...",
+            "descripcion_detallada": "Técnica: Siéntate erguido, agarra el cable con codos cerca del cuerpo. Tira hasta que el mango toque el abdomen, apretando las escápulas. No uses la inercia del torso.\nSobrecarga: Aumenta el peso cuando logres el tope de reps sin balanceo durante 2 sesiones consecutivas.\nRespiración: Exhala al tirar el cable hacia ti; inhala al extender los brazos.",
+            "descripcion_guia": "Siéntate erguido, agarra el cable con codos cerca del cuerpo. Tira hasta que el mango toque el abdomen, apretando las escápulas. No uses la inercia del torso."
+        },
+        {
+            "nombre": "Pull-over con mancuerna",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Pullover.gif",
+            "descripcion": "Apoya solo la parte superior de la espalda en un banco. Sostén una mancuerna con ambas manos. Con co...",
+            "descripcion_detallada": "Técnica: Apoya solo la parte superior de la espalda en un banco. Sostén una mancuerna con ambas manos. Con codos ligeramente flexionados, baja la mancuerna detrás de la cabeza en arco hasta sentir el estiramiento. Sube controladamente.\nSobrecarga: Incrementa el peso o las repeticiones cuando el rango de movimiento sea completo y sin dolor en hombros.\nRespiración: Inhala profundamente al bajar la mancuerna; exhala al volver a la posición inicial.",
+            "descripcion_guia": "Apoya solo la parte superior de la espalda en un banco. Sostén una mancuerna con ambas manos. Con codos ligeramente flexionados, baja la mancuerna detrás de la cabeza en arco hasta sentir el estiramiento. Sube controladamente."
+        },
+        {
+            "nombre": "Remo en T",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/T-Bar-Row.gif",
+            "descripcion": "Coloca un extremo de la barra en una esquina. Agarra el otro extremo con un maneral. Espalda recta y...",
+            "descripcion_detallada": "Técnica: Coloca un extremo de la barra en una esquina. Agarra el otro extremo con un maneral. Espalda recta y torso inclinado a ~45°. Tira de la barra hacia tu pecho, manteniendo los codos cerca y apretando la espalda.\nSobrecarga: Sube el peso gradualmente una vez domines la postura de la espalda y no uses inercia.\nRespiración: Exhala al tirar del peso; inhala al bajar.",
+            "descripcion_guia": "Coloca un extremo de la barra en una esquina. Agarra el otro extremo con un maneral. Espalda recta y torso inclinado a ~45°. Tira de la barra hacia tu pecho, manteniendo los codos cerca y apretando la espalda."
+        },
+        {
+            "nombre": "Hiperextensiones lumbares",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/seated-back-extension.gif",
+            "descripcion": "Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en l...",
+            "descripcion_detallada": "Técnica: Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en línea recta (no hiperextiendas). Glúteos activos al subir.\nSobrecarga: Cuando domines 15 reps con peso corporal, añade una mancuerna o disco al pecho.\nRespiración: Inhala al bajar; exhala al subir y contraer los glúteos.",
+            "descripcion_guia": "Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en línea recta (no hiperextiendas). Glúteos activos al subir."
+        }
+    ],
+    "Piernas": [
+        {
+            "nombre": "Sentadilla libre",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/BARBELL-SQUAT.gif",
+            "descripcion": "Pies a la anchura de los hombros, puntas ligeramente abiertas. Baja manteniendo el torso erguido y l...",
+            "descripcion_detallada": "Técnica: Pies a la anchura de los hombros, puntas ligeramente abiertas. Baja manteniendo el torso erguido y las rodillas alineadas con los pies. Profundidad mínima: muslos paralelos al suelo.\nSobrecarga: Sube 2,5 kg cuando completes todas las series con técnica sólida (rodillas sin colapsar) durante 2 sesiones.\nRespiración: Inhala profundamente antes de bajar (maniobra de Valsalva suave); exhala al subir.",
+            "descripcion_guia": "Pies a la anchura de los hombros, puntas ligeramente abiertas. Baja manteniendo el torso erguido y las rodillas alineadas con los pies. Profundidad mínima: muslos paralelos al suelo."
+        },
+        {
+            "nombre": "Prensa de piernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2015/11/Leg-Press.gif",
+            "descripcion": "Espalda y glúteos pegados al respaldo. Pies en la plataforma a la anchura de los hombros. Baja hasta...",
+            "descripcion_detallada": "Técnica: Espalda y glúteos pegados al respaldo. Pies en la plataforma a la anchura de los hombros. Baja hasta que las rodillas formen ~90° sin despegar el glúteo del asiento.\nSobrecarga: Incrementa el peso cuando completes el rango de reps sin despegar los glúteos durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al empujar la plataforma.",
+            "descripcion_guia": "Espalda y glúteos pegados al respaldo. Pies en la plataforma a la anchura de los hombros. Baja hasta que las rodillas formen ~90° sin despegar el glúteo del asiento."
+        },
+        {
+            "nombre": "Zancadas / estocadas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/05/Barbell-Lunge.gif",
+            "descripcion": "Da un paso amplio hacia adelante. La rodilla trasera casi toca el suelo; la rodilla delantera no deb...",
+            "descripcion_detallada": "Técnica: Da un paso amplio hacia adelante. La rodilla trasera casi toca el suelo; la rodilla delantera no debe sobrepasar los dedos del pie. Torso erguido durante todo el movimiento.\nSobrecarga: Añade mancuernas o barra cuando domines 12 reps por pierna con equilibrio estable durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al empujar y volver a la posición inicial.",
+            "descripcion_guia": "Da un paso amplio hacia adelante. La rodilla trasera casi toca el suelo; la rodilla delantera no debe sobrepasar los dedos del pie. Torso erguido durante todo el movimiento."
+        },
+        {
+            "nombre": "Peso muerto rumano",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Romanian-Deadlift.gif",
+            "descripcion": "Rodillas ligeramente flexionadas, bisagra de cadera: baja la barra deslizándola por las piernas hast...",
+            "descripcion_detallada": "Técnica: Rodillas ligeramente flexionadas, bisagra de cadera: baja la barra deslizándola por las piernas hasta sentir el estiramiento en isquiotibiales. Espalda neutra en todo momento.\nSobrecarga: Sube 2,5-5 kg cuando mantengas la espalda completamente neutra en todo el rango durante 2 sesiones.\nRespiración: Inhala antes de bajar (bracing); exhala al volver a la posición erguida.",
+            "descripcion_guia": "Rodillas ligeramente flexionadas, bisagra de cadera: baja la barra deslizándola por las piernas hasta sentir el estiramiento en isquiotibiales. Espalda neutra en todo momento."
+        },
+        {
+            "nombre": "Hip thrust (empuje de cadera)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Hip-Thrust.gif",
+            "descripcion": "Hombros apoyados en el banco, barra sobre el pliegue de la cadera. Empuja hasta que caderas, muslos ...",
+            "descripcion_detallada": "Técnica: Hombros apoyados en el banco, barra sobre el pliegue de la cadera. Empuja hasta que caderas, muslos y torso formen una línea recta. Aprieta los glúteos en el punto más alto.\nSobrecarga: Aumenta el peso cuando puedas mantener la contracción máxima 1 seg en todas las reps durante 2 sesiones.\nRespiración: Inhala al bajar; exhala y aprieta los glúteos al subir.",
+            "descripcion_guia": "Hombros apoyados en el banco, barra sobre el pliegue de la cadera. Empuja hasta que caderas, muslos y torso formen una línea recta. Aprieta los glúteos en el punto más alto."
+        },
+        {
+            "nombre": "Extensión de cuádriceps en máquina",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/LEG-EXTENSION.gif",
+            "descripcion": "Ajusta el asiento para que la articulación de la rodilla quede alineada con el pivote de la máquina....",
+            "descripcion_detallada": "Técnica: Ajusta el asiento para que la articulación de la rodilla quede alineada con el pivote de la máquina. Extiende completamente y mantén 1 seg; baja de forma controlada (2-3 seg).\nSobrecarga: Sube el peso cuando logres la contracción completa y pausa en todas las reps durante 2 sesiones.\nRespiración: Exhala al extender; inhala al bajar.",
+            "descripcion_guia": "Ajusta el asiento para que la articulación de la rodilla quede alineada con el pivote de la máquina. Extiende completamente y mantén 1 seg; baja de forma controlada (2-3 seg)."
+        },
+        {
+            "nombre": "Curl femoral tumbado o sentado",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Curl.gif",
+            "descripcion": "Caderas pegadas al banco. Flexiona hasta ~120-130° (máxima contracción del femoral); extiende lentam...",
+            "descripcion_detallada": "Técnica: Caderas pegadas al banco. Flexiona hasta ~120-130° (máxima contracción del femoral); extiende lentamente sin bloquear la rodilla al final.\nSobrecarga: Incrementa el peso cuando completes el rango completo sin levantar las caderas durante 2 sesiones.\nRespiración: Exhala al flexionar; inhala al extender.",
+            "descripcion_guia": "Caderas pegadas al banco. Flexiona hasta ~120-130° (máxima contracción del femoral); extiende lentamente sin bloquear la rodilla al final."
+        },
+        {
+            "nombre": "Elevación de talones",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif",
+            "descripcion": "De pie en el borde de un escalón. Baja el talón por debajo del nivel del escalón para el estiramient...",
+            "descripcion_detallada": "Técnica: De pie en el borde de un escalón. Baja el talón por debajo del nivel del escalón para el estiramiento máximo; sube de puntillas lo más alto posible. Pausa arriba 1 seg.\nSobrecarga: Añade peso (mancuerna en mano o mochila) cuando superes 20 reps con pausa completa durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar.",
+            "descripcion_guia": "De pie en el borde de un escalón. Baja el talón por debajo del nivel del escalón para el estiramiento máximo; sube de puntillas lo más alto posible. Pausa arriba 1 seg."
+        },
+        {
+            "nombre": "Sentadilla búlgara",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/05/Barbell-Bulgarian-Split-Squat.gif",
+            "descripcion": "Pie trasero apoyado en el banco, pie delantero lo suficientemente adelante para que la rodilla no so...",
+            "descripcion_detallada": "Técnica: Pie trasero apoyado en el banco, pie delantero lo suficientemente adelante para que la rodilla no sobrepase los dedos. Baja de forma controlada hasta que la rodilla trasera roz el suelo.\nSobrecarga: Añade mancuernas o barra cuando domines 10 reps sólidas por pierna durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar; exhala al subir empujando con el talón delantero.",
+            "descripcion_guia": "Pie trasero apoyado en el banco, pie delantero lo suficientemente adelante para que la rodilla no sobrepase los dedos. Baja de forma controlada hasta que la rodilla trasera roz el suelo."
+        },
+        {
+            "nombre": "Peso muerto sumo con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-Sumo-Deadlift.gif",
+            "descripcion": "Pies mucho más anchos que los hombros, puntas hacia afuera. Agarre por dentro de las piernas. Mantén...",
+            "descripcion_detallada": "Técnica: Pies mucho más anchos que los hombros, puntas hacia afuera. Agarre por dentro de las piernas. Mantén el torso erguido y baja caderas. Empuja el suelo con las piernas manteniendo la barra pegada a las espinillas.\nSobrecarga: Sube el peso cuando la técnica sea sólida y no haya flexión lumbar en ninguna rep.\nRespiración: Toma aire y bloquea el core (bracing) antes de subir; exhala al terminar de subir.",
+            "descripcion_guia": "Pies mucho más anchos que los hombros, puntas hacia afuera. Agarre por dentro de las piernas. Mantén el torso erguido y baja caderas. Empuja el suelo con las piernas manteniendo la barra pegada a las espinillas."
+        },
+        {
+            "nombre": "Step-ups con mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/12/Dumbeel-Step-Up.gif",
+            "descripcion": "Sostén una mancuerna en cada mano. Sube un pie a un cajón estable. Empuja tu cuerpo hacia arriba usa...",
+            "descripcion_detallada": "Técnica: Sostén una mancuerna en cada mano. Sube un pie a un cajón estable. Empuja tu cuerpo hacia arriba usando principalmente la pierna del cajón, sin impulsarte mucho con la trasera. Baja de forma controlada.\nSobrecarga: Usa cajones más altos o sube el peso de las mancuernas cuando hagas 10-12 reps estables por pierna.\nRespiración: Exhala al subir al cajón; inhala al bajar.",
+            "descripcion_guia": "Sostén una mancuerna en cada mano. Sube un pie a un cajón estable. Empuja tu cuerpo hacia arriba usando principalmente la pierna del cajón, sin impulsarte mucho con la trasera. Baja de forma controlada."
+        }
+    ],
+    "Hombros": [
+        {
+            "nombre": "Press militar con barra o mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/07/Barbell-Standing-Military-Press.gif",
+            "descripcion": "De pie o sentado. Empuja la barra/mancuernas verticalmente por encima de la cabeza hasta que los bra...",
+            "descripcion_detallada": "Técnica: De pie o sentado. Empuja la barra/mancuernas verticalmente por encima de la cabeza hasta que los brazos queden casi extendidos. No arquees la zona lumbar al bloquear.\nSobrecarga: Sube 2,5 kg cuando completes todas las series sin arqueo lumbar durante 2 sesiones.\nRespiración: Inhala antes del empuje; exhala al presionar hacia arriba.",
+            "descripcion_guia": "De pie o sentado. Empuja la barra/mancuernas verticalmente por encima de la cabeza hasta que los brazos queden casi extendidos. No arquees la zona lumbar al bloquear."
+        },
+        {
+            "nombre": "Elevaciones laterales con mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif",
+            "descripcion": "Codos ligeramente flexionados. Sube hasta que los brazos queden paralelos al suelo (no más). Pequeña...",
+            "descripcion_detallada": "Técnica: Codos ligeramente flexionados. Sube hasta que los brazos queden paralelos al suelo (no más). Pequeña rotación externa al final: el meñique ligeramente más alto que el pulgar.\nSobrecarga: Incrementa el peso cuando puedas completar todas las reps con control total (sin trampa) durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar de forma controlada.",
+            "descripcion_guia": "Codos ligeramente flexionados. Sube hasta que los brazos queden paralelos al suelo (no más). Pequeña rotación externa al final: el meñique ligeramente más alto que el pulgar."
+        },
+        {
+            "nombre": "Pájaros / vuelos posteriores",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Reverse-Fly.gif",
+            "descripcion": "Torso inclinado ~90°. Sube las mancuernas con codos ligeramente flexionados hasta que queden alinead...",
+            "descripcion_detallada": "Técnica: Torso inclinado ~90°. Sube las mancuernas con codos ligeramente flexionados hasta que queden alineados con los hombros, apretando los deltoides posteriores.\nSobrecarga: Sube el peso cuando logres la alineación correcta en todas las reps durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar.",
+            "descripcion_guia": "Torso inclinado ~90°. Sube las mancuernas con codos ligeramente flexionados hasta que queden alineados con los hombros, apretando los deltoides posteriores."
+        },
+        {
+            "nombre": "Elevaciones frontales",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/08/Two-Arm-Dumbbell-Front-Raise.gif",
+            "descripcion": "De pie, mancuernas al frente con agarre neutro o prono. Sube hasta la altura de los ojos (no más). E...",
+            "descripcion_detallada": "Técnica: De pie, mancuernas al frente con agarre neutro o prono. Sube hasta la altura de los ojos (no más). Evita el balanceo del torso.\nSobrecarga: Incrementa el peso cuando completes todas las reps sin balanceo durante 2 sesiones consecutivas.\nRespiración: Exhala al subir; inhala al bajar de forma controlada.",
+            "descripcion_guia": "De pie, mancuernas al frente con agarre neutro o prono. Sube hasta la altura de los ojos (no más). Evita el balanceo del torso."
+        },
+        {
+            "nombre": "Face pull (salud del hombro)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Face-Pull.gif",
+            "descripcion": "Polea alta con cuerda. Tira hacia la cara separando la cuerda y rotando externamente los hombros. Co...",
+            "descripcion_detallada": "Técnica: Polea alta con cuerda. Tira hacia la cara separando la cuerda y rotando externamente los hombros. Codos por encima del agarre. Foco en deltoides posterior y manguito rotador.\nSobrecarga: Sube el peso solo cuando mantengas la rotación external completa en todas las reps durante 2 sesiones.\nRespiración: Exhala al tirar hacia la cara; inhala al extender los brazos.",
+            "descripcion_guia": "Polea alta con cuerda. Tira hacia la cara separando la cuerda y rotando externamente los hombros. Codos por encima del agarre. Foco en deltoides posterior y manguito rotador."
+        },
+        {
+            "nombre": "Press Arnold",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Arnold-Press.gif",
+            "descripcion": "Sentado con mancuernas al nivel de los hombros y palmas hacia ti (supino). Al empujar las mancuernas...",
+            "descripcion_detallada": "Técnica: Sentado con mancuernas al nivel de los hombros y palmas hacia ti (supino). Al empujar las mancuernas hacia arriba, rota las muñecas para que al final las palmas miren hacia adelante (prono).\nSobrecarga: Sube el peso cuando el movimiento de rotación se sienta fluido y estable en todas las reps.\nRespiración: Inhala antes de empujar; exhala mientras empujas y rotas.",
+            "descripcion_guia": "Sentado con mancuernas al nivel de los hombros y palmas hacia ti (supino). Al empujar las mancuernas hacia arriba, rota las muñecas para que al final las palmas miren hacia adelante (prono)."
+        },
+        {
+            "nombre": "Encogimientos de hombros con barra reversa",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2023/03/Behind-The-Back-Barbell-Shrug-Reverse-Barbell-Shrug.gif",
+            "descripcion": "Sostén la barra por detrás de tu espalda. Mantén brazos rectos y eleva los hombros hacia tus orejas ...",
+            "descripcion_detallada": "Técnica: Sostén la barra por detrás de tu espalda. Mantén brazos rectos y eleva los hombros hacia tus orejas encogiendo trapecios. Mantén la contracción 1-2 seg arriba y baja controladamente.\nSobrecarga: Sube el peso manteniendo la pausa de 1 segundo arriba.\nRespiración: Exhala al subir los hombros; inhala al bajarlos.",
+            "descripcion_guia": "Sostén la barra por detrás de tu espalda. Mantén brazos rectos y eleva los hombros hacia tus orejas encogiendo trapecios. Mantén la contracción 1-2 seg arriba y baja controladamente."
+        }
+    ],
+    "Brazos": [
+        {
+            "nombre": "Curl de bíceps con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Curl.gif",
+            "descripcion": "Codos pegados a los costados. Sube la barra en arco controlado hasta la contracción máxima; baja des...",
+            "descripcion_detallada": "Técnica: Codos pegados a los costados. Sube la barra en arco controlado hasta la contracción máxima; baja despacio (2-3 seg). No uses la inercia del torso.\nSobrecarga: Sube 2,5 kg cuando puedas completar todas las reps sin balanceo durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar.",
+            "descripcion_guia": "Codos pegados a los costados. Sube la barra en arco controlado hasta la contracción máxima; baja despacio (2-3 seg). No uses la inercia del torso."
+        },
+        {
+            "nombre": "Curl martillo con mancuernas",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif",
+            "descripcion": "Agarre neutro (pulgares arriba). Codos fijos a los lados. Sube hasta la contracción y baja controlad...",
+            "descripcion_detallada": "Técnica: Agarre neutro (pulgares arriba). Codos fijos a los lados. Sube hasta la contracción y baja controlado. Trabaja braquial y braquiorradial además del bíceps.\nSobrecarga: Incrementa el peso cuando completes todas las reps con codos fijos durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar.",
+            "descripcion_guia": "Agarre neutro (pulgares arriba). Codos fijos a los lados. Sube hasta la contracción y baja controlado. Trabaja braquial y braquiorradial además del bíceps."
+        },
+        {
+            "nombre": "Curl predicador",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Concentration-Curl.gif",
+            "descripcion": "Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mante...",
+            "descripcion_detallada": "Técnica: Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mantener tensión. Foco en la parte baja del bíceps.\nSobrecarga: Sube el peso cuando domines el rango completo sin balanceo durante 2 sesiones consecutivas.\nRespiración: Exhala al subir; inhala al bajar de forma controlada.",
+            "descripcion_guia": "Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mantener tensión. Foco en la parte baja del bíceps."
+        },
+        {
+            "nombre": "Fondos entre bancos",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/04/CHAIR-DIPS.gif",
+            "descripcion": "Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen...",
+            "descripcion_detallada": "Técnica: Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen 90°; sube sin bloquear por completo. Torso erguido para foco en tríceps.\nSobrecarga: Añade un disco sobre los muslos cuando superes 15 reps con buena técnica durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al subir.",
+            "descripcion_guia": "Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen 90°; sube sin bloquear por completo. Torso erguido para foco en tríceps."
+        }
+    ],
+    "Tríceps": [
+        {
+            "nombre": "Press francés",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Triceps-Extension.gif",
+            "descripcion": "Barra EZ tumbado. Codos apuntando al techo, fijos. Baja la barra hasta la frente o detrás de la cabe...",
+            "descripcion_detallada": "Técnica: Barra EZ tumbado. Codos apuntando al techo, fijos. Baja la barra hasta la frente o detrás de la cabeza (mayor estiramiento). Extiende sin bloquear completamente.\nSobrecarga: Sube 2,5 kg cuando completes todas las reps con codos fijos y sin dolor en el codo durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al extender.",
+            "descripcion_guia": "Barra EZ tumbado. Codos apuntando al techo, fijos. Baja la barra hasta la frente o detrás de la cabeza (mayor estiramiento). Extiende sin bloquear completamente."
+        },
+        {
+            "nombre": "Extensión de triceps en polea alta",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/11/One-arm-triceps-pushdown.gif",
+            "descripcion": "Cuerda o barra en polea alta. Codos fijos a los lados del cuerpo. Extiende hasta la máxima contracci...",
+            "descripcion_detallada": "Técnica: Cuerda o barra en polea alta. Codos fijos a los lados del cuerpo. Extiende hasta la máxima contracción del tríceps; sube de forma controlada.\nSobrecarga: Incrementa el peso cuando logres la contracción máxima en todas las reps sin mover los codos durante 2 sesiones.\nRespiración: Exhala al extender; inhala al subir.",
+            "descripcion_guia": "Cuerda o barra en polea alta. Codos fijos a los lados del cuerpo. Extiende hasta la máxima contracción del tríceps; sube de forma controlada."
+        },
+        {
+            "nombre": "Fondos entre bancos",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/04/CHAIR-DIPS.gif",
+            "descripcion": "Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen...",
+            "descripcion_detallada": "Técnica: Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen 90°; sube sin bloquear por completo. Torso erguido para foco en tríceps.\nSobrecarga: Añade un disco sobre los muslos cuando superes 15 reps con buena técnica durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al subir.",
+            "descripcion_guia": "Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen 90°; sube sin bloquear por completo. Torso erguido para foco en tríceps."
+        },
+        {
+            "nombre": "Extensión de tríceps con mancuerna sobre la cabeza",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Seated-Dumbbell-Triceps-Extension.gif",
+            "descripcion": "Siéntate o de pie. Mancuerna con ambas manos sobre la cabeza. Codos cerca de las orejas; baja la man...",
+            "descripcion_detallada": "Técnica: Siéntate o de pie. Mancuerna con ambas manos sobre la cabeza. Codos cerca de las orejas; baja la mancuerna detrás de la cabeza controlando el estiramiento del tríceps largo.\nSobrecarga: Sube el peso cuando manejes el rango completo con codos estables durante 2 sesiones.\nRespiración: Inhala al bajar; exhala al extender.",
+            "descripcion_guia": "Siéntate o de pie. Mancuerna con ambas manos sobre la cabeza. Codos cerca de las orejas; baja la mancuerna detrás de la cabeza controlando el estiramiento del tríceps largo."
+        },
+        {
+            "nombre": "Patada de tríceps con mancuerna",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Kickback.gif",
+            "descripcion": "Torso paralelo al suelo, codo elevado a la altura de la cadera. Extiende el antebrazo hacia atrás ha...",
+            "descripcion_detallada": "Técnica: Torso paralelo al suelo, codo elevado a la altura de la cadera. Extiende el antebrazo hacia atrás hasta la máxima contracción; vuelve de forma controlada. Codo fijo.\nSobrecarga: Incrementa el peso cuando logres la extensión completa y contracción máxima en todas las reps durante 2 sesiones.\nRespiración: Exhala al extender; inhala al regresar.",
+            "descripcion_guia": "Torso paralelo al suelo, codo elevado a la altura de la cadera. Extiende el antebrazo hacia atrás hasta la máxima contracción; vuelve de forma controlada. Codo fijo."
+        }
+    ],
+    "Antebrazos": [
+        {
+            "nombre": "Curl de muñeca con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2025/07/seated-barbell-finger-curl.gif",
+            "descripcion": "Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. P...",
+            "descripcion_detallada": "Técnica: Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. Peso ligero, altas repeticiones.\nSobrecarga: Sube el peso poco a poco (1-2 kg) cuando domines 20 reps por sesión durante 2 semanas.\nRespiración: Exhala al flexionar; inhala al bajar.",
+            "descripcion_guia": "Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. Peso ligero, altas repeticiones."
+        },
+        {
+            "nombre": "Curl de muñeca con mancuerna",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Wrist-Curl.gif",
+            "descripcion": "Igual que con barra, pero permite mayor rango de movimiento individual por muñeca. Trabaja un brazo ...",
+            "descripcion_detallada": "Técnica: Igual que con barra, pero permite mayor rango de movimiento individual por muñeca. Trabaja un brazo a la vez para corregir desequilibrios.\nSobrecarga: Sube el peso cuando completes 20 reps limpias con rango completo durante 2 sesiones.\nRespiración: Exhala al flexionar; inhala al extender.",
+            "descripcion_guia": "Igual que con barra, pero permite mayor rango de movimiento individual por muñeca. Trabaja un brazo a la vez para corregir desequilibrios."
+        },
+        {
+            "nombre": "Curl invertido con barra",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Reverse-Curl.gif",
+            "descripcion": "Agarre prono (dorso de la mano arriba). Codos fijos a los lados. Trabaja extensores del antebrazo y ...",
+            "descripcion_detallada": "Técnica: Agarre prono (dorso de la mano arriba). Codos fijos a los lados. Trabaja extensores del antebrazo y braquiorradial. Mantén la muñeca neutra al subir.\nSobrecarga: Incrementa el peso cuando completes todas las reps con muñeca neutra y sin balanceo durante 2 sesiones.\nRespiración: Exhala al subir; inhala al bajar.",
+            "descripcion_guia": "Agarre prono (dorso de la mano arriba). Codos fijos a los lados. Trabaja extensores del antebrazo y braquiorradial. Mantén la muñeca neutra al subir."
+        },
+        {
+            "nombre": "Farmer's walk (caminata del granjero)",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/02/Farmers-walk_Cardio.gif",
+            "descripcion": "Carga pesada en ambas manos. Espalda recta, hombros hacia atrás y abajo. Camina con pasos medianos y...",
+            "descripcion_detallada": "Técnica: Carga pesada en ambas manos. Espalda recta, hombros hacia atrás y abajo. Camina con pasos medianos y firmes. Foco en el agarre y la estabilidad del core.\nSobrecarga: Aumenta el peso o la distancia cuando puedas mantener la técnica perfecta durante toda la distancia en 2 sesiones.\nRespiración: Respira de forma continua y controlada; no aguantes la respiración.",
+            "descripcion_guia": "Carga pesada en ambas manos. Espalda recta, hombros hacia atrás y abajo. Camina con pasos medianos y firmes. Foco en el agarre y la estabilidad del core."
+        }
+    ],
+    "Abdomen / core": [
+        {
+            "nombre": "Plancha abdominal",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2023/07/High-Plank.gif",
+            "descripcion": "Antebrazos y pies apoyados. Activa el core (empuja el ombligo hacia la columna). Cuerpo en línea rec...",
+            "descripcion_detallada": "Técnica: Antebrazos y pies apoyados. Activa el core (empuja el ombligo hacia la columna). Cuerpo en línea recta; no elevar las caderas ni dejarlas caer.\nSobrecarga: Aumenta el tiempo de mantenimiento (objetivo: 60-90 seg) antes de agregar variantes con peso o movimiento.\nRespiración: Respira de forma continua y controlada; no aguantes la respiración.",
+            "descripcion_guia": "Antebrazos y pies apoyados. Activa el core (empuja el ombligo hacia la columna). Cuerpo en línea recta; no elevar las caderas ni dejarlas caer."
+        },
+        {
+            "nombre": "Crunch abdominal clásico",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/07/Cross-Crunch.gif",
+            "descripcion": "Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). ...",
+            "descripcion_detallada": "Técnica: Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). Aprieta el abdomen en la cima; baja de forma controlada.\nSobrecarga: Añade resistencia (disco en el pecho) cuando superes 20 reps limpias durante 2 sesiones.\nRespiración: Exhala al subir y apretar; inhala al bajar.",
+            "descripcion_guia": "Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). Aprieta el abdomen en la cima; baja de forma controlada."
+        },
+        {
+            "nombre": "Elevación de piernas colgado o en suelo",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/08/Hanging-Leg-Raises.gif",
+            "descripcion": "Colgado en barra: pelvis ligeramente retrovertida. Eleva las piernas rectas (o flexionadas) hasta la...",
+            "descripcion_detallada": "Técnica: Colgado en barra: pelvis ligeramente retrovertida. Eleva las piernas rectas (o flexionadas) hasta la horizontal o más. Evita el balanceo.\nSobrecarga: Avanza de piernas flexionadas a rectas; luego añade tobilleras con peso cuando domines 12 reps limpias.\nRespiración: Exhala al elevar; inhala al bajar de forma controlada.",
+            "descripcion_guia": "Colgado en barra: pelvis ligeramente retrovertida. Eleva las piernas rectas (o flexionadas) hasta la horizontal o más. Evita el balanceo."
+        },
+        {
+            "nombre": "Giros rusos",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Russian-Twist.gif",
+            "descripcion": "Sentado con el torso a ~45°, pies elevados (opcional). Gira el torso de lado a lado con control; no ...",
+            "descripcion_detallada": "Técnica: Sentado con el torso a ~45°, pies elevados (opcional). Gira el torso de lado a lado con control; no solo los brazos. Usa un disco o mancuerna para añadir resistencia.\nSobrecarga: Incrementa el peso cuando puedas hacer 20 reps por lado con rotación real del torso durante 2 sesiones.\nRespiración: Exhala en cada giro; inhala al centro.",
+            "descripcion_guia": "Sentado con el torso a ~45°, pies elevados (opcional). Gira el torso de lado a lado con control; no solo los brazos. Usa un disco o mancuerna para añadir resistencia."
+        },
+        {
+            "nombre": "Rueda abdominal",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Ab-Wheel-Rollout.gif",
+            "descripcion": "Rodillas en el suelo. Rueda hacia adelante extendiendo la cadera y columna casi hasta el suelo; regr...",
+            "descripcion_detallada": "Técnica: Rodillas en el suelo. Rueda hacia adelante extendiendo la cadera y columna casi hasta el suelo; regresa activando el core sin impulso. Es un ejercicio muy exigente.\nSobrecarga: Avanza de rodillas al suelo a de pie (rueda completa) cuando domines 10 reps limpias desde rodillas.\nRespiración: Inhala al extenderte; exhala al contraer el core y volver.",
+            "descripcion_guia": "Rodillas en el suelo. Rueda hacia adelante extendiendo la cadera y columna casi hasta el suelo; regresa activando el core sin impulso. Es un ejercicio muy exigente."
+        },
+        {
+            "nombre": "Dragon flag",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/07/Leg-Raise-Dragon-Flag.gif",
+            "descripcion": "Tumbado, sujeta un banco fijo detrás de tu cabeza. Mantén el cuerpo recto y tenso. Levanta piernas y...",
+            "descripcion_detallada": "Técnica: Tumbado, sujeta un banco fijo detrás de tu cabeza. Mantén el cuerpo recto y tenso. Levanta piernas y torso juntos hasta apoyarte solo en hombros. Baja controladamente sin doblarte.\nSobrecarga: Aumenta el tiempo de bajada excéntrica (3-5 segundos) para progresar la intensidad.\nRespiración: Inhala y aprieta el core antes de bajar; exhala al volver a subir.",
+            "descripcion_guia": "Tumbado, sujeta un banco fijo detrás de tu cabeza. Mantén el cuerpo recto y tenso. Levanta piernas y torso juntos hasta apoyarte solo en hombros. Baja controladamente sin doblarte."
+        }
+    ],
+    "Cardio / acondicionamiento": [
+        {
+            "nombre": "Burpees",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2025/08/Burpee-with-Push-Up.gif",
+            "descripcion": "De pie → flexión → plancha → flexión de pecho (opcional) → salta con los brazos arriba. Mantén el co...",
+            "descripcion_detallada": "Técnica: De pie → flexión → plancha → flexión de pecho (opcional) → salta con los brazos arriba. Mantén el core activo durante toda la secuencia.\nSobrecarga: Aumenta el número de reps por bloque o reduce el descanso entre series; luego agrega la flexión de pecho en cada rep.\nRespiración: Exhala en el salto; inhala al volver a la posición de plancha.",
+            "descripcion_guia": "De pie → flexión → plancha → flexión de pecho (opcional) → salta con los brazos arriba. Mantén el core activo durante toda la secuencia."
+        },
+        {
+            "nombre": "Saltos de tijera",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/05/Jumping-jack.gif",
+            "descripcion": "Pies juntos al inicio. Salta abriendo piernas y brazos simultáneamente; aterriza suave sobre la part...",
+            "descripcion_detallada": "Técnica: Pies juntos al inicio. Salta abriendo piernas y brazos simultáneamente; aterriza suave sobre la parte delantera del pie con rodillas ligeramente flexionadas.\nSobrecarga: Aumenta la velocidad, el número de reps o añade el ejercicio en circuito con descanso mínimo.\nRespiración: Respira de forma continua y rítmica; no aguantes el aire.",
+            "descripcion_guia": "Pies juntos al inicio. Salta abriendo piernas y brazos simultáneamente; aterriza suave sobre la parte delantera del pie con rodillas ligeramente flexionadas."
+        },
+        {
+            "nombre": "Salto a la cuerda",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2023/10/Skip-Jump-Rope.gif",
+            "descripcion": "Pies juntos o alternados, rodillas ligeramente flexionadas. Muñecas rotan la cuerda (no los hombros)...",
+            "descripcion_detallada": "Técnica: Pies juntos o alternados, rodillas ligeramente flexionadas. Muñecas rotan la cuerda (no los hombros). Aterriza en el antepié suavemente.\nSobrecarga: Aumenta la duración del intervalo o la velocidad; luego incorpora saltos dobles (double-unders).\nRespiración: Respira de forma continua y controlada al ritmo del salto.",
+            "descripcion_guia": "Pies juntos o alternados, rodillas ligeramente flexionadas. Muñecas rotan la cuerda (no los hombros). Aterriza en el antepié suavemente."
+        }
+    ]
+}

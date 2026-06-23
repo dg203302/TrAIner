@@ -54,8 +54,6 @@ const validatePlanShape = (obj) => {
         for (const ex of dia.ejercicios) {
             if (!ex || typeof ex !== "object") return "Cada ejercicio debe ser un objeto";
             if (typeof ex.nombre !== "string" || !ex.nombre.trim()) return "Cada ejercicio debe tener nombre (string)";
-            if (typeof ex.descripcion !== "string" || !ex.descripcion.trim()) return "Cada ejercicio debe tener descripcion (string)";
-            if (typeof ex.descripcion_detallada !== "string" || !ex.descripcion_detallada.trim()) return "Cada ejercicio debe tener descripcion_detallada (string)";
             if (typeof ex.series !== "number" || Number.isNaN(ex.series)) return "Cada ejercicio debe tener series (number)";
             if (typeof ex.repeticiones !== "string" || !ex.repeticiones.trim()) return "Cada ejercicio debe tener repeticiones (string)";
             if (typeof ex.descanso_segundos !== "number" || Number.isNaN(ex.descanso_segundos)) {

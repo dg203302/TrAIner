@@ -648,81 +648,27 @@ const showNetlifyHostingErrorAlert = async ({ endpoint, status, statusText, body
 const username = localStorage.getItem("username_usuario")
 const avatar = localStorage.getItem("avatar_usuario")
 
-const EJERCICIOS_INDICE = {
-    "Pecho": [
-        "Press de banca plano con barra",
-        "Press de banca inclinado con barra",
-        "Press de banca inclinado con mancuernas",
-        "Flexiones de brazos (peso corporal)",
-        "Aperturas con mancuernas",
-        "Fondos en paralelas (pecho bajo/tríceps)",
-        "Cruce de poleas",
-    ],
-    "Espalda": [
-        "Dominadas (peso corporal)",
-        "Jalón al pecho en polea",
-        "Remo con barra",
-        "Remo unilateral con mancuerna",
-        "Remo sentado en polea",
-        "Pull-over con mancuerna",
-        "Remo en T",
-        "Hiperextensiones lumbares",
-    ],
-    "Piernas": [
-        "Sentadilla libre",
-        "Prensa de piernas",
-        "Zancadas / estocadas",
-        "Peso muerto rumano",
-        "Hip thrust (empuje de cadera)",
-        "Extensión de cuádriceps en máquina",
-        "Curl femoral tumbado o sentado",
-        "Elevación de talones",
-        "Sentadilla búlgara",
-        "Peso muerto sumo con barra",
-        "Step-ups con mancuernas",
-    ],
-    "Hombros": [
-        "Press militar con barra o mancuernas",
-        "Elevaciones laterales con mancuernas",
-        "Pájaros / vuelos posteriores",
-        "Elevaciones frontales",
-        "Face pull (salud del hombro)",
-        "Press Arnold",
-        "Encogimientos de hombros con barra reversa",
-    ],
-    "Brazos": [
-        "Curl de bíceps con barra",
-        "Curl martillo con mancuernas",
-        "Curl predicador",
-        "Fondos entre bancos",
-    ],
-    "Tríceps": [
-        "Press francés",
-        "Extensión de triceps en polea alta",
-        "Fondos entre bancos",
-        "Extensión de tríceps con mancuerna sobre la cabeza",
-        "Patada de tríceps con mancuerna",
-    ],
-    "Antebrazos": [
-        "Curl de muñeca con barra",
-        "Curl de muñeca con mancuerna",
-        "Curl invertido con barra",
-        "Farmer's walk (caminata del granjero)",
-    ],
-    "Abdomen / core": [
-        "Plancha abdominal",
-        "Crunch abdominal clásico",
-        "Elevación de piernas colgado o en suelo",
-        "Giros rusos",
-        "Rueda abdominal",
-        "Dragon flag",
-    ],
-    "Cardio / acondicionamiento": [
-        "Burpees",
-        "Saltos de tijera",
-        "Salto a la cuerda",
-    ],
-};
+let EJERCICIOS_INDICE = {};
+window.ENTRENAMIENTOS_DB = {};
+window.ENTRENAMIENTOS_FLAT = {};
+
+(async () => {
+    try {
+        const res = await fetch("/Datos/entrenamientos.json");
+        if (res.ok) {
+            window.ENTRENAMIENTOS_DB = await res.json();
+            for (const grupo in window.ENTRENAMIENTOS_DB) {
+                EJERCICIOS_INDICE[grupo] = window.ENTRENAMIENTOS_DB[grupo].map(ex => ex.nombre);
+                for (const ex of window.ENTRENAMIENTOS_DB[grupo]) {
+                    const norm = String(ex.nombre || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+                    window.ENTRENAMIENTOS_FLAT[norm] = ex;
+                }
+            }
+        }
+    } catch (e) {
+        console.error("Error loading entrenamientos.json", e);
+    }
+})();
 
 const escapeHtml = (value) => String(value)
     .replaceAll("&", "&amp;")
@@ -756,33 +702,72 @@ const formatReps = (value) => {
     return s;
 };
 
-const renderListaEjerciciosSelectable = () => {
-    const grupoLabelMapEn = {
-        "Pecho": "Chest",
-        "Espalda": "Back",
-        "Piernas": "Legs",
-        "Hombros": "Shoulders",
-        "Brazos": "Arms",
-        "Tríceps": "Triceps",
-        "Antebrazos": "Forearms",
-        "Abdomen / core": "Abs / core",
-        "Cardio / acondicionamiento": "Cardio / conditioning",
+const renderListaEjerciciosSelectable = (inputName = "ejercicios") => {
+    if (!EJERCICIOS_INDICE) return "";
+    const parts = [];
+
+    const groupOrder = ["Pecho", "Espalda", "Piernas", "Hombros", "Brazos", "Tríceps", "Antebrazos", "Abdomen / core", "Cardio / acondicionamiento"];
+    const validKeys = Object.keys(EJERCICIOS_INDICE).filter(k => groupOrder.includes(k));
+    validKeys.sort((a, b) => groupOrder.indexOf(a) - groupOrder.indexOf(b));
+
+    const translateGroup = (g) => {
+        const m = { "Pecho": "Chest", "Espalda": "Back", "Piernas": "Legs", "Hombros": "Shoulders", "Brazos": "Arms", "Tríceps": "Triceps", "Antebrazos": "Forearms", "Abdomen / core": "Abs / core", "Cardio / acondicionamiento": "Cardio / conditioning" };
+        return m[g] ?? g;
     };
 
-    const parts = [];
-    for (const [grupo, items] of Object.entries(EJERCICIOS_INDICE)) {
-        const grupoLabel = isEnglish() ? (grupoLabelMapEn[grupo] || grupo) : grupo;
+    for (const grupo of validKeys) {
+        const items = EJERCICIOS_INDICE[grupo] || [];
+        if (!items.length) continue;
+
+        const grupoLabel = tLang(grupo, translateGroup(grupo));
+
         const checks = items
-            .map((e) => {
-                const original = String(e ?? "");
-                const label = isEnglish() ? translateExerciseNameToEnglish(original) : original;
-                // Mantener el value en español para compatibilidad con selecciones guardadas.
+            .map((original) => {
+                const enName = translateExerciseNameToEnglish(original) || original;
                 const safeValue = escapeHtml(original);
-                const safeLabel = escapeHtml(label);
+                const safeLabel = escapeHtml(tLang(original, enName));
+
+                const _normGif = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+                const searchName = _normGif(original);
+
+                let gifUrl = null;
+                let descriptionText = "";
+
+                if (window.ENTRENAMIENTOS_FLAT) {
+                    if (window.ENTRENAMIENTOS_FLAT[searchName]) {
+                        gifUrl = window.ENTRENAMIENTOS_FLAT[searchName].gifUrl;
+                        descriptionText = window.ENTRENAMIENTOS_FLAT[searchName].descripcion;
+                    } else {
+                        for (const [key, exObj] of Object.entries(window.ENTRENAMIENTOS_FLAT)) {
+                            const enNorm = _normGif(translateExerciseNameToEnglish(key));
+                            if (searchName.includes(key) || searchName.includes(enNorm) || (key.length > 5 && key.includes(searchName))) {
+                                gifUrl = exObj.gifUrl;
+                                descriptionText = exObj.descripcion;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                const imgHtml = gifUrl
+                    ? `<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 60%; pointer-events: none; z-index: 0; mask-image: linear-gradient(to right, transparent 0%, black 50%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 50%); border-top-right-radius: 11px; border-bottom-right-radius: 11px; overflow: hidden;">
+                           <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: right center; opacity: 0.45; mix-blend-mode: luminosity;" loading="lazy">
+                       </div>`
+                    : "";
+
+                let descriptionHtml = "";
+                if (descriptionText) {
+                    descriptionHtml = `<div style="font-size: 11.5px; color: rgba(255,255,255,0.6); line-height: 1.3; margin-top: 6px; padding-right: 40px; position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${escapeHtml(descriptionText)}</div>`;
+                }
+
                 return `
-                    <label class="swal-check">
-                        <input type="checkbox" name="ejercicios" value="${safeValue}">
-                        <span>${safeLabel}</span>
+                    <label class="swal-check" style="position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; padding: 12px 15px;">
+                        ${imgHtml}
+                        <div style="display: flex; align-items: center; width: 100%; position: relative; z-index: 1;">
+                            <input type="checkbox" name="${escapeHtml(inputName)}" value="${safeValue}">
+                            <span style="text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-weight: 600;">${safeLabel}</span>
+                        </div>
+                        ${descriptionHtml}
                     </label>
                 `;
             })
@@ -1022,57 +1007,80 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 
             <div class="pt-detail-body">
                 <div class="pt-detail-viewport plan-detalle-viewport" role="region" aria-label="${escapeHtml(tLang("Opciones del plan", "Plan options"))}">
+                    
                     <div class="pt-detail-card">
                         <div class="pt-detail-card-inner">
-                            <div class="pt-sheet-section-title">${escapeHtml(tLang("Opciones", "Options"))}</div>
+                            <div class="pt-sheet-section-title">${escapeHtml(tLang("Tipo de Creación", "Creation Type"))}</div>
                             <div class="swal-grid">
                                 <div class="swal-field">
-                                    <p class="swal-label">${escapeHtml(tLang("¿Dónde entrenás?", "Where do you train?"))}</p>
-                                    <label class="swal-radio"><input type="radio" name="lugar" value="casa"><span>${escapeHtml(tLang("Entreno en casa", "I train at home"))}</span></label>
-                                    <label class="swal-radio"><input type="radio" name="lugar" value="gimnasio"><span>${escapeHtml(tLang("Entreno en gimnasio", "I train at the gym"))}</span></label>
-                                </div>
-                                <div class="swal-field">
-                                    <p class="swal-label">${escapeHtml(tLang("¿Qué priorizás?", "What do you prioritize?"))}</p>
-                                    <label class="swal-radio"><input type="radio" name="objetivo" value="grasa"><span>${escapeHtml(tLang("Priorizar pérdida de grasa", "Prioritize fat loss"))}</span></label>
-                                    <label class="swal-radio"><input type="radio" name="objetivo" value="musculo"><span>${escapeHtml(tLang("Priorizar ganancia muscular", "Prioritize muscle gain"))}</span></label>
+                                    <label class="swal-radio"><input type="radio" name="tipo_plan" value="ia" checked><span>${escapeHtml(tLang("Generar con IA", "Generate with AI"))}</span></label>
+                                    <label class="swal-radio"><input type="radio" name="tipo_plan" value="manual"><span>${escapeHtml(tLang("Crear manualmente", "Create manually"))}</span></label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-detail-card">
-                        <div class="pt-detail-card-inner">
-                            ${renderSelectorIntensidad()}
+                    <div id="pt-gen-ia-container">
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Opciones", "Options"))}</div>
+                                <div class="swal-grid">
+                                    <div class="swal-field">
+                                        <p class="swal-label">${escapeHtml(tLang("¿Dónde entrenás?", "Where do you train?"))}</p>
+                                        <label class="swal-radio"><input type="radio" name="lugar" value="casa"><span>${escapeHtml(tLang("Entreno en casa", "I train at home"))}</span></label>
+                                        <label class="swal-radio"><input type="radio" name="lugar" value="gimnasio"><span>${escapeHtml(tLang("Entreno en gimnasio", "I train at the gym"))}</span></label>
+                                    </div>
+                                    <div class="swal-field">
+                                        <p class="swal-label">${escapeHtml(tLang("¿Qué priorizás?", "What do you prioritize?"))}</p>
+                                        <label class="swal-radio"><input type="radio" name="objetivo" value="grasa"><span>${escapeHtml(tLang("Priorizar pérdida de grasa", "Prioritize fat loss"))}</span></label>
+                                        <label class="swal-radio"><input type="radio" name="objetivo" value="musculo"><span>${escapeHtml(tLang("Priorizar ganancia muscular", "Prioritize muscle gain"))}</span></label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="pt-detail-card">
-                        <div class="pt-detail-card-inner">
-                            <div class="pt-sheet-section-title">${escapeHtml(tLang("Días", "Days"))}</div>
-                            <p class="swal-helper">${escapeHtml(tLang(
-        "Tocá para seleccionar los días en los que vas a entrenar.",
-        "Tap to select the days you plan to train."
-    ))}</p>
-                            ${renderDiasSelector()}
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                ${renderSelectorIntensidad()}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="pt-detail-card">
-                        <div class="pt-detail-card-inner">
-                            <div class="pt-sheet-section-title">${escapeHtml(tLang("Ejercicios", "Exercises"))}</div>
-                            <p class="swal-helper">${escapeHtml(tLang(
-        "Opcional: si querés, marcá ejercicios preferidos. Si no seleccionás nada, la IA elige automáticamente.",
-        "Optional: pick preferred exercises. If you don't select any, the AI will choose automatically."
-    ))}</p>
-                            <label class="swal-toggle">
-                                <input type="checkbox" id="swal_ej_toggle">
-                                <span>${escapeHtml(tLang("Quiero elegir ejercicios", "I want to choose exercises"))}</span>
-                            </label>
-                            <div class="swal-ejercicios">
-                                ${renderListaEjerciciosSelectable()}
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Días", "Days"))}</div>
+                                <p class="swal-helper">${escapeHtml(tLang("Tocá para seleccionar los días en los que vas a entrenar.", "Tap to select the days you plan to train."))}</p>
+                                ${renderDiasSelector()}
+                            </div>
+                        </div>
+
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Ejercicios", "Exercises"))}</div>
+                                <p class="swal-helper">${escapeHtml(tLang("Opcional: si querés, marcá ejercicios preferidos. Si no seleccionás nada, la IA elige automáticamente.", "Optional: pick preferred exercises. If you don't select any, the AI will choose automatically."))}</p>
+                                <label class="swal-toggle">
+                                    <input type="checkbox" id="swal_ej_toggle">
+                                    <span>${escapeHtml(tLang("Quiero elegir ejercicios", "I want to choose exercises"))}</span>
+                                </label>
+                                <div class="swal-ejercicios">
+                                    ${renderListaEjerciciosSelectable()}
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div id="pt-gen-manual-container" style="display: none;">
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Días de entrenamiento", "Training days"))}</div>
+                                <p class="swal-helper">${escapeHtml(tLang("Seleccioná los días para tu plan manual.", "Select the days for your manual plan."))}</p>
+                                <div class="swal-dias" id="swal-dias-manual" role="group">
+                                    ${DIAS_SEMANA.map(d => `<button type="button" class="swal-dia-btn swal-dia-btn-manual" data-dia="${escapeHtml(d.code)}" data-name="${escapeHtml(d.name)}" aria-pressed="false">${escapeHtml(d.label)}</button>`).join("")}
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pt-manual-days-forms"></div>
+                    </div>
+
                 </div>
             </div>
 
@@ -1117,21 +1125,60 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 
                 const diasSet = new Set(lastDias);
                 sheet.querySelectorAll(".swal-dia-btn")?.forEach((btn) => {
+                    if (btn.classList.contains("swal-dia-btn-manual")) return;
                     const code = btn.getAttribute("data-dia");
                     const isOn = diasSet.has(String(code ?? "").toUpperCase());
                     btn.classList.toggle("is-selected", isOn);
                     btn.setAttribute("aria-pressed", isOn ? "true" : "false");
                 });
 
-                sheet.querySelector(".swal-dias")?.addEventListener("click", (ev) => {
-                    const target = ev.target;
-                    if (!(target instanceof HTMLElement)) return;
-                    const btn = target.closest(".swal-dia-btn");
-                    if (!(btn instanceof HTMLButtonElement)) return;
-                    const pressed = btn.getAttribute("aria-pressed") === "true";
-                    const next = !pressed;
-                    btn.classList.toggle("is-selected", next);
-                    btn.setAttribute("aria-pressed", next ? "true" : "false");
+                sheet.querySelectorAll('input[name="tipo_plan"]')?.forEach(radio => {
+                    radio.addEventListener("change", (e) => {
+                        const isManual = e.target.value === "manual";
+                        sheet.querySelector("#pt-gen-ia-container").style.display = isManual ? "none" : "block";
+                        sheet.querySelector("#pt-gen-manual-container").style.display = isManual ? "block" : "none";
+                        const btn = sheet.querySelector("[data-pt-generate]");
+                        if (btn) btn.textContent = isManual ? escapeHtml(tLang("Crear", "Create")) : escapeHtml(tLang("Generar", "Generate"));
+                    });
+                });
+
+                const renderManualDayForm = (code, name, label) => `
+                    <div class="pt-detail-card pt-manual-day-card" id="pt-manual-day-${code}">
+                        <div class="pt-detail-card-inner">
+                            <div class="pt-sheet-section-title" style="color: var(--my-primary, #ff073a);">${escapeHtml(label)} - ${escapeHtml(tLang("Enfoque", "Focus"))}</div>
+                            <input type="text" class="swal2-input pt-manual-enfoque" data-day-code="${escapeHtml(code)}" placeholder="${escapeHtml(tLang("Ej: Pecho y Tríceps", "Ex: Chest and Triceps"))}" style="display: block; width: 100%; margin-top: 5px; height: 44px; font-size: 15px; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0 12px; outline: none; margin-bottom: 15px;">
+                            <div class="pt-sheet-section-title">${escapeHtml(tLang("Ejercicios", "Exercises"))}</div>
+                            <div class="swal-ejercicios" style="padding-bottom: 10px;">
+                                ${renderListaEjerciciosSelectable(`ejercicios_${code}`)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                sheet.querySelectorAll(".swal-dias")?.forEach(container => {
+                    container.addEventListener("click", (ev) => {
+                        const target = ev.target;
+                        if (!(target instanceof HTMLElement)) return;
+                        const btn = target.closest(".swal-dia-btn");
+                        if (!(btn instanceof HTMLButtonElement)) return;
+                        const pressed = btn.getAttribute("aria-pressed") === "true";
+                        const next = !pressed;
+                        btn.classList.toggle("is-selected", next);
+                        btn.setAttribute("aria-pressed", next ? "true" : "false");
+
+                        if (btn.classList.contains("swal-dia-btn-manual")) {
+                            const code = btn.getAttribute("data-dia");
+                            const name = btn.getAttribute("data-name");
+                            const label = btn.textContent;
+                            const formsContainer = sheet.querySelector("#pt-manual-days-forms");
+                            if (next) {
+                                formsContainer.insertAdjacentHTML("beforeend", renderManualDayForm(code, name, label));
+                            } else {
+                                const card = formsContainer.querySelector(`#pt-manual-day-${code}`);
+                                if (card) card.remove();
+                            }
+                        }
+                    });
                 });
 
                 const toggle = sheet.querySelector("#swal_ej_toggle");
@@ -1161,12 +1208,30 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 
                 const btnGenerate = sheet.querySelector("[data-pt-generate]");
                 btnGenerate?.addEventListener("click", async () => {
+                    const tipoPlan = sheet.querySelector('input[name="tipo_plan"]:checked')?.value || "ia";
+                    if (tipoPlan === "manual") {
+                        const manualDays = Array.from(sheet.querySelectorAll(".swal-dia-btn-manual[aria-pressed='true']"));
+                        if (manualDays.length === 0) return showError(tLang("Seleccioná al menos un día.", "Select at least one day."));
+
+                        const diasData = manualDays.map(btn => {
+                            const code = btn.getAttribute("data-dia");
+                            const name = btn.getAttribute("data-name");
+                            const enfoque = sheet.querySelector(`#pt-manual-day-${code} .pt-manual-enfoque`)?.value || "";
+                            const exercises = Array.from(sheet.querySelectorAll(`input[name="ejercicios_${code}"]:checked`)).map(el => el.value);
+                            return { dia: name, enfoque, ejercicios: exercises };
+                        });
+
+                        safeResolve({ isConfirmed: true, isManual: true, diasData });
+                        try { window.PTBottomSheet?.close?.(); } catch { }
+                        return;
+                    }
+
                     const lugar = sheet.querySelector('input[name="lugar"]:checked')?.value;
                     const objetivo = sheet.querySelector('input[name="objetivo"]:checked')?.value;
-                    const dias = Array.from(sheet.querySelectorAll('.swal-dia-btn[aria-pressed="true"]') ?? [])
-                        .map((b) => String(b.getAttribute("data-dia") ?? "").toUpperCase())
+                    const dias = Array.from(sheet.querySelectorAll('.swal-dia-btn:not(.swal-dia-btn-manual)[aria-pressed="true"]') ?? [])
+                        .map((el) => el.getAttribute("data-dia"))
                         .filter(Boolean);
-                    const intensidad = sheet.querySelector('input[name="intensidad"]:checked')?.value || null;
+                    const intensidad = sheet.querySelector('input[name="intensidad"]:checked')?.value;
                     const ejToggle = sheet.querySelector("#swal_ej_toggle");
                     const ejEnabled = ejToggle instanceof HTMLInputElement ? ejToggle.checked : false;
                     const ejercicios = ejEnabled
@@ -1191,7 +1256,6 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
                         return;
                     }
 
-                    // Persist choices
                     try {
                         localStorage.setItem("plan_lugar", String(lugar));
                         localStorage.setItem("plan_objetivo", String(objetivo));
@@ -1199,19 +1263,14 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
                         if (intensidad) localStorage.setItem("plan_intensidad", String(intensidad));
                         localStorage.setItem("plan_ejercicios_enabled", ejEnabled ? "1" : "0");
                         localStorage.setItem("plan_ejercicios_selected", JSON.stringify(Array.isArray(ejercicios) ? ejercicios : []));
-                    } catch {
-                        // ignore
-                    }
+                    } catch { }
 
-                    // Prevent double submit
                     try {
                         if (btnGenerate instanceof HTMLButtonElement) btnGenerate.disabled = true;
                     } catch { }
 
-                    safeResolve({ isConfirmed: true, value: { lugar, objetivo, dias, ejEnabled, ejercicios, intensidad } });
+                    safeResolve({ isConfirmed: true, lugar, objetivo, dias, ejEnabled, ejercicios, intensidad });
                     window.PTBottomSheet?.close?.();
-
-                    await crearPlanEntreno(lugar, objetivo, dias, ejercicios, intensidad);
                 });
             },
             willClose: () => {
@@ -1222,18 +1281,6 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 };
 window.onload = async () => {
 
-    if (!window.__gifs_cache) {
-        try {
-            const res = await fetch("/Datos/correspondencia_gifs.json");
-            if (res.ok) {
-                window.__gifs_cache = await res.json();
-            } else {
-                window.__gifs_cache = {};
-            }
-        } catch (e) {
-            window.__gifs_cache = {};
-        }
-    }
 
     await recuperar_planes();
 
@@ -1357,10 +1404,125 @@ function verificacion_plan_entrenamiento() {
         boton_ejercicios.style.width = "auto";
         boton_ejercicios.style.height = "auto";
         boton_ejercicios.onclick = async () => {
-            await openGenerarPlanModal();
+            const data = await openGenerarPlanModal();
+            if (!data?.isConfirmed) return;
+
+            if (data.isManual) {
+                await crearPlanManual(data.diasData);
+            } else {
+                await crearPlanEntreno(data.lugar, data.objetivo, data.dias, data.ejercicios, data.intensidad);
+            }
         }
     }
 }
+
+async function crearPlanManual(diasData) {
+    try { window.PTBottomSheet?.close?.(); } catch { }
+
+    window.PTBottomSheet?.open?.({
+        title: tLang("Creando Plan Manual", "Creating Manual Plan"),
+        subtitle: tLang("Guardando tu plan personalizado...", "Saving your custom plan..."),
+        html: `
+            <div class="pt-status" aria-live="polite">
+                <div class="pt-status-row">
+                    <div class="pt-spinner" aria-hidden="true"></div>
+                    <div class="pt-status-text">${escapeHtml(tLang("Por favor, esperá...", "Please wait..."))}</div>
+                </div>
+            </div>
+        `,
+        showClose: false,
+        showHandle: false,
+        showBack: false,
+        allowOutsideClose: false,
+        allowEscapeClose: false,
+        allowDragClose: false,
+    });
+
+    const plan = {
+        plan_entrenamiento: {
+            configuracion_semanal: diasData.map(d => ({
+                dia: d.dia,
+                enfoque: d.enfoque,
+                ejercicios: d.ejercicios.map(eName => {
+                    const searchName = String(eName ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+
+                    let exInfo = null;
+                    if (window.ENTRENAMIENTOS_FLAT && window.ENTRENAMIENTOS_FLAT[searchName]) {
+                        exInfo = window.ENTRENAMIENTOS_FLAT[searchName];
+                    } else if (window.ENTRENAMIENTOS_FLAT) {
+                        for (const [key, exObj] of Object.entries(window.ENTRENAMIENTOS_FLAT)) {
+                            const enNorm = translateExerciseNameToEnglish(key).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                            if (searchName.includes(key) || searchName.includes(enNorm)) {
+                                exInfo = exObj;
+                                break;
+                            }
+                        }
+                    }
+
+                    return {
+                        nombre: exInfo ? exInfo.nombre : eName,
+                        series: exInfo?.series_recomendadas || 3,
+                        repeticiones: exInfo?.repeticiones_recomendadas || "8-12",
+                        descanso: exInfo?.descanso_recomendado || "60s"
+                    };
+                })
+            }))
+        }
+    };
+
+    const planStr = JSON.stringify(plan);
+    localStorage.setItem("plan_entreno_usuario", planStr);
+
+    try {
+        const id_usuario = localStorage.getItem("id_usuario");
+        if (id_usuario && supabase) {
+            await supabase.from("Planes").update({
+                Plan_entreno: planStr,
+                Generado_con_ia: false
+            }).eq("ID_user", id_usuario);
+        }
+    } catch (err) {
+        console.error("Error al guardar plan manual en supabase:", err);
+    }
+
+    // Llamar a la edge function de actualizar tal cual pide el usuario
+    await actualizar_cambios_plan_entreno();
+
+    try { window.PTBottomSheet?.close?.(); } catch { }
+
+    const br = document.getElementById("boton_regenerar");
+    if (br) br.style.display = "block";
+    verificacion_plan_entrenamiento();
+
+    // Mostrar cartel de éxito
+    window.PTBottomSheet?.open?.({
+        title: tLang("¡Plan Creado!", "Plan created!"),
+        ariaLabel: tLang("Plan creado exitosamente", "Plan created successfully"),
+        html: `
+            <div class="pt-status">
+                <div class="pt-status-row">
+                    <div class="pt-status-text">${escapeHtml(tLang(
+            "Tu plan manual se ha guardado y sincronizado correctamente.",
+            "Your manual plan has been saved and synchronized successfully."
+        ))}</div>
+                </div>
+                <div class="pt-status-actions">
+                    <button type="button" class="btn-primary" data-pt-sheet-close>${escapeHtml(tLang("Ver Plan", "View Plan"))}</button>
+                </div>
+            </div>
+        `,
+        showClose: false,
+        showHandle: true,
+        showBack: false,
+        allowOutsideClose: true,
+        allowEscapeClose: true,
+        allowDragClose: true,
+        didOpen: (sheet) => {
+            sheet.querySelector("[data-pt-sheet-close]")?.addEventListener("click", () => window.PTBottomSheet?.close?.());
+        },
+    });
+}
+
 async function crearPlanEntreno(lugar, objetivo, diasSeleccionados, ejerciciosSeleccionados, intensidad = 'media') {
 
     const diasCodes = Array.isArray(diasSeleccionados) ? diasSeleccionados : [];
@@ -1718,36 +1880,33 @@ function mapear_plan(plan_entrenamiento_json) {
     const renderExerciseCard = (exNorm, idx, dayIdx) => {
         const nombreEs = escapeHtml(exNorm.nombre);
         const nombreEn = escapeHtml(exNorm.nombre_en ?? exNorm.nombre);
-        const descripcion = escapeHtml(exNorm.descripcion || "");
-        const series = escapeHtml(exNorm.series);
-        const reps = escapeHtml(formatReps(exNorm.repeticiones));
-
         let gifUrl = null;
-        let gifsDict = window.__gifs_cache;
-        if (gifsDict) {
-            const _normGif = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
-            const searchName = _normGif(exNorm.nombre);
-            for (const [esKey, url] of Object.entries(gifsDict)) {
-                const esNorm = _normGif(esKey);
-                const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
-                if (searchName === esNorm || searchName === enNorm) {
-                    gifUrl = url;
-                    break;
-                }
-            }
-            if (!gifUrl) {
-                for (const [esKey, url] of Object.entries(gifsDict)) {
-                    const esNorm = _normGif(esKey);
-                    const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
-                    if (searchName.includes(esNorm) || searchName.includes(enNorm) || (esNorm.length > 5 && esNorm.includes(searchName))) {
-                        gifUrl = url;
+        let descripcionText = exNorm.descripcion || "";
+
+        const _normGif = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+        const searchName = _normGif(exNorm.nombre);
+
+        if (window.ENTRENAMIENTOS_FLAT) {
+            let matchedEx = window.ENTRENAMIENTOS_FLAT[searchName];
+            if (!matchedEx) {
+                for (const [key, exObj] of Object.entries(window.ENTRENAMIENTOS_FLAT)) {
+                    const enNorm = _normGif(translateExerciseNameToEnglish(key));
+                    if (searchName.includes(key) || searchName.includes(enNorm) || (key.length > 5 && key.includes(searchName))) {
+                        matchedEx = exObj;
                         break;
                     }
                 }
             }
+            if (matchedEx) {
+                gifUrl = matchedEx.gifUrl;
+                if (!descripcionText) descripcionText = matchedEx.descripcion;
+            }
         }
+        const descripcion = escapeHtml(descripcionText);
+        const series = escapeHtml(exNorm.series);
+        const reps = escapeHtml(formatReps(exNorm.repeticiones));
 
-        const imgHtml = gifUrl 
+        const imgHtml = gifUrl
             ? `<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 60%; pointer-events: none; z-index: 0; mask-image: linear-gradient(to right, transparent 0%, black 50%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 50%); border-top-right-radius: 17px; border-bottom-right-radius: 17px; overflow: hidden;">
                    <img src="${gifUrl}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: right center; opacity: 0.5; mix-blend-mode: luminosity;" loading="lazy">
                </div>`
@@ -1757,12 +1916,12 @@ function mapear_plan(plan_entrenamiento_json) {
             <article class="plan-card" data-idx="${idx}" data-day-idx="${escapeHtml(dayIdx)}" role="button" tabindex="0" style="position: relative; overflow: hidden; padding-right: 30%;">
                 ${imgHtml}
                 <div style="position: relative; z-index: 1;">
-                    <h3 class="plan-nombre" data-i18n-en="${nombreEn}" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${nombreEs}</h3>
-                    ${descripcion ? `<p class="plan-desc" style="text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${descripcion}</p>` : ""}
-                    <div class="plan-meta">
-                        <span class="plan-chip" style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Sets:">Series:</span> <strong>${series}</strong></span>
-                        <span class="plan-chip" style="backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Reps:">Reps:</span> <strong>${reps}</strong></span>
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; flex-wrap: nowrap; width: 100%;">
+                        <span class="plan-chip" style="flex-shrink: 0; white-space: nowrap; padding: 4px 8px; font-size: 11.5px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Sets:">Series:</span> <strong>${series}</strong></span>
+                        <h3 class="plan-nombre" data-i18n-en="${nombreEn}" style="text-shadow: 0 2px 4px rgba(0,0,0,0.8); margin: 0; padding: 0; text-align: center; flex-shrink: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(12px, 3vw, 14.5px);">${nombreEs}</h3>
+                        <span class="plan-chip" style="flex-shrink: 0; white-space: nowrap; padding: 4px 8px; font-size: 11.5px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); background: rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15);"><span data-i18n-en="Reps:">Reps:</span> <strong>${reps}</strong></span>
                     </div>
+                    ${descripcion ? `<p class="plan-desc" style="text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${descripcion}</p>` : ""}
                 </div>
             </article>
         `;
@@ -1782,17 +1941,28 @@ function mapear_plan(plan_entrenamiento_json) {
 
         return `
             <section class="plan-dia">
-                <div class="plan-dia-header" data-day-idx="${escapeHtml(dayIdx)}" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Detalle del día", "Day detail"))} ${dayIdx + 1}">
+                <div class="plan-dia-header" data-day-idx="${escapeHtml(dayIdx)}">
                     <div class="plan-dia-titulos">
                         <h2 class="plan-dia-titulo">${escapeHtml(diaLabel)}</h2>
                         ${enfoque ? `<div class="plan-dia-subtitle">${escapeHtml(enfoque)}</div>` : ""}
                     </div>
-                    <div class="plan-dia-chip" style="font-size: 13.5px; font-weight: 800; background: linear-gradient(135deg, rgba(157,243,255,0.15), rgba(182,168,255,0.15)); border: 1px solid rgba(157,243,255,0.25); color: #9DF3FF; padding: 8px 14px; box-shadow: 0 4px 14px rgba(157,243,255,0.1); border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 20h9"></path>
-                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 Z"></path>
-                        </svg>
-                        <span data-i18n-en="Log Workout">Registrar entreno</span>
+                    <div class="plan-dia-actions" style="display: flex; flex-direction: column; gap: 8px; margin-left: auto;">
+                        <div class="plan-dia-chip chip-registrar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Detalle del día", "Day detail"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span data-i18n-en="Log Workout">Registrar entreno</span>
+                        </div>
+                        <div class="plan-dia-chip chip-editar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Editar día", "Edit day"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 Z"></path>
+                            </svg>
+                            <span data-i18n-en="Edit Day">Editar Dia</span>
+                        </div>
                     </div>
                 </div>
                 <div class="plan-grid">${cards}</div>
@@ -2412,6 +2582,396 @@ function initDetallePorDiaPlan() {
         });
     };
 
+    const openEditDia = async (headerEl) => {
+        const dayIdx = Number(headerEl.getAttribute("data-day-idx"));
+        if (!Number.isFinite(dayIdx)) return;
+
+        let rawPlanText = localStorage.getItem("plan_entreno_usuario") || "";
+        const diasOrden = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+        const extractLikelyJsonText = (text) => {
+            const s = String(text ?? "");
+            const unfenced = s.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+            const firstObj = unfenced.indexOf("{");
+            const firstArr = unfenced.indexOf("[");
+            if (firstObj === -1 && firstArr === -1) return unfenced;
+            const start = firstArr === -1 ? firstObj : (firstObj === -1 ? firstArr : Math.min(firstObj, firstArr));
+            const lastObj = unfenced.lastIndexOf("}");
+            const lastArr = unfenced.lastIndexOf("]");
+            const end = Math.max(lastObj, lastArr);
+            if (end <= start) return unfenced;
+            return unfenced.slice(start, end + 1);
+        };
+
+        const parsed = (() => { try { return JSON.parse(extractLikelyJsonText(rawPlanText)) } catch { return null } })() ?? (() => { try { return JSON.parse(rawPlanText) } catch { return null } })();
+        if (!parsed || typeof parsed !== "object") return;
+
+        let root = Array.isArray(parsed) ? { ejercicios: parsed } : parsed;
+        let actualRoot = root.plan_entrenamiento_hipertrofia ?? root.plan_entrenamiento ?? root.plan ?? root;
+
+        const maybeDiasArray = actualRoot?.configuracion_semanal ?? actualRoot?.configuracionSemanal ?? actualRoot?.dias ?? actualRoot?.semana ?? actualRoot?.plan_semanal ?? actualRoot?.planSemanal;
+
+        let targetDayObj = null;
+        let isArrayStructure = false;
+        let objectKey = "";
+
+        if (Array.isArray(maybeDiasArray)) {
+            isArrayStructure = true;
+            let filteredIdx = 0;
+            for (let i = 0; i < maybeDiasArray.length; i++) {
+                const d = maybeDiasArray[i];
+                const ejercicios = Array.isArray(d?.ejercicios) ? d.ejercicios : [];
+                if (ejercicios.length > 0) {
+                    if (filteredIdx === dayIdx) {
+                        targetDayObj = d;
+                        break;
+                    }
+                    filteredIdx++;
+                }
+            }
+        } else {
+            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+            if (weekdayKeys.length > 0) {
+                const orderedKeys = [...weekdayKeys].sort((a, b) => {
+                    const ia = diasOrden.indexOf(String(a).toLowerCase());
+                    const ib = diasOrden.indexOf(String(b).toLowerCase());
+                    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+                });
+
+                let filteredIdx = 0;
+                for (const k of orderedKeys) {
+                    const ejercicios = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
+                    if (ejercicios.length > 0) {
+                        if (filteredIdx === dayIdx) {
+                            targetDayObj = { dia: k, enfoque: "", ejercicios };
+                            objectKey = k;
+                            break;
+                        }
+                        filteredIdx++;
+                    }
+                }
+            }
+        }
+
+        if (!targetDayObj) return;
+
+        const currentDia = String(isArrayStructure ? (targetDayObj.dia ?? targetDayObj.nombre ?? targetDayObj.day ?? objectKey) : objectKey).toLowerCase();
+        const currentEnfoque = isArrayStructure ? (targetDayObj.enfoque ?? targetDayObj.focus ?? targetDayObj.objetivo ?? targetDayObj.titulo ?? targetDayObj.title ?? "") : "";
+        const currentEjercicios = Array.isArray(targetDayObj.ejercicios) ? targetDayObj.ejercicios : [];
+
+        let exercisesHtml = "";
+        currentEjercicios.forEach((ex, i) => {
+            const n = ex.nombre ?? ex.ejercicio ?? ex.exercise ?? ex.name ?? ex.titulo ?? ex.title ?? "";
+            exercisesHtml += `
+                <div class="edit-ex-item" data-index="${i}" style="margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                    <input type="text" class="swal2-input ex-name-input" value="${escapeHtml(n)}" placeholder="Nombre del ejercicio" style="margin-top:0; height: 36px; font-size: 14px; color: #fff;" />
+                </div>
+            `;
+        });
+
+        // Compute used days
+        const usedDiasLower = [];
+        if (isArrayStructure) {
+            maybeDiasArray.forEach(d => {
+                if (Array.isArray(d?.ejercicios) && d.ejercicios.length > 0) {
+                    usedDiasLower.push(String(d.dia ?? d.nombre ?? d.day ?? "").toLowerCase());
+                }
+            });
+        } else {
+            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+            weekdayKeys.forEach(k => {
+                if (Array.isArray(actualRoot[k]) && actualRoot[k].length > 0) {
+                    usedDiasLower.push(String(k).toLowerCase());
+                }
+            });
+        }
+
+        const formatDiaStr = (str) => String(str).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+        const diasBtnsHtml = DIAS_SEMANA.map(d => {
+            const dNorm = formatDiaStr(d.name);
+            const currNorm = formatDiaStr(currentDia);
+            const isCurrent = dNorm === currNorm;
+            const isUsed = usedDiasLower.some(u => formatDiaStr(u) === dNorm);
+            const disabled = isUsed && !isCurrent ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : '';
+            return `<button type="button" class="swal-dia-btn" data-dia="${escapeHtml(d.code)}" data-name="${escapeHtml(d.name)}" aria-pressed="${isCurrent}" ${disabled}>${escapeHtml(d.label)}</button>`;
+        }).join("");
+
+        const html = `
+            <div class="pt-detail pt-gen">
+                <div class="pt-detail-hero pt-detail-hero-focus">
+                    <div class="pt-detail-hero-row">
+                        <div class="pt-detail-hero-title">${escapeHtml(tLang("Editar Día", "Edit Day"))}</div>
+                        <div class="pt-gen-header-actions">
+                            <button type="button" class="btn-primary pt-gen-generate" id="pt-edit-save-btn">
+                                ${escapeHtml(tLang("Guardar", "Save"))}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-detail-body">
+                    <div class="pt-detail-viewport plan-detalle-viewport" role="region" aria-label="${escapeHtml(tLang("Opciones del día", "Day options"))}">
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Día de la semana", "Day of week"))}</div>
+                                <div class="swal-dias" role="group" style="margin-top: 5px;">
+                                    ${diasBtnsHtml}
+                                </div>
+                            </div>
+                        </div>
+
+                        ${isArrayStructure ? `
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Nombre / Enfoque", "Name / Focus"))}</div>
+                                <input id="edit-enfoque-input" type="text" class="swal2-input" value="${escapeHtml(currentEnfoque)}" style="display: block; width: 100%; margin-top: 0; height: 44px; font-size: 15px; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0 12px; outline: none;">
+                            </div>
+                        </div>
+                        ` : ""}
+
+                        <div class="pt-detail-card">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Ejercicios del día", "Day's exercises"))}</div>
+                                <div id="pt-edit-selected-list" style="margin-top: 10px;"></div>
+                                <button type="button" id="pt-edit-add-btn" class="btn-secondary" style="width:100%; margin-top: 15px;">
+                                    ${escapeHtml(tLang("+ Añadir / quitar del catálogo", "+ Add / remove from catalog"))}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pt-detail-card" id="pt-edit-catalog-card" style="display:none; margin-top: 15px;">
+                            <div class="pt-detail-card-inner">
+                                <div class="pt-sheet-section-title">${escapeHtml(tLang("Catálogo", "Catalog"))}</div>
+                                <p class="swal-helper">${escapeHtml(tLang("Marcá los ejercicios para añadirlos al día. Desmarca para quitarlos.", "Check exercises to add them to the day. Uncheck to remove."))}</p>
+                                <div class="swal-ejercicios">
+                                    ${renderListaEjerciciosSelectable()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        let isConfirmed = false;
+        let confirmValue = null;
+
+        const openWithSheet = globalThis.PTBottomSheet && typeof globalThis.PTBottomSheet.open === "function";
+        if (openWithSheet) {
+            await globalThis.PTBottomSheet.open({
+                title: "",
+                html: html,
+                className: "",
+                showClose: false,
+                showHandle: true,
+                allowOutsideClose: true,
+                allowEscapeClose: true,
+                allowDragClose: true,
+                triggerEl: headerEl,
+                didOpen: (sheet) => {
+                    const diaBtns = sheet.querySelectorAll(".swal-dia-btn");
+                    diaBtns.forEach(btn => {
+                        if (!btn.hasAttribute("disabled")) {
+                            btn.addEventListener("click", () => {
+                                diaBtns.forEach(b => b.setAttribute("aria-pressed", "false"));
+                                btn.setAttribute("aria-pressed", "true");
+                            });
+                        }
+                    });
+
+                    let localSelected = [...currentEjercicios];
+
+                    const renderSelected = () => {
+                        const listEl = sheet.querySelector("#pt-edit-selected-list");
+                        if (!listEl) return;
+                        listEl.innerHTML = "";
+                        if (localSelected.length === 0) {
+                            listEl.innerHTML = `<p style="color:rgba(255,255,255,0.5); font-size:14px;">${escapeHtml(tLang("No hay ejercicios. Añade desde el catálogo.", "No exercises. Add from catalog."))}</p>`;
+                            return;
+                        }
+                        
+                        localSelected.forEach((ex, idx) => {
+                            const name = ex.nombre ?? ex.ejercicio ?? ex.name ?? "";
+                            const _normEx = String(name).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+                            let bgImage = "";
+                            if (window.ENTRENAMIENTOS_FLAT && window.ENTRENAMIENTOS_FLAT[_normEx]) {
+                                bgImage = window.ENTRENAMIENTOS_FLAT[_normEx].gifUrl;
+                            }
+
+                            const bgStyle = bgImage 
+                                ? `background-image: linear-gradient(to right, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.7) 50%, rgba(20,20,20,0.4) 100%), url('${bgImage}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);` 
+                                : `background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);`;
+
+                            const el = document.createElement("div");
+                            el.style.cssText = `display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; position: relative; overflow: hidden; ${bgStyle}`;
+                            
+                            const upSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
+                            const downSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+                            const delSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+
+                            el.innerHTML = `
+                                <div style="flex: 1; font-size: 15px; font-weight: 600; color: #fff; padding-right: 15px; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.8); z-index: 1;">
+                                    ${escapeHtml(name)}
+                                </div>
+                                <div style="display: flex; gap: 8px; z-index: 1; align-items: center;">
+                                    <button type="button" class="btn-move-up" data-idx="${idx}" style="background:rgba(255,255,255,0.15); backdrop-filter:blur(4px); border:none; color:#fff; cursor:pointer; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:0.2s;" ${idx === 0 ? 'disabled style="opacity:0.3;"' : ''}>${upSvg}</button>
+                                    <button type="button" class="btn-move-down" data-idx="${idx}" style="background:rgba(255,255,255,0.15); backdrop-filter:blur(4px); border:none; color:#fff; cursor:pointer; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:0.2s;" ${idx === localSelected.length - 1 ? 'disabled style="opacity:0.3;"' : ''}>${downSvg}</button>
+                                    <button type="button" class="btn-delete" data-idx="${idx}" style="background:rgba(255,68,68,0.2); backdrop-filter:blur(4px); border:none; color:#ff4444; cursor:pointer; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:0.2s;">${delSvg}</button>
+                                </div>
+                            `;
+                            listEl.appendChild(el);
+                        });
+
+                        listEl.querySelectorAll(".btn-move-up").forEach(btn => {
+                            btn.addEventListener("click", (e) => {
+                                const idx = Number(e.currentTarget.getAttribute("data-idx"));
+                                if (idx > 0) {
+                                    [localSelected[idx-1], localSelected[idx]] = [localSelected[idx], localSelected[idx-1]];
+                                    renderSelected();
+                                }
+                            });
+                        });
+                        listEl.querySelectorAll(".btn-move-down").forEach(btn => {
+                            btn.addEventListener("click", (e) => {
+                                const idx = Number(e.currentTarget.getAttribute("data-idx"));
+                                if (idx < localSelected.length - 1) {
+                                    [localSelected[idx], localSelected[idx+1]] = [localSelected[idx+1], localSelected[idx]];
+                                    renderSelected();
+                                }
+                            });
+                        });
+                        listEl.querySelectorAll(".btn-delete").forEach(btn => {
+                            btn.addEventListener("click", (e) => {
+                                const idx = Number(e.currentTarget.getAttribute("data-idx"));
+                                localSelected.splice(idx, 1);
+                                renderSelected();
+                                syncCheckboxes();
+                            });
+                        });
+                    };
+
+                    const syncCheckboxes = () => {
+                        const checkboxes = sheet.querySelectorAll(".swal-ejercicios input[type='checkbox']");
+                        const currentExNames = localSelected.map(ex => formatDiaStr(ex.nombre ?? ex.ejercicio ?? ex.name ?? ""));
+                        checkboxes.forEach(chk => {
+                            const valNorm = formatDiaStr(chk.value);
+                            chk.checked = currentExNames.some(n => valNorm === n || valNorm.includes(n) || n.includes(valNorm));
+                        });
+                    };
+
+                    sheet.querySelector("#pt-edit-add-btn")?.addEventListener("click", () => {
+                        const catCard = sheet.querySelector("#pt-edit-catalog-card");
+                        if (catCard) {
+                            catCard.style.display = catCard.style.display === "none" ? "block" : "none";
+                            // Scroll to catalog when opened
+                            if (catCard.style.display === "block") {
+                                setTimeout(() => catCard.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+                            }
+                        }
+                    });
+
+                    const checkboxes = sheet.querySelectorAll(".swal-ejercicios input[type='checkbox']");
+                    checkboxes.forEach(chk => {
+                        chk.addEventListener("change", (e) => {
+                            const name = e.target.value;
+                            if (e.target.checked) {
+                                // Add if not already there
+                                const norm = formatDiaStr(name);
+                                if (!localSelected.some(ex => formatDiaStr(ex.nombre ?? ex.ejercicio ?? ex.name ?? "") === norm)) {
+                                    localSelected.push({ nombre: name, series: 4, repeticiones: "10-12", descanso_segundos: 90 });
+                                }
+                            } else {
+                                const norm = formatDiaStr(name);
+                                localSelected = localSelected.filter(ex => formatDiaStr(ex.nombre ?? ex.ejercicio ?? ex.name ?? "") !== norm);
+                            }
+                            renderSelected();
+                        });
+                    });
+
+                    renderSelected();
+                    syncCheckboxes();
+
+                    const cancelBtn = sheet.querySelector("#pt-edit-cancel-btn");
+                    if (cancelBtn) {
+                        cancelBtn.addEventListener("click", () => {
+                            globalThis.PTBottomSheet.close();
+                        });
+                    }
+
+                    const saveBtn = sheet.querySelector("#pt-edit-save-btn");
+                    if (saveBtn) {
+                        saveBtn.addEventListener("click", () => {
+                            const activeDiaBtn = sheet.querySelector(".swal-dia-btn[aria-pressed='true']");
+                            if (!activeDiaBtn) {
+                                Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: tLang('Selecciona un día de la semana', 'Select a day of the week'), showConfirmButton: false, timer: 2000 });
+                                return;
+                            }
+
+                            const newDiaLower = activeDiaBtn.getAttribute("data-name");
+                            const newDia = newDiaLower.charAt(0).toUpperCase() + newDiaLower.slice(1);
+
+                            const newEnfoque = isArrayStructure ? sheet.querySelector("#edit-enfoque-input")?.value || "" : "";
+
+                            if (localSelected.length === 0) {
+                                Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: tLang('Selecciona al menos un ejercicio', 'Select at least one exercise'), showConfirmButton: false, timer: 2000 });
+                                return;
+                            }
+
+                            const newEjercicios = localSelected;
+
+                            isConfirmed = true;
+                            confirmValue = { newDia, newEnfoque, newEjercicios };
+                            globalThis.PTBottomSheet.close();
+                        });
+                    }
+                }
+            });
+        }
+
+        if (isConfirmed && confirmValue) {
+            const { newDia, newEnfoque, newEjercicios } = confirmValue;
+
+            if (isArrayStructure) {
+                targetDayObj.dia = newDia;
+                if (targetDayObj.nombre !== undefined && formatDiaStr(targetDayObj.nombre) === formatDiaStr(currentDia)) {
+                    targetDayObj.nombre = newDia;
+                }
+                if (targetDayObj.day !== undefined && formatDiaStr(targetDayObj.day) === formatDiaStr(currentDia)) {
+                    targetDayObj.day = newDia;
+                }
+                targetDayObj.enfoque = newEnfoque;
+                targetDayObj.ejercicios = newEjercicios;
+            } else {
+                const formatDiaStrLower = (str) => String(str).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                const oldKeyLower = formatDiaStrLower(objectKey);
+                const newKeyLower = formatDiaStrLower(newDia);
+
+                if (oldKeyLower !== newKeyLower) {
+                    actualRoot[newKeyLower] = newEjercicios;
+                    delete actualRoot[objectKey];
+                } else {
+                    actualRoot[objectKey] = newEjercicios;
+                }
+            }
+
+            const newJson = JSON.stringify(parsed, null, 2);
+            localStorage.setItem("plan_entreno_usuario", newJson);
+
+            verificacion_plan_entrenamiento();
+
+            await openStatusSheet({
+                title: tLang("Guardando...", "Saving..."),
+                message: tLang("Actualizando el plan de entrenamiento", "Updating training plan")
+            });
+
+            // sync async
+            actualizar_cambios_plan_entreno().catch(err => console.error(err));
+        }
+    };
+
+
+
     const openDetalle = async (cardEl) => {
         const dayIdx = Number(cardEl?.getAttribute?.("data-day-idx"));
         const exIdx = Number(cardEl?.getAttribute?.("data-idx"));
@@ -2426,263 +2986,49 @@ function initDetallePorDiaPlan() {
         const ex = ejercicios[exIdx];
         if (!ex) return;
 
-        // ── Mapa estático de descripciones detalladas por ejercicio ──────────────
-        const _stripKey = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
-        const EJERCICIOS_DETALLE = {
-            // ── PECHO ────────────────────────────────────────────────────────────
-            "press de banca plano con barra": {
-                es: { tecnica: "Retrae las escápulas y mantén los pies firmes en el suelo. Baja la barra hasta rozar el pecho (línea del esternón), codos a ~75° del tronco. Rango completo sin rebotar.", sobrecarga: "Sube 2,5 kg cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.", respiracion: "Inhala al bajar la barra; exhala con fuerza al empujar." },
-                en: { tecnica: "Retract your shoulder blades and keep your feet flat on the floor. Lower the bar to your sternum with elbows at ~75° from your torso. Full range, no bouncing.", sobrecarga: "Add 2.5 kg once you complete all sets and reps with good form for 2 consecutive sessions.", respiracion: "Inhale as the bar descends; exhale forcefully as you press." },
-            },
-            "press de banca inclinado con mancuernas": {
-                es: { tecnica: "Banco a 30-45°. Empuja las mancuernas hacia arriba y ligeramente hacia adentro. Controla la bajada 2-3 seg; no dejes que los codos caigan por debajo del plano del banco.", sobrecarga: "Sube de peso cuando puedas hacer el rango completo de reps con técnica sólida en 2 sesiones seguidas.", respiracion: "Inhala en la bajada; exhala al empujar las mancuernas." },
-                en: { tecnica: "Set bench to 30-45°. Press dumbbells up and slightly inward. Control the descent for 2-3 sec; don't let elbows drop below bench level.", sobrecarga: "Increase weight when you can complete the full rep range with solid form for 2 sessions in a row.", respiracion: "Inhale on the way down; exhale as you press the dumbbells up." },
-            },
-            "flexiones de brazos (peso corporal)": {
-                es: { tecnica: "Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta casi tocar el suelo; codos a ~45° del torso.", sobrecarga: "Aumenta las reps hasta llegar a 20; luego añade dificultad (pies elevados, chaleco con peso o pausa de 2 seg abajo).", respiracion: "Inhala al bajar; exhala al empujar." },
-                en: { tecnica: "Hands shoulder-width apart, body in a straight line from heels to head. Lower your chest nearly to the floor; elbows at ~45° from your torso.", sobrecarga: "Increase reps until you hit 20; then add difficulty (elevated feet, weighted vest, or 2-sec pause at the bottom).", respiracion: "Inhale as you lower; exhale as you push up." },
-            },
-            "aperturas con mancuernas": {
-                es: { tecnica: "Banco plano o inclinado. Baja las mancuernas en arco con codos ligeramente flexionados hasta sentir estiramiento en el pecho. No exageres el rango para proteger los hombros.", sobrecarga: "Incrementa el peso cuando completes todas las reps sin perder el arco controlado durante 2 sesiones.", respiracion: "Inhala al abrir; exhala al cerrar y contraer el pecho." },
-                en: { tecnica: "Flat or inclined bench. Lower dumbbells in an arc with slightly bent elbows until you feel a chest stretch. Don't over-extend to protect your shoulders.", sobrecarga: "Increase weight when you complete all reps without losing the controlled arc for 2 sessions.", respiracion: "Inhale as you open; exhale as you close and squeeze the chest." },
-            },
-            "fondos en paralelas (pecho bajo/triceps)": {
-                es: { tecnica: "Para priorizar pecho: inclínate ligeramente hacia adelante, codos hacia afuera. Baja hasta que los hombros queden por debajo de los codos. Sube sin bloquear los codos.", sobrecarga: "Añade peso con cinturón o mochila en cuanto superes 12 reps con buena técnica.", respiracion: "Inhala al bajar; exhala al subir." },
-                en: { tecnica: "For chest focus: lean slightly forward, flare elbows out. Descend until shoulders are below elbows. Press up without locking out elbows.", sobrecarga: "Add weight with a belt or backpack once you exceed 12 reps with good form.", respiracion: "Inhale on the way down; exhale on the way up." },
-            },
-            "cruce de poleas": {
-                es: { tecnica: "Poleas a la altura de los hombros o por encima. Lleva las manos hacia el centro y cruza ligeramente, apretando el pecho al final del movimiento. Movimiento controlado en todo momento.", sobrecarga: "Sube el peso cuando logres el tope de reps apretando bien en la contracción durante 2 sesiones.", respiracion: "Inhala en la apertura; exhala al hacer el cruce y la contracción." },
-                en: { tecnica: "Set cables at shoulder height or above. Bring hands to center and slightly cross, squeezing the chest at the end of the movement. Keep control throughout.", sobrecarga: "Increase weight when you hit the top of your rep range with a strong contraction for 2 sessions.", respiracion: "Inhale as you open; exhale on the cross and squeeze." },
-            },
-            // ── ESPALDA ──────────────────────────────────────────────────────────
-            "dominadas (peso corporal)": {
-                es: { tecnica: "Agarre prono, manos a la anchura de los hombros. Inicia el movimiento retrayendo las escápulas. Sube hasta que la barbilla supere la barra; baja de forma controlada.", sobrecarga: "Añade peso con cinturón cuando hagas 10 reps limpias. Si no llegas a 5, usa banda de asistencia.", respiracion: "Exhala al subir; inhala de forma controlada al bajar." },
-                en: { tecnica: "Pronated grip, hands shoulder-width apart. Initiate by retracting your scapulae. Pull until your chin clears the bar; lower in a controlled manner.", sobrecarga: "Add weight with a belt once you can do 10 clean reps. If you can't do 5, use a resistance band for assistance.", respiracion: "Exhale as you pull up; inhale in a controlled way as you lower." },
-            },
-            "jalon al pecho en polea": {
-                es: { tecnica: "Agarre prono a la anchura de los hombros. Inclínate ligeramente hacia atrás (10-15°) y lleva la barra hasta la clavícula, apretando los dorsales. Controla la subida.", sobrecarga: "Aumenta el peso cuando completes el rango completo de reps con retracción escapular durante 2 sesiones.", respiracion: "Exhala al tirar hacia abajo; inhala al dejar subir la barra." },
-                en: { tecnica: "Pronated grip at shoulder width. Lean back slightly (10-15°) and pull the bar to your collarbone, squeezing your lats. Control the return.", sobrecarga: "Increase weight when you complete the full rep range with scapular retraction for 2 sessions.", respiracion: "Exhale as you pull down; inhale as you let the bar rise." },
-            },
-            "remo con barra": {
-                es: { tecnica: "Espalda plana, bisagra de cadera hasta ~45°. Tira la barra hacia el ombligo, codos cerca del cuerpo. Retrae y deprime las escápulas al final. No redondees la zona lumbar.", sobrecarga: "Sube 2,5-5 kg cuando completes todas las series manteniendo espalda plana durante 2 sesiones.", respiracion: "Exhala al tirar; inhala al extender los brazos." },
-                en: { tecnica: "Flat back, hip hinge to ~45°. Pull the bar toward your navel, keeping elbows close. Retract and depress your scapulae at the top. Never round your lower back.", sobrecarga: "Add 2.5-5 kg when you complete all sets with a flat back for 2 sessions.", respiracion: "Exhale as you pull; inhale as you extend your arms." },
-            },
-            "remo unilateral con mancuerna": {
-                es: { tecnica: "Apoya mano y rodilla en el banco. Espalda paralela al suelo. Tira la mancuerna hacia la cadera, rotando ligeramente el torso. Al bajar, extiende bien la escápula.", sobrecarga: "Sube el peso cuando domines el rango completo en todas las reps con rotación controlada durante 2 sesiones.", respiracion: "Exhala al tirar hacia arriba; inhala al bajar la mancuerna." },
-                en: { tecnica: "Support one hand and knee on a bench. Back parallel to the floor. Pull the dumbbell toward your hip with slight torso rotation. On the way down, fully extend your scapula.", sobrecarga: "Increase weight when you master the full range across all reps with controlled rotation for 2 sessions.", respiracion: "Exhale as you pull up; inhale as you lower the dumbbell." },
-            },
-            "remo sentado en polea": {
-                es: { tecnica: "Siéntate erguido, agarra el cable con codos cerca del cuerpo. Tira hasta que el mango toque el abdomen, apretando las escápulas. No uses la inercia del torso.", sobrecarga: "Aumenta el peso cuando logres el tope de reps sin balanceo durante 2 sesiones consecutivas.", respiracion: "Exhala al tirar el cable hacia ti; inhala al extender los brazos." },
-                en: { tecnica: "Sit upright, grip the cable with elbows close to your body. Pull until the handle touches your abdomen, squeezing your scapulae. Don't use torso momentum.", sobrecarga: "Increase weight when you hit the top of your rep range without swinging for 2 consecutive sessions.", respiracion: "Exhale as you pull the cable toward you; inhale as you extend." },
-            },
-            "hiperextensiones lumbares": {
-                es: { tecnica: "Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en línea recta (no hiperextiendas). Glúteos activos al subir.", sobrecarga: "Cuando domines 15 reps con peso corporal, añade una mancuerna o disco al pecho.", respiracion: "Inhala al bajar; exhala al subir y contraer los glúteos." },
-                en: { tecnica: "Hips supported on the Roman chair. Lower your torso to ~90° and rise until your body is in a straight line (don't hyper-extend). Squeeze your glutes on the way up.", sobrecarga: "Once you master 15 bodyweight reps, add a dumbbell or plate to your chest.", respiracion: "Inhale as you lower; exhale as you rise and squeeze your glutes." },
-            },
-            // ── PIERNAS ──────────────────────────────────────────────────────────
-            "sentadilla libre": {
-                es: { tecnica: "Pies a la anchura de los hombros, puntas ligeramente abiertas. Baja manteniendo el torso erguido y las rodillas alineadas con los pies. Profundidad mínima: muslos paralelos al suelo.", sobrecarga: "Sube 2,5 kg cuando completes todas las series con técnica sólida (rodillas sin colapsar) durante 2 sesiones.", respiracion: "Inhala profundamente antes de bajar (maniobra de Valsalva suave); exhala al subir." },
-                en: { tecnica: "Feet shoulder-width apart, toes slightly turned out. Descend keeping your torso upright and knees tracking over your feet. Minimum depth: thighs parallel to the floor.", sobrecarga: "Add 2.5 kg when you complete all sets with solid form (no knee cave) for 2 sessions.", respiracion: "Take a deep breath before descending (gentle Valsalva); exhale as you rise." },
-            },
-            "prensa de piernas": {
-                es: { tecnica: "Espalda y glúteos pegados al respaldo. Pies en la plataforma a la anchura de los hombros. Baja hasta que las rodillas formen ~90° sin despegar el glúteo del asiento.", sobrecarga: "Incrementa el peso cuando completes el rango de reps sin despegar los glúteos durante 2 sesiones.", respiracion: "Inhala al bajar; exhala al empujar la plataforma." },
-                en: { tecnica: "Back and glutes flat against the pad. Feet on the platform shoulder-width apart. Lower until your knees reach ~90° without lifting your hips off the seat.", sobrecarga: "Add weight when you complete the full rep range without hips lifting for 2 sessions.", respiracion: "Inhale as you lower; exhale as you push the platform." },
-            },
-            "zancadas / estocadas": {
-                es: { tecnica: "Da un paso amplio hacia adelante. La rodilla trasera casi toca el suelo; la rodilla delantera no debe sobrepasar los dedos del pie. Torso erguido durante todo el movimiento.", sobrecarga: "Añade mancuernas o barra cuando domines 12 reps por pierna con equilibrio estable durante 2 sesiones.", respiracion: "Inhala al bajar; exhala al empujar y volver a la posición inicial." },
-                en: { tecnica: "Step forward with a long stride. The rear knee almost touches the floor; the front knee should not pass your toes. Keep your torso upright throughout.", sobrecarga: "Add dumbbells or a barbell once you complete 12 reps per leg with stable balance for 2 sessions.", respiracion: "Inhale as you lower; exhale as you drive back to the starting position." },
-            },
-            "peso muerto rumano": {
-                es: { tecnica: "Rodillas ligeramente flexionadas, bisagra de cadera: baja la barra deslizándola por las piernas hasta sentir el estiramiento en isquiotibiales. Espalda neutra en todo momento.", sobrecarga: "Sube 2,5-5 kg cuando mantengas la espalda completamente neutra en todo el rango durante 2 sesiones.", respiracion: "Inhala antes de bajar (bracing); exhala al volver a la posición erguida." },
-                en: { tecnica: "Knees slightly bent, hip hinge: lower the bar sliding it down your legs until you feel a hamstring stretch. Neutral spine at all times.", sobrecarga: "Add 2.5-5 kg when you maintain a completely neutral back through the full range for 2 sessions.", respiracion: "Inhale before descending (brace your core); exhale as you return to standing." },
-            },
-            "hip thrust (empuje de cadera)": {
-                es: { tecnica: "Hombros apoyados en el banco, barra sobre el pliegue de la cadera. Empuja hasta que caderas, muslos y torso formen una línea recta. Aprieta los glúteos en el punto más alto.", sobrecarga: "Aumenta el peso cuando puedas mantener la contracción máxima 1 seg en todas las reps durante 2 sesiones.", respiracion: "Inhala al bajar; exhala y aprieta los glúteos al subir." },
-                en: { tecnica: "Shoulders against the bench, bar over your hip crease. Drive until hips, thighs, and torso form a straight line. Squeeze glutes hard at the top.", sobrecarga: "Add weight once you can hold the peak contraction for 1 sec on every rep for 2 sessions.", respiracion: "Inhale as you lower; exhale and squeeze your glutes as you thrust up." },
-            },
-            "extension de cuadriceps en maquina": {
-                es: { tecnica: "Ajusta el asiento para que la articulación de la rodilla quede alineada con el pivote de la máquina. Extiende completamente y mantén 1 seg; baja de forma controlada (2-3 seg).", sobrecarga: "Sube el peso cuando logres la contracción completa y pausa en todas las reps durante 2 sesiones.", respiracion: "Exhala al extender; inhala al bajar." },
-                en: { tecnica: "Adjust the seat so your knee joint aligns with the machine pivot. Fully extend and hold 1 sec; lower in a controlled manner (2-3 sec).", sobrecarga: "Increase weight when you achieve full extension with a pause on every rep for 2 sessions.", respiracion: "Exhale as you extend; inhale as you lower." },
-            },
-            "curl femoral tumbado o sentado": {
-                es: { tecnica: "Caderas pegadas al banco. Flexiona hasta ~120-130° (máxima contracción del femoral); extiende lentamente sin bloquear la rodilla al final.", sobrecarga: "Incrementa el peso cuando completes el rango completo sin levantar las caderas durante 2 sesiones.", respiracion: "Exhala al flexionar; inhala al extender." },
-                en: { tecnica: "Hips pressed against the pad. Curl to ~120-130° (peak hamstring contraction); extend slowly without locking out your knee.", sobrecarga: "Increase weight when you complete the full range without lifting your hips for 2 sessions.", respiracion: "Exhale as you curl; inhale as you extend." },
-            },
-            "elevacion de talones": {
-                es: { tecnica: "De pie en el borde de un escalón. Baja el talón por debajo del nivel del escalón para el estiramiento máximo; sube de puntillas lo más alto posible. Pausa arriba 1 seg.", sobrecarga: "Añade peso (mancuerna en mano o mochila) cuando superes 20 reps con pausa completa durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar." },
-                en: { tecnica: "Stand on the edge of a step. Lower your heel below step level for maximum stretch; rise as high as possible on your toes. Pause for 1 sec at top.", sobrecarga: "Add weight (dumbbell in hand or backpack) once you exceed 20 reps with a full pause for 2 sessions.", respiracion: "Exhale as you rise; inhale as you lower." },
-            },
-            "sentadilla bulgara": {
-                es: { tecnica: "Pie trasero apoyado en el banco, pie delantero lo suficientemente adelante para que la rodilla no sobrepase los dedos. Baja de forma controlada hasta que la rodilla trasera roz el suelo.", sobrecarga: "Añade mancuernas o barra cuando domines 10 reps sólidas por pierna durante 2 sesiones consecutivas.", respiracion: "Inhala al bajar; exhala al subir empujando con el talón delantero." },
-                en: { tecnica: "Rear foot elevated on a bench, front foot far enough forward so your knee doesn't pass your toes. Lower in a controlled way until your rear knee nearly touches the floor.", sobrecarga: "Add dumbbells or a barbell once you complete 10 solid reps per leg for 2 consecutive sessions.", respiracion: "Inhale as you lower; exhale as you drive up through your front heel." },
-            },
-            // ── HOMBROS ──────────────────────────────────────────────────────────
-            "press militar con barra o mancuernas": {
-                es: { tecnica: "De pie o sentado. Empuja la barra/mancuernas verticalmente por encima de la cabeza hasta que los brazos queden casi extendidos. No arquees la zona lumbar al bloquear.", sobrecarga: "Sube 2,5 kg cuando completes todas las series sin arqueo lumbar durante 2 sesiones.", respiracion: "Inhala antes del empuje; exhala al presionar hacia arriba." },
-                en: { tecnica: "Standing or seated. Press the bar/dumbbells vertically overhead until your arms are nearly extended. Don't arch your lower back at lockout.", sobrecarga: "Add 2.5 kg when you complete all sets without lower back arch for 2 sessions.", respiracion: "Inhale before the press; exhale as you push overhead." },
-            },
-            "elevaciones laterales con mancuernas": {
-                es: { tecnica: "Codos ligeramente flexionados. Sube hasta que los brazos queden paralelos al suelo (no más). Pequeña rotación externa al final: el meñique ligeramente más alto que el pulgar.", sobrecarga: "Incrementa el peso cuando puedas completar todas las reps con control total (sin trampa) durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar de forma controlada." },
-                en: { tecnica: "Elbows slightly bent. Raise until arms are parallel to the floor (no higher). Slight external rotation at the top: pinky slightly higher than thumb.", sobrecarga: "Increase weight when you can complete all reps with full control (no cheating) for 2 sessions.", respiracion: "Exhale as you raise; inhale as you lower in a controlled way." },
-            },
-            "pajaros / vuelos posteriores": {
-                es: { tecnica: "Torso inclinado ~90°. Sube las mancuernas con codos ligeramente flexionados hasta que queden alineados con los hombros, apretando los deltoides posteriores.", sobrecarga: "Sube el peso cuando logres la alineación correcta en todas las reps durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar." },
-                en: { tecnica: "Torso bent ~90°. Raise dumbbells with slightly bent elbows until aligned with your shoulders, squeezing the rear delts.", sobrecarga: "Increase weight when you achieve correct alignment on every rep for 2 sessions.", respiracion: "Exhale as you raise; inhale as you lower." },
-            },
-            "elevaciones frontales": {
-                es: { tecnica: "De pie, mancuernas al frente con agarre neutro o prono. Sube hasta la altura de los ojos (no más). Evita el balanceo del torso.", sobrecarga: "Incrementa el peso cuando completes todas las reps sin balanceo durante 2 sesiones consecutivas.", respiracion: "Exhala al subir; inhala al bajar de forma controlada." },
-                en: { tecnica: "Standing, dumbbells in front with neutral or pronated grip. Raise to eye level (no higher). Avoid torso swinging.", sobrecarga: "Increase weight when you complete all reps without swinging for 2 consecutive sessions.", respiracion: "Exhale as you raise; inhale as you lower in a controlled manner." },
-            },
-            "face pull (salud del hombro)": {
-                es: { tecnica: "Polea alta con cuerda. Tira hacia la cara separando la cuerda y rotando externamente los hombros. Codos por encima del agarre. Foco en deltoides posterior y manguito rotador.", sobrecarga: "Sube el peso solo cuando mantengas la rotación external completa en todas las reps durante 2 sesiones.", respiracion: "Exhala al tirar hacia la cara; inhala al extender los brazos." },
-                en: { tecnica: "High cable with rope. Pull toward your face splitting the rope and rotating your shoulders externally. Elbows above the handles. Focus on rear delt and rotator cuff.", sobrecarga: "Increase weight only when you maintain full external rotation on every rep for 2 sessions.", respiracion: "Exhale as you pull toward your face; inhale as you extend your arms." },
-            },
-            // ── BRAZOS / BÍCEPS ──────────────────────────────────────────────────
-            "curl de biceps con barra": {
-                es: { tecnica: "Codos pegados a los costados. Sube la barra en arco controlado hasta la contracción máxima; baja despacio (2-3 seg). No uses la inercia del torso.", sobrecarga: "Sube 2,5 kg cuando puedas completar todas las reps sin balanceo durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar." },
-                en: { tecnica: "Keep elbows pinned to your sides. Curl in a controlled arc to peak contraction; lower slowly (2-3 sec). Don't use torso momentum.", sobrecarga: "Add 2.5 kg when you can complete all reps without swinging for 2 sessions.", respiracion: "Exhale as you curl up; inhale as you lower." },
-            },
-            "curl martillo con mancuernas": {
-                es: { tecnica: "Agarre neutro (pulgares arriba). Codos fijos a los lados. Sube hasta la contracción y baja controlado. Trabaja braquial y braquiorradial además del bíceps.", sobrecarga: "Incrementa el peso cuando completes todas las reps con codos fijos durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar." },
-                en: { tecnica: "Neutral grip (thumbs up). Elbows fixed at your sides. Curl to peak contraction and lower in control. Targets brachialis and brachioradialis in addition to the bicep.", sobrecarga: "Increase weight when you complete all reps with fixed elbows for 2 sessions.", respiracion: "Exhale as you curl; inhale as you lower." },
-            },
-            "curl predicador": {
-                es: { tecnica: "Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mantener tensión. Foco en la parte baja del bíceps.", sobrecarga: "Sube el peso cuando domines el rango completo sin balanceo durante 2 sesiones consecutivas.", respiracion: "Exhala al subir; inhala al bajar de forma controlada." },
-                en: { tecnica: "Arms rested on the inclined pad. Avoid swinging and full lockout at the bottom to keep tension. Targets the lower portion of the bicep.", sobrecarga: "Increase weight when you master the full range without swinging for 2 consecutive sessions.", respiracion: "Exhale as you curl; inhale as you lower in a controlled way." },
-            },
-            // ── TRÍCEPS ──────────────────────────────────────────────────────────
-            "press frances": {
-                es: { tecnica: "Barra EZ tumbado. Codos apuntando al techo, fijos. Baja la barra hasta la frente o detrás de la cabeza (mayor estiramiento). Extiende sin bloquear completamente.", sobrecarga: "Sube 2,5 kg cuando completes todas las reps con codos fijos y sin dolor en el codo durante 2 sesiones.", respiracion: "Inhala al bajar; exhala al extender." },
-                en: { tecnica: "EZ-bar lying down. Elbows pointing toward the ceiling, fixed. Lower the bar toward your forehead or behind your head (greater stretch). Extend without fully locking out.", sobrecarga: "Add 2.5 kg when you complete all reps with fixed elbows and no elbow pain for 2 sessions.", respiracion: "Inhale as you lower; exhale as you extend." },
-            },
-            "extension de triceps en polea alta": {
-                es: { tecnica: "Cuerda o barra en polea alta. Codos fijos a los lados del cuerpo. Extiende hasta la máxima contracción del tríceps; sube de forma controlada.", sobrecarga: "Incrementa el peso cuando logres la contracción máxima en todas las reps sin mover los codos durante 2 sesiones.", respiracion: "Exhala al extender; inhala al subir." },
-                en: { tecnica: "Rope or bar on high cable. Elbows fixed at your sides. Extend to maximum tricep contraction; return in a controlled way.", sobrecarga: "Add weight when you achieve peak contraction on every rep without moving your elbows for 2 sessions.", respiracion: "Exhale as you extend; inhale as you return." },
-            },
-            "fondos entre bancos": {
-                es: { tecnica: "Manos en el banco trasero, pies en el banco delantero o en el suelo. Baja hasta que los codos formen 90°; sube sin bloquear por completo. Torso erguido para foco en tríceps.", sobrecarga: "Añade un disco sobre los muslos cuando superes 15 reps con buena técnica durante 2 sesiones.", respiracion: "Inhala al bajar; exhala al subir." },
-                en: { tecnica: "Hands on the rear bench, feet on the front bench or floor. Lower until elbows reach 90°; press up without fully locking out. Upright torso for tricep focus.", sobrecarga: "Add a plate on your thighs once you exceed 15 reps with good form for 2 sessions.", respiracion: "Inhale as you lower; exhale as you press up." },
-            },
-            "extension de triceps con mancuerna sobre la cabeza": {
-                es: { tecnica: "Siéntate o de pie. Mancuerna con ambas manos sobre la cabeza. Codos cerca de las orejas; baja la mancuerna detrás de la cabeza controlando el estiramiento del tríceps largo.", sobrecarga: "Sube el peso cuando manejes el rango completo con codos estables durante 2 sesiones.", respiracion: "Inhala al bajar; exhala al extender." },
-                en: { tecnica: "Seated or standing. Hold a dumbbell with both hands overhead. Keep elbows near your ears; lower the dumbbell behind your head controlling the long head stretch.", sobrecarga: "Increase weight when you handle the full range with stable elbows for 2 sessions.", respiracion: "Inhale as you lower; exhale as you extend." },
-            },
-            "patada de triceps con mancuerna": {
-                es: { tecnica: "Torso paralelo al suelo, codo elevado a la altura de la cadera. Extiende el antebrazo hacia atrás hasta la máxima contracción; vuelve de forma controlada. Codo fijo.", sobrecarga: "Incrementa el peso cuando logres la extensión completa y contracción máxima en todas las reps durante 2 sesiones.", respiracion: "Exhala al extender; inhala al regresar." },
-                en: { tecnica: "Torso parallel to the floor, elbow raised to hip height. Extend your forearm back to peak contraction; return in a controlled way. Keep elbow fixed.", sobrecarga: "Add weight when you achieve full extension and peak contraction on every rep for 2 sessions.", respiracion: "Exhale as you extend; inhale as you return." },
-            },
-            // ── ANTEBRAZOS ───────────────────────────────────────────────────────
-            "curl de muneca con barra": {
-                es: { tecnica: "Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. Peso ligero, altas repeticiones.", sobrecarga: "Sube el peso poco a poco (1-2 kg) cuando domines 20 reps por sesión durante 2 semanas.", respiracion: "Exhala al flexionar; inhala al bajar." },
-                en: { tecnica: "Forearms resting on a bench or your thighs. Flex your wrist through the full range; lower in control. Use light weight and high reps.", sobrecarga: "Increase weight gradually (1-2 kg) once you master 20 reps per session for 2 weeks.", respiracion: "Exhale as you flex; inhale as you lower." },
-            },
-            "curl de muneca con mancuerna": {
-                es: { tecnica: "Igual que con barra, pero permite mayor rango de movimiento individual por muñeca. Trabaja un brazo a la vez para corregir desequilibrios.", sobrecarga: "Sube el peso cuando completes 20 reps limpias con rango completo durante 2 sesiones.", respiracion: "Exhala al flexionar; inhala al extender." },
-                en: { tecnica: "Same as barbell but allows a greater individual range per wrist. Work one arm at a time to address imbalances.", sobrecarga: "Increase weight when you complete 20 clean reps with full range for 2 sessions.", respiracion: "Exhale as you flex; inhale as you extend." },
-            },
-            "curl invertido con barra": {
-                es: { tecnica: "Agarre prono (dorso de la mano arriba). Codos fijos a los lados. Trabaja extensores del antebrazo y braquiorradial. Mantén la muñeca neutra al subir.", sobrecarga: "Incrementa el peso cuando completes todas las reps con muñeca neutra y sin balanceo durante 2 sesiones.", respiracion: "Exhala al subir; inhala al bajar." },
-                en: { tecnica: "Pronated grip (back of hand facing up). Elbows fixed at sides. Targets forearm extensors and brachioradialis. Keep wrist neutral at the top.", sobrecarga: "Increase weight when you complete all reps with a neutral wrist and no swinging for 2 sessions.", respiracion: "Exhale as you curl; inhale as you lower." },
-            },
-            "farmer's walk (caminata del granjero)": {
-                es: { tecnica: "Carga pesada en ambas manos. Espalda recta, hombros hacia atrás y abajo. Camina con pasos medianos y firmes. Foco en el agarre y la estabilidad del core.", sobrecarga: "Aumenta el peso o la distancia cuando puedas mantener la técnica perfecta durante toda la distancia en 2 sesiones.", respiracion: "Respira de forma continua y controlada; no aguantes la respiración." },
-                en: { tecnica: "Heavy load in both hands. Straight back, shoulders back and down. Walk with medium, firm steps. Focus on grip and core stability.", sobrecarga: "Increase weight or distance when you can maintain perfect form throughout the entire distance for 2 sessions.", respiracion: "Breathe continuously and in control; don't hold your breath." },
-            },
-            // ── ABDOMEN / CORE ───────────────────────────────────────────────────
-            "plancha abdominal": {
-                es: { tecnica: "Antebrazos y pies apoyados. Activa el core (empuja el ombligo hacia la columna). Cuerpo en línea recta; no elevar las caderas ni dejarlas caer.", sobrecarga: "Aumenta el tiempo de mantenimiento (objetivo: 60-90 seg) antes de agregar variantes con peso o movimiento.", respiracion: "Respira de forma continua y controlada; no aguantes la respiración." },
-                en: { tecnica: "Resting on forearms and feet. Engage your core (draw navel toward your spine). Body in a straight line; don't raise or drop your hips.", sobrecarga: "Increase hold time (target: 60-90 sec) before adding weighted or dynamic variations.", respiracion: "Breathe continuously and in control; never hold your breath." },
-            },
-            "crunch abdominal clasico": {
-                es: { tecnica: "Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). Aprieta el abdomen en la cima; baja de forma controlada.", sobrecarga: "Añade resistencia (disco en el pecho) cuando superes 20 reps limpias durante 2 sesiones.", respiracion: "Exhala al subir y apretar; inhala al bajar." },
-                en: { tecnica: "Lying down, knees bent. Raise your shoulders off the floor by curling your spine (not your hips). Squeeze your abs at the top; lower in control.", sobrecarga: "Add resistance (plate on chest) once you exceed 20 clean reps for 2 sessions.", respiracion: "Exhale as you crunch; inhale as you lower." },
-            },
-            "elevacion de piernas colgado o en suelo": {
-                es: { tecnica: "Colgado en barra: pelvis ligeramente retrovertida. Eleva las piernas rectas (o flexionadas) hasta la horizontal o más. Evita el balanceo.", sobrecarga: "Avanza de piernas flexionadas a rectas; luego añade tobilleras con peso cuando domines 12 reps limpias.", respiracion: "Exhala al elevar; inhala al bajar de forma controlada." },
-                en: { tecnica: "Hanging from a bar: posterior pelvic tilt. Raise straight (or bent) legs to horizontal or higher. Avoid swinging.", sobrecarga: "Progress from bent legs to straight legs; then add ankle weights once you master 12 clean reps.", respiracion: "Exhale as you raise; inhale as you lower in a controlled way." },
-            },
-            "giros rusos": {
-                es: { tecnica: "Sentado con el torso a ~45°, pies elevados (opcional). Gira el torso de lado a lado con control; no solo los brazos. Usa un disco o mancuerna para añadir resistencia.", sobrecarga: "Incrementa el peso cuando puedas hacer 20 reps por lado con rotación real del torso durante 2 sesiones.", respiracion: "Exhala en cada giro; inhala al centro." },
-                en: { tecnica: "Seated with torso at ~45°, feet elevated (optional). Rotate your torso side to side in control; don't just move your arms. Use a plate or dumbbell for resistance.", sobrecarga: "Add weight when you can do 20 reps per side with real torso rotation for 2 sessions.", respiracion: "Exhale on each twist; inhale as you return to center." },
-            },
-            "rueda abdominal": {
-                es: { tecnica: "Rodillas en el suelo. Rueda hacia adelante extendiendo la cadera y columna casi hasta el suelo; regresa activando el core sin impulso. Es un ejercicio muy exigente.", sobrecarga: "Avanza de rodillas al suelo a de pie (rueda completa) cuando domines 10 reps limpias desde rodillas.", respiracion: "Inhala al extenderte; exhala al contraer el core y volver." },
-                en: { tecnica: "Knees on the floor. Roll forward extending your hips and spine nearly to the floor; return using your core without momentum. A very demanding exercise.", sobrecarga: "Progress from kneeling to standing (full rollout) once you master 10 clean kneeling reps.", respiracion: "Inhale as you extend; exhale as you contract your core and return." },
-            },
-            // ── CARDIO ───────────────────────────────────────────────────────────
-            "burpees": {
-                es: { tecnica: "De pie → flexión → plancha → flexión de pecho (opcional) → salta con los brazos arriba. Mantén el core activo durante toda la secuencia.", sobrecarga: "Aumenta el número de reps por bloque o reduce el descanso entre series; luego agrega la flexión de pecho en cada rep.", respiracion: "Exhala en el salto; inhala al volver a la posición de plancha." },
-                en: { tecnica: "Standing → squat → plank → push-up (optional) → jump with arms overhead. Keep your core active throughout the sequence.", sobrecarga: "Increase reps per block or reduce rest between sets; then add a push-up to each rep.", respiracion: "Exhale on the jump; inhale as you return to plank position." },
-            },
-            "saltos de tijera": {
-                es: { tecnica: "Pies juntos al inicio. Salta abriendo piernas y brazos simultáneamente; aterriza suave sobre la parte delantera del pie con rodillas ligeramente flexionadas.", sobrecarga: "Aumenta la velocidad, el número de reps o añade el ejercicio en circuito con descanso mínimo.", respiracion: "Respira de forma continua y rítmica; no aguantes el aire." },
-                en: { tecnica: "Feet together at start. Jump spreading legs and arms simultaneously; land softly on the balls of your feet with knees slightly bent.", sobrecarga: "Increase speed, reps, or incorporate into a circuit with minimal rest.", respiracion: "Breathe continuously and rhythmically; never hold your breath." },
-            },
-            "salto a la cuerda": {
-                es: { tecnica: "Pies juntos o alternados, rodillas ligeramente flexionadas. Muñecas rotan la cuerda (no los hombros). Aterriza en el antepié suavemente.", sobrecarga: "Aumenta la duración del intervalo o la velocidad; luego incorpora saltos dobles (double-unders).", respiracion: "Respira de forma continua y controlada al ritmo del salto." },
-                en: { tecnica: "Feet together or alternating, knees slightly bent. Wrists rotate the rope (not shoulders). Land softly on the balls of your feet.", sobrecarga: "Increase interval duration or speed; then incorporate double-unders.", respiracion: "Breathe continuously and in control with the rhythm of your jumps." },
-            },
-        };
-
-        const lang = tLang("es", "en");
-        const key = _stripKey(ex.nombre);
-        const detalle = EJERCICIOS_DETALLE[key];
-
         let tecnica, sobrecarga, respiracion;
-        if (detalle && detalle[lang]) {
-            tecnica = detalle[lang].tecnica;
-            sobrecarga = detalle[lang].sobrecarga;
-            respiracion = detalle[lang].respiracion;
-        } else {
-            tecnica = tLang("Mantener postura neutra, rango completo y control en la fase excéntrica.", "Maintain neutral posture, full range of motion, and control the eccentric phase.");
-            sobrecarga = tLang("Aumentar 2-5% de carga o 1-2 reps cuando completes el rango objetivo durante 1-2 sesiones.", "Add 2-5% weight or 1-2 reps once you hit the target range for 1-2 sessions.");
-            respiracion = tLang("Inhala en la fase excéntrica; exhala en la fase concéntrica.", "Inhale on the eccentric phase; exhale on the concentric phase.");
-        }
 
-        const nombreEs = escapeHtml(ex.nombre);
-        const nombreEn = escapeHtml(ex.nombre_en ?? ex.nombre);
-        const descripcion = escapeHtml(ex.descripcion || "");
-        const series = escapeHtml(ex.series);
-        const reps = escapeHtml(formatReps(ex.repeticiones));
-        const descanso = escapeHtml(ex.descanso_segundos);
-
-        let gifsDict = window.__gifs_cache;
-        if (!gifsDict) {
-            try {
-                const res = await fetch("/Datos/correspondencia_gifs.json");
-                if (res.ok) {
-                    gifsDict = await res.json();
-                    window.__gifs_cache = gifsDict;
-                } else {
-                    gifsDict = {};
-                }
-            } catch (e) {
-                gifsDict = {};
-            }
-        }
-
-        let gifUrl = null;
         const _normGif = (s) => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
         const searchName = _normGif(ex.nombre);
 
-        for (const [esKey, url] of Object.entries(gifsDict)) {
-            const esNorm = _normGif(esKey);
-            const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
-            if (searchName === esNorm || searchName === enNorm) {
-                gifUrl = url;
-                break;
+        let gifUrl = null;
+        let matchedEx = null;
+
+        if (window.ENTRENAMIENTOS_FLAT) {
+            matchedEx = window.ENTRENAMIENTOS_FLAT[searchName];
+            if (!matchedEx) {
+                for (const [key, exObj] of Object.entries(window.ENTRENAMIENTOS_FLAT)) {
+                    const enNorm = _normGif(translateExerciseNameToEnglish(key));
+                    if (searchName.includes(key) || searchName.includes(enNorm) || (key.length > 5 && key.includes(searchName))) {
+                        matchedEx = exObj;
+                        break;
+                    }
+                }
             }
-        }
-        if (!gifUrl) {
-            for (const [esKey, url] of Object.entries(gifsDict)) {
-                const esNorm = _normGif(esKey);
-                const enNorm = _normGif(translateExerciseNameToEnglish(esKey));
-                if (searchName.includes(esNorm) || searchName.includes(enNorm) || (esNorm.length > 5 && esNorm.includes(searchName))) {
-                    gifUrl = url;
-                    break;
+            if (matchedEx) {
+                gifUrl = matchedEx.gifUrl;
+
+                const parts = (matchedEx.descripcion_detallada || "").split('\n');
+                for (const p of parts) {
+                    if (p.toLowerCase().startsWith('técnica:')) tecnica = p.substring(8).trim();
+                    else if (p.toLowerCase().startsWith('tecnica:')) tecnica = p.substring(8).trim();
+                    else if (p.toLowerCase().startsWith('sobrecarga:')) sobrecarga = p.substring(11).trim();
+                    else if (p.toLowerCase().startsWith('respiración:')) respiracion = p.substring(12).trim();
+                    else if (p.toLowerCase().startsWith('respiracion:')) respiracion = p.substring(12).trim();
                 }
             }
         }
+
+        if (!tecnica) tecnica = tLang("Mantener postura neutra, rango completo y control en la fase excéntrica.", "Maintain neutral posture, full range of motion, and control the eccentric phase.");
+        if (!sobrecarga) sobrecarga = tLang("Aumentar 2-5% de carga o 1-2 reps cuando completes el rango objetivo durante 1-2 sesiones.", "Add 2-5% weight or 1-2 reps once you hit the target range for 1-2 sessions.");
+        if (!respiracion) respiracion = tLang("Inhala en la fase excéntrica; exhala en la fase concéntrica.", "Inhale on the eccentric phase; exhale on the concentric phase.");
+
+        const nombreEs = escapeHtml(ex.nombre);
+        const nombreEn = escapeHtml(ex.nombre_en ?? ex.nombre);
+        const descripcion = escapeHtml(matchedEx ? (matchedEx.descripcion_guia || matchedEx.descripcion) : (ex.descripcion_guia || ex.descripcion || tecnica));
+        const series = escapeHtml(ex.series);
+        const reps = escapeHtml(formatReps(ex.repeticiones));
+        const descanso = escapeHtml(ex.descanso_segundos);
 
         // Helper to find muscle group category
         const getMuscleGroupOfExercise = (name) => {
@@ -2909,9 +3255,21 @@ function initDetallePorDiaPlan() {
             return;
         }
 
-        const headerEl = target.closest(".plan-dia-header");
-        if (headerEl instanceof HTMLElement) {
-            await openDetalleDia(headerEl);
+        const chipEditarEl = target.closest(".chip-editar");
+        if (chipEditarEl instanceof HTMLElement) {
+            const headerEl = chipEditarEl.closest(".plan-dia-header");
+            if (headerEl) {
+                await openEditDia(headerEl);
+            }
+            return;
+        }
+
+        const chipRegistrarEl = target.closest(".chip-registrar");
+        if (chipRegistrarEl instanceof HTMLElement) {
+            const headerEl = chipRegistrarEl.closest(".plan-dia-header");
+            if (headerEl) {
+                await openDetalleDia(headerEl);
+            }
         }
     });
 
@@ -2927,10 +3285,23 @@ function initDetallePorDiaPlan() {
             return;
         }
 
-        const headerEl = target.closest(".plan-dia-header");
-        if (headerEl instanceof HTMLElement) {
+        const chipEditarEl = target.closest(".chip-editar");
+        if (chipEditarEl instanceof HTMLElement) {
             ev.preventDefault();
-            await openDetalleDia(headerEl);
+            const headerEl = chipEditarEl.closest(".plan-dia-header");
+            if (headerEl) {
+                await openEditDia(headerEl);
+            }
+            return;
+        }
+
+        const chipRegistrarEl = target.closest(".chip-registrar");
+        if (chipRegistrarEl instanceof HTMLElement) {
+            ev.preventDefault();
+            const headerEl = chipRegistrarEl.closest(".plan-dia-header");
+            if (headerEl) {
+                await openDetalleDia(headerEl);
+            }
         }
     });
 }
@@ -3282,5 +3653,16 @@ async function Regen_plan() {
 
     const botonRegenerar = document.getElementById("boton_regenerar");
     if (botonRegenerar) botonRegenerar.style.display = "none";
-    await openGenerarPlanModal(plan_entreno_actual);
+    const data = await openGenerarPlanModal(plan_entreno_actual);
+
+    if (!data?.isConfirmed) {
+        if (botonRegenerar) botonRegenerar.style.display = "inline-block";
+        return;
+    }
+
+    if (data.isManual) {
+        await crearPlanManual(data.diasData);
+    } else {
+        await crearPlanEntreno(data.lugar, data.objetivo, data.dias, data.ejercicios, data.intensidad);
+    }
 }
