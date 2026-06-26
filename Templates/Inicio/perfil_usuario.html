@@ -560,53 +560,23 @@
             }
 
             footer.footer-wrap {
-                left: auto !important;
-                right: 32px !important;
-                bottom: auto !important;
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-                width: 80px !important;
-                height: 320px !important;
+                bottom: 20px !important;
+                padding: 0 16px !important;
+                width: 100% !important;
+                max-width: 450px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                top: auto !important;
+                height: 70px !important;
             }
 
             footer .footer-nav {
-                flex-direction: column !important;
-                width: 80px !important;
-                height: 100% !important;
-                padding: 24px 0 !important;
-                border-radius: 999px !important;
-                justify-content: space-between !important;
-                align-items: center !important;
+                border-radius: 35px !important;
             }
 
             footer .footer-nav::before {
-                border-radius: 999px !important;
+                border-radius: 35px !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
-                top: 0 !important;
-                bottom: 0 !important;
-                left: 20px !important;
-                right: 0 !important;
-
-                /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                -webkit-mask-size: auto !important;
-                mask-size: auto !important;
-                -webkit-mask-position: 0 0 !important;
-                mask-position: 0 0 !important;
-            }
-
-            .footer-btn {
-                margin-top: 0 !important;
-                margin-left: 20px !important;
-                width: 60px !important;
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
-                height: auto !important;
-            }
-
-            .footer-btn.is-active .footer-btn-icon {
-                transform: translateX(-26px) !important;
             }
         }
 
@@ -779,6 +749,18 @@
                 <label class="switch" for="toggle_transparencia">
                     <input id="toggle_transparencia" type="checkbox" role="switch" aria-label="Activar transparencia"
                         data-i18n-en-aria-label="Enable transparency" />
+                    <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
+                </label>
+            </div>
+            
+            <div class="config-item">
+                <div class="config-text">
+                    <h4 class="config-title" data-i18n-en="AI Chatbot">Chatbot IA</h4>
+                    <p class="config-desc" data-i18n-en="Enable the AI assistant floating button.">Activá el botón flotante del asistente de IA.</p>
+                </div>
+                <label class="switch" for="toggle_chatbot">
+                    <input id="toggle_chatbot" type="checkbox" role="switch" aria-label="Activar chatbot"
+                        data-i18n-en-aria-label="Enable chatbot" />
                     <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
                 </label>
             </div>

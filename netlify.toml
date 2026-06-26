@@ -47,3 +47,8 @@
   function = "guardar_registro_entreno"
   path = "/guardar_registro_entreno"
   method = "POST"
+
+[[edge_functions]]
+  function = "chatbot_comunicacion"
+  path = "/IA_chatbot"
+  method = "POST"

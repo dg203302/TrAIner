@@ -20,16 +20,24 @@
 <body>
 
     <main style="display: grid; place-items: center; min-height: 100vh; position: relative; z-index: 1;">
-        <div class="loader" role="status" aria-live="polite">
-            <div class="loader-text">
-                <h1 class="loader-title"
-                    style="font-size: clamp(60px, 15vw, 100px); font-weight: 800; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.8); margin: 0;">
-                    Tr<span style="color: #ff073a;">AI</span>ner</h1>
-                <p class="loader-subtitle" data-i18n-en="Loading…">Cargando…</p>
-            </div>
+        <div id="pt-global-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <h1 class="loader-title" style="font-size: clamp(60px, 15vw, 100px); font-weight: 800; color: #fff; text-shadow: 0 4px 40px rgba(0,0,0,0.5); margin: 0 0 40px 0;">
+                Tr<span style="color: #ff073a;">AI</span>ner
+            </h1>
 
+            <div style="position: relative; width: 64px; height: 64px;">
+                <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                <div style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: #ff073a; border-radius: 50%; animation: pt-spin 1s linear infinite;"></div>
+            </div>
+            
+            <div style="margin-top: 24px; color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; animation: pt-pulse 1.5s ease-in-out infinite;" data-i18n-en="Verifying user...">Verificando usuario...</div>
             <span class="sr-only" data-i18n-en="Loading, please wait…">Cargando, por favor esperá…</span>
         </div>
+        <style>
+            @keyframes pt-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes pt-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+            body { margin: 0; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; background-color: #0c0d0f; }
+        </style>
     </main>
     <footer>
         <a href="privacy.html">Política de Privacidad</a>

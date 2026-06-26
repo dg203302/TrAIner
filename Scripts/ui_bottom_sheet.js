@@ -67,6 +67,13 @@
 		.pt-sheet.pt-new-detail-sheet .pt-sheet-content {
 			padding: 64px 0 0 0 !important;
 		}
+		@media (min-width: 768px) {
+			.pt-sheet.pt-new-detail-sheet,
+			.pt-sheet:has(.pt-new-detail) {
+				max-width: 900px !important;
+				max-height: 85vh !important;
+			}
+		}
 		.pt-sheet-header {
 			display: none !important;
 		}
@@ -121,11 +128,17 @@
 			padding: 64px 24px 24px 24px !important;
 			-webkit-overflow-scrolling: touch !important;
 		}
-		.pt-sheet-back-btn {
+		.pt-sheet-top-actions {
 			position: absolute !important;
 			top: 16px !important;
 			left: 50% !important;
 			transform: translateX(-50%) !important;
+			display: flex !important;
+			gap: 8px !important;
+			z-index: 2100 !important;
+			pointer-events: none !important;
+		}
+		.pt-sheet-back-btn, .pt-sheet-action-btn {
 			background: rgba(255, 255, 255, 0.08) !important;
 			border: 1px solid rgba(255, 255, 255, 0.1) !important;
 			color: #ffffff !important;
@@ -138,19 +151,18 @@
 			justify-content: center !important;
 			gap: 6px !important;
 			cursor: pointer !important;
-			z-index: 2100 !important;
 			transition: all 0.2s ease !important;
 			pointer-events: auto !important;
 			backdrop-filter: blur(8px) !important;
 			-webkit-backdrop-filter: blur(8px) !important;
 			box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 		}
-		.pt-sheet-back-btn:hover {
+		.pt-sheet-back-btn:hover, .pt-sheet-action-btn:hover {
 			background: rgba(255, 255, 255, 0.16) !important;
-			transform: translateX(-50%) scale(1.05) !important;
+			transform: scale(1.05) !important;
 		}
-		.pt-sheet-back-btn:active {
-			transform: translateX(-50%) scale(0.95) !important;
+		.pt-sheet-back-btn:active, .pt-sheet-action-btn:active {
+			transform: scale(0.95) !important;
 		}
 		.pt-sheet-content::-webkit-scrollbar {
 			width: 6px !important;
@@ -257,6 +269,7 @@
 		showClose = false,
 		showHandle = false,
 		showBack = true,
+		extraTopBtn = null,
 		allowOutsideClose = true,
 		allowEscapeClose = true,
 		allowDragClose = false,
@@ -327,6 +340,9 @@
 		content.className = "pt-sheet-content";
 		content.innerHTML = html;
 
+		const topActionsWrap = document.createElement("div");
+		topActionsWrap.className = "pt-sheet-top-actions";
+
 		const backBtn = showBack
 			? (() => {
 				const btn = document.createElement("button");
@@ -338,8 +354,23 @@
 			})()
 			: null;
 
-		if (backBtn) {
-			sheet.appendChild(backBtn);
+		let extraBtnEl = null;
+		if (extraTopBtn) {
+			extraBtnEl = document.createElement("button");
+			extraBtnEl.type = "button";
+			extraBtnEl.className = "pt-sheet-action-btn";
+			if (extraTopBtn.ariaLabel) extraBtnEl.setAttribute("aria-label", extraTopBtn.ariaLabel);
+			extraBtnEl.innerHTML = extraTopBtn.html || "";
+			if (typeof extraTopBtn.onClick === "function") {
+				extraBtnEl.addEventListener("click", extraTopBtn.onClick);
+			}
+		}
+
+		if (backBtn) topActionsWrap.appendChild(backBtn);
+		if (extraBtnEl) topActionsWrap.appendChild(extraBtnEl);
+
+		if (backBtn || extraBtnEl) {
+			sheet.appendChild(topActionsWrap);
 		}
 		sheet.appendChild(header);
 		sheet.appendChild(content);
@@ -373,7 +404,7 @@
 				resolvePromise();
 			};
 
-			console.log("PTBottomSheet.open: supportsVT=", supportsVT, "trigger=", resolvedTrigger); if (supportsVT) {
+			if (supportsVT) {
 				sheet.style.viewTransitionName = "pt-sheet-hero";
 				const oldVTName = resolvedTrigger.style.viewTransitionName;
 
@@ -451,7 +482,7 @@
 			sheet.style.transform = "none";
 		};
 
-		console.log("PTBottomSheet.open: supportsVT=", supportsVT, "trigger=", resolvedTrigger); if (supportsVT) {
+		if (supportsVT) {
 			const oldVTName = resolvedTrigger.style.viewTransitionName;
 			resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
 

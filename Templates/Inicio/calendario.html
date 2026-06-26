@@ -796,53 +796,23 @@
             }
 
             footer.footer-wrap {
-                left: auto !important;
-                right: 32px !important;
-                bottom: auto !important;
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-                width: 80px !important;
-                height: 320px !important;
+                bottom: 20px !important;
+                padding: 0 16px !important;
+                width: 100% !important;
+                max-width: 450px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                top: auto !important;
+                height: 70px !important;
             }
 
             footer .footer-nav {
-                flex-direction: column !important;
-                width: 80px !important;
-                height: 100% !important;
-                padding: 24px 0 !important;
-                border-radius: 999px !important;
-                justify-content: space-between !important;
-                align-items: center !important;
+                border-radius: 35px !important;
             }
 
             footer .footer-nav::before {
-                border-radius: 999px !important;
+                border-radius: 35px !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
-                top: 0 !important;
-                bottom: 0 !important;
-                left: 20px !important;
-                right: 0 !important;
-
-                /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                -webkit-mask-size: auto !important;
-                mask-size: auto !important;
-                -webkit-mask-position: 0 0 !important;
-                mask-position: 0 0 !important;
-            }
-
-            .footer-btn {
-                margin-top: 0 !important;
-                margin-left: 20px !important;
-                width: 60px !important;
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
-                height: auto !important;
-            }
-
-            .footer-btn.is-active .footer-btn-icon {
-                transform: translateX(-26px) !important;
             }
         }
 
@@ -1209,6 +1179,36 @@
 </head>
 
 <body>
+    <!-- Pantalla de carga dinámica -->
+    <div id="pt-global-loader" style="position: fixed; inset: 0; z-index: 99999; background: rgba(12, 13, 15, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease, visibility 0.4s ease;">
+        <div style="position: relative; width: 64px; height: 64px;">
+            <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;"></div>
+            <div style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: var(--my-primary, #bce4ff); border-radius: 50%; animation: pt-spin 1s linear infinite;"></div>
+        </div>
+        <div style="margin-top: 24px; color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; animation: pt-pulse 1.5s ease-in-out infinite;">Cargando calendario...</div>
+        <style>
+            @keyframes pt-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes pt-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+            body.pt-loading { overflow: hidden !important; }
+        </style>
+        <script>
+            document.body.classList.add('pt-loading');
+            window.planesCargados = false;
+            const ptLoaderInterval = setInterval(() => {
+                if (window.planesCargados) {
+                    clearInterval(ptLoaderInterval);
+                    const loader = document.getElementById('pt-global-loader');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                        setTimeout(() => loader.remove(), 400);
+                    }
+                    document.body.classList.remove('pt-loading');
+                }
+            }, 100);
+            setTimeout(() => { window.planesCargados = true; }, 5000); // Fallback preventivo
+        </script>
+    </div>
 
     <header>
         <div></div>

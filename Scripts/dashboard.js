@@ -1124,9 +1124,11 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
                 sheet.querySelector(`input[name="intensidad"][value="${lastIntensidad}"]`)?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
                 const diasSet = new Set(lastDias);
+
                 sheet.querySelectorAll(".swal-dia-btn")?.forEach((btn) => {
                     if (btn.classList.contains("swal-dia-btn-manual")) return;
                     const code = btn.getAttribute("data-dia");
+
                     const isOn = diasSet.has(String(code ?? "").toUpperCase());
                     btn.classList.toggle("is-selected", isOn);
                     btn.setAttribute("aria-pressed", isOn ? "true" : "false");
@@ -1228,9 +1230,11 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
 
                     const lugar = sheet.querySelector('input[name="lugar"]:checked')?.value;
                     const objetivo = sheet.querySelector('input[name="objetivo"]:checked')?.value;
-                    const dias = Array.from(sheet.querySelectorAll('.swal-dia-btn:not(.swal-dia-btn-manual)[aria-pressed="true"]') ?? [])
+
+                    let dias = Array.from(sheet.querySelectorAll('.swal-dia-btn:not(.swal-dia-btn-manual)[aria-pressed="true"]') ?? [])
                         .map((el) => el.getAttribute("data-dia"))
                         .filter(Boolean);
+
                     const intensidad = sheet.querySelector('input[name="intensidad"]:checked')?.value;
                     const ejToggle = sheet.querySelector("#swal_ej_toggle");
                     const ejEnabled = ejToggle instanceof HTMLInputElement ? ejToggle.checked : false;
@@ -1249,10 +1253,7 @@ const openGenerarPlanModal = async (planPrevioRaw = null) => {
                     }
 
                     if (!dias.length) {
-                        showError(tLang(
-                            "Seleccioná al menos un día de la semana",
-                            "Select at least one day of the week"
-                        ));
+                        showError(tLang("Seleccioná al menos un día de la semana", "Select at least one day of the week"));
                         return;
                     }
 
@@ -1311,6 +1312,9 @@ window.onload = async () => {
 
     initDetallePorDiaPlan();
     initPlanDiaPager();
+
+    // Notificar al overlay de carga que todo está listo
+    window.planesCargados = true;
 }
 
 function verificacion_plan_entrenamiento() {
@@ -1330,9 +1334,9 @@ function verificacion_plan_entrenamiento() {
         }
         if (boton_regenerar) {
             boton_regenerar.style.display = "inline-block";
-            boton_regenerar.onclick = () => Regen_plan();
+            boton_regenerar.onclick = () => openConfiguracionPlan();
         }
-        boton_eliminar_plan_eje.style.display = "inline-block";
+        boton_eliminar_plan_eje.style.display = "none";
         const contenedor_ejercicios = document.getElementById("Plan_ejercicio");
         contenedor_ejercicios.style.display = "block";
         contenedor_ejercicios.innerHTML = mapear_plan(plan_entrenamiento)
@@ -1577,13 +1581,42 @@ async function crearPlanEntreno(lugar, objetivo, diasSeleccionados, ejerciciosSe
             Peso_objetivo: localStorage.getItem("peso_objetivo_usuario"),
             Edad: localStorage.getItem("edad_usuario"),
         });
+        const cleanEmptyDays = (planStr) => {
+            if (!planStr) return planStr;
+            try {
+                const planObj = JSON.parse(planStr);
+                const rootNode = planObj.plan_entrenamiento_hipertrofia || planObj.plan_entrenamiento || planObj.plan || planObj;
+                if (rootNode && typeof rootNode === "object") {
+                    const arr = rootNode.configuracion_semanal || rootNode.dias;
+                    if (Array.isArray(arr)) {
+                        const filtered = arr.filter(d => Array.isArray(d.ejercicios) && d.ejercicios.length > 0);
+                        if (rootNode.configuracion_semanal) rootNode.configuracion_semanal = filtered;
+                        if (rootNode.dias) rootNode.dias = filtered;
+                    } else if (!Array.isArray(rootNode)) {
+                        Object.keys(rootNode).forEach(k => {
+                            if (Array.isArray(rootNode[k]) && rootNode[k].length === 0) {
+                                delete rootNode[k];
+                            }
+                        });
+                    }
+                }
+                return JSON.stringify(planObj);
+            } catch (e) {
+                return planStr;
+            }
+        };
+
+        // Remove any empty days from the newly generated plan so they are hidden by default
+        const cleanNewPlan = cleanEmptyDays(plan_entreno);
+
+        const finalPlan = cleanNewPlan;
 
         response = await fetch('/generar_plan_entreno', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 id_usuario: localStorage.getItem("id_usuario"),
-                plan_entreno,
+                plan_entreno: finalPlan,
             }),
         });
     } catch (err) {
@@ -1932,12 +1965,9 @@ function mapear_plan(plan_entrenamiento_json) {
             .map(normalizeExercise)
             .filter(Boolean);
 
-        // No mostrar días sin ejercicios
-        if (!normalized.length) return "";
-
         const cards = normalized.length
             ? normalized.map((ex, idx) => renderExerciseCard(ex, idx, dayIdx)).join("")
-            : `<div class="plan-vacio" data-i18n-en="No exercises for this day.">No hay ejercicios para este día.</div>`;
+            : `<div class="plan-vacio" data-i18n-en="No exercises for this day." style="color: rgba(255,255,255,0.6); padding: 16px; text-align: center;">No hay ejercicios para este día. Usa el botón "Editar Dia" para agregarlos.</div>`;
 
         return `
             <section class="plan-dia">
@@ -1946,7 +1976,7 @@ function mapear_plan(plan_entrenamiento_json) {
                         <h2 class="plan-dia-titulo">${escapeHtml(diaLabel)}</h2>
                         ${enfoque ? `<div class="plan-dia-subtitle">${escapeHtml(enfoque)}</div>` : ""}
                     </div>
-                    <div class="plan-dia-actions" style="display: flex; flex-direction: column; gap: 8px; margin-left: auto;">
+                    <div class="plan-dia-actions" style="display: flex; flex-direction: row; gap: 8px; margin-left: auto;">
                         <div class="plan-dia-chip chip-registrar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Detalle del día", "Day detail"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -1954,14 +1984,12 @@ function mapear_plan(plan_entrenamiento_json) {
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                            <span data-i18n-en="Log Workout">Registrar entreno</span>
                         </div>
                         <div class="plan-dia-chip chip-editar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Editar día", "Edit day"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 Z"></path>
                             </svg>
-                            <span data-i18n-en="Edit Day">Editar Dia</span>
                         </div>
                     </div>
                 </div>
@@ -1982,8 +2010,7 @@ function mapear_plan(plan_entrenamiento_json) {
                     .map(normalizeExercise)
                     .filter(Boolean);
                 return { dia, enfoque, ejercicios, normalized, originalIndex };
-            })
-            .filter((d) => d.normalized.length > 0);
+            });
 
         if (!days.length) {
             html = `<div class="plan-vacio" data-i18n-en="No days have exercises assigned.">No hay días con ejercicios asignados.</div>`;
@@ -2007,8 +2034,7 @@ function mapear_plan(plan_entrenamiento_json) {
                     .map(normalizeExercise)
                     .filter(Boolean);
                 return { key: k, ejercicios, normalized };
-            })
-            .filter((d) => d.normalized.length > 0);
+            });
 
         if (!days.length) {
             html = `<div class="plan-vacio" data-i18n-en="No days have exercises assigned.">No hay días con ejercicios asignados.</div>`;
@@ -2127,7 +2153,7 @@ function parsePlanDiasDetallados(planRaw) {
                 : [];
             return { dia, enfoque, ejercicios };
         });
-        return days.filter((d) => Array.isArray(d.ejercicios) && d.ejercicios.length > 0);
+        return days;
     }
 
     const weekdayKeys = Object.keys(root || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
@@ -2141,7 +2167,7 @@ function parsePlanDiasDetallados(planRaw) {
             const ejercicios = Array.isArray(root[k]) ? root[k].map(normalizeExDet).filter(Boolean) : [];
             return { dia: k, enfoque: "", ejercicios };
         });
-        return days.filter((d) => Array.isArray(d.ejercicios) && d.ejercicios.length > 0);
+        return days;
     }
 
     return null;
@@ -2790,7 +2816,7 @@ function initDetallePorDiaPlan() {
                             listEl.innerHTML = `<p style="color:rgba(255,255,255,0.5); font-size:14px;">${escapeHtml(tLang("No hay ejercicios. Añade desde el catálogo.", "No exercises. Add from catalog."))}</p>`;
                             return;
                         }
-                        
+
                         localSelected.forEach((ex, idx) => {
                             const name = ex.nombre ?? ex.ejercicio ?? ex.name ?? "";
                             const _normEx = String(name).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
@@ -2799,13 +2825,13 @@ function initDetallePorDiaPlan() {
                                 bgImage = window.ENTRENAMIENTOS_FLAT[_normEx].gifUrl;
                             }
 
-                            const bgStyle = bgImage 
-                                ? `background-image: linear-gradient(to right, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.7) 50%, rgba(20,20,20,0.4) 100%), url('${bgImage}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);` 
+                            const bgStyle = bgImage
+                                ? `background-image: linear-gradient(to right, rgba(20,20,20,0.9) 0%, rgba(20,20,20,0.7) 50%, rgba(20,20,20,0.4) 100%), url('${bgImage}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);`
                                 : `background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);`;
 
                             const el = document.createElement("div");
                             el.style.cssText = `display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; position: relative; overflow: hidden; ${bgStyle}`;
-                            
+
                             const upSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
                             const downSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
                             const delSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
@@ -2827,7 +2853,7 @@ function initDetallePorDiaPlan() {
                             btn.addEventListener("click", (e) => {
                                 const idx = Number(e.currentTarget.getAttribute("data-idx"));
                                 if (idx > 0) {
-                                    [localSelected[idx-1], localSelected[idx]] = [localSelected[idx], localSelected[idx-1]];
+                                    [localSelected[idx - 1], localSelected[idx]] = [localSelected[idx], localSelected[idx - 1]];
                                     renderSelected();
                                 }
                             });
@@ -2836,7 +2862,7 @@ function initDetallePorDiaPlan() {
                             btn.addEventListener("click", (e) => {
                                 const idx = Number(e.currentTarget.getAttribute("data-idx"));
                                 if (idx < localSelected.length - 1) {
-                                    [localSelected[idx], localSelected[idx+1]] = [localSelected[idx+1], localSelected[idx]];
+                                    [localSelected[idx], localSelected[idx + 1]] = [localSelected[idx + 1], localSelected[idx]];
                                     renderSelected();
                                 }
                             });
@@ -3088,6 +3114,31 @@ function initDetallePorDiaPlan() {
 
         const html = `
             <div class="pt-new-detail theme-${activeThemeColor}">
+                <div id="inline-edit-panel" style="display: none; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 24px 20px; flex-direction: column; gap: 16px;">
+                    <div style="font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        ${escapeHtml(tLang("Editar Ejercicio", "Edit Exercise"))}
+                    </div>
+                    <div style="display: flex; gap: 12px; width: 100%;">
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Series", "Sets"))}</label>
+                            <input id="inline-edit-series" type="number" value="${escapeHtml(ex.series || '')}" style="width: 100%; height: 44px; margin-top: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; padding: 0 14px; font-size: 15px; outline: none; transition: 0.2s; box-sizing: border-box;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Reps", "Reps"))}</label>
+                            <input id="inline-edit-reps" type="text" value="${escapeHtml(ex.repeticiones || '')}" style="width: 100%; height: 44px; margin-top: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; padding: 0 14px; font-size: 15px; outline: none; transition: 0.2s; box-sizing: border-box;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Descanso", "Rest"))}</label>
+                            <input id="inline-edit-rest" type="number" value="${escapeHtml(ex.descanso_segundos || '')}" style="width: 100%; height: 44px; margin-top: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; padding: 0 14px; font-size: 15px; outline: none; transition: 0.2s; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 4px;">
+                        <button id="inline-edit-cancel" type="button" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.08); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 14px; cursor: pointer;">${escapeHtml(tLang("Cancelar", "Cancel"))}</button>
+                        <button id="inline-edit-save" type="button" style="flex: 1; padding: 12px; background: var(--my-primary, #e24a4a); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 14px; cursor: pointer;">${escapeHtml(tLang("Guardar Cambios", "Save Changes"))}</button>
+                    </div>
+                </div>
+
                 ${gifUrl ? `
                     <div class="pt-new-detail-gif-hero">
                         <img src="${gifUrl}" alt="" class="pt-new-detail-hero-img" />
@@ -3219,8 +3270,118 @@ function initDetallePorDiaPlan() {
             html,
             closeText,
             triggerEl: cardEl,
+            extraTopBtn: {
+                html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span style="vertical-align: middle;">${escapeHtml(tLang("Editar", "Edit"))}</span>`,
+                ariaLabel: tLang("Editar Ejercicio", "Edit Exercise"),
+                onClick: () => {
+                    const panel = document.getElementById("inline-edit-panel");
+                    if (panel) {
+                        if (panel.style.display === "none") {
+                            panel.style.display = "flex";
+                            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                            panel.style.display = "none";
+                        }
+                    }
+                }
+            },
             didOpen: (sheet) => {
                 const root = sheet instanceof HTMLElement ? sheet : document.body;
+
+                const cancelBtn = root.querySelector("#inline-edit-cancel");
+                if (cancelBtn) {
+                    cancelBtn.addEventListener("click", () => {
+                        const panel = root.querySelector("#inline-edit-panel");
+                        if (panel) panel.style.display = "none";
+                    });
+                }
+
+                const saveBtn = root.querySelector("#inline-edit-save");
+                if (saveBtn) {
+                    saveBtn.addEventListener("click", async () => {
+                        const seriesVal = root.querySelector("#inline-edit-series")?.value;
+                        const repsVal = root.querySelector("#inline-edit-reps")?.value;
+                        const restVal = root.querySelector("#inline-edit-rest")?.value;
+
+                        const rawPlanText = localStorage.getItem("plan_entreno_usuario") || "";
+                        const extractLikelyJsonText = (text) => {
+                            const s = String(text ?? "");
+                            const unfenced = s.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+                            const firstObj = unfenced.indexOf("{");
+                            const firstArr = unfenced.indexOf("[");
+                            if (firstObj === -1 && firstArr === -1) return unfenced;
+                            const start = firstArr === -1 ? firstObj : (firstObj === -1 ? firstArr : Math.min(firstObj, firstArr));
+                            const lastObj = unfenced.lastIndexOf("}");
+                            const lastArr = unfenced.lastIndexOf("]");
+                            const end = Math.max(lastObj, lastArr);
+                            if (end <= start) return unfenced;
+                            return unfenced.slice(start, end + 1);
+                        };
+
+                        const parsed = (() => { try { return JSON.parse(extractLikelyJsonText(rawPlanText)) } catch { return null } })() ?? (() => { try { return JSON.parse(rawPlanText) } catch { return null } })();
+                        if (!parsed || typeof parsed !== "object") return;
+
+                        let planRoot = Array.isArray(parsed) ? { ejercicios: parsed } : parsed;
+                        let actualRoot = planRoot.plan_entrenamiento_hipertrofia ?? planRoot.plan_entrenamiento ?? planRoot.plan ?? planRoot;
+                        const maybeDiasArray = actualRoot?.configuracion_semanal ?? actualRoot?.configuracionSemanal ?? actualRoot?.dias ?? actualRoot?.semana ?? actualRoot?.plan_semanal ?? actualRoot?.planSemanal;
+
+                        let targetList = null;
+
+                        if (Array.isArray(maybeDiasArray)) {
+                            let filteredIdx = 0;
+                            for (let i = 0; i < maybeDiasArray.length; i++) {
+                                const d = maybeDiasArray[i];
+                                const ejerciciosList = Array.isArray(d?.ejercicios) ? d.ejercicios : [];
+                                if (ejerciciosList.length > 0) {
+                                    if (filteredIdx === dayIdx) {
+                                        targetList = ejerciciosList;
+                                        break;
+                                    }
+                                    filteredIdx++;
+                                }
+                            }
+                        } else {
+                            const diasOrden = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+                            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+                            const orderedKeys = [...weekdayKeys].sort((a, b) => {
+                                const ia = diasOrden.indexOf(String(a).toLowerCase());
+                                const ib = diasOrden.indexOf(String(b).toLowerCase());
+                                return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+                            });
+
+                            let filteredIdx = 0;
+                            for (const k of orderedKeys) {
+                                const ejerciciosList = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
+                                if (ejerciciosList.length > 0) {
+                                    if (filteredIdx === dayIdx) {
+                                        targetList = ejerciciosList;
+                                        break;
+                                    }
+                                    filteredIdx++;
+                                }
+                            }
+                        }
+
+                        if (targetList && targetList[exIdx]) {
+                            targetList[exIdx].series = seriesVal ? Number(seriesVal) : targetList[exIdx].series;
+                            targetList[exIdx].repeticiones = repsVal || targetList[exIdx].repeticiones;
+                            targetList[exIdx].descanso_segundos = restVal ? Number(restVal) : targetList[exIdx].descanso_segundos;
+
+                            localStorage.setItem("plan_entreno_usuario", JSON.stringify(parsed, null, 2));
+
+                            try { globalThis.PTBottomSheet.close(); } catch { }
+
+                            await openStatusSheet({
+                                title: tLang("Guardando...", "Saving..."),
+                                message: tLang("Actualizando el ejercicio", "Updating exercise")
+                            });
+
+                            try { verificacion_plan_entrenamiento(); } catch { }
+                            actualizar_cambios_plan_entreno().catch(err => console.error(err));
+                        }
+                    });
+                }
+
                 try {
                     globalThis.UIIdioma?.translatePage?.(root);
                 } catch {
@@ -3550,6 +3711,545 @@ async function actualizar_cambios_plan_entreno() {
     }
 }
 
+const openEditarDiasModal = async () => {
+    const raw = localStorage.getItem("plan_entreno_usuario");
+    if (!raw || raw === "Ninguno") return;
+
+    let parsed = null;
+    try { parsed = JSON.parse(raw); } catch { return; }
+
+    const root = parsed?.plan_entrenamiento_hipertrofia ?? parsed?.plan_entrenamiento ?? parsed?.plan ?? parsed;
+    const maybeDiasArray = root.configuracion_semanal ?? root.configuracionSemanal ?? root.dias ?? root.semana ?? root.plan_semanal ?? root.planSemanal;
+
+    let existingDays = [];
+    if (Array.isArray(maybeDiasArray)) {
+        existingDays = maybeDiasArray.map(d => String(d?.dia || "").toLowerCase().trim());
+    } else {
+        const diasOrden = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo"];
+        existingDays = Object.keys(root || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+    }
+
+    const allDaysEs = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const allDaysEn = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    const isDayPresent = (dayEs) => {
+        const norm = dayEs.toLowerCase().replace("é", "e").replace("á", "a");
+        return existingDays.some(ed => {
+            const edNorm = ed.toLowerCase().replace("é", "e").replace("á", "a");
+            return edNorm === norm || (edNorm === "miercoles" && norm === "miercoles");
+        });
+    };
+
+    const checkboxesHtml = allDaysEs.map((dayEs, idx) => {
+        const dayEn = allDaysEn[idx];
+        const present = isDayPresent(dayEs);
+        return `
+            <label style="display:flex; align-items:center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.04); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s;">
+                <input type="checkbox" name="pt-edit-day" value="${dayEs}" ${present ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--my-primary); cursor: pointer;">
+                <span data-i18n-en="${dayEn}">${dayEs}</span>
+                ${present ? `<span style="margin-left:auto; font-size:12px; color:rgba(255,255,255,0.4);" data-i18n-en="(In plan)">(En el plan)</span>` : ''}
+            </label>
+        `;
+    }).join('');
+
+    const html = `
+        <div class="pt-status" style="text-align:left;">
+            <p style="font-size: 14px; color: rgba(255,255,255,0.7); margin-top:0; margin-bottom: 16px;">
+                ${escapeHtml(tLang(
+        "Seleccioná los días que querés incluir en tu plan. Si desmarcás un día, se eliminará del plan junto con sus ejercicios.",
+        "Select the days you want in your plan. If you uncheck a day, it will be removed from the plan along with its exercises."
+    ))}
+            </p>
+            <div style="max-height: 40vh; overflow-y: auto; margin-bottom: 16px;">
+                ${checkboxesHtml}
+            </div>
+            <button id="btn-save-edit-dias" class="btn-primary" style="width:100%; padding:14px; font-size:16px; border-radius:12px; border:none; cursor:pointer; font-weight:600;">
+                ${escapeHtml(tLang("Guardar días", "Save days"))}
+            </button>
+        </div>
+    `;
+
+    await globalThis.PTBottomSheet.open({
+        title: tLang("Gestionar días", "Manage days"),
+        html,
+        showClose: true,
+        didOpen: (sheet) => {
+            try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+            sheet.querySelector("#btn-save-edit-dias").onclick = async () => {
+                const checkedSet = new Set(Array.from(sheet.querySelectorAll('input[name="pt-edit-day"]:checked')).map(el => el.value.toLowerCase().replace("é", "e").replace("á", "a")));
+
+                if (checkedSet.size === 0) {
+                    const confirmDel = confirm(tLang("Has deseleccionado todos los días. Esto dejará tu plan vacío. ¿Continuar?", "You unselected all days. This will leave your plan empty. Continue?"));
+                    if (!confirmDel) return;
+                }
+
+                if (Array.isArray(maybeDiasArray)) {
+                    for (let i = maybeDiasArray.length - 1; i >= 0; i--) {
+                        const dNorm = String(maybeDiasArray[i]?.dia || "").toLowerCase().replace("é", "e").replace("á", "a");
+                        const checkMatch = dNorm === "miercoles" ? "miercoles" : dNorm;
+                        if (!checkedSet.has(checkMatch)) {
+                            maybeDiasArray.splice(i, 1);
+                        }
+                    }
+
+                    const existingNorms = new Set(maybeDiasArray.map(d => String(d?.dia || "").toLowerCase().replace("é", "e").replace("á", "a")));
+                    checkedSet.forEach(c => {
+                        if (!existingNorms.has(c)) {
+                            const properName = allDaysEs.find(dayEs => dayEs.toLowerCase().replace("é", "e").replace("á", "a") === c);
+                            if (properName) maybeDiasArray.push({ dia: properName, ejercicios: [] });
+                        }
+                    });
+
+                    const weekOrder = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo"];
+                    maybeDiasArray.sort((a, b) => {
+                        const idxA = weekOrder.indexOf(String(a.dia).toLowerCase().replace("é", "e").replace("á", "a"));
+                        const idxB = weekOrder.indexOf(String(b.dia).toLowerCase().replace("é", "e").replace("á", "a"));
+                        return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+                    });
+                } else {
+                    Object.keys(root).forEach(k => {
+                        const kNorm = String(k).toLowerCase().replace("é", "e").replace("á", "a");
+                        const checkMatch = kNorm === "miercoles" ? "miercoles" : kNorm;
+                        const weekOrder = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo"];
+                        if (weekOrder.includes(checkMatch) && !checkedSet.has(checkMatch)) {
+                            delete root[k];
+                        }
+                    });
+
+                    const existing = new Set(Object.keys(root).map(k => String(k).toLowerCase().replace("é", "e").replace("á", "a")));
+                    checkedSet.forEach(c => {
+                        if (!existing.has(c)) {
+                            const properName = allDaysEs.find(dayEs => dayEs.toLowerCase().replace("é", "e").replace("á", "a") === c);
+                            if (properName) root[properName.toLowerCase()] = [];
+                        }
+                    });
+                }
+
+                localStorage.setItem("plan_entreno_usuario", JSON.stringify(parsed));
+
+                const btn = sheet.querySelector("#btn-save-edit-dias");
+                btn.disabled = true;
+                btn.textContent = tLang("Guardando...", "Saving...");
+
+                await actualizar_cambios_plan_entreno();
+                verificacion_plan_entrenamiento();
+                globalThis.PTBottomSheet.close();
+            };
+        }
+    });
+};
+
+window.openChatbotSheet = async ({ triggerEl }) => {
+    if (!canUseBottomSheet()) return;
+
+    const user_name = localStorage.getItem("username_usuario") || "";
+    
+    const formatChatbotMsg = (text) => {
+        let html = escapeHtml(text);
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        html = html.replace(/^[\-\*]\s+(.*)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>(?:\n<li>.*<\/li>)*)/g, '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
+        html = html.replace(/\n/g, '<br>');
+        html = html.replace(/<br><ul/g, '<ul');
+        html = html.replace(/<\/ul><br>/g, '</ul>');
+        html = html.replace(/<\/li><br>/g, '</li>');
+        return html;
+    };
+
+    const html = `
+        <div class="chatbot-container">
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="chat-msg chat-msg-bot">
+                    <div class="chat-bubble">
+                        ${formatChatbotMsg(tLang(`¡Hola! Soy tu TrAIner.\n¿En qué te puedo ayudar hoy, ${user_name}?`, `Hello ${user_name}! I am your TrAIner.\nHow can I help you today?`))}
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-area">
+                <textarea id="chatbot-input" placeholder="${escapeHtml(tLang("Escribe tu mensaje...", "Type your message..."))}" rows="1"></textarea>
+                <button id="chatbot-send" class="btn-icon" aria-label="Enviar" data-i18n-en-aria-label="Send">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+        <style>
+            .chatbot-container {
+                display: flex;
+                flex-direction: column;
+                height: 75vh;
+                max-height: 750px;
+                margin: -16px -24px -24px -24px;
+                position: relative;
+            }
+            .chatbot-messages {
+                flex: 1;
+                overflow-y: auto;
+                padding: 24px 24px 90px 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            .chat-msg {
+                display: flex;
+                max-width: 85%;
+            }
+            .chat-msg-user {
+                align-self: flex-end;
+            }
+            .chat-msg-bot {
+                align-self: flex-start;
+            }
+            .chat-bubble {
+                padding: 12px 16px;
+                border-radius: 18px;
+                font-size: 14.5px;
+                line-height: 1.45;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                word-break: break-word;
+            }
+            .chat-msg-user .chat-bubble {
+                background: var(--my-primary);
+                color: #fff;
+                border-bottom-right-radius: 4px;
+            }
+            .chat-msg-bot .chat-bubble {
+                background: rgba(255,255,255,0.08);
+                color: rgba(255,255,255,0.92);
+                border-bottom-left-radius: 4px;
+            }
+            .chatbot-input-area {
+                display: flex;
+                gap: 8px;
+                padding: 6px 10px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 30px;
+                align-items: flex-end;
+                position: absolute;
+                bottom: 16px;
+                left: 16px;
+                right: 16px;
+                z-index: 10;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+                pointer-events: auto;
+                background: transparent;
+            }
+            .chatbot-input-area::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 30px;
+                background: rgba(30, 30, 35, 0.6);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                z-index: -1;
+            }
+            .chatbot-input-area textarea {
+                flex: 1;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                padding: 12px 4px 12px 14px;
+                color: #fff;
+                font-family: inherit;
+                font-size: 14.5px;
+                resize: none;
+                max-height: 120px;
+                min-height: 44px;
+                line-height: 1.4;
+            }
+            .chatbot-input-area textarea:focus {
+                outline: none;
+            }
+            .chatbot-input-area button {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: var(--my-primary);
+                border: none;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: transform 0.15s, background 0.15s;
+                margin-bottom: 0px;
+            }
+            .chatbot-input-area button:active {
+                transform: scale(0.92);
+            }
+        </style>
+    `;
+
+    await globalThis.PTBottomSheet.open({
+        title: tLang("Entrenador IA", "AI Trainer"),
+        html,
+        showClose: true,
+        triggerEl,
+        extraTopBtn: {
+            ariaLabel: "Limpiar historial",
+            html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
+            onClick: async () => {
+                const ok = await new Promise((resolve) => {
+                    let resolved = false;
+                    const safeResolve = (v) => {
+                        if (resolved) return;
+                        resolved = true;
+                        resolve(!!v);
+                    };
+                    globalThis.PTBottomSheet.open({
+                        title: tLang("Limpiar Chat", "Clear Chat"),
+                        html: `
+                            <div class="pt-status" style="padding: 16px 0;">
+                                <div style="margin-bottom: 24px; font-size: 15px; text-align: center;">${escapeHtml(tLang("¿Borrar todo el historial de conversación con la IA?", "Clear the entire AI chat history?"))}</div>
+                                <div style="display: flex; gap: 12px; justify-content: center;">
+                                    <button class="btn-secondary" data-cancel style="padding: 12px 24px; border-radius: 999px;">${escapeHtml(tLang("Cancelar", "Cancel"))}</button>
+                                    <button class="btn-primary" data-confirm style="padding: 12px 24px; border-radius: 999px; background: var(--my-danger, #ff4444); color: #fff;">${escapeHtml(tLang("Borrar", "Clear"))}</button>
+                                </div>
+                            </div>
+                        `,
+                        stack: true,
+                        showClose: false,
+                        showBack: false,
+                        didOpen: (sheet) => {
+                            sheet.querySelector("[data-cancel]")?.addEventListener("click", () => {
+                                globalThis.PTBottomSheet.close();
+                                safeResolve(false);
+                            });
+                            sheet.querySelector("[data-confirm]")?.addEventListener("click", () => {
+                                globalThis.PTBottomSheet.close();
+                                safeResolve(true);
+                            });
+                        },
+                        willClose: () => safeResolve(false)
+                    });
+                });
+
+                if (ok) {
+                    localStorage.removeItem("pt_chatbot_history");
+                    window.chatbotHistory = [];
+                    const msgsContainer = document.querySelector("#chatbot-messages");
+                    if(msgsContainer) {
+                        const un = localStorage.getItem("username_usuario") || "";
+                        msgsContainer.innerHTML = `
+                            <div class="chat-msg chat-msg-bot">
+                                <div class="chat-bubble">
+                                    ${formatChatbotMsg(tLang(`¡Historial limpio!\n¿En qué te puedo ayudar hoy, ${un}?`, `History cleared!\nHow can I help you today, ${un}?`))}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+        },
+        didOpen: (sheet) => {
+            try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+
+            const textarea = sheet.querySelector("#chatbot-input");
+            const sendBtn = sheet.querySelector("#chatbot-send");
+            const messagesContainer = sheet.querySelector("#chatbot-messages");
+
+            const autoResize = () => {
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            };
+            textarea.addEventListener("input", autoResize);
+
+            let savedHistory = [];
+            try {
+                savedHistory = JSON.parse(localStorage.getItem("pt_chatbot_history")) || [];
+            } catch (e) { }
+            window.chatbotHistory = savedHistory;
+
+            savedHistory.forEach(msg => {
+                const msgEl = document.createElement("div");
+                msgEl.className = msg.role === "user" ? "chat-msg chat-msg-user" : "chat-msg chat-msg-bot";
+                msgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(msg.content)}</div>`;
+                messagesContainer.appendChild(msgEl);
+            });
+            
+            // Wait for transition to finish before calculating scroll height
+            setTimeout(() => { 
+                if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight; 
+            }, 350);
+
+            sendBtn.addEventListener("click", async () => {
+                const text = textarea.value.trim();
+                if (!text) return;
+
+                // Add user message to UI
+                const msgEl = document.createElement("div");
+                msgEl.className = "chat-msg chat-msg-user";
+                msgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(text)}</div>`;
+                messagesContainer.appendChild(msgEl);
+
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                textarea.value = "";
+                autoResize();
+                textarea.disabled = true;
+                sendBtn.disabled = true;
+
+                // Add loading indicator
+                const loadingEl = document.createElement("div");
+                loadingEl.className = "chat-msg chat-msg-bot";
+                loadingEl.innerHTML = `<div class="chat-bubble" style="color: rgba(255,255,255,0.5);">${escapeHtml(tLang("Escribiendo...", "Typing..."))}</div>`;
+                messagesContainer.appendChild(loadingEl);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                try {
+                    const payload = {
+                        idioma: window.UIIdioma?.getIdioma() || "es",
+                        P_ent: localStorage.getItem("plan_entreno_usuario"),
+                        P_alim: localStorage.getItem("plan_dieta_usuario") || localStorage.getItem("plan_alim_usuario") || "Ninguno",
+                        D_user: {
+                            edad: localStorage.getItem("edad_usuario"),
+                            altura: localStorage.getItem("altura_usuario"),
+                            peso: localStorage.getItem("peso_usuario"),
+                            peso_objetivo: localStorage.getItem("peso_objetivo_usuario"),
+                        },
+                        consulta: text,
+                        historial: window.chatbotHistory
+                    };
+
+                    const res = await fetch("/IA_chatbot", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) throw new Error("Error en el servidor");
+                    const data = await res.json();
+
+                    if (data.error) throw new Error(data.error);
+
+                    // Replace loading with actual response
+                    loadingEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(data.respuesta)}</div>`;
+
+                    // Update history
+                    window.chatbotHistory.push({ role: "user", content: text });
+                    window.chatbotHistory.push({ role: "assistant", content: data.respuesta });
+
+                    try {
+                        localStorage.setItem("pt_chatbot_history", JSON.stringify(window.chatbotHistory));
+                    } catch (e) { }
+                } catch (e) {
+                    loadingEl.innerHTML = `<div class="chat-bubble" style="color: var(--my-danger, #ff4c4c);">${escapeHtml(tLang("Error al conectar. Intenta de nuevo.", "Error connecting. Try again."))}</div>`;
+                } finally {
+                    textarea.disabled = false;
+                    sendBtn.disabled = false;
+                    textarea.focus();
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            });
+
+            // Allow sending with Enter key (but Shift+Enter adds a new line)
+            textarea.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendBtn.click();
+                }
+            });
+        }
+    });
+};
+
+const openConfiguracionPlan = async () => {
+    const html = `
+        <div class="pt-status">
+            <div class="pt-status-row pt-config-opt" id="opt-editar" style="cursor:pointer; display:block; margin-top: 12px;">
+                <div class="pt-status-text">
+                    <strong style="color:#fff;">${escapeHtml(tLang("Editar días (Manual)", "Edit days (Manual)"))}</strong>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: normal;">
+                        ${escapeHtml(tLang(
+        "Elegí días vacíos para agregar al plan. Luego, podrás agregarles ejercicios directamente desde el dashboard.",
+        "Choose empty days to add to the plan. You can then add exercises to them directly from the dashboard."
+    ))}
+                    </div>
+                </div>
+            </div>
+            <div class="pt-status-row pt-config-opt" id="opt-regenerar" style="cursor:pointer; display:block; margin-top: 12px;">
+                <div class="pt-status-text">
+                    <strong style="color:var(--my-danger, #ff4c4c);">${escapeHtml(tLang("Regenerar todo el plan", "Regenerate entire plan"))}</strong>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: normal;">
+                        ${escapeHtml(tLang("Elimina el plan actual y crea uno nuevo basado en tus preferencias.", "Deletes the current plan and creates a new one based on your preferences."))}
+                    </div>
+                </div>
+            </div>
+            <div class="pt-status-row pt-config-opt" id="opt-borrar" style="cursor:pointer; display:block; margin-top: 12px; border-color: rgba(255,76,76,0.3);">
+                <div class="pt-status-text">
+                    <strong style="color:var(--my-danger, #ff4c4c);">${escapeHtml(tLang("Borrar plan", "Delete plan"))}</strong>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: normal;">
+                        ${escapeHtml(tLang("Elimina tu plan de entrenamiento actual y lo deja vacío.", "Deletes your current training plan and leaves it empty."))}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            .pt-config-opt {
+                padding: 14px;
+                border: 1px solid rgba(255,255,255,0.05);
+                border-radius: 12px;
+                background: rgba(255,255,255,0.02);
+                transition: background 0.2s;
+            }
+            .pt-config-opt:active { background: rgba(255,255,255,0.08); }
+        </style>
+    `;
+
+    if (!canUseBottomSheet()) return;
+
+    await globalThis.PTBottomSheet.open({
+        title: tLang("Configuración del plan", "Plan configuration"),
+        html,
+        showClose: true,
+        closeText: tLang("Cerrar", "Close"),
+        didOpen: (sheet) => {
+            try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+
+            sheet.querySelector("#opt-editar").onclick = () => {
+                globalThis.PTBottomSheet.close();
+                openEditarDiasModal();
+            };
+
+            sheet.querySelector("#opt-regenerar").onclick = () => {
+                globalThis.PTBottomSheet.close();
+                Regen_plan();
+            };
+
+            sheet.querySelector("#opt-borrar").onclick = async () => {
+                globalThis.PTBottomSheet.close();
+                const ok = await openConfirmSheet({
+                    title: tLang("¿Estás seguro?", "Are you sure?"),
+                    message: tLang(
+                        "Esta acción eliminará tu plan de entrenamiento actual.",
+                        "This action will delete your current training plan."
+                    ),
+                    confirmText: tLang("Sí, eliminar", "Yes, delete"),
+                    cancelText: tLang("Cancelar", "Cancel"),
+                });
+
+                if (!ok) return;
+
+                localStorage.setItem("plan_entreno_usuario", "Ninguno");
+                await actualizar_cambios_plan_entreno();
+                document.getElementById("Plan_ejercicio").innerHTML = "";
+                document.getElementById("Plan_ejercicio").style.display = "none";
+                document.getElementById("boton_regenerar").style.display = "none";
+                verificacion_plan_entrenamiento();
+
+                await openStatusSheet({
+                    title: tLang("Plan eliminado", "Plan deleted"),
+                    message: tLang("Tu plan de entrenamiento ha sido eliminado.", "Your training plan has been deleted."),
+                });
+            };
+        }
+    });
+};
+
 async function Regen_plan() {
     const plan_entreno_actual = localStorage.getItem("plan_entreno_usuario");
 
@@ -3561,8 +4261,8 @@ async function Regen_plan() {
         const extractLikelyJson = (text) => {
             const s = String(text ?? "");
             const unfenced = s
-                .replace(/^```(?:json)?\s*/i, "")
-                .replace(/\s*```\s*$/i, "")
+                .replace(/^`{3}(?:json)?\s*/i, "")
+                .replace(/\s*`{3}\s*$/i, "")
                 .trim();
 
             const firstObj = unfenced.indexOf("{");

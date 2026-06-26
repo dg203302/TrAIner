@@ -658,53 +658,23 @@
             }
 
             footer.footer-wrap {
-                left: auto !important;
-                right: 32px !important;
-                bottom: auto !important;
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-                width: 80px !important;
-                height: 320px !important;
+                bottom: 20px !important;
+                padding: 0 16px !important;
+                width: 100% !important;
+                max-width: 450px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                top: auto !important;
+                height: 70px !important;
             }
 
             footer .footer-nav {
-                flex-direction: column !important;
-                width: 80px !important;
-                height: 100% !important;
-                padding: 24px 0 !important;
-                border-radius: 999px !important;
-                justify-content: space-between !important;
-                align-items: center !important;
+                border-radius: 35px !important;
             }
 
             footer .footer-nav::before {
-                border-radius: 999px !important;
+                border-radius: 35px !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
-                top: 0 !important;
-                bottom: 0 !important;
-                left: 20px !important;
-                right: 0 !important;
-
-                /* Vertical gradient cutout mask centered dynamically on the Y axis */
-                -webkit-mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                mask-image: radial-gradient(circle 28px at 0px calc(24px + var(--active-x, 0.5) * (100vw - 48px)), transparent 28px, black 29px) !important;
-                -webkit-mask-size: auto !important;
-                mask-size: auto !important;
-                -webkit-mask-position: 0 0 !important;
-                mask-position: 0 0 !important;
-            }
-
-            .footer-btn {
-                margin-top: 0 !important;
-                margin-left: 20px !important;
-                width: 60px !important;
-                flex: 1 1 0 !important;
-                min-height: 0 !important;
-                height: auto !important;
-            }
-
-            .footer-btn.is-active .footer-btn-icon {
-                transform: translateX(-26px) !important;
             }
         }
 
@@ -751,6 +721,64 @@
 </head>
 
 <body>
+    <!-- Pantalla de carga dinámica -->
+    <div id="pt-global-loader"
+        style="position: fixed; inset: 0; z-index: 99999; background: rgba(12, 13, 15, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease, visibility 0.4s ease;">
+        <div style="position: relative; width: 64px; height: 64px;">
+            <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;">
+            </div>
+            <div
+                style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: var(--my-primary, #bce4ff); border-radius: 50%; animation: pt-spin 1s linear infinite;">
+            </div>
+        </div>
+        <div
+            style="margin-top: 24px; color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; animation: pt-pulse 1.5s ease-in-out infinite;">
+            Cargando planes...</div>
+        <style>
+            @keyframes pt-spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes pt-pulse {
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.5;
+                }
+            }
+
+            body.pt-loading {
+                overflow: hidden !important;
+            }
+        </style>
+        <script>
+            document.body.classList.add('pt-loading');
+            window.planesCargados = false;
+            const ptLoaderInterval = setInterval(() => {
+                if (window.planesCargados) {
+                    clearInterval(ptLoaderInterval);
+                    const loader = document.getElementById('pt-global-loader');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                        setTimeout(() => loader.remove(), 400);
+                    }
+                    document.body.classList.remove('pt-loading');
+                }
+            }, 100);
+            setTimeout(() => { window.planesCargados = true; }, 5000); // Fallback preventivo
+        </script>
+    </div>
 
     <header>
         <div></div>
@@ -786,9 +814,10 @@
                         <div role="group" aria-label="Acciones del plan" data-i18n-en-aria-label="Plan actions"
                             class="translucent-bar">
                             <button id="boton_ejercicios">...</button>
-                            <button id="boton_regenerar" class="btn-icon-sm" style="display: none;">
-                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1yZWRvLWljb24gbHVjaWRlLXJlZG8iPjxwYXRoIGQ9Ik0yMSA3djZoLTYiLz48cGF0aCBkPSJNMyAxN2E5IDkgMCAwIDEgOS05IDkgOSAwIDAgMSA2IDIuM2wzIDIuNyIvPjwvc3ZnPg=="
-                                    alt="rehacer" data-i18n-en-alt="redo">
+                            <button id="boton_regenerar" class="btn-icon-sm" style="display: none;"
+                                aria-label="Configuración" data-i18n-en-aria-label="Settings">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zZXR0aW5ncyI+PHBhdGggZD0iTTEyLjIyIDJoLS40NGEyIDIgMCAwIDAtMiAydi4xOGEyIDIgMCAwIDEtMSAxLjczbC0uNDMuMjVhMiAyIDAgMCAxLTIgMGwtLjE1LS4wOGEyIDIgMCAwIDAtMi43My43M2wtLjIyLjM4YTIgMiAwIDAgMCAuNzMgMi43M2wuMTUuMTBhMiAyIDAgMCAxIDEgMS43MnYuNTFhMiAyIDAgMCAxLTEgMS43NGwtLjE1LjA5YTIgMiAwIDAgMC0uNzMgMi43M2wuMjIuMzhhMiAyIDAgMCAwIDIuNzMuNzNsLjE1LS4wOGEyIDIgMCAwIDEgMiAwbC40My4yNWEyIDIgMCAwIDEgMSAxLjczVjIwYTIgMiAwIDAgMCAyIDJoLjQ0YTIgMiAwIDAgMCAyLTJ2LS4xOGEyIDIgMCAwIDEgMS0xLjczbC40My0uMjVhMiAyIDAgMCAxIDIgMGwuMTUuMDhhMiAyIDAgMCAwIDIuNzMtLjczbC4yMi0uMzhhMiAyIDAgMCAwLS43My0yLjczbC0uMTUtLjA4YTIgMiAwIDAgMS0xLTEuNzR2LS41YTIgMiAwIDAgMSAxLTEuNzRsLjE1LS4wOWEyIDIgMCAwIDAgLjczLTIuNzNsLS4yMi0uMzhhMiAyIDAgMCAwLTIuNzMtLjczbC0uMTUuMDhhMiAyIDAgMCAxLTIgMGwtLjQzLS4yNWEyIDIgMCAwIDEtMS0xLjczVjRhMiAyIDAgMCAwLTItMnoiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIzIi8+PC9zdmc+"
+                                    alt="configuración" data-i18n-en-alt="settings">
                             </button>
                             <button id="boton_eliminar" class="btn-icon-sm" style="display: none;">
                                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS10cmFzaDItaWNvbiBsdWNpZGUtdHJhc2gtMiI+PHBhdGggZD0iTTEwIDExdjYiLz48cGF0aCBkPSJNMTQgMTF2NiIvPjxwYXRoIGQ9Ik0xOSA2djE0YTIgMiAwIDAgMS0yIDJIN2EyIDIgMCAwIDEtMi0yVjYiLz48cGF0aCBkPSJNMyA2aDE4Ii8+PHBhdGggZD0iTTggNlY0YTIgMiAwIDAgMSAyLTJoNGEyIDIgMCAwIDEgMiAydjIiLz48L3N2Zz4="
@@ -1026,6 +1055,168 @@
             checkScroll(); // run once initially
 
             showTab('entreno');
+        })();
+    </script>
+    <!-- Chatbot FAB -->
+    <div id="pt-chatbot-fab"
+        style="position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px; background: var(--my-primary); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1500; cursor: pointer; user-select: none; touch-action: none;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" />
+            <rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" />
+            <path d="M20 14h2" />
+            <path d="M15 13v2" />
+            <path d="M9 13v2" />
+        </svg>
+    </div>
+    <script>
+        (function () {
+            const fab = document.getElementById('pt-chatbot-fab');
+
+            if (localStorage.getItem('pt_chatbot_enabled') === '0') {
+                fab.style.display = 'none';
+                return;
+            }
+
+            let isDragging = false;
+            let startX, startY;
+            let initialX, initialY;
+            let hasMoved = false;
+
+            function clampAndSnap() {
+                const rect = fab.getBoundingClientRect();
+                if (rect.width === 0) return; // Not visible yet
+
+                const maxX = window.innerWidth - rect.width;
+                const maxY = window.innerHeight - rect.height;
+
+                let currentX = rect.left;
+                let currentY = rect.top;
+
+                // Clamp Y
+                currentY = Math.max(16, Math.min(currentY, maxY - 16));
+
+                // Snap X
+                const snapX = (currentX + rect.width / 2) < window.innerWidth / 2 ? 16 : window.innerWidth - rect.width - 16;
+
+                fab.style.transition = 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                fab.style.left = snapX + 'px';
+                fab.style.top = currentY + 'px';
+                fab.style.bottom = 'auto';
+                fab.style.right = 'auto';
+            }
+
+            const savedPos = localStorage.getItem('pt_chatbot_fab_pos');
+            if (savedPos) {
+                try {
+                    const pos = JSON.parse(savedPos);
+                    fab.style.left = pos.left;
+                    fab.style.top = pos.top;
+                    fab.style.bottom = 'auto';
+                    fab.style.right = 'auto';
+
+                    // Delay clamp to ensure it's rendered
+                    setTimeout(clampAndSnap, 100);
+                } catch (e) { }
+            }
+
+            function onStart(e) {
+                if (e.type === 'touchstart') {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                } else {
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+
+                const rect = fab.getBoundingClientRect();
+                initialX = rect.left;
+                initialY = rect.top;
+
+                isDragging = true;
+                hasMoved = false;
+                fab.style.transition = 'none';
+
+                if (e.type === 'mousedown') {
+                    document.addEventListener('mousemove', onMove, { passive: false });
+                    document.addEventListener('mouseup', onEnd);
+                }
+            }
+
+            function onMove(e) {
+                if (!isDragging) return;
+
+                let currentX, currentY;
+                if (e.type === 'touchmove') {
+                    currentX = e.touches[0].clientX;
+                    currentY = e.touches[0].clientY;
+                } else {
+                    currentX = e.clientX;
+                    currentY = e.clientY;
+                }
+
+                const dx = currentX - startX;
+                const dy = currentY - startY;
+
+                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                    hasMoved = true;
+                }
+
+                if (hasMoved) {
+                    e.preventDefault();
+                }
+
+                let newX = initialX + dx;
+                let newY = initialY + dy;
+
+                const maxX = window.innerWidth - fab.offsetWidth;
+                const maxY = window.innerHeight - fab.offsetHeight;
+
+                newX = Math.max(0, Math.min(newX, maxX));
+                newY = Math.max(0, Math.min(newY, maxY));
+
+                fab.style.left = newX + 'px';
+                fab.style.top = newY + 'px';
+                fab.style.bottom = 'auto';
+                fab.style.right = 'auto';
+            }
+
+            function onEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+
+                if (e.type === 'mouseup') {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onEnd);
+                }
+
+                if (!hasMoved) {
+                    if (window.openChatbotSheet) {
+                        window.openChatbotSheet({ triggerEl: fab });
+                    }
+                    return;
+                }
+
+                clampAndSnap();
+
+                setTimeout(() => {
+                    localStorage.setItem('pt_chatbot_fab_pos', JSON.stringify({
+                        left: fab.style.left,
+                        top: fab.style.top
+                    }));
+                }, 350);
+            }
+
+            fab.addEventListener('touchstart', onStart, { passive: false });
+            fab.addEventListener('touchmove', onMove, { passive: false });
+            fab.addEventListener('touchend', onEnd);
+            fab.addEventListener('mousedown', onStart);
+
+            // Adjust on resize/orientation change
+            window.addEventListener('resize', () => {
+                if (!isDragging) clampAndSnap();
+            }, { passive: true });
         })();
     </script>
 </body>

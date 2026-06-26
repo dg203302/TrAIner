@@ -1031,6 +1031,9 @@ window.onload = async () => {
     const avatarSidebarEl = document.getElementById("icono_usuario_sidebar");
     if (userSidebarEl) userSidebarEl.textContent = username || "";
     if (avatarSidebarEl && avatar) avatarSidebarEl.src = avatar;
-    initCalendario();
+    await initCalendario();
     //initDetallePorDiaCalendario();
+
+    // Notificar al overlay de carga que todo está listo
+    window.planesCargados = true;
 };

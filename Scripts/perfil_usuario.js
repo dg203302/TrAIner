@@ -676,6 +676,28 @@ const initColorToggle = () => {
     });
 };
 
+const initChatbotToggle = () => {
+    const toggle = document.getElementById("toggle_chatbot");
+    if (!toggle) return;
+
+    let chatbotEnabled = true;
+    try {
+        chatbotEnabled = localStorage.getItem("pt_chatbot_enabled") !== "0";
+    } catch {}
+
+    toggle.checked = chatbotEnabled;
+
+    toggle.addEventListener("change", () => {
+        try {
+            if (toggle.checked) {
+                localStorage.removeItem("pt_chatbot_enabled");
+            } else {
+                localStorage.setItem("pt_chatbot_enabled", "0");
+            }
+        } catch {}
+    });
+};
+
 window.onload = async () => {
 	document.getElementById("username").textContent = username;
 	document.querySelectorAll("#icono_usuario, .footer-profile-avatar").forEach(el => el.src = avatar);
@@ -688,6 +710,7 @@ window.onload = async () => {
 	initTransparenciaToggle();
 	initFondoToggle();
 	initColorToggle();
+    initChatbotToggle();
 	renderBMI();
 }
 

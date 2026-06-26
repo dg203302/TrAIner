@@ -44,7 +44,6 @@ const validatePlanShape = (obj) => {
 
     const semanal = root.configuracion_semanal;
     if (!Array.isArray(semanal)) return "Falta configuracion_semanal (array)";
-    if (semanal.length !== 7) return "configuracion_semanal debe tener 7 días";
 
     for (const dia of semanal) {
         if (!dia || typeof dia !== "object") return "Cada día debe ser un objeto";
