@@ -38,6 +38,7 @@ input {
 html {
 	scroll-behavior: smooth;
 	text-size-adjust: 100%;
+    background-color: var(--bg0, #0c0d0f);
 }
 
 body {

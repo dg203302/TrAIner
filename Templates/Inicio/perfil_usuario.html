@@ -262,7 +262,8 @@
                 max-width: 100%;
                 margin: 0;
                 padding: 10px 20px;
-                position: relative; /* Not sticky, so it doesn't get clipped by parent height */
+                position: relative;
+                /* Not sticky, so it doesn't get clipped by parent height */
                 z-index: 20;
                 border-radius: var(--my-radius-pill, 999px);
                 background: transparent;
@@ -275,18 +276,21 @@
             .dynamic-title.is-scrolled {
                 position: fixed;
                 top: 16px;
-                left: 16px; /* Align to the left padding of main */
+                left: 16px;
+                /* Align to the left padding of main */
                 background: rgba(0, 0, 0, 0.45);
                 backdrop-filter: blur(20px) saturate(140%);
                 -webkit-backdrop-filter: blur(20px) saturate(140%);
                 border-color: rgba(255, 255, 255, 0.08);
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-                transform: translateY(0); /* Reset jump if any */
+                transform: translateY(0);
+                /* Reset jump if any */
             }
 
             /* Prevent content jump when title becomes fixed */
-            .dynamic-title.is-scrolled + p {
-                margin-top: 110px; /* ~90px title height + 20px padding */
+            .dynamic-title.is-scrolled+p {
+                margin-top: 110px;
+                /* ~90px title height + 20px padding */
             }
         }
 
@@ -616,9 +620,36 @@
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="/Scripts/spa_router.js"></script>
 </head>
 
 <body>
+    <!-- Pantalla de carga (0.5s) -->
+    <div id="pt-profile-loader"
+        style="position: fixed; inset: 0; background: var(--bg0, #0c0d0f); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease, visibility 0.3s ease;">
+        <div
+            style="width: 42px; height: 42px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--my-primary, #ff073a); border-radius: 50%; animation: pt-spin 0.8s linear infinite;">
+        </div>
+        <style>
+            @keyframes pt-spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('pt-profile-loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                    setTimeout(() => loader.remove(), 300);
+                }
+            }, 150);
+        });
+    </script>
 
     <header>
         <button class="translucent-bar" type="button" aria-label="Desloguear" data-i18n-en-aria-label="Log out"
@@ -752,11 +783,12 @@
                     <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
                 </label>
             </div>
-            
+
             <div class="config-item">
                 <div class="config-text">
                     <h4 class="config-title" data-i18n-en="AI Chatbot">Chatbot IA</h4>
-                    <p class="config-desc" data-i18n-en="Enable the AI assistant floating button.">Activá el botón flotante del asistente de IA.</p>
+                    <p class="config-desc" data-i18n-en="Enable the AI assistant floating button.">Activá el botón
+                        flotante del asistente de IA.</p>
                 </div>
                 <label class="switch" for="toggle_chatbot">
                     <input id="toggle_chatbot" type="checkbox" role="switch" aria-label="Activar chatbot"
