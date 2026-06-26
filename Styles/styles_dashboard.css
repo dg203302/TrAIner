@@ -333,6 +333,66 @@ a:focus-visible {
 	padding-top: 2px;
 }
 
+.pt-edit-dias-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-height: 40vh;
+	overflow-y: auto;
+	margin-bottom: 16px;
+}
+
+.pt-edit-dia-btn {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	padding: 12px 14px;
+	border-radius: 12px;
+	border: 1px solid color-mix(in srgb, #fff 12%, transparent);
+	background: color-mix(in srgb, #fff 5%, transparent);
+	color: rgba(255, 255, 255, .92);
+	font: inherit;
+	font-size: 15px;
+	font-weight: 650;
+	text-align: left;
+	cursor: pointer;
+	transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.pt-edit-dia-btn:hover {
+	background: color-mix(in srgb, #fff 8%, transparent);
+	border-color: color-mix(in srgb, #fff 18%, transparent);
+}
+
+.pt-edit-dia-btn.is-selected,
+.pt-edit-dia-btn[aria-pressed="true"] {
+	border-color: color-mix(in srgb, var(--accent, var(--my-primary, #bce4ff)) 55%, transparent);
+	background:
+		linear-gradient(135deg,
+			color-mix(in srgb, var(--accent, var(--my-primary, #bce4ff)) 22%, transparent),
+			color-mix(in srgb, var(--accent2, var(--my-primary, #bce4ff)) 14%, transparent));
+	box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+
+.pt-edit-dia-btn:focus-visible {
+	outline: 3px solid color-mix(in srgb, var(--accent, var(--my-primary, #bce4ff)) 60%, transparent);
+	outline-offset: 2px;
+}
+
+.pt-edit-dia-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.pt-edit-dia-badge {
+	flex: 0 0 auto;
+	font-size: 12px;
+	font-weight: 600;
+	color: rgba(255, 255, 255, .45);
+}
+
 /* Registro entreno: inputs + tipografias mas legibles y consistentes con el glass style */
 .pt-detalle-entreno .pt-status-row {
 	gap: 14px;

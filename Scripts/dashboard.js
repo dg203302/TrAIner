@@ -3733,28 +3733,27 @@ const openEditarDiasModal = async () => {
         });
     };
 
-    const checkboxesHtml = allDaysEs.map((dayEs, idx) => {
+    const daysHtml = allDaysEs.map((dayEs, idx) => {
         const dayEn = allDaysEn[idx];
         const present = isDayPresent(dayEs);
         return `
-            <label style="display:flex; align-items:center; gap: 12px; padding: 12px; background: rgba(255,255,255,0.04); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s;">
-                <input type="checkbox" name="pt-edit-day" value="${dayEs}" ${present ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--my-primary); cursor: pointer;">
-                <span data-i18n-en="${dayEn}">${dayEs}</span>
-                ${present ? `<span style="margin-left:auto; font-size:12px; color:rgba(255,255,255,0.4);" data-i18n-en="(In plan)">(En el plan)</span>` : ''}
-            </label>
+            <button type="button" class="pt-edit-dia-btn${present ? " is-selected" : ""}" data-day="${escapeHtml(dayEs)}" data-was-in-plan="${present ? "true" : "false"}" aria-pressed="${present ? "true" : "false"}">
+                <span class="pt-edit-dia-label" data-i18n-en="${dayEn}">${escapeHtml(dayEs)}</span>
+                ${present ? `<span class="pt-edit-dia-badge" data-i18n-en="(In plan)">(En el plan)</span>` : ""}
+            </button>
         `;
-    }).join('');
+    }).join("");
 
     const html = `
         <div class="pt-status" style="text-align:left;">
             <p style="font-size: 14px; color: rgba(255,255,255,0.7); margin-top:0; margin-bottom: 16px;">
                 ${escapeHtml(tLang(
-        "Seleccioná los días que querés incluir en tu plan. Si desmarcás un día, se eliminará del plan junto con sus ejercicios.",
-        "Select the days you want in your plan. If you uncheck a day, it will be removed from the plan along with its exercises."
+        "Seleccioná los días que querés incluir en tu plan. Si quitás un día, se eliminará del plan junto con sus ejercicios.",
+        "Select the days you want in your plan. If you remove a day, it will be removed from the plan along with its exercises."
     ))}
             </p>
-            <div style="max-height: 40vh; overflow-y: auto; margin-bottom: 16px;">
-                ${checkboxesHtml}
+            <div class="pt-edit-dias-list">
+                ${daysHtml}
             </div>
             <button id="btn-save-edit-dias" class="btn-primary" style="width:100%; padding:14px; font-size:16px; border-radius:12px; border:none; cursor:pointer; font-weight:600;">
                 ${escapeHtml(tLang("Guardar días", "Save days"))}
@@ -3768,11 +3767,42 @@ const openEditarDiasModal = async () => {
         showClose: true,
         didOpen: (sheet) => {
             try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+
+            const syncEditDayBadge = (btn) => {
+                const selected = btn.getAttribute("aria-pressed") === "true";
+                const wasInPlan = btn.getAttribute("data-was-in-plan") === "true";
+                let badge = btn.querySelector(".pt-edit-dia-badge");
+                if (selected && wasInPlan) {
+                    if (!badge) {
+                        btn.insertAdjacentHTML(
+                            "beforeend",
+                            `<span class="pt-edit-dia-badge" data-i18n-en="(In plan)">(En el plan)</span>`
+                        );
+                        try { globalThis.UIIdioma?.translatePage?.(btn); } catch { }
+                    }
+                } else if (badge) {
+                    badge.remove();
+                }
+            };
+
+            sheet.querySelectorAll(".pt-edit-dia-btn").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const pressed = btn.getAttribute("aria-pressed") === "true";
+                    const next = !pressed;
+                    btn.classList.toggle("is-selected", next);
+                    btn.setAttribute("aria-pressed", next ? "true" : "false");
+                    syncEditDayBadge(btn);
+                });
+            });
+
             sheet.querySelector("#btn-save-edit-dias").onclick = async () => {
-                const checkedSet = new Set(Array.from(sheet.querySelectorAll('input[name="pt-edit-day"]:checked')).map(el => el.value.toLowerCase().replace("é", "e").replace("á", "a")));
+                const checkedSet = new Set(
+                    Array.from(sheet.querySelectorAll('.pt-edit-dia-btn[aria-pressed="true"]'))
+                        .map((el) => String(el.getAttribute("data-day") || "").toLowerCase().replace("é", "e").replace("á", "a"))
+                );
 
                 if (checkedSet.size === 0) {
-                    const confirmDel = confirm(tLang("Has deseleccionado todos los días. Esto dejará tu plan vacío. ¿Continuar?", "You unselected all days. This will leave your plan empty. Continue?"));
+                    const confirmDel = confirm(tLang("Quitaste todos los días. Esto dejará tu plan vacío. ¿Continuar?", "You removed all days. This will leave your plan empty. Continue?"));
                     if (!confirmDel) return;
                 }
 
