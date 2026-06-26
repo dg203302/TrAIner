@@ -636,45 +636,93 @@ const initFondoToggle = () => {
 const initColorToggle = () => {
     const COLOR_KEY = "ui_background_color";
     const BG_KEY = "ui_background";
-    const select = document.getElementById("select_color_fondo");
+    const hiddenInput = document.getElementById("select_color_fondo");
+    const dropdown = document.getElementById("pt-color-dropdown");
     const toggle = document.getElementById("toggle_fondo");
     const colorContainer = document.getElementById("config_color_container");
-    if (!select) return;
+    if (!hiddenInput || !dropdown) return;
 
     let colorPref = "red";
     try {
         colorPref = localStorage.getItem(COLOR_KEY) || "red";
     } catch {}
 
-    select.value = colorPref;
+    // --- Init custom dropdown ---
+    const trigger = dropdown.querySelector(".pt-dropdown-trigger");
+    const label = dropdown.querySelector(".pt-dropdown-label");
+    const menu = dropdown.querySelector(".pt-dropdown-menu");
+    const options = dropdown.querySelectorAll(".pt-dropdown-option");
 
+    const applyColor = (value) => {
+        hiddenInput.value = value;
+        // update selected option UI
+        options.forEach(opt => {
+            opt.classList.toggle("is-selected", opt.dataset.value === value);
+        });
+        // update label text
+        const selected = dropdown.querySelector(`.pt-dropdown-option[data-value="${value}"]`);
+        if (label && selected) {
+            label.textContent = selected.textContent;
+            // sync i18n attribute
+            const enText = selected.getAttribute("data-i18n-en");
+            if (enText) label.setAttribute("data-i18n-en", enText);
+        }
+        // save & propagate
+        try { localStorage.setItem(COLOR_KEY, value); } catch {}
+        let bgPref = "video";
+        try { bgPref = localStorage.getItem(BG_KEY) || "video"; } catch {}
+        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
+            window.PT_CanvasBg.update(bgPref, value);
+        }
+    };
+
+    // Set initial value
+    applyColor(colorPref);
+
+    // Open/close dropdown
+    const closeDropdown = () => {
+        dropdown.classList.remove("is-open");
+        trigger?.setAttribute("aria-expanded", "false");
+    };
+    const openDropdown = () => {
+        dropdown.classList.add("is-open");
+        trigger?.setAttribute("aria-expanded", "true");
+    };
+
+    trigger?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        trigger.blur();
+        dropdown.classList.contains("is-open") ? closeDropdown() : openDropdown();
+    });
+
+    options.forEach(opt => {
+        opt.addEventListener("click", (e) => {
+            e.stopPropagation();
+            applyColor(opt.dataset.value);
+            closeDropdown();
+        });
+    });
+
+    // Close on outside click
+    document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target)) closeDropdown();
+    });
+
+    // Escape key
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDropdown();
+    });
+
+    // Visibility based on video toggle
     const updateVisibility = () => {
         if (colorContainer && toggle) {
             colorContainer.style.display = toggle.checked ? "flex" : "none";
         }
     };
-
     updateVisibility();
-    if (toggle) {
-        toggle.addEventListener("change", updateVisibility);
-    }
-
-    select.addEventListener("change", () => {
-        const newColor = select.value;
-        try {
-            localStorage.setItem(COLOR_KEY, newColor);
-        } catch {}
-        
-        let bgPref = "video";
-        try {
-            bgPref = localStorage.getItem(BG_KEY) || "video";
-        } catch {}
-
-        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
-            window.PT_CanvasBg.update(bgPref, newColor);
-        }
-    });
+    if (toggle) toggle.addEventListener("change", updateVisibility);
 };
+
 
 const initChatbotToggle = () => {
     const toggle = document.getElementById("toggle_chatbot");

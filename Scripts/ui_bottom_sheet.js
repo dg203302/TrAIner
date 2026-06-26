@@ -408,12 +408,20 @@
 				sheet.style.viewTransitionName = "pt-sheet-hero";
 				const oldVTName = resolvedTrigger.style.viewTransitionName;
 
-				const transition = document.startViewTransition(() => {
-					sheet.style.viewTransitionName = "";
-					resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
+				let transition;
+				try {
+					transition = document.startViewTransition(() => {
+						sheet.style.viewTransitionName = "";
+						resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
+						overlay.classList.remove("is-open");
+						sheet.style.display = "none";
+					});
+				} catch (err) {
+					resolvedTrigger.style.viewTransitionName = oldVTName;
 					overlay.classList.remove("is-open");
-					sheet.style.display = "none";
-				});
+					finish();
+					return;
+				}
 
 				transition.finished.finally(() => {
 					resolvedTrigger.style.viewTransitionName = oldVTName;
@@ -486,18 +494,26 @@
 			const oldVTName = resolvedTrigger.style.viewTransitionName;
 			resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
 
-			const transition = document.startViewTransition(() => {
+			let transition;
+			try {
+				transition = document.startViewTransition(() => {
+					resolvedTrigger.style.viewTransitionName = oldVTName;
+					document.body.appendChild(overlay);
+					sheet.style.viewTransitionName = "pt-sheet-hero";
+					overlay.classList.add("is-open");
+					sheet.style.opacity = "1";
+					sheet.style.transform = "none";
+				});
+			} catch (e) {
 				resolvedTrigger.style.viewTransitionName = oldVTName;
-				document.body.appendChild(overlay);
-				sheet.style.viewTransitionName = "pt-sheet-hero";
-				overlay.classList.add("is-open");
-				sheet.style.opacity = "1";
-				sheet.style.transform = "none";
-			});
+				doOpenFallback();
+			}
 
-			transition.finished.finally(() => {
-				sheet.style.viewTransitionName = "";
-			});
+			if (transition) {
+				transition.finished.finally(() => {
+					sheet.style.viewTransitionName = "";
+				});
+			}
 		} else {
 			doOpenFallback();
 		}

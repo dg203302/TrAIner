@@ -618,6 +618,104 @@
             background-color: #12151A;
             color: #fff;
         }
+
+        /* Custom dropdown — estilo igual al botón nativo de la página */
+        .pt-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .pt-dropdown-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            /* Idéntico al botón nativo de styles_perfil.css */
+            appearance: none;
+            border: 1px solid color-mix(in srgb, #fff 30%, transparent);
+            background: color-mix(in srgb, #fff 12%, transparent);
+            color: var(--text, rgba(255,255,255,.92));
+            border-radius: 999px;
+            padding: 10px 14px;
+            min-height: 40px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            justify-content: space-between;
+            min-width: 80px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .pt-dropdown-trigger:hover {
+            background: color-mix(in srgb, #fff 16%, transparent);
+        }
+        .pt-dropdown-trigger:active {
+            transform: translateY(1px);
+        }
+        .pt-dropdown-trigger svg {
+            flex-shrink: 0;
+            opacity: 0.7;
+            transition: transform 0.2s ease;
+        }
+        .pt-dropdown.is-open .pt-dropdown-trigger svg {
+            transform: rotate(180deg);
+        }
+        .pt-dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
+            min-width: 100%;
+            /* Misma superficie que las secciones <section> de la página */
+            background: color-mix(in srgb, #12151A 92%, transparent);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border: 1px solid color-mix(in srgb, #fff 22%, transparent);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 14px 34px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.12);
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.97);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .pt-dropdown.is-open .pt-dropdown-menu {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .pt-dropdown-option {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            cursor: pointer;
+            border: none;
+            border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
+            background: none;
+            text-align: left;
+            transition: background 0.12s;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pt-dropdown-option:last-child {
+            border-bottom: none;
+        }
+        .pt-dropdown-option:hover,
+        .pt-dropdown-option:focus {
+            background: color-mix(in srgb, #fff 8%, transparent);
+            color: #fff;
+            outline: none;
+        }
+        .pt-dropdown-option:active {
+            background: color-mix(in srgb, #fff 12%, transparent);
+        }
+        .pt-dropdown-option.is-selected {
+            color: var(--accent, #9DF3FF);
+            font-weight: 750;
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="/Scripts/spa_router.js"></script>
@@ -748,12 +846,18 @@
                         color de las burbujas del fondo animado.</p>
                 </div>
                 <div style="flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 44px;">
-                    <select id="select_color_fondo" class="pt-select-custom" aria-label="Color del fondo"
-                        data-i18n-en-aria-label="Background color">
-                        <option value="red" data-i18n-en="Red">Rojo</option>
-                        <option value="green" data-i18n-en="Green">Verde</option>
-                        <option value="blue" data-i18n-en="Blue">Azul</option>
-                    </select>
+                    <input type="hidden" id="select_color_fondo" value="blue">
+                    <div class="pt-dropdown" id="pt-color-dropdown">
+                        <button type="button" class="pt-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Color del fondo">
+                            <span class="pt-dropdown-label" data-i18n-en="Blue">Azul</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+                        <div class="pt-dropdown-menu" role="listbox">
+                            <button type="button" class="pt-dropdown-option" role="option" data-value="red" data-i18n-en="Red">Rojo</button>
+                            <button type="button" class="pt-dropdown-option" role="option" data-value="green" data-i18n-en="Green">Verde</button>
+                            <button type="button" class="pt-dropdown-option is-selected" role="option" data-value="blue" data-i18n-en="Blue">Azul</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

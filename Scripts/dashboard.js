@@ -1351,6 +1351,7 @@ function verificacion_plan_entrenamiento() {
         try { globalThis.UIIdioma?.translatePage?.(boton_ejercicios); } catch { }
         boton_ejercicios.onclick = async () => {
             await recuperar_planes();
+            verificacion_plan_entrenamiento();
             const title = tLang("Plan de entrenamiento actualizado", "Training plan updated");
             const message = tLang(
                 "Tu plan de entrenamiento ha sido refrescado correctamente.",
@@ -1977,20 +1978,22 @@ function mapear_plan(plan_entrenamiento_json) {
                         ${enfoque ? `<div class="plan-dia-subtitle">${escapeHtml(enfoque)}</div>` : ""}
                     </div>
                     <div class="plan-dia-actions" style="display: flex; flex-direction: row; gap: 8px; margin-left: auto;">
-                        <div class="plan-dia-chip chip-registrar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Detalle del día", "Day detail"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
+                        <button type="button" class="plan-dia-chip chip-registrar" aria-label="${escapeHtml(tLang("Detalle del día", "Day detail"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; touch-action: manipulation; border: none; font-family: inherit; color: inherit; appearance: none; outline: none;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
                                 <line x1="3" y1="10" x2="21" y2="10"></line>
                             </svg>
-                        </div>
-                        <div class="plan-dia-chip chip-editar" role="button" tabindex="0" aria-label="${escapeHtml(tLang("Editar día", "Edit day"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; transition: background .2s ease, transform .2s ease;">
+                            <span data-i18n-en="Register">${tLang("Registrar", "Register")}</span>
+                        </button>
+                        <button type="button" class="plan-dia-chip chip-editar" aria-label="${escapeHtml(tLang("Editar día", "Edit day"))} ${dayIdx + 1}" style="font-size: 13.5px; font-weight: 800; padding: 8px 14px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; cursor: pointer; touch-action: manipulation; border: none; font-family: inherit; color: inherit; appearance: none; outline: none;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 20h9"></path>
                                 <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 Z"></path>
                             </svg>
-                        </div>
+                            <span data-i18n-en="Edit">${tLang("Editar", "Edit")}</span>
+                        </button>
                     </div>
                 </div>
                 <div class="plan-grid">${cards}</div>
@@ -2643,17 +2646,9 @@ function initDetallePorDiaPlan() {
 
         if (Array.isArray(maybeDiasArray)) {
             isArrayStructure = true;
-            let filteredIdx = 0;
-            for (let i = 0; i < maybeDiasArray.length; i++) {
-                const d = maybeDiasArray[i];
-                const ejercicios = Array.isArray(d?.ejercicios) ? d.ejercicios : [];
-                if (ejercicios.length > 0) {
-                    if (filteredIdx === dayIdx) {
-                        targetDayObj = d;
-                        break;
-                    }
-                    filteredIdx++;
-                }
+            // Use direct index (same as renderer - counts ALL days including empty ones)
+            if (dayIdx >= 0 && dayIdx < maybeDiasArray.length) {
+                targetDayObj = maybeDiasArray[dayIdx];
             }
         } else {
             const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
@@ -2664,17 +2659,12 @@ function initDetallePorDiaPlan() {
                     return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
                 });
 
-                let filteredIdx = 0;
-                for (const k of orderedKeys) {
+                // Use direct index (same as renderer)
+                if (dayIdx >= 0 && dayIdx < orderedKeys.length) {
+                    const k = orderedKeys[dayIdx];
                     const ejercicios = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
-                    if (ejercicios.length > 0) {
-                        if (filteredIdx === dayIdx) {
-                            targetDayObj = { dia: k, enfoque: "", ejercicios };
-                            objectKey = k;
-                            break;
-                        }
-                        filteredIdx++;
-                    }
+                    targetDayObj = { dia: k, enfoque: "", ejercicios };
+                    objectKey = k;
                 }
             }
         }
@@ -3418,6 +3408,7 @@ function initDetallePorDiaPlan() {
 
         const chipEditarEl = target.closest(".chip-editar");
         if (chipEditarEl instanceof HTMLElement) {
+            chipEditarEl.blur();
             const headerEl = chipEditarEl.closest(".plan-dia-header");
             if (headerEl) {
                 await openEditDia(headerEl);
@@ -3427,6 +3418,7 @@ function initDetallePorDiaPlan() {
 
         const chipRegistrarEl = target.closest(".chip-registrar");
         if (chipRegistrarEl instanceof HTMLElement) {
+            chipRegistrarEl.blur();
             const headerEl = chipRegistrarEl.closest(".plan-dia-header");
             if (headerEl) {
                 await openDetalleDia(headerEl);
@@ -3684,6 +3676,7 @@ async function actualizar_cambios_plan_entreno() {
     try {
         res = await fetch('/actualizar_cambios_plan', {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ plan_entreno: localStorage.getItem("plan_entreno_usuario"), id_usuario: localStorage.getItem("id_usuario") }),
         });
     } catch (err) {
@@ -3843,7 +3836,7 @@ window.openChatbotSheet = async ({ triggerEl }) => {
     if (!canUseBottomSheet()) return;
 
     const user_name = localStorage.getItem("username_usuario") || "";
-    
+
     const formatChatbotMsg = (text) => {
         let html = escapeHtml(text);
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -4016,12 +4009,12 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                         showBack: false,
                         didOpen: (sheet) => {
                             sheet.querySelector("[data-cancel]")?.addEventListener("click", () => {
-                                globalThis.PTBottomSheet.close();
                                 safeResolve(false);
+                                globalThis.PTBottomSheet.close();
                             });
                             sheet.querySelector("[data-confirm]")?.addEventListener("click", () => {
-                                globalThis.PTBottomSheet.close();
                                 safeResolve(true);
+                                globalThis.PTBottomSheet.close();
                             });
                         },
                         willClose: () => safeResolve(false)
@@ -4032,7 +4025,7 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                     localStorage.removeItem("pt_chatbot_history");
                     window.chatbotHistory = [];
                     const msgsContainer = document.querySelector("#chatbot-messages");
-                    if(msgsContainer) {
+                    if (msgsContainer) {
                         const un = localStorage.getItem("username_usuario") || "";
                         msgsContainer.innerHTML = `
                             <div class="chat-msg chat-msg-bot">
@@ -4070,10 +4063,10 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                 msgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(msg.content)}</div>`;
                 messagesContainer.appendChild(msgEl);
             });
-            
+
             // Wait for transition to finish before calculating scroll height
-            setTimeout(() => { 
-                if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight; 
+            setTimeout(() => {
+                if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }, 350);
 
             sendBtn.addEventListener("click", async () => {
