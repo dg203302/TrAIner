@@ -4160,7 +4160,24 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                         localStorage.setItem("pt_chatbot_history", JSON.stringify(window.chatbotHistory));
                     } catch (e) { }
                 } catch (e) {
-                    loadingEl.innerHTML = `<div class="chat-bubble" style="color: var(--my-danger, #ff4c4c);">${escapeHtml(tLang("Error al conectar. Intenta de nuevo.", "Error connecting. Try again."))}</div>`;
+                    loadingEl.innerHTML = `
+                        <div class="chat-bubble" style="color: var(--my-danger, #ff4c4c); display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span>${escapeHtml(tLang("Error al conectar.", "Error connecting."))}</span>
+                            <button class="btn-resend" style="background: rgba(255,76,76,0.15); border: 1px solid rgba(255,76,76,0.3); color: inherit; border-radius: 12px; padding: 4px 10px; font-size: 13px; cursor: pointer; font-family: inherit; transition: opacity 0.2s;">
+                                ${escapeHtml(tLang("Reintentar", "Retry"))}
+                            </button>
+                        </div>`;
+                    const resendBtn = loadingEl.querySelector('.btn-resend');
+                    if (resendBtn) {
+                        resendBtn.addEventListener('click', () => {
+                            loadingEl.remove();
+                            msgEl.remove();
+                            textarea.value = text;
+                            sendBtn.click();
+                        });
+                        resendBtn.addEventListener('mouseover', () => resendBtn.style.opacity = '0.8');
+                        resendBtn.addEventListener('mouseout', () => resendBtn.style.opacity = '1');
+                    }
                 } finally {
                     textarea.disabled = false;
                     sendBtn.disabled = false;
