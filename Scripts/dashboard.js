@@ -1358,39 +1358,20 @@ function verificacion_plan_entrenamiento() {
                 "Your training plan was refreshed successfully."
             );
 
-            if (window.PTBottomSheet && typeof window.PTBottomSheet.open === "function") {
-                try { window.PTBottomSheet.close?.(); } catch { }
-                await window.PTBottomSheet.open({
-                    title,
-                    ariaLabel: title,
-                    triggerEl: boton_ejercicios,
-                    html: `
-                        <div class="pt-status">
-                            <div class="pt-status-row">
-                                <div class="pt-status-text">${escapeHtml(message)}</div>
-                            </div>
-                            <div class="pt-status-actions">
-                                <button type="button" class="btn-primary" data-pt-sheet-close>${escapeHtml(tLang("Listo", "Done"))}</button>
-                            </div>
-                        </div>
-                    `,
-                    showClose: false,
-                    showHandle: true,
-                    showBack: false,
-                    allowOutsideClose: true,
-                    allowEscapeClose: true,
-                    allowDragClose: true,
-                    didOpen: (sheet) => {
-                        sheet.querySelector("[data-pt-sheet-close]")?.addEventListener("click", () => {
-                            try { window.PTBottomSheet.close?.(); } catch { }
-                        });
-                        try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
-                    },
-                });
-                return;
-            }
-
-            await openStatusSheet({ title, message });
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                icon: 'success',
+                title: title,
+                text: message,
+                showConfirmButton: false,
+                timer: 2500,
+                background: '#13141a',
+                color: '#ffffff',
+                customClass: {
+                    popup: 'swal-dark-popup'
+                }
+            });
         }
     }
     else if (plan_entrenamiento == "Ninguno" || plan_entrenamiento == null) {
@@ -1972,6 +1953,8 @@ function mapear_plan(plan_entrenamiento_json) {
 
         return `
             <section class="plan-dia">
+                <!-- Ad Block -->
+                <iframe style="width: 100%; aspect-ratio: 728 / 90; max-height: 85px; border: none; overflow: hidden; margin-bottom: 12px; border-radius: 12px; background: rgba(0,0,0,0.2);" scrolling="no" srcdoc='<!DOCTYPE html><html><head><style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; } #scale-wrap { transform: scale(min(1, calc(100vw / 728))); transform-origin: center center; }</style></head><body><div id="scale-wrap"><script>atOptions={"key":"20fd356d9c7b90b05c268f07099b182f","format":"iframe","height":90,"width":728,"params":{}};</script><script src="https://www.highperformanceformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script></div></body></html>'></iframe>
                 <div class="plan-dia-header" data-day-idx="${escapeHtml(dayIdx)}">
                     <div class="plan-dia-titulos">
                         <h2 class="plan-dia-titulo">${escapeHtml(diaLabel)}</h2>
@@ -2312,14 +2295,21 @@ function initDetallePorDiaPlan() {
             let scrollTimer = null;
             const onScroll = () => {
                 const idx = Math.round((wheelEl.scrollTop + 0.0001) / WHEEL_ITEM_HEIGHT);
+                
+                // Immediately update visually without enforcing scroll (native snap handles that)
                 setActive(idx);
+                
                 if (scrollTimer) window.clearTimeout(scrollTimer);
                 scrollTimer = window.setTimeout(() => {
-                    wheelEl.scrollTo({
-                        top: Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT,
-                        behavior: "smooth",
-                    });
-                }, 80);
+                    const targetTop = Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT;
+                    // Only intervene if native snap didn't perfectly align it (fallback)
+                    if (Math.abs(wheelEl.scrollTop - targetTop) > 2) {
+                        wheelEl.scrollTo({
+                            top: targetTop,
+                            behavior: "smooth",
+                        });
+                    }
+                }, 150);
             };
 
             wheelEl.addEventListener("scroll", onScroll, { passive: true });
@@ -2593,12 +2583,20 @@ function initDetallePorDiaPlan() {
                     }
                     try { globalThis.PTBottomSheet?.close?.(); } catch { }
 
-                    await openStatusSheet({
+                    Swal.fire({
+                        toast: true,
+                        position: 'top',
+                        icon: 'success',
                         title: tLang("Entreno registrado", "Workout registered"),
-                        message: tLang(
+                        text: tLang(
                             `Se guardó el entreno de hoy a las ${now.hora}.`,
                             `Today's workout was saved at ${now.hora}.`
                         ),
+                        showConfirmButton: false,
+                        timer: 2500,
+                        background: '#13141a',
+                        color: '#ffffff',
+                        customClass: { popup: 'swal-dark-popup' }
                     });
 
                     try {
@@ -2976,9 +2974,17 @@ function initDetallePorDiaPlan() {
 
             verificacion_plan_entrenamiento();
 
-            await openStatusSheet({
+            Swal.fire({
+                toast: true,
+                position: 'top',
+                icon: 'success',
                 title: tLang("Guardando...", "Saving..."),
-                message: tLang("Actualizando el plan de entrenamiento", "Updating training plan")
+                text: tLang("Actualizando el plan de entrenamiento", "Updating training plan"),
+                showConfirmButton: false,
+                timer: 2500,
+                background: '#13141a',
+                color: '#ffffff',
+                customClass: { popup: 'swal-dark-popup' }
             });
 
             // sync async
@@ -3361,9 +3367,17 @@ function initDetallePorDiaPlan() {
 
                             try { globalThis.PTBottomSheet.close(); } catch { }
 
-                            await openStatusSheet({
+                            Swal.fire({
+                                toast: true,
+                                position: 'top',
+                                icon: 'success',
                                 title: tLang("Guardando...", "Saving..."),
-                                message: tLang("Actualizando el ejercicio", "Updating exercise")
+                                text: tLang("Actualizando el ejercicio", "Updating exercise"),
+                                showConfirmButton: false,
+                                timer: 2500,
+                                background: '#13141a',
+                                color: '#ffffff',
+                                customClass: { popup: 'swal-dark-popup' }
                             });
 
                             try { verificacion_plan_entrenamiento(); } catch { }
@@ -4012,6 +4026,7 @@ window.openChatbotSheet = async ({ triggerEl }) => {
         html,
         showClose: true,
         triggerEl,
+        hideAd: true,
         extraTopBtn: {
             ariaLabel: "Limpiar historial",
             html: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
@@ -4037,6 +4052,7 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                         stack: true,
                         showClose: false,
                         showBack: false,
+                        hideAd: true,
                         didOpen: (sheet) => {
                             sheet.querySelector("[data-cancel]")?.addEventListener("click", () => {
                                 safeResolve(false);
@@ -4362,16 +4378,24 @@ async function Regen_plan() {
     const ejerciciosPorDiaMap = { baja: 4, media: 6, alta: 8 };
     const ejerciciosPorDiaDetectados = ejerciciosPorDiaMap[intensidadDetectada] ?? 6;
 
-    const ok = await openConfirmSheet({
+    const result = await Swal.fire({
         title: tLang("Regenerar plan de entrenamiento", "Regenerate training plan"),
-        message: isEnglish()
+        text: isEnglish()
             ? `Your current plan will be deleted and a new one will be generated based on the previous configuration. Detected intensity: ${intensidadDetectada} (${ejerciciosPorDiaDetectados} exercises per day).`
             : `Se eliminará el plan actual y se generará uno nuevo basado en la configuración previa. Intensidad detectada: ${intensidadDetectada} (${ejerciciosPorDiaDetectados} ejercicios por día).`,
-        confirmText: tLang("Sí, regenerar", "Yes, regenerate"),
-        cancelText: tLang("Cancelar", "Cancel"),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: tLang("Sí, regenerar", "Yes, regenerate"),
+        cancelButtonText: tLang("Cancelar", "Cancel"),
+        confirmButtonColor: 'var(--my-primary)',
+        background: '#13141a',
+        color: '#ffffff',
+        customClass: {
+            popup: 'swal-dark-popup'
+        }
     });
 
-    if (!ok) return;
+    if (!result.isConfirmed) return;
 
     if (plan_entreno_actual == null || plan_entreno_actual === "Ninguno") {
         await openStatusSheet({

@@ -559,7 +559,6 @@ async function initCalendario() {
             const section = document.getElementById('estadisticas');
             const emptyOverlay = document.getElementById('pt-stats-empty');
             if (section) section.style.display = 'block';
-            if (!container) return;
 
             const noData = !stats || (stats.totalCalories === 0 && stats.totalMinutes === 0 && stats.daysTrained === 0);
 
@@ -613,18 +612,20 @@ async function initCalendario() {
             items.push({ k: tLang('Tendencia semanal', 'Weekly trend'), v: weeklyTrendLabel, tone: 'progress' });
             items.push({ k: tLang('Ritmo proyectado (cal)', 'Projected pace (cal)'), v: `${formatNumber(stats.projectedCalories)} kcal`, tone: 'projection' });
 
-            container.innerHTML = items.map((it) => {
-                if (it.type === 'group') {
-                    return `<div class="pt-stat-group">${escapeHtml(it.v)}</div>`;
-                }
-                const tone = it.tone ? ` pt-stat-card--${it.tone}` : '';
-                return `
-                    <div class="pt-stat-card${tone}">
-                        <div class="pt-stat-key">${escapeHtml(it.k)}</div>
-                        <div class="pt-stat-value">${escapeHtml(it.v)}</div>
-                    </div>
-                `;
-            }).join('');
+            if (container) {
+                container.innerHTML = items.map((it) => {
+                    if (it.type === 'group') {
+                        return `<div class="pt-stat-group">${escapeHtml(it.v)}</div>`;
+                    }
+                    const tone = it.tone ? ` pt-stat-card--${it.tone}` : '';
+                    return `
+                        <div class="pt-stat-card${tone}">
+                            <div class="pt-stat-key">${escapeHtml(it.k)}</div>
+                            <div class="pt-stat-value">${escapeHtml(it.v)}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
         } catch (err) {
             console.error('Error renderEstadisticas', err);
         }
@@ -666,16 +667,46 @@ async function initCalendario() {
         drawDonutChart(stats.daysTrained || 0, stats.daysRest ?? (dim - (stats.daysTrained || 0)));
     };
 
-    const drawBarChart = (data, days) => {
-        const c = setupCanvas(document.getElementById('pt-chart-bar'));
+    const drawBarChart = (data, days, canvasId = 'pt-chart-bar') => {
+        const c = setupCanvas(document.getElementById(canvasId));
         if (!c) return;
         const { ctx, w, h } = c;
-        const pad = { t: 8, b: 22, l: 6, r: 6 };
+        const pad = { t: 16, b: 22, l: 34, r: 6 };
         const plotW = w - pad.l - pad.r;
         const plotH = h - pad.t - pad.b;
         const barW = Math.max(2, (plotW / days) - 2);
         const gap = (plotW - barW * days) / (days - 1 || 1);
-        const maxVal = Math.max(...data, 1);
+        
+        // Round max to nearest 30 mins for cleaner Y axis
+        let rawMax = Math.max(...data, 1);
+        const maxVal = Math.max(30, Math.ceil(rawMax / 30) * 30);
+
+        // Y-axis grid & labels
+        ctx.fillStyle = 'rgba(255,255,255,0.48)';
+        ctx.font = '500 9.5px "Plus Jakarta Sans", sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        
+        const steps = 3;
+        for (let i = 1; i <= steps; i++) {
+            const val = (maxVal / steps) * i;
+            const y = pad.t + plotH - (val / maxVal) * plotH;
+            
+            ctx.beginPath();
+            ctx.moveTo(pad.l, y);
+            ctx.lineTo(w - pad.r, y);
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            const hrs = Math.floor(val / 60);
+            const mins = Math.round(val % 60);
+            let label = '';
+            if (hrs > 0) label += `${hrs}h `;
+            if (mins > 0 || hrs === 0) label += `${mins}m`;
+            
+            ctx.fillText(label.trim(), pad.l - 6, y);
+        }
 
         // Bars
         const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
@@ -693,13 +724,20 @@ async function initCalendario() {
             ctx.fill();
         });
 
-        // X labels (every 5 days)
-        ctx.fillStyle = 'rgba(255,255,255,0.38)';
-        ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+        // X labels (dynamic step to prevent overlap)
+        ctx.fillStyle = 'rgba(255,255,255,0.48)';
+        ctx.font = '500 9.5px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
-        for (let i = 0; i < days; i += 5) {
+        ctx.textBaseline = 'top';
+        
+        const labelWidth = 16;
+        const maxLabels = Math.floor(plotW / labelWidth);
+        let step = Math.ceil(days / maxLabels);
+        if (step < 2) step = 2; // Show at least every other day to not look too dense
+
+        for (let i = 0; i < days; i += step) {
             const x = pad.l + i * (barW + gap) + barW / 2;
-            ctx.fillText(String(i + 1), x, h - 4);
+            ctx.fillText(String(i + 1), x, h - pad.b + 6);
         }
     };
 
@@ -762,8 +800,8 @@ async function initCalendario() {
         }
     };
 
-    const drawDonutChart = (active, rest) => {
-        const c = setupCanvas(document.getElementById('pt-chart-donut'));
+    const drawDonutChart = (active, rest, canvasId = 'pt-chart-donut') => {
+        const c = setupCanvas(document.getElementById(canvasId));
         if (!c) return;
         const { ctx, w, h } = c;
         const cx = w / 2, cy = h / 2;
@@ -1014,6 +1052,186 @@ async function initCalendario() {
     } catch (err) {
         console.warn('ResizeObserver setup failed:', err);
     }
+    const initChartInteraction = () => {
+        const barCard = document.getElementById('pt-chart-bar')?.closest('.pt-chart-card');
+        if (!barCard) return;
+
+        barCard.style.cursor = 'pointer';
+
+        barCard.addEventListener('click', async () => {
+            if (!lastStats || !globalThis.PTBottomSheet) return;
+
+            const stats = lastStats;
+            const noData = stats.totalCalories === 0 && stats.totalMinutes === 0 && stats.daysTrained === 0;
+            if (noData) return;
+
+            const items = [];
+            
+            const bestLabel = stats.bestDay ? `${stats.bestDay.date} — ${stats.bestDay.calories} kcal / ${stats.bestDay.minutes} min` : tLang('N/A', 'N/A');
+            items.push({ type: 'group', v: tLang('Rendimiento', 'Performance') });
+            items.push({ k: tLang('Mejor día (mes)', 'Best day (month)'), v: bestLabel, tone: 'performance' });
+            items.push({ k: tLang('Racha más larga', 'Longest streak'), v: `${formatNumber(stats.longestStreak)} ${tLang('días','days')}`, tone: 'performance' });
+            items.push({ k: tLang('Racha actual', 'Current streak'), v: `${formatNumber(stats.streakCurrent)} ${tLang('días','days')}`, tone: 'performance' });
+            items.push({ k: tLang('Eficiencia calórica', 'Caloric efficiency'), v: `${stats.efficiency} ${tLang('kcal/min','kcal/min')}`, tone: 'performance' });
+
+            items.push({ type: 'group', v: tLang('Consistencia', 'Consistency') });
+            items.push({ k: tLang('% días activos', '% active days'), v: `${stats.pctActive}%`, tone: 'consistency' });
+            items.push({ k: tLang('Días de descanso', 'Rest days'), v: `${formatNumber(stats.daysRest)}`, tone: 'consistency' });
+
+            const weekdayEntries = Object.entries(stats.weekdayCounts || {}).sort((a, b) => b[1] - a[1]);
+            const distLabel = weekdayEntries.length ? weekdayEntries.map(([k,v])=>`${k}: ${v}`).slice(0,5).join(' · ') : tLang('Sin datos', 'No data');
+            items.push({ k: tLang('Distribución por día', 'Distribution by weekday'), v: distLabel, tone: 'consistency' });
+            
+            const statsHtml = items.map((it) => {
+                if (it.type === 'group') {
+                    return `<div class="pt-stat-group">${escapeHtml(it.v)}</div>`;
+                }
+                const tone = it.tone ? ` pt-stat-card--${it.tone}` : '';
+                return `
+                    <div class="pt-stat-card${tone}">
+                        <div class="pt-stat-key">${escapeHtml(it.k)}</div>
+                        <div class="pt-stat-value">${escapeHtml(it.v)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            const html = `
+                <div class="pt-status pt-cal-detalle-sheet" style="padding: 16px 0 0 0;">
+                    <div class="pt-chart-card" style="margin-bottom: 24px; border: none; background: transparent; padding: 0;">
+                        <h3 class="pt-chart-card-title" style="margin-bottom: 12px; font-size: 14px; text-transform: uppercase;">${tLang("Actividad Diaria", "Daily activity")}</h3>
+                        <div class="pt-chart-canvas-wrap" style="aspect-ratio: 16/9;">
+                            <canvas id="pt-chart-bar-detail"></canvas>
+                        </div>
+                    </div>
+                    <div class="pt-stats-grid" style="padding: 0;">
+                        ${statsHtml}
+                    </div>
+                </div>
+            `;
+            
+            await globalThis.PTBottomSheet.open({
+                title: tLang("Detalle del Gráfico", "Chart Detail"),
+                ariaLabel: tLang("Detalle del Gráfico", "Chart Detail"),
+                className: "pt-calendar-chart-detail-sheet",
+                html,
+                showClose: false,
+                showHandle: true,
+                allowOutsideClose: true,
+                allowEscapeClose: true,
+                allowDragClose: true,
+                triggerEl: barCard,
+                didOpen: (sheet) => {
+                    try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+                    
+                    const dim = stats.daysInMonth || 30;
+                    const agg = stats.aggByDate || new Map();
+                    const yr = stats.curYear ?? new Date().getFullYear();
+                    const mo = stats.curMonth ?? new Date().getMonth();
+
+                    const dailyMin = [];
+                    for (let d = 1; d <= dim; d++) {
+                        const iso = `${yr}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                        const entry = agg.get(iso);
+                        dailyMin.push(entry ? entry.minutes : 0);
+                    }
+                    
+                    setTimeout(() => {
+                        drawBarChart(dailyMin, dim, 'pt-chart-bar-detail');
+                    }, 150);
+                },
+            });
+        });
+
+        const donutCard = document.getElementById('pt-chart-donut')?.closest('.pt-chart-card');
+        if (donutCard) {
+            donutCard.style.cursor = 'pointer';
+            donutCard.addEventListener('click', async () => {
+                if (!lastStats || !globalThis.PTBottomSheet) return;
+
+                const stats = lastStats;
+                const noData = stats.totalCalories === 0 && stats.totalMinutes === 0 && stats.daysTrained === 0;
+                if (noData) return;
+
+                const items = [];
+                
+                const weeklyEntries = Object.entries(stats.weeks || {})
+                    .map(([k, v]) => [Number(k), v])
+                    .filter(([k]) => Number.isFinite(k))
+                    .sort((a, b) => a[0] - b[0]);
+                const firstWeek = weeklyEntries[0]?.[1] || null;
+                const lastWeek = weeklyEntries[weeklyEntries.length - 1]?.[1] || null;
+                const weeklyTrendLabel = (() => {
+                    if (!firstWeek || !lastWeek) return tLang('Sin datos', 'No data');
+                    const diff = (lastWeek.calories || 0) - (firstWeek.calories || 0);
+                    if (diff === 0) return tLang('Estable', 'Stable');
+                    return diff > 0 ? `+${formatNumber(diff)} kcal` : `${formatNumber(diff)} kcal`;
+                })();
+
+                items.push({ type: 'group', v: tLang('Resumen Mensual', 'Monthly Summary') });
+                items.push({ k: tLang('Total minutos (mes)', 'Total minutes (month)'), v: `${formatNumber(stats.totalMinutes)} min`, tone: 'primary' });
+                items.push({ k: tLang('Total calorías (mes)', 'Total calories (month)'), v: `${formatNumber(stats.totalCalories)} kcal`, tone: 'primary' });
+                items.push({ k: tLang('Promedio diario minutos', 'Avg daily minutes'), v: `${formatNumber(stats.avgDailyMinutes)} min`, tone: 'primary' });
+                items.push({ k: tLang('Promedio diario calorías', 'Avg daily calories'), v: `${formatNumber(stats.avgDailyCalories)} kcal`, tone: 'primary' });
+                items.push({ k: tLang('Días entrenados (mes)', 'Days trained (month)'), v: `${formatNumber(stats.daysTrained)}`, tone: 'primary' });
+
+                const varPct = stats.variationPct === null ? tLang('N/A', 'N/A') : `${stats.variationPct}%`;
+                items.push({ type: 'group', v: tLang('Progreso y Proyección', 'Progress and Projection') });
+                items.push({ k: tLang('Variación mensual (cal)', 'Monthly variation (cal)'), v: `${formatNumber(stats.variationAbsolute)} kcal (${varPct})`, tone: 'progress' });
+                items.push({ k: tLang('Tendencia semanal', 'Weekly trend'), v: weeklyTrendLabel, tone: 'progress' });
+                items.push({ k: tLang('Ritmo proyectado (cal)', 'Projected pace (cal)'), v: `${formatNumber(stats.projectedCalories)} kcal`, tone: 'projection' });
+
+                const statsHtml = items.map((it) => {
+                    if (it.type === 'group') {
+                        return `<div class="pt-stat-group">${escapeHtml(it.v)}</div>`;
+                    }
+                    const tone = it.tone ? ` pt-stat-card--${it.tone}` : '';
+                    return `
+                        <div class="pt-stat-card${tone}">
+                            <div class="pt-stat-key">${escapeHtml(it.k)}</div>
+                            <div class="pt-stat-value">${escapeHtml(it.v)}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                const html = `
+                    <div class="pt-status pt-cal-detalle-sheet" style="padding: 16px 0 0 0;">
+                        <div class="pt-chart-card" style="margin-bottom: 24px; border: none; background: transparent; padding: 0;">
+                            <h3 class="pt-chart-card-title" style="margin-bottom: 12px; font-size: 14px; text-transform: uppercase;">${tLang("Días activos vs descanso", "Active vs rest days")}</h3>
+                            <div class="pt-chart-canvas-wrap pt-chart-canvas-wrap--donut" style="aspect-ratio: 1/1; max-width: 240px; margin: 0 auto;">
+                                <canvas id="pt-chart-donut-detail"></canvas>
+                            </div>
+                        </div>
+                        <div class="pt-stats-grid" style="padding: 0;">
+                            ${statsHtml}
+                        </div>
+                    </div>
+                `;
+                
+                await globalThis.PTBottomSheet.open({
+                    title: tLang("Detalle del Gráfico", "Chart Detail"),
+                    ariaLabel: tLang("Detalle del Gráfico", "Chart Detail"),
+                    className: "pt-calendar-chart-detail-sheet",
+                    html,
+                    showClose: false,
+                    showHandle: true,
+                    allowOutsideClose: true,
+                    allowEscapeClose: true,
+                    allowDragClose: true,
+                    triggerEl: donutCard,
+                    didOpen: (sheet) => {
+                        try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+                        
+                        const dim = stats.daysInMonth || 30;
+                        setTimeout(() => {
+                            drawDonutChart(stats.daysTrained || 0, stats.daysRest ?? (dim - (stats.daysTrained || 0)), 'pt-chart-donut-detail');
+                        }, 150);
+                    },
+                });
+            });
+        }
+    };
+
+    initChartInteraction();
 }
 
 window.onload = async () => {

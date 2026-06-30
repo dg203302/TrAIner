@@ -145,10 +145,17 @@ const buildWheelInRoot = ({ root, field, values, format, initialValue }) => {
 	const onScroll = () => {
 		const idx = Math.round((wheelEl.scrollTop + 0.0001) / WHEEL_ITEM_HEIGHT);
 		setActive(idx);
+		
 		if (scrollTimer) window.clearTimeout(scrollTimer);
 		scrollTimer = window.setTimeout(() => {
-			wheelEl.scrollTo({ top: Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT, behavior: "smooth" });
-		}, 80);
+			const targetTop = Number(wheelEl.dataset.index) * WHEEL_ITEM_HEIGHT;
+			if (Math.abs(wheelEl.scrollTop - targetTop) > 2) {
+				wheelEl.scrollTo({
+					top: targetTop,
+					behavior: "smooth"
+				});
+			}
+		}, 150);
 	};
 
 	wheelEl.addEventListener("scroll", onScroll, { passive: true });
@@ -1016,9 +1023,17 @@ async function subirCambiosPerfil() {
 	try { result = JSON.parse(bodyText || "{}"); } catch { result = {}; }
 
 	if (response.ok) {
-		await openStatusSheet({
+		Swal.fire({
+			toast: true,
+			position: 'top',
+			icon: 'success',
 			title: 'Cambios guardados',
-			message: 'Tu perfil ha sido actualizado correctamente.',
+			text: 'Tu perfil ha sido actualizado correctamente.',
+			showConfirmButton: false,
+			timer: 2500,
+			background: '#13141a',
+			color: '#ffffff',
+			customClass: { popup: 'swal-dark-popup' }
 		});
 		console.log("Cambios de perfil subidos correctamente:", result);
 	} else {

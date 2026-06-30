@@ -722,6 +722,7 @@
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="/Scripts/spa_router.js"></script>
+<link rel="icon" type="image/png" href="/Icons/2.png">
 </head>
 
 <body>
@@ -1063,8 +1064,8 @@
     </script>
     <!-- Chatbot FAB -->
     <div id="pt-chatbot-fab"
-        style="position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px; background: var(--my-primary); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1500; cursor: pointer; user-select: none; touch-action: none;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+        style="position: fixed; bottom: 90px; right: 20px; width: 64px; height: 64px; background: color-mix(in srgb, var(--my-primary) 70%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 50%; box-shadow: 0 6px 20px rgba(0,0,0,0.3); border: 1px solid color-mix(in srgb, #fff 25%, transparent); display: flex; align-items: center; justify-content: center; z-index: 1500; cursor: pointer; user-select: none; touch-action: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 8V4H8" />
             <rect width="16" height="12" x="4" y="8" rx="2" />
@@ -1101,14 +1102,37 @@
                 // Clamp Y
                 currentY = Math.max(16, Math.min(currentY, maxY - 16));
 
-                // Snap X
-                const snapX = (currentX + rect.width / 2) < window.innerWidth / 2 ? 16 : window.innerWidth - rect.width - 16;
+                // Snap X (hide only if dragged to extreme edge)
+                const offset = rect.width * 0.45;
+                const rightEdge = window.innerWidth - rect.width;
+                const isLeftHalf = (currentX + rect.width / 2) < window.innerWidth / 2;
+                
+                let snapX;
+                let isHidden = false;
+                
+                if (isLeftHalf) {
+                    if (currentX <= 8) {
+                        snapX = -offset;
+                        isHidden = true;
+                    } else {
+                        snapX = 16;
+                    }
+                } else {
+                    if (currentX >= rightEdge - 8) {
+                        snapX = rightEdge + offset;
+                        isHidden = true;
+                    } else {
+                        snapX = rightEdge - 16;
+                    }
+                }
 
-                fab.style.transition = 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                fab.style.transition = 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease';
                 fab.style.left = snapX + 'px';
                 fab.style.top = currentY + 'px';
                 fab.style.bottom = 'auto';
                 fab.style.right = 'auto';
+                fab.style.opacity = isHidden ? '0.6' : '1';
+                fab.dataset.isHidden = isHidden ? 'true' : 'false';
             }
 
             const savedPos = localStorage.getItem('pt_chatbot_fab_pos');
@@ -1140,7 +1164,8 @@
 
                 isDragging = true;
                 hasMoved = false;
-                fab.style.transition = 'none';
+                fab.style.transition = 'opacity 0.2s ease';
+                fab.style.opacity = '1';
 
                 if (e.type === 'mousedown') {
                     document.addEventListener('mousemove', onMove, { passive: false });
@@ -1174,10 +1199,11 @@
                 let newX = initialX + dx;
                 let newY = initialY + dy;
 
-                const maxX = window.innerWidth - fab.offsetWidth;
+                const offset = fab.offsetWidth * 0.45;
+                const maxX = window.innerWidth - fab.offsetWidth + offset;
                 const maxY = window.innerHeight - fab.offsetHeight;
 
-                newX = Math.max(0, Math.min(newX, maxX));
+                newX = Math.max(-offset, Math.min(newX, maxX));
                 newY = Math.max(0, Math.min(newY, maxY));
 
                 fab.style.left = newX + 'px';
@@ -1196,6 +1222,11 @@
                 }
 
                 if (!hasMoved) {
+                    if (fab.dataset.isHidden === 'true') {
+                        // Ignore clicks entirely when hidden. Must be dragged to un-hide.
+                        return;
+                    }
+
                     if (window.openChatbotSheet) {
                         window.openChatbotSheet({ triggerEl: fab });
                     }

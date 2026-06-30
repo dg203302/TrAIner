@@ -1064,52 +1064,52 @@
         }
 
         .pt-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
 
         .pt-stat-group {
-            grid-column: 1 / -1;
-            margin: 4px 2px 0;
-            font-size: 12px;
+            margin: 20px 4px 6px;
+            font-size: 11px;
             font-weight: 800;
-            letter-spacing: .7px;
+            letter-spacing: .8px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.58);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .pt-stat-card {
-            padding: 12px 12px;
-            border-radius: 14px;
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(242, 234, 227, 0.06);
-            color: rgba(255, 255, 255, 0.92);
+            padding: 12px 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-height: 94px;
-            backdrop-filter: blur(20px) saturate(140%);
-            -webkit-backdrop-filter: blur(20px) saturate(140%);
-            transition: transform .16s ease, border-color .16s ease, background .16s ease;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            transition: opacity .16s ease;
+        }
+        .pt-stat-card:last-of-type {
+            border-bottom: none;
         }
 
         .pt-stat-card:active {
-            transform: scale(0.98);
+            opacity: 0.6;
         }
 
         .pt-stat-key {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.68);
-            font-weight: 700;
-            line-height: 1.25;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            flex-shrink: 0;
+            line-height: 1.4;
         }
 
         .pt-stat-value {
-            font-size: clamp(18px, 4.8vw, 22px);
-            font-weight: 900;
+            font-size: 14px;
+            font-weight: 700;
             color: var(--my-primary);
-            line-height: 1.12;
+            line-height: 1.4;
+            text-align: right;
             word-break: break-word;
         }
 
@@ -1177,6 +1177,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script src="/Scripts/spa_router.js"></script>
+    <link rel="icon" type="image/png" href="/Icons/2.png">
 </head>
 
 <body>
@@ -1232,6 +1233,9 @@
                     </div>
                 </div>
 
+                <!-- Adsterra Banner -->
+                <iframe style="width: 100%; aspect-ratio: 728 / 90; max-height: 90px; border: none; overflow: hidden; margin: 0; border-radius: 12px;" scrolling="no" srcdoc='<!DOCTYPE html><html><head><style>body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; } #scale-wrap { transform: scale(min(1, calc(100vw / 728))); transform-origin: center center; }</style></head><body><div id="scale-wrap"><script>atOptions={"key":"20fd356d9c7b90b05c268f07099b182f","format":"iframe","height":90,"width":728,"params":{}};</script><script src="https://www.highperformanceformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script></div></body></html>'></iframe>
+
                 <div class="pt-chart-card" style="min-height: 260px; flex-shrink: 0;">
                     <h3 class="pt-chart-card-title" data-i18n-en="Active vs rest days">Días activos vs descanso</h3>
                     <div class="pt-chart-canvas-wrap pt-chart-canvas-wrap--donut">
@@ -1240,41 +1244,12 @@
                 </div>
             </div>
 
-            <!-- Panel 2: Estadísticas textuales (Scrolling vertical) -->
-            <div class="pt-chart-panel" data-chart-idx="2">
-                <section id="estadisticas" class="pt-stats" style="margin-top: 0; flex-shrink: 0;">
-                    <!-- Empty state overlay (hidden by default, shown by JS when no data) -->
-                    <div id="pt-stats-empty" class="pt-stats-empty" style="display:none;">
-                        <div class="pt-stats-empty-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M3 3v18h18" />
-                                <path d="M7 16l4-8 4 4 4-6" />
-                            </svg>
-                        </div>
-                        <p class="pt-stats-empty-title" data-i18n-en="No training data found">No se encontraron datos de
-                            entreno</p>
-                        <p class="pt-stats-empty-sub"
-                            data-i18n-en="Complete workouts from your training plan to see your statistics and charts here.">
-                            Completá entrenamientos desde tu plan de entreno para ver tus estadísticas y gráficos acá.
-                        </p>
-                    </div>
-
-                    <h2 class="pt-stats-title" data-i18n-en="Statistics">Estadísticas</h2>
-
-                    <div id="pt-stats-grid" class="pt-stats-grid">
-                        <!-- Las tarjetas de estadísticas se renderizan dinámicamente desde Scripts/script_calendario.js -->
-                    </div>
-                </section>
-            </div>
         </div>
 
         <!-- Dot indicators for swipe -->
         <div id="pt-charts-dots" class="pt-charts-dots" style="margin-bottom: 24px; margin-top: 12px; width: 100%;">
             <button class="pt-charts-dot is-active" data-dot="0" aria-label="Calendar"></button>
             <button class="pt-charts-dot" data-dot="1" aria-label="Charts"></button>
-            <button class="pt-charts-dot" data-dot="2" aria-label="Statistics"></button>
         </div>
     </main>
 

@@ -277,6 +277,7 @@
 		didOpen,
 		willClose,
 		triggerEl = null,
+		hideAd = false,
 	} = {}) => {
 		// Resolve trigger BEFORE any async gap so _lastClickedEl is still fresh
 		const resolvedTrigger = resolveTrigger(triggerEl);
@@ -338,7 +339,49 @@
 
 		const content = document.createElement("div");
 		content.className = "pt-sheet-content";
-		content.innerHTML = html;
+
+		// Adsterra Banner Banner (Iframe to prevent document.write issues)
+		const adIframe = document.createElement("iframe");
+		adIframe.style.width = "100%";
+		adIframe.style.aspectRatio = "728 / 90";
+		adIframe.style.maxHeight = "90px";
+		adIframe.style.border = "none";
+		adIframe.style.overflow = "hidden";
+		adIframe.style.marginBottom = "16px";
+		adIframe.scrolling = "no";
+		adIframe.srcdoc = `
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<style>
+					body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }
+					#scale-wrap { transform: scale(min(1, calc(100vw / 728))); transform-origin: center center; }
+				</style>
+			</head>
+			<body>
+				<div id="scale-wrap">
+					<script>
+					  atOptions = {
+						'key' : '20fd356d9c7b90b05c268f07099b182f',
+						'format' : 'iframe',
+						'height' : 90,
+						'width' : 728,
+						'params' : {}
+					  };
+					</script>
+					<script src="https://www.highperformanceformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
+				</div>
+			</body>
+			</html>
+		`;
+		
+		const htmlWrap = document.createElement("div");
+		htmlWrap.innerHTML = html;
+
+		if (!hideAd) {
+			content.appendChild(adIframe);
+		}
+		content.appendChild(htmlWrap);
 
 		const topActionsWrap = document.createElement("div");
 		topActionsWrap.className = "pt-sheet-top-actions";
@@ -521,7 +564,7 @@
 		setTimeout(() => {
 			try {
 				sheet.setAttribute("tabindex", "-1");
-				sheet.focus();
+				sheet.focus({ preventScroll: true });
 			} catch {
 				// ignore
 			}

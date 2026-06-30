@@ -912,6 +912,8 @@ html.no-transparency .translucent-bar {
 	outline: none;
 	box-shadow: var(--shadow-soft);
 	scrollbar-width: none;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+	mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
 }
 
 .perfil-swal .wheel::-webkit-scrollbar {
@@ -928,6 +930,8 @@ html.no-transparency .translucent-bar {
 	color: color-mix(in srgb, var(--text) 55%, transparent);
 	scroll-snap-align: center;
 	user-select: none;
+	font-weight: 500;
+	transition: all 0.2s ease-out;
 }
 
 .perfil-swal .wheel-item.is-active {
@@ -1131,6 +1135,8 @@ html.no-transparency .pt-sheet{
 	outline: none;
 	box-shadow: var(--shadow-soft);
 	scrollbar-width: none;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
+	mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
 }
 
 .pt-perfil-sheet .wheel::-webkit-scrollbar{display:none;}
@@ -1145,6 +1151,8 @@ html.no-transparency .pt-sheet{
 	color: color-mix(in srgb, var(--text) 55%, transparent);
 	scroll-snap-align: center;
 	user-select: none;
+	font-weight: 500;
+	transition: all 0.2s ease-out;
 }
 
 .pt-perfil-sheet .wheel-item.is-active{
