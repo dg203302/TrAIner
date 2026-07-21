@@ -44,7 +44,7 @@ ${consulta}`;
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            model: "tencent/hy3:free",
+            model: "openrouter/free",
             messages: [
                 { role: "system", content: prompt_restricc },
                 ...historial,
