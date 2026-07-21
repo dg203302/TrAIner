@@ -44,7 +44,7 @@ ${consulta}`;
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            model: "google/gemma-4-31b-it:free",
+            model: "tencent/hy3:free",
             messages: [
                 { role: "system", content: prompt_restricc },
                 ...historial,
