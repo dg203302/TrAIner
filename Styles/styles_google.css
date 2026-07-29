@@ -56,7 +56,7 @@ body {
 		Arial,
 		sans-serif;
 	line-height: 1.35;
-	background: linear-gradient(180deg, var(--bg0), var(--bg1));
+	background: #1a1d22;
 	min-height: 100svh;
 	overflow-x: hidden;
 	position: relative;
@@ -70,9 +70,7 @@ html.no-transparency header,
 html.no-transparency main,
 html.no-transparency section,
 html.no-transparency .card {
-	backdrop-filter: none !important;
-	-webkit-backdrop-filter: none !important;
-}
+	}
 
 html.no-transparency header {
 	background: var(--bg1) !important;
@@ -87,9 +85,7 @@ html.no-transparency .bullet,
 html.no-transparency .page-copy,
 html.no-transparency .google-btn {
 	background: color-mix(in srgb, #fff 6%, var(--bg1)) !important;
-	backdrop-filter: none !important;
-	-webkit-backdrop-filter: none !important;
-}
+	}
 
 a {
 	color: inherit;
@@ -110,8 +106,6 @@ header {
 	z-index: 50;
 	padding: calc(14px + env(safe-area-inset-top)) var(--pad) 12px;
 	background: color-mix(in srgb, #FFFFFF 6%, transparent);
-	backdrop-filter: blur(18px) saturate(155%);
-	-webkit-backdrop-filter: blur(18px) saturate(155%);
 	border-bottom: 1px solid var(--stroke);
 	box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
 	overflow: hidden;
@@ -148,8 +142,8 @@ header p {
 	width: 42px;
 	height: 42px;
 	border-radius: 999px;
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 7%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 }
 
 .header-home img {
@@ -177,9 +171,7 @@ footer {
 	bottom: 0;
 	z-index: 40;
 	padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom));
-	background: color-mix(in srgb, #000 18%, transparent);
-	backdrop-filter: blur(16px) saturate(150%);
-	-webkit-backdrop-filter: blur(16px) saturate(150%);
+	background: #0f151b;
 	border-top: 1px solid var(--stroke);
 	display: flex;
 	justify-content: center;
@@ -192,8 +184,8 @@ footer a {
 	min-height: 40px;
 	padding: 10px 14px;
 	border-radius: 999px;
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 7%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 	color: var(--text);
 	width: auto;
 	min-width: 44px;
@@ -203,11 +195,9 @@ footer a {
 .card {
 	width: min(640px, 100%);
 	border-radius: var(--radius-xl);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 7%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 	box-shadow: var(--shadow);
-	backdrop-filter: blur(12px) saturate(140%);
-	-webkit-backdrop-filter: blur(12px) saturate(140%);
 	padding: 18px;
 }
 
@@ -232,8 +222,8 @@ footer a {
 .bullet {
 	padding: 12px;
 	border-radius: var(--radius-md);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #000 12%, transparent);
+	border: 1px solid #2e3340;
+	background: #1e2228;
 	color: var(--muted);
 }
 
@@ -249,8 +239,6 @@ footer a {
 	border: 1px solid color-mix(in srgb, #fff 30%, transparent);
 	background: color-mix(in srgb, #fff 12%, transparent);
 	color: var(--text);
-	backdrop-filter: blur(10px) saturate(140%);
-	-webkit-backdrop-filter: blur(10px) saturate(140%);
 	box-shadow: var(--shadow-soft);
 	cursor: pointer;
 }
@@ -284,8 +272,8 @@ footer a {
 .page-copy {
 	width: min(640px, 100%);
 	border-radius: var(--radius-xl);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #000 12%, transparent);
+	border: 1px solid #2e3340;
+	background: #1e2228;
 	box-shadow: var(--shadow-soft);
 	padding: 16px;
 }
@@ -306,8 +294,8 @@ footer a {
 	margin-top: 12px;
 	padding: 12px;
 	border-radius: var(--radius-lg);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 6%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 }
 
 .note h4 {

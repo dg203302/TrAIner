@@ -25,8 +25,8 @@ input {
 	--radius-md: 14px;
 	--radius-sm: 12px;
 
-	--shadow: 0 24px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .16), 0 0 34px rgba(255, 255, 255, .18);
-	--shadow-soft: 0 14px 34px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 22px rgba(255, 255, 255, .14);
+	--shadow: 0 8px 24px rgba(0, 0, 0, .55);
+	--shadow-soft: 0 4px 14px rgba(0, 0, 0, .40);
 
 	/* Fixed chrome sizes (keeps content visible) */
 	--header-h: 108px;
@@ -48,8 +48,8 @@ input {
 		--muted2: rgba(255, 255, 255, .55);
 		--stroke: rgba(255, 255, 255, .22);
 		--stroke2: rgba(255, 255, 255, .16);
-		--shadow: 0 24px 70px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .16), 0 0 34px rgba(255, 255, 255, .18);
-		--shadow-soft: 0 14px 34px rgba(0, 0, 0, .45), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 22px rgba(255, 255, 255, .14);
+		--shadow: 0 8px 24px rgba(0, 0, 0, .55);
+		--shadow-soft: 0 4px 14px rgba(0, 0, 0, .40);
 	}
 }
 
@@ -79,7 +79,7 @@ body {
 		Arial,
 		sans-serif;
 	line-height: 1.35;
-	background: linear-gradient(180deg, var(--bg0), var(--bg1));
+	background: #1a1d22;
 	min-height: 100svh;
 	overflow-x: hidden;
 	position: relative;
@@ -88,34 +88,7 @@ body {
 
 
 
-/* Desactivar transparencias (controlado por el toggle) */
-html.no-transparency header,
-html.no-transparency footer,
-html.no-transparency main>section,
-html.no-transparency .card,
-html.no-transparency .callout,
-html.no-transparency .lista-ejercicios,
-html.no-transparency #secciones,
-html.no-transparency #botones>a {
-	backdrop-filter: none !important;
-	-webkit-backdrop-filter: none !important;
-}
-
-html.no-transparency footer {
-	background: var(--bg1) !important;
-}
-
-html.no-transparency main>section,
-html.no-transparency .card,
-html.no-transparency .callout,
-html.no-transparency .lista-ejercicios,
-html.no-transparency #secciones {
-	background: var(--bg1) !important;
-}
-
-html.no-transparency #botones>a {
-	background: color-mix(in srgb, #fff 10%, var(--bg1)) !important;
-}
+/* Estilos planos: sin transparencias */
 
 p {
 	margin: 10px 0;
@@ -148,16 +121,15 @@ a:focus-visible {
 #presentacion {
 	position: relative;
 	overflow: hidden;
-	background: color-mix(in srgb, #fff 7%, transparent) !important;
+	background: #242830 !important;
 }
 
 #presentacion::before {
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(rgba(11, 13, 16, 0.45), rgba(11, 13, 16, 0.15)), url("/Icons/2.png") center/cover no-repeat;
-	/* Opacidad de la imagen para que transluzca el aura animada */
-	opacity: 0.6;
+	background: url("/Icons/2.png") center/cover no-repeat;
+	opacity: 0.12;
 	pointer-events: none;
 	z-index: -1;
 }
@@ -180,10 +152,8 @@ footer {
 	min-height: calc(var(--footer-h) + env(safe-area-inset-bottom));
 	padding:
 		10px var(--pad) calc(10px + env(safe-area-inset-bottom));
-	background: color-mix(in srgb, #000 18%, transparent);
-	backdrop-filter: blur(16px) saturate(150%);
-	-webkit-backdrop-filter: blur(16px) saturate(150%);
-	border-top: 1px solid var(--stroke);
+	background: #0f151b;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Keep main content visible under fixed header/footer */
@@ -246,16 +216,12 @@ header {
 	min-height: 44px;
 	padding: 12px 16px;
 	border-radius: 999px;
-
-	background:
-		linear-gradient(135deg,
-			color-mix(in srgb, var(--accent) 85%, transparent),
-			color-mix(in srgb, var(--accent2) 80%, transparent));
-	color: color-mix(in srgb, #000 88%, var(--text));
+	background: #2a3240;
+	color: rgba(255, 255, 255, .92);
 	font-weight: 750;
 	letter-spacing: .2px;
-	box-shadow: var(--shadow-soft);
-	border: 1px solid color-mix(in srgb, #fff 20%, transparent);
+	box-shadow: none;
+	border: 1px solid #2e3340;
 	transform: translateZ(0);
 }
 
@@ -268,8 +234,8 @@ header {
 }
 
 #secciones {
-	background: color-mix(in srgb, #fff 7%, transparent);
-	border: 1px solid var(--stroke2);
+	background: #2c3038;
+	border: 1px solid #2e3340;
 	border-radius: 999px;
 	padding: 6px;
 	overflow: hidden;
@@ -313,11 +279,9 @@ main>section {
 	margin: 18px 0;
 	padding: 18px;
 	border-radius: var(--radius-xl);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 7%, transparent);
-	box-shadow: var(--shadow);
-	backdrop-filter: blur(12px) saturate(140%);
-	-webkit-backdrop-filter: blur(12px) saturate(140%);
+	border: 1px solid #2e3340;
+	background: #242830;
+	box-shadow: none;
 }
 
 /* --- Configuración (toggles) --- */
@@ -395,7 +359,7 @@ main>section {
 	height: 32px;
 	border-radius: 999px;
 	border: 1px solid color-mix(in srgb, #fff 22%, transparent);
-	background: color-mix(in srgb, #000 14%, transparent);
+	background: #1e2228;
 	box-shadow: var(--shadow-soft);
 	position: relative;
 	transition: background .15s ease, border-color .15s ease;
@@ -489,8 +453,8 @@ main>section {
 	align-items: center;
 	padding: 8px 10px;
 	border-radius: 999px;
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 7%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 	color: var(--text);
 	font-size: 12.5px;
 	letter-spacing: .1px;
@@ -533,11 +497,9 @@ main>section {
 	margin-top: 14px;
 	padding: 16px;
 	border-radius: var(--radius-xl);
-	border: 1px solid color-mix(in srgb, #fff 14%, transparent);
-	background:
-		radial-gradient(900px 240px at 10% 0%, color-mix(in srgb, var(--accent2) 10%, transparent) 0%, transparent 60%),
-		color-mix(in srgb, #000 18%, transparent);
-	box-shadow: var(--shadow-soft);
+	border: 1px solid #2e3340;
+	background: #1e2228;
+	box-shadow: none;
 }
 
 #ejercicios .lista-ejercicios h2 {
@@ -572,12 +534,9 @@ main>section {
 #ejercicios .callout {
 	padding: 16px;
 	border-radius: var(--radius-xl);
-	border-color: color-mix(in srgb, #fff 14%, transparent);
-	box-shadow: var(--shadow-soft);
-	background:
-		radial-gradient(900px 260px at 15% 0%, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 60%),
-		radial-gradient(700px 220px at 85% 30%, color-mix(in srgb, var(--accent2) 10%, transparent) 0%, transparent 62%),
-		color-mix(in srgb, #fff 6%, transparent);
+	border-color: #2e3340;
+	box-shadow: none;
+	background: #242830;
 }
 
 #ejercicios .callout h2 {
@@ -596,18 +555,16 @@ main>section>h1 {
 	margin-top: 10px;
 	padding: 14px;
 	border-radius: var(--radius-lg);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #000 14%, transparent);
+	border: 1px solid #2e3340;
+	background: #1e2228;
 }
 
 .callout {
 	margin-top: 16px;
 	padding: 14px;
 	border-radius: var(--radius-lg);
-	border: 1px solid var(--stroke2);
-	background:
-		radial-gradient(700px 240px at 10% 0%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 60%),
-		color-mix(in srgb, #fff 6%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 }
 
 .callout h2 {
@@ -626,8 +583,8 @@ main>section>h1 {
 .card {
 	padding: 14px;
 	border-radius: var(--radius-lg);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #000 12%, transparent);
+	border: 1px solid #2e3340;
+	background: #1e2228;
 }
 
 .card h2 {
@@ -663,8 +620,8 @@ main>section>h1 {
 .lista-ejercicios li {
 	padding: 12px 12px;
 	border-radius: var(--radius-md);
-	border: 1px solid var(--stroke2);
-	background: color-mix(in srgb, #fff 6%, transparent);
+	border: 1px solid #2e3340;
+	background: #242830;
 	color: var(--muted);
 }
 

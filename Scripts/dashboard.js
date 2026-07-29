@@ -2355,41 +2355,29 @@ function initDetallePorDiaPlan() {
                     </div>
                 </div>
 
-                <div class="pt-status-row" style="margin-top: 16px; display: grid; gap: 12px;">
+                <div class="pt-status-row" style="margin-top: 16px; display: grid; gap: 16px;">
                     <div class="pt-wheel-group">
-                        <span class="pt-detalle-label">${escapeHtml(tLang("Calorías quemadas", "Calories burned"))}</span>
-                        <div class="pt-wheel-row" role="group" aria-label="${escapeHtml(tLang("Calorías quemadas", "Calories burned"))}">
-                            <div class="pt-wheel" data-pt-wheel="calorias" tabindex="0" aria-label="${escapeHtml(tLang("Calorías", "Calories"))}"></div>
-                        </div>
-                        <input type="hidden" data-pt-calorias value="${escapeHtml(caloriasPrevias)}">
+                        <span class="pt-detalle-label">${escapeHtml(tLang("Calorías quemadas (kcal)", "Calories burned (kcal)"))}</span>
+                        <input type="number" data-pt-calorias value="${escapeHtml(caloriasPrevias)}" placeholder="0" style="width: 100%; height: 48px; margin-top: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 0 16px; font-size: 16px; outline: none; transition: 0.2s; box-sizing: border-box;">
                     </div>
 
                     <div class="pt-wheel-group">
-                        <span class="pt-detalle-label">${escapeHtml(tLang("Tiempo total de entreno", "Total workout time"))}</span>
-                        <div class="pt-wheel-row pt-wheel-row--time" role="group" aria-label="${escapeHtml(tLang("Tiempo total de entreno", "Total workout time"))}">
-                            <div class="pt-wheel-col">
-                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Horas", "Hours"))}</div>
-                                <div class="pt-wheel" data-pt-wheel="tiempo_horas" tabindex="0" aria-label="${escapeHtml(tLang("Horas", "Hours"))}"></div>
+                        <span class="pt-detalle-label">${escapeHtml(tLang("Tiempo de entreno", "Workout time"))}</span>
+                        <div style="display: flex; gap: 12px; margin-top: 8px;">
+                            <div style="flex: 1;">
+                                <label style="font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Horas", "Hours"))}</label>
+                                <input type="number" id="pt-tiempo-horas" placeholder="0" min="0" style="width: 100%; height: 48px; margin-top: 4px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 0 16px; font-size: 16px; outline: none; transition: 0.2s; box-sizing: border-box;">
                             </div>
-                            <div class="pt-wheel-col">
-                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Minutos", "Minutes"))}</div>
-                                <div class="pt-wheel" data-pt-wheel="tiempo_minutos" tabindex="0" aria-label="${escapeHtml(tLang("Minutos", "Minutes"))}"></div>
-                            </div>
-                            <div class="pt-wheel-col">
-                                <div class="pt-wheel-col-label">${escapeHtml(tLang("Segundos", "Seconds"))}</div>
-                                <div class="pt-wheel" data-pt-wheel="tiempo_segundos" tabindex="0" aria-label="${escapeHtml(tLang("Segundos", "Seconds"))}"></div>
+                            <div style="flex: 1;">
+                                <label style="font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${escapeHtml(tLang("Minutos", "Minutes"))}</label>
+                                <input type="number" id="pt-tiempo-minutos" placeholder="0" min="0" max="59" style="width: 100%; height: 48px; margin-top: 4px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 0 16px; font-size: 16px; outline: none; transition: 0.2s; box-sizing: border-box;">
                             </div>
                         </div>
-                        <input type="hidden" data-pt-tiempo_horas value="0">
-                        <input type="hidden" data-pt-tiempo_minutos value="0">
-                        <input type="hidden" data-pt-tiempo_segundos value="0">
                         <input type="hidden" data-pt-tiempo value="${escapeHtml(tiempoPrevio)}">
                     </div>
                 </div>
 
-                <div class="pt-status-actions" style="margin-top: 18px;">
-                    <button type="button" class="btn-primary" data-pt-confirmar-entreno>${escapeHtml(tLang("Confirmar entreno", "Confirm workout"))}</button>
-                </div>
+
             </div>
         `;
 
@@ -2413,90 +2401,14 @@ function initDetallePorDiaPlan() {
             allowOutsideClose: true,
             allowEscapeClose: true,
             allowDragClose: true,
-            didOpen: (sheet) => {
-                try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+            extraTopBtn: {
+                html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M20 6 9 17l-5-5"/></svg><span style="vertical-align: middle;">${escapeHtml(tLang("Confirmar entreno", "Confirm workout"))}</span>`,
+                onClick: async () => {
+                    const sheet = document.querySelector(".pt-detalle-entreno-sheet");
+                    if (!sheet) return;
+                    const caloriasEl = sheet.querySelector("[data-pt-calorias]");
+                    const tiempoEl = sheet.querySelector("[data-pt-tiempo]");
 
-                const caloriasEl = sheet.querySelector("[data-pt-calorias]");
-                const tiempoEl = sheet.querySelector("[data-pt-tiempo]");
-                const btnConfirmar = sheet.querySelector("[data-pt-confirmar-entreno]");
-
-                if (caloriasEl instanceof HTMLInputElement && registroPrevio) {
-                    caloriasEl.value = String(registroPrevio.calorias_quemadas ?? registroPrevio.caloriasQuemadas ?? "");
-                }
-                if (tiempoEl instanceof HTMLInputElement && registroPrevio) {
-                    tiempoEl.value = String(registroPrevio.tiempo_total_min ?? registroPrevio.tiempoTotalMin ?? "");
-                }
-
-                buildSheetWheel({
-                    root: sheet,
-                    field: "calorias",
-                    values: Array.from({ length: 3001 }, (_, i) => i),
-                    format: (value) => `${value} kcal`,
-                    initialValue: caloriasEl?.value ?? "",
-                });
-
-                const horasEl = sheet.querySelector("[data-pt-tiempo_horas]");
-                const minutosEl = sheet.querySelector("[data-pt-tiempo_minutos]");
-                const segundosEl = sheet.querySelector("[data-pt-tiempo_segundos]");
-                const totalMinInicial = Number.parseFloat(String(tiempoEl?.value ?? "").trim());
-                const horasIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
-                    ? Math.floor(totalMinInicial / 60)
-                    : 0;
-                const minutosIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
-                    ? Math.floor(totalMinInicial % 60)
-                    : 0;
-                const segundosIniciales = Number.isFinite(totalMinInicial) && totalMinInicial > 0
-                    ? Math.round((totalMinInicial % 1) * 60)
-                    : 0;
-
-                const syncTiempoTotalMin = () => {
-                    const horas = Number.parseInt(String(horasEl?.value ?? "0").trim(), 10);
-                    const minutos = Number.parseInt(String(minutosEl?.value ?? "0").trim(), 10);
-                    const segundos = Number.parseInt(String(segundosEl?.value ?? "0").trim(), 10);
-                    const h = Number.isFinite(horas) && horas >= 0 ? horas : 0;
-                    const m = Number.isFinite(minutos) && minutos >= 0 ? minutos : 0;
-                    const s = Number.isFinite(segundos) && segundos >= 0 ? segundos : 0;
-                    if (tiempoEl instanceof HTMLInputElement) {
-                        tiempoEl.value = String((h * 60) + m + (s / 60));
-                    }
-                };
-
-                buildSheetWheel({
-                    root: sheet,
-                    field: "tiempo_horas",
-                    values: Array.from({ length: 13 }, (_, i) => i),
-                    format: (value) => `${value} h`,
-                    initialValue: String(Math.min(12, Math.max(0, horasIniciales))),
-                    includeEmpty: false,
-                    onChange: syncTiempoTotalMin,
-                    inputSelector: "[data-pt-tiempo_horas]",
-                });
-
-                buildSheetWheel({
-                    root: sheet,
-                    field: "tiempo_minutos",
-                    values: Array.from({ length: 60 }, (_, i) => i),
-                    format: (value) => `${String(value).padStart(2, "0")} min`,
-                    initialValue: String(Math.min(59, Math.max(0, minutosIniciales))),
-                    includeEmpty: false,
-                    onChange: syncTiempoTotalMin,
-                    inputSelector: "[data-pt-tiempo_minutos]",
-                });
-
-                buildSheetWheel({
-                    root: sheet,
-                    field: "tiempo_segundos",
-                    values: Array.from({ length: 60 }, (_, i) => i),
-                    format: (value) => `${String(value).padStart(2, "0")} s`,
-                    initialValue: String(Math.min(59, Math.max(0, segundosIniciales))),
-                    includeEmpty: false,
-                    onChange: syncTiempoTotalMin,
-                    inputSelector: "[data-pt-tiempo_segundos]",
-                });
-
-                syncTiempoTotalMin();
-
-                btnConfirmar?.addEventListener("click", async () => {
                     const caloriasQuemadas = Number.parseInt(String(caloriasEl?.value ?? "").trim(), 10);
                     const tiempoTotalMin = Number.parseFloat(String(tiempoEl?.value ?? "").trim());
 
@@ -2523,7 +2435,6 @@ function initDetallePorDiaPlan() {
                         ? globalThis.crypto.randomUUID()
                         : `${dia_Actual}-${now.iso}-${Math.random().toString(36).slice(2, 10)}`;
 
-                    // Registro en formato legible (para compatibilidad interna)
                     const registro = {
                         id_registro: idRegistro,
                         fecha: dia_Actual,
@@ -2535,7 +2446,6 @@ function initDetallePorDiaPlan() {
                         confirmado_en: now.iso,
                     };
 
-                    // Transformar/insertar en el formato solicitado: Dias_cale = [{ title, start, extendedProps: { calories_burnt, status, ... } }, ...]
                     const diasArray = Array.isArray(registrosPrevios) ? registrosPrevios.slice() : [];
 
                     const newEntry = {
@@ -2551,7 +2461,6 @@ function initDetallePorDiaPlan() {
                         },
                     };
 
-                    // Buscar índice por id único; así varios entrenos del mismo día pueden coexistir.
                     const idx = diasArray.findIndex((d) => {
                         if (!d) return false;
                         if (d.id_registro && d.id_registro === registro.id_registro) return true;
@@ -2567,7 +2476,6 @@ function initDetallePorDiaPlan() {
 
                     localStorage.setItem("Dias_cale", JSON.stringify(diasArray));
 
-                    // Enviar array actualizado al edge-function / guardar
                     try {
                         const res = await guardarRegistroEntreno(diasArray);
                         if (!res || !res.ok) {
@@ -2595,16 +2503,56 @@ function initDetallePorDiaPlan() {
                         showConfirmButton: false,
                         timer: 2500,
                         background: '#13141a',
-                        color: '#ffffff',
-                        customClass: { popup: 'swal-dark-popup' }
+                        color: '#fff',
+                        customClass: {
+                            popup: 'swal-custom-dark'
+                        }
                     });
 
-                    try {
-                        verificacion_plan_entrenamiento();
-                    } catch (err) {
-                        console.warn("No se pudo refrescar la vista del plan:", err);
+                    if (typeof window.recargarCalendario === "function") {
+                        window.recargarCalendario();
                     }
-                });
+                    if (typeof window.actualizarDetalleDiaSeleccionado === "function") {
+                        window.actualizarDetalleDiaSeleccionado();
+                    }
+                }
+            },
+            didOpen: (sheet) => {
+                try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
+
+                const caloriasEl = sheet.querySelector("[data-pt-calorias]");
+                const tiempoEl = sheet.querySelector("[data-pt-tiempo]");
+                const horasEl = sheet.querySelector("#pt-tiempo-horas");
+                const minutosEl = sheet.querySelector("#pt-tiempo-minutos");
+
+                if (caloriasEl instanceof HTMLInputElement && registroPrevio) {
+                    caloriasEl.value = String(registroPrevio.calorias_quemadas ?? registroPrevio.caloriasQuemadas ?? "");
+                }
+
+                const totalMinInicial = Number.parseFloat(String(registroPrevio?.tiempo_total_min ?? registroPrevio?.tiempoTotalMin ?? tiempoPrevio ?? "0").trim());
+                if (Number.isFinite(totalMinInicial) && totalMinInicial > 0) {
+                    if (horasEl) horasEl.value = String(Math.floor(totalMinInicial / 60));
+                    if (minutosEl) minutosEl.value = String(Math.round(totalMinInicial % 60));
+                } else {
+                    if (horasEl) horasEl.value = "";
+                    if (minutosEl) minutosEl.value = "";
+                }
+
+                if (tiempoEl instanceof HTMLInputElement) {
+                    tiempoEl.value = String(totalMinInicial);
+                }
+
+                const syncTiempo = () => {
+                    const h = Number.parseInt(horasEl?.value || "0", 10);
+                    const m = Number.parseInt(minutosEl?.value || "0", 10);
+                    const totalMin = (Number.isFinite(h) && h >= 0 ? h : 0) * 60 + (Number.isFinite(m) && m >= 0 ? m : 0);
+                    if (tiempoEl instanceof HTMLInputElement) {
+                        tiempoEl.value = String(totalMin);
+                    }
+                };
+
+                horasEl?.addEventListener("input", syncTiempo);
+                minutosEl?.addEventListener("input", syncTiempo);
             },
         });
     };
@@ -2716,11 +2664,6 @@ function initDetallePorDiaPlan() {
                 <div class="pt-detail-hero pt-detail-hero-focus">
                     <div class="pt-detail-hero-row">
                         <div class="pt-detail-hero-title">${escapeHtml(tLang("Editar Día", "Edit Day"))}</div>
-                        <div class="pt-gen-header-actions">
-                            <button type="button" class="btn-primary pt-gen-generate" id="pt-edit-save-btn">
-                                ${escapeHtml(tLang("Guardar", "Save"))}
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -2773,16 +2716,46 @@ function initDetallePorDiaPlan() {
 
         const openWithSheet = globalThis.PTBottomSheet && typeof globalThis.PTBottomSheet.open === "function";
         if (openWithSheet) {
+            let localSelected = [...currentEjercicios];
             await globalThis.PTBottomSheet.open({
                 title: "",
                 html: html,
-                className: "",
+                className: "pt-editar-dia-plan-sheet",
                 showClose: false,
                 showHandle: true,
                 allowOutsideClose: true,
                 allowEscapeClose: true,
                 allowDragClose: true,
                 triggerEl: headerEl,
+                extraTopBtn: {
+                    html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span style="vertical-align: middle;">${escapeHtml(tLang("Guardar", "Save"))}</span>`,
+                    onClick: async () => {
+                        const sheet = document.querySelector(".pt-editar-dia-plan-sheet");
+                        if (!sheet) return;
+
+                        const activeDiaBtn = sheet.querySelector(".swal-dia-btn[aria-pressed='true']");
+                        if (!activeDiaBtn) {
+                            Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: tLang('Selecciona un día de la semana', 'Select a day of the week'), showConfirmButton: false, timer: 2000 });
+                            return;
+                        }
+
+                        const newDiaLower = activeDiaBtn.getAttribute("data-name");
+                        const newDia = newDiaLower.charAt(0).toUpperCase() + newDiaLower.slice(1);
+
+                        const newEnfoque = isArrayStructure ? sheet.querySelector("#edit-enfoque-input")?.value || "" : "";
+
+                        if (localSelected.length === 0) {
+                            Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: tLang('Selecciona al menos un ejercicio', 'Select at least one exercise'), showConfirmButton: false, timer: 2000 });
+                            return;
+                        }
+
+                        const newEjercicios = localSelected;
+
+                        isConfirmed = true;
+                        confirmValue = { newDia, newEnfoque, newEjercicios };
+                        globalThis.PTBottomSheet.close();
+                    }
+                },
                 didOpen: (sheet) => {
                     const diaBtns = sheet.querySelectorAll(".swal-dia-btn");
                     diaBtns.forEach(btn => {
@@ -2793,8 +2766,6 @@ function initDetallePorDiaPlan() {
                             });
                         }
                     });
-
-                    let localSelected = [...currentEjercicios];
 
                     const renderSelected = () => {
                         const listEl = sheet.querySelector("#pt-edit-selected-list");
@@ -3769,9 +3740,7 @@ const openEditarDiasModal = async () => {
             <div class="pt-edit-dias-list">
                 ${daysHtml}
             </div>
-            <button id="btn-save-edit-dias" class="btn-primary" style="width:100%; padding:14px; font-size:16px; border-radius:12px; border:none; cursor:pointer; font-weight:600;">
-                ${escapeHtml(tLang("Guardar días", "Save days"))}
-            </button>
+
         </div>
     `;
 
@@ -3911,18 +3880,27 @@ window.openChatbotSheet = async ({ triggerEl }) => {
             </div>
         </div>
         <style>
+            .pt-chatbot-sheet .pt-sheet {
+                height: 80vh !important;
+            }
+            .pt-chatbot-sheet .pt-sheet-content {
+                overflow: hidden !important;
+                display: flex;
+                flex-direction: column;
+                padding: 20px !important;
+            }
             .chatbot-container {
                 display: flex;
                 flex-direction: column;
-                height: 75vh;
-                max-height: 750px;
-                margin: -16px -24px -24px -24px;
+                height: 100%;
+                margin: -20px;
                 position: relative;
+                overflow: hidden;
             }
             .chatbot-messages {
                 flex: 1;
                 overflow-y: auto;
-                padding: 24px 24px 90px 24px;
+                padding: 20px 20px 90px 20px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
@@ -4023,6 +4001,7 @@ window.openChatbotSheet = async ({ triggerEl }) => {
 
     await globalThis.PTBottomSheet.open({
         title: tLang("Entrenador IA", "AI Trainer"),
+        className: "pt-chatbot-sheet",
         html,
         showClose: true,
         triggerEl,

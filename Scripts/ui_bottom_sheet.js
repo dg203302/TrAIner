@@ -7,57 +7,52 @@
 	const style = document.createElement("style");
 	style.id = "pt-floating-sheet-override";
 	style.textContent = `
-		::view-transition-group(pt-sheet-hero) {
-			animation-duration: 0.5s;
-			animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
-		}
 		.pt-sheet-overlay {
 			position: fixed !important;
 			top: 0 !important;
 			left: 0 !important;
 			width: 100% !important;
 			height: 100% !important;
-			background: rgba(0, 0, 0, 0.15) !important;
-			backdrop-filter: blur(24px) !important;
-			-webkit-backdrop-filter: blur(24px) !important;
+			background: rgba(0, 0, 0, 0.6) !important;
 			z-index: 2000 !important;
 			display: flex !important;
 			align-items: center !important;
 			justify-content: center !important;
 			opacity: 0 !important;
-			pointer-events: auto !important;
+			pointer-events: none !important;
+			transition: opacity 0.2s ease !important;
 		}
 		.pt-sheet-overlay.is-open {
 			opacity: 1 !important;
+			pointer-events: auto !important;
 		}
 		.pt-sheet {
 			position: relative !important;
-			width: 95% !important;
+			width: 98% !important;
 			max-width: 500px !important;
 			max-height: 90vh !important;
-			background: color-mix(in srgb, var(--bg0, #0c0d0f) 40%, transparent) !important;
-			backdrop-filter: blur(20px) !important;
-			-webkit-backdrop-filter: blur(20px) !important;
-			border: 1px solid rgba(255, 255, 255, 0.15) !important;
+			background: #1a1d22 !important;
+			border: none !important;
 			border-radius: 24px !important;
-			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 
-						inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+			box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
 			display: flex !important;
 			flex-direction: column !important;
 			overflow: hidden !important;
-			transform-origin: center center !important;
 			margin: 0 !important;
 			bottom: auto !important;
-			transform: none !important;
-			transition: none !important;
+			transform: scale(0.97) translateY(20px) !important;
+			opacity: 0 !important;
+			transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+		}
+		.pt-sheet-overlay.is-open .pt-sheet {
+			transform: scale(1) translateY(0) !important;
+			opacity: 1 !important;
 		}
 		.pt-sheet:has(.pt-new-detail),
 		.pt-sheet.pt-new-detail-sheet {
 			border: none !important;
-			background: color-mix(in srgb, var(--bg0, #0c0d0f) 60%, transparent) !important;
-			backdrop-filter: blur(30px) !important;
-			-webkit-backdrop-filter: blur(30px) !important;
-			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9) !important;
+			background: #1a1d22 !important;
+			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5) !important;
 		}
 		.pt-sheet:has(.pt-new-detail) .pt-sheet-header,
 		.pt-sheet.pt-new-detail-sheet .pt-sheet-header {
@@ -65,13 +60,31 @@
 		}
 		.pt-sheet:has(.pt-new-detail) .pt-sheet-content,
 		.pt-sheet.pt-new-detail-sheet .pt-sheet-content {
-			padding: 64px 0 0 0 !important;
+			padding: 48px 0 0 0 !important;
 		}
 		@media (min-width: 768px) {
 			.pt-sheet.pt-new-detail-sheet,
 			.pt-sheet:has(.pt-new-detail) {
 				max-width: 900px !important;
 				max-height: 85vh !important;
+			}
+		}
+		@media (max-width: 767px) {
+			.pt-sheet-overlay {
+				align-items: flex-end !important;
+				padding: 0 !important;
+			}
+			.pt-sheet {
+				width: 100% !important;
+				max-width: 100% !important;
+				border-radius: 24px 24px 0 0 !important;
+				transform: translateY(100%) !important;
+			}
+			.pt-sheet-overlay.is-open .pt-sheet {
+				transform: translateY(0) !important;
+			}
+			.pt-sheet-content {
+				padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
 			}
 		}
 		.pt-sheet-header {
@@ -97,18 +110,18 @@
 			color: rgba(255, 255, 255, 0.6) !important;
 		}
 		.pt-sheet-close {
-			background: rgba(255, 255, 255, 0.08) !important;
-			border: 1px solid rgba(255, 255, 255, 0.1) !important;
+			background: #242830 !important;
+			border: none !important;
 			color: #ffffff !important;
-			width: 36px !important;
-			height: 36px !important;
+			width: 32px !important;
+			height: 32px !important;
 			border-radius: 50% !important;
 			display: flex !important;
 			align-items: center !important;
 			justify-content: center !important;
 			cursor: pointer !important;
 			transition: all 0.2s ease !important;
-			font-size: 22px !important;
+			font-size: 18px !important;
 			line-height: 1 !important;
 			padding: 0 !important;
 			margin: 0 !important;
@@ -116,8 +129,7 @@
 			flex-shrink: 0 !important;
 		}
 		.pt-sheet-close:hover {
-			background: rgba(255, 255, 255, 0.15) !important;
-			transform: scale(1.05) !important;
+			background: #2a2f38 !important;
 		}
 		.pt-sheet-close:active {
 			transform: scale(0.95) !important;
@@ -125,26 +137,31 @@
 		.pt-sheet-content {
 			flex: 1 !important;
 			overflow-y: auto !important;
-			padding: 64px 24px 24px 24px !important;
+			padding: 48px 16px 16px 16px !important;
 			-webkit-overflow-scrolling: touch !important;
 		}
 		.pt-sheet-top-actions {
-			position: absolute !important;
-			top: 16px !important;
-			left: 50% !important;
-			transform: translateX(-50%) !important;
 			display: flex !important;
-			gap: 8px !important;
+			flex-direction: column-reverse !important;
+			gap: 12px !important;
+			padding: 16px 24px !important;
+			background: #1a1d22 !important;
+			border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
 			z-index: 2100 !important;
-			pointer-events: none !important;
+			pointer-events: auto !important;
+			width: 100% !important;
+			box-sizing: border-box !important;
+		}
+		@media (max-width: 767px) {
+			.pt-sheet-top-actions {
+				padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px !important;
+			}
 		}
 		.pt-sheet-back-btn, .pt-sheet-action-btn {
-			background: rgba(255, 255, 255, 0.08) !important;
-			border: 1px solid rgba(255, 255, 255, 0.1) !important;
-			color: #ffffff !important;
-			padding: 8px 18px !important;
-			border-radius: 999px !important;
-			font-size: 13px !important;
+			border: none !important;
+			padding: 12px 18px !important;
+			border-radius: 14px !important;
+			font-size: 15px !important;
 			font-weight: 700 !important;
 			display: inline-flex !important;
 			align-items: center !important;
@@ -153,16 +170,27 @@
 			cursor: pointer !important;
 			transition: all 0.2s ease !important;
 			pointer-events: auto !important;
-			backdrop-filter: blur(8px) !important;
-			-webkit-backdrop-filter: blur(8px) !important;
-			box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+			box-shadow: none !important;
+			width: 100% !important;
+			box-sizing: border-box !important;
 		}
-		.pt-sheet-back-btn:hover, .pt-sheet-action-btn:hover {
-			background: rgba(255, 255, 255, 0.16) !important;
-			transform: scale(1.05) !important;
+		.pt-sheet-action-btn {
+			background: #6b52ff !important;
+			color: #ffffff !important;
+		}
+		.pt-sheet-action-btn:hover {
+			filter: brightness(1.1) !important;
+		}
+		.pt-sheet-back-btn {
+			background: #242830 !important;
+			color: #a49d97 !important;
+		}
+		.pt-sheet-back-btn:hover {
+			background: #2a2f38 !important;
+			color: #ffffff !important;
 		}
 		.pt-sheet-back-btn:active, .pt-sheet-action-btn:active {
-			transform: scale(0.95) !important;
+			transform: scale(0.98) !important;
 		}
 		.pt-sheet-content::-webkit-scrollbar {
 			width: 6px !important;
@@ -177,7 +205,7 @@
 		.pt-sheet-content::-webkit-scrollbar-thumb:hover {
 			background: rgba(255, 255, 255, 0.4) !important;
 		}
-	`;
+`;
 	document.head.appendChild(style);
 
 	// Track the last clicked element so we can use it as animation origin
@@ -412,11 +440,11 @@
 		if (backBtn) topActionsWrap.appendChild(backBtn);
 		if (extraBtnEl) topActionsWrap.appendChild(extraBtnEl);
 
+		sheet.appendChild(header);
+		sheet.appendChild(content);
 		if (backBtn || extraBtnEl) {
 			sheet.appendChild(topActionsWrap);
 		}
-		sheet.appendChild(header);
-		sheet.appendChild(content);
 		overlay.appendChild(sheet);
 
 		let resolvePromise;
@@ -438,8 +466,6 @@
 				// ignore
 			}
 
-			const supportsVT = document.startViewTransition && resolvedTrigger;
-
 			const finish = () => {
 				removeListeners();
 				try { overlay.remove(); } catch { }
@@ -447,33 +473,8 @@
 				resolvePromise();
 			};
 
-			if (supportsVT) {
-				sheet.style.viewTransitionName = "pt-sheet-hero";
-				const oldVTName = resolvedTrigger.style.viewTransitionName;
-
-				let transition;
-				try {
-					transition = document.startViewTransition(() => {
-						sheet.style.viewTransitionName = "";
-						resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
-						overlay.classList.remove("is-open");
-						sheet.style.display = "none";
-					});
-				} catch (err) {
-					resolvedTrigger.style.viewTransitionName = oldVTName;
-					overlay.classList.remove("is-open");
-					finish();
-					return;
-				}
-
-				transition.finished.finally(() => {
-					resolvedTrigger.style.viewTransitionName = oldVTName;
-					finish();
-				});
-			} else {
-				overlay.classList.remove("is-open");
-				finish();
-			}
+			overlay.classList.remove("is-open");
+			setTimeout(finish, 200);
 		};
 
 		activeCloseStack.push(close);
@@ -524,42 +525,9 @@
 		if (closeBtn) closeBtn.addEventListener("click", close);
 		if (backBtn) backBtn.addEventListener("click", close);
 
-		const supportsVT = document.startViewTransition && resolvedTrigger;
-
-		const doOpenFallback = () => {
-			document.body.appendChild(overlay);
-			overlay.classList.add("is-open");
-			sheet.style.opacity = "1";
-			sheet.style.transform = "none";
-		};
-
-		if (supportsVT) {
-			const oldVTName = resolvedTrigger.style.viewTransitionName;
-			resolvedTrigger.style.viewTransitionName = "pt-sheet-hero";
-
-			let transition;
-			try {
-				transition = document.startViewTransition(() => {
-					resolvedTrigger.style.viewTransitionName = oldVTName;
-					document.body.appendChild(overlay);
-					sheet.style.viewTransitionName = "pt-sheet-hero";
-					overlay.classList.add("is-open");
-					sheet.style.opacity = "1";
-					sheet.style.transform = "none";
-				});
-			} catch (e) {
-				resolvedTrigger.style.viewTransitionName = oldVTName;
-				doOpenFallback();
-			}
-
-			if (transition) {
-				transition.finished.finally(() => {
-					sheet.style.viewTransitionName = "";
-				});
-			}
-		} else {
-			doOpenFallback();
-		}
+		document.body.appendChild(overlay);
+		overlay.offsetHeight; // force reflow
+		overlay.classList.add("is-open");
 
 		setTimeout(() => {
 			try {
@@ -592,21 +560,6 @@
 
 	// Floating footer and sticky title logic
 	const updateScrollStates = () => {
-		// Footer floating logic
-		const footerWrap = document.querySelector('footer.footer-wrap');
-		if (footerWrap) {
-			const scrollPosition = window.innerHeight + window.scrollY;
-			const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-
-			if (docHeight <= window.innerHeight + 10) {
-				footerWrap.classList.add('is-floating');
-			} else if (docHeight - scrollPosition <= 25) {
-				footerWrap.classList.remove('is-floating');
-			} else {
-				footerWrap.classList.add('is-floating');
-			}
-		}
-
 		// Sticky title floating logic
 		const mainTitle = document.querySelector('.dynamic-title');
 		if (mainTitle) {

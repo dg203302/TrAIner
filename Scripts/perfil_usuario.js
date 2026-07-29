@@ -361,27 +361,27 @@ const openConfirmSheet = async ({ title, message, confirmText, cancelText } = {}
 					<div class="pt-status-row">
 						<div class="pt-status-text">${escapeHtml(safeMessage)}</div>
 					</div>
-					<div class="pt-status-actions">
-						<button type="button" class="btn-primary" data-pt-confirm>${escapeHtml(okText)}</button>
-					</div>
 				</div>
 			`,
 			showClose: false,
 			showHandle: true,
-			showBack: false,
+			showBack: true,
 			allowOutsideClose: true,
 			allowEscapeClose: true,
 			allowDragClose: true,
+			extraTopBtn: {
+				html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M20 6 9 17l-5-5"/></svg><span style="vertical-align: middle;">${escapeHtml(okText)}</span>`,
+				onClick: () => {
+					safeResolve(true);
+					closeBottomSheetSafe();
+				}
+			},
 			didOpen: (sheet) => {
 				try {
 					window.UIIdioma?.translatePage?.(sheet);
 				} catch {
 					// ignore
 				}
-				sheet.querySelector("[data-pt-confirm]")?.addEventListener("click", () => {
-					safeResolve(true);
-					closeBottomSheetSafe();
-				});
 			},
 			willClose: () => safeResolve(false),
 		});
@@ -413,32 +413,27 @@ const openPerfilWheelSheet = async ({
 		ariaLabel: ariaLabel || title || "Modal",
 		className: "pt-perfil-sheet",
 		triggerEl,
+		showBack: true,
 		html: `
 			<div class="pt-perfil-form">
 				<p class="pt-perfil-helper" data-i18n-en="${escapeHtml(helperTextEn || helperText || "")}">${escapeHtml(helperText || "")}</p>
 				<div class="pt-form-error" data-pt-error role="alert" aria-live="polite"></div>
 				${html || ""}
-				<div class="pt-perfil-actions">
-					<button type="button" class="btn-primary" data-pt-save data-i18n-en="Save">Guardar</button>
-				</div>
 			</div>
 		`,
-		didOpen: (sheet) => {
-			const ui = window.UIIdioma;
-			try {
-				if (ui && typeof ui.translatePage === "function") ui.translatePage(sheet);
-			} catch {
-				// ignore
-			}
+		extraTopBtn: {
+			html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><polyline points="20 6 9 17 4 12"/></svg><span style="vertical-align: middle;" data-i18n-en="Save">Guardar</span>`,
+			onClick: () => {
+				const sheet = document.querySelector(".pt-perfil-sheet");
+				if (!sheet) return;
+				const errorEl = sheet.querySelector("[data-pt-error]");
+				const setError = (msg) => {
+					if (!errorEl) return;
+					const text = String(msg || "").trim();
+					errorEl.textContent = text;
+					errorEl.classList.toggle("is-show", !!text);
+				};
 
-			const errorEl = sheet.querySelector("[data-pt-error]");
-			const setError = (msg) => {
-				if (!errorEl) return;
-				const text = String(msg || "").trim();
-				errorEl.textContent = text;
-				errorEl.classList.toggle("is-show", !!text);
-			};
-			const onSave = () => {
 				setError("");
 				let v = null;
 				try {
@@ -459,8 +454,15 @@ const openPerfilWheelSheet = async ({
 				resolved = true;
 				resolvedValue = v;
 				bs.close();
-			};
-			sheet.querySelector("[data-pt-save]")?.addEventListener("click", onSave);
+			}
+		},
+		didOpen: (sheet) => {
+			const ui = window.UIIdioma;
+			try {
+				if (ui && typeof ui.translatePage === "function") ui.translatePage(sheet);
+			} catch {
+				// ignore
+			}
 
 			try {
 				if (typeof init === "function") init(sheet);
@@ -616,121 +618,6 @@ if (document.readyState === "loading") {
 }
 
 
-const initFondoToggle = () => {
-    const BG_KEY = "ui_background";
-    const toggle = document.getElementById("toggle_fondo");
-    if (!toggle) return;
-
-    let bgPref = "video";
-    try {
-        bgPref = localStorage.getItem(BG_KEY) || "video";
-    } catch {}
-
-    toggle.checked = bgPref === "video";
-
-    toggle.addEventListener("change", () => {
-        const newPref = toggle.checked ? "video" : "static";
-        try {
-            localStorage.setItem(BG_KEY, newPref);
-        } catch {}
-        
-        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
-            window.PT_CanvasBg.update(newPref);
-        }
-    });
-};
-
-const initColorToggle = () => {
-    const COLOR_KEY = "ui_background_color";
-    const BG_KEY = "ui_background";
-    const hiddenInput = document.getElementById("select_color_fondo");
-    const dropdown = document.getElementById("pt-color-dropdown");
-    const toggle = document.getElementById("toggle_fondo");
-    const colorContainer = document.getElementById("config_color_container");
-    if (!hiddenInput || !dropdown) return;
-
-    let colorPref = "red";
-    try {
-        colorPref = localStorage.getItem(COLOR_KEY) || "red";
-    } catch {}
-
-    // --- Init custom dropdown ---
-    const trigger = dropdown.querySelector(".pt-dropdown-trigger");
-    const label = dropdown.querySelector(".pt-dropdown-label");
-    const menu = dropdown.querySelector(".pt-dropdown-menu");
-    const options = dropdown.querySelectorAll(".pt-dropdown-option");
-
-    const applyColor = (value) => {
-        hiddenInput.value = value;
-        // update selected option UI
-        options.forEach(opt => {
-            opt.classList.toggle("is-selected", opt.dataset.value === value);
-        });
-        // update label text
-        const selected = dropdown.querySelector(`.pt-dropdown-option[data-value="${value}"]`);
-        if (label && selected) {
-            label.textContent = selected.textContent;
-            // sync i18n attribute
-            const enText = selected.getAttribute("data-i18n-en");
-            if (enText) label.setAttribute("data-i18n-en", enText);
-        }
-        // save & propagate
-        try { localStorage.setItem(COLOR_KEY, value); } catch {}
-        let bgPref = "video";
-        try { bgPref = localStorage.getItem(BG_KEY) || "video"; } catch {}
-        if (window.PT_CanvasBg && typeof window.PT_CanvasBg.update === "function") {
-            window.PT_CanvasBg.update(bgPref, value);
-        }
-    };
-
-    // Set initial value
-    applyColor(colorPref);
-
-    // Open/close dropdown
-    const closeDropdown = () => {
-        dropdown.classList.remove("is-open");
-        trigger?.setAttribute("aria-expanded", "false");
-    };
-    const openDropdown = () => {
-        dropdown.classList.add("is-open");
-        trigger?.setAttribute("aria-expanded", "true");
-    };
-
-    trigger?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        trigger.blur();
-        dropdown.classList.contains("is-open") ? closeDropdown() : openDropdown();
-    });
-
-    options.forEach(opt => {
-        opt.addEventListener("click", (e) => {
-            e.stopPropagation();
-            applyColor(opt.dataset.value);
-            closeDropdown();
-        });
-    });
-
-    // Close on outside click
-    document.addEventListener("click", (e) => {
-        if (!dropdown.contains(e.target)) closeDropdown();
-    });
-
-    // Escape key
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeDropdown();
-    });
-
-    // Visibility based on video toggle
-    const updateVisibility = () => {
-        if (colorContainer && toggle) {
-            colorContainer.style.display = toggle.checked ? "flex" : "none";
-        }
-    };
-    updateVisibility();
-    if (toggle) toggle.addEventListener("change", updateVisibility);
-};
-
-
 const initChatbotToggle = () => {
     const toggle = document.getElementById("toggle_chatbot");
     if (!toggle) return;
@@ -763,8 +650,6 @@ window.onload = async () => {
 
 	initIdiomaToggle();
 	initTransparenciaToggle();
-	initFondoToggle();
-	initColorToggle();
     initChatbotToggle();
 	renderBMI();
 }

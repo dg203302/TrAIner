@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/Scripts/ui_transparencia_apply.js"></script>
-    <script src="/Scripts/ui_canvas_bg.js"></script>
+
     <script src="/Scripts/ui_idioma.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,14 +19,14 @@
         crossorigin="anonymous"></script>
 
     <style>
-        /* ── Material You overlay (inicio_indice only) ──────────────── */
+        /* ── Material You overlay (inicio_indice only) ────────────── */
         :root {
-            --my-primary: #ff073a;
-            --my-primary-dim: rgba(255, 7, 58, 0.14);
-            --my-primary-rim: rgba(255, 7, 58, 0.22);
-            --my-glass: rgba(255, 255, 255, 0.05);
-            --my-glass-rim: rgba(255, 255, 255, 0.10);
-            --my-glass-hover: rgba(255, 255, 255, 0.08);
+            --my-primary: #6e8caa;
+            --my-primary-dim: rgba(110, 140, 170, 0.15);
+            --my-primary-rim: rgba(110, 140, 170, 0.25);
+            --my-glass: #242830;
+            --my-glass-rim: #2e3340;
+            --my-glass-hover: #2c3038;
             --my-radius-card: 26px;
             --my-radius-sm: 16px;
             --my-radius-pill: 999px;
@@ -35,7 +34,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background: #000000;
+            background: #1a1d22;
             color: rgba(255, 255, 255, .88);
             margin: 0;
             min-height: 100svh;
@@ -158,8 +157,6 @@
             border-radius: var(--my-radius-card);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -248,8 +245,6 @@
             border-radius: var(--my-radius-sm);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             padding: 18px;
             display: flex;
             flex-direction: column;
@@ -275,8 +270,6 @@
             border-radius: var(--my-radius-card);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             padding: 20px;
         }
 
@@ -332,7 +325,7 @@
             white-space: nowrap;
         }
 
-        /* ========== TRANSLUCENT BUTTON ========== */
+        /* ======= TRANSLUCENT BUTTON ======= */
         .translucent-btn {
             all: unset;
             cursor: pointer;
@@ -344,19 +337,17 @@
             justify-content: center;
             padding: 8px 18px;
             border-radius: 999px;
-            background: var(--my-glass, rgba(255, 255, 255, 0.06));
-            border: 1px solid var(--my-glass-rim, rgba(255, 255, 255, 0.12));
+            background: #242830;
+            border: 1px solid #2e3340;
             color: rgba(255, 255, 255, 0.95);
             font-weight: 700;
             text-decoration: none;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px) saturate(140%);
-            -webkit-backdrop-filter: blur(12px) saturate(140%);
-            transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
+            box-shadow: none;
+            transition: transform 200ms ease, background 200ms ease;
         }
 
         .translucent-btn:hover {
-            background: var(--my-glass-hover, rgba(255, 255, 255, 0.08));
+            background: #2c3038;
             transform: translateY(-1px);
         }
 
@@ -366,16 +357,6 @@
 
         .translucent-btn>span {
             user-select: none;
-        }
-
-        /* ── No-transparency fallback ── */
-        html.no-transparency .translucent-btn {
-            background: #1e1e22 !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            box-shadow: none !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            transform: none !important;
         }
 
         /* Divider between sections */
@@ -427,18 +408,6 @@
                 </label>
             </div>
 
-            <div class="config-item">
-                <div class="config-text">
-                    <h4 class="config-title" data-i18n-en="Transparency">Transparencia</h4>
-                    <p class="config-desc" data-i18n-en="Enable a translucent style on cards and panels.">Activá un
-                        estilo translúcido en tarjetas y paneles.</p>
-                </div>
-                <label class="switch" for="toggle_transparencia">
-                    <input id="toggle_transparencia" type="checkbox" role="switch" aria-label="Activar transparencia"
-                        data-i18n-en-aria-label="Enable transparency" />
-                    <span class="switch-ui" aria-hidden="true"><span class="switch-thumb"></span></span>
-                </label>
-            </div>
         </section>
         <hr class="section-divider">
 
@@ -673,26 +642,6 @@
                 });
             }
             if (ui) ui.translatePage(document);
-
-            const TRANSPARENCIA_STORAGE_KEY = "ui_transparencia";
-            const isTransparenciaEnabled = () => {
-                try { return localStorage.getItem(TRANSPARENCIA_STORAGE_KEY) !== "0"; } catch { return true; }
-            };
-            const setTransparenciaEnabled = (enabled) => {
-                try {
-                    if (enabled) localStorage.removeItem(TRANSPARENCIA_STORAGE_KEY);
-                    else localStorage.setItem(TRANSPARENCIA_STORAGE_KEY, "0");
-                } catch { }
-                document.documentElement.classList.toggle("no-transparency", !enabled);
-            };
-
-            const toggle = document.getElementById("toggle_transparencia");
-            const enabled = isTransparenciaEnabled();
-            if (toggle instanceof HTMLInputElement) {
-                toggle.checked = enabled;
-                toggle.addEventListener("change", () => setTransparenciaEnabled(toggle.checked));
-            }
-            setTransparenciaEnabled(enabled);
 
             supabase.auth.getSession().then(({ data: { session } }) => {
                 if (session) { window.location.href = "/"; }

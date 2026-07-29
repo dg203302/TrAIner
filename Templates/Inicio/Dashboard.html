@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/Scripts/ui_transparencia_apply.js"></script>
-    <script src="/Scripts/ui_canvas_bg.js"></script>
+
     <script src="/Scripts/ui_idioma.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,15 +71,15 @@
 
         /* ── Material You override layer (Dashboard only) ───────────── */
         :root {
-            --my-primary: #bce4ff;
-            --my-primary-dim: rgba(208, 188, 255, 0.14);
-            --my-primary-rim: rgba(208, 188, 255, 0.22);
+            --my-primary: #6e8caa;
+            --my-primary-dim: rgba(110, 140, 170, 0.15);
+            --my-primary-rim: rgba(110, 140, 170, 0.25);
             --my-danger: #f2b8b5;
             --my-danger-dim: rgba(242, 184, 181, 0.10);
             --my-danger-rim: rgba(242, 184, 181, 0.22);
-            --my-glass: rgba(255, 255, 255, 0.05);
-            --my-glass-rim: rgba(255, 255, 255, 0.10);
-            --my-glass-hover: rgba(255, 255, 255, 0.08);
+            --my-glass: #242830;
+            --my-glass-rim: #2e3340;
+            --my-glass-hover: #2c3038;
             --my-radius-card: 26px;
             --my-radius-sm: 16px;
             --my-radius-pill: 999px;
@@ -123,8 +122,6 @@
             border-radius: var(--my-radius-pill);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             transition: background .18s ease;
             min-width: 0;
             max-width: 60vw;
@@ -234,16 +231,12 @@
         }
 
         .plan-floating-header.scrolled {
-            background: rgba(12, 13, 15, 0.75);
-            backdrop-filter: blur(28px) saturate(150%);
-            -webkit-backdrop-filter: blur(28px) saturate(150%);
+            background: #1a1d22;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         html.no-transparency .plan-floating-header.scrolled {
             background: #12151a;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
         }
 
         /* Top Row containing Title & Toggle */
@@ -473,9 +466,7 @@
             padding: 14px 16px;
             border-radius: var(--my-radius-sm);
             border: 1px solid rgba(242, 234, 227, 0.06);
-            background: rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(20px) saturate(140%);
-            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            background: #1e2228;
         }
 
         footer.footer-wrap {
@@ -533,7 +524,7 @@
             transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* Real background container with concave notch mask */
+        /* Real background container */
         footer .footer-nav::before {
             content: '' !important;
             position: absolute !important;
@@ -541,32 +532,15 @@
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            background: rgba(0, 0, 0, 0.45) !important;
-            backdrop-filter: blur(20px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+            background: #0f151b !important;
             border: 0px solid rgba(255, 255, 255, 0.08) !important;
             border-top-width: 1px !important;
             border-radius: 0 !important;
             z-index: -1 !important;
             pointer-events: none !important;
-
-            /* Concave notch mask — bar deforms around active icon */
-            -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
-            mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAwIDcwJyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSdub25lJz48cGF0aCBkPSdNMCwwIEg0MzAgQzQ1MCwwIDQ3MSwxNSA0NzEsMzUgQSAyOSAyOSAwIDAgMCA1MjksMzUgQzUyOSwxNSA1NTAsMCA1NzAsMCBIMTAwMCBWNzAgSDAgWicgZmlsbD0nYmxhY2snLz48L3N2Zz4=") !important;
-            -webkit-mask-size: 1000px 100% !important;
-            mask-size: 1000px 100% !important;
-            -webkit-mask-repeat: no-repeat !important;
-            mask-repeat: no-repeat !important;
-            -webkit-mask-position: calc(16.666% - 317.33px) 0 !important;
-            mask-position: calc(16.666% - 317.33px) 0 !important;
             transition: border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1), border 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        html.no-transparency footer .footer-nav::before {
-            background: #0f151b !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-        }
 
         /* Footer buttons styling */
         .footer-btn {
@@ -616,15 +590,13 @@
         }
 
         .footer-btn.is-active .footer-btn-icon {
-            background: rgba(26, 31, 38, 0.85) !important;
-            backdrop-filter: blur(16px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            background: #1e2228 !important;
             border: 2px solid var(--accent) !important;
             box-sizing: border-box !important;
             transform: none !important;
             width: 46px !important;
             height: 46px !important;
-            box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 40%, transparent) !important;
+            box-shadow: none !important;
         }
 
         .footer-btn.is-active .footer-btn-icon img,
@@ -728,12 +700,12 @@
 <body>
     <!-- Pantalla de carga dinámica -->
     <div id="pt-global-loader"
-        style="position: fixed; inset: 0; z-index: 99999; background: rgba(12, 13, 15, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease, visibility 0.4s ease;">
+        style="position: fixed; inset: 0; z-index: 99999; background: #1a1d22; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s ease, visibility 0.4s ease;">
         <div style="position: relative; width: 64px; height: 64px;">
             <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;">
             </div>
             <div
-                style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: var(--my-primary, #bce4ff); border-radius: 50%; animation: pt-spin 1s linear infinite;">
+            <div style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: var(--my-primary, #6e8caa); border-radius: 50%; animation: pt-spin 1s linear infinite;">
             </div>
         </div>
         <div
@@ -1064,8 +1036,8 @@
     </script>
     <!-- Chatbot FAB -->
     <div id="pt-chatbot-fab"
-        style="position: fixed; bottom: 90px; right: 20px; width: 64px; height: 64px; background: color-mix(in srgb, var(--my-primary) 70%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 50%; box-shadow: 0 6px 20px rgba(0,0,0,0.3); border: 1px solid color-mix(in srgb, #fff 25%, transparent); display: flex; align-items: center; justify-content: center; z-index: 1500; cursor: pointer; user-select: none; touch-action: none;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+        style="position: fixed; bottom: 90px; right: -38px; width: 76px; height: 76px; background: #2a3240; border-radius: 50%; box-shadow: none; border: 1px solid #2e3340; display: flex; align-items: center; justify-content: center; z-index: 1500; cursor: pointer; user-select: none; touch-action: none; opacity: 0.8;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 8V4H8" />
             <rect width="16" height="12" x="4" y="8" rx="2" />
@@ -1093,7 +1065,6 @@
                 const rect = fab.getBoundingClientRect();
                 if (rect.width === 0) return; // Not visible yet
 
-                const maxX = window.innerWidth - rect.width;
                 const maxY = window.innerHeight - rect.height;
 
                 let currentX = rect.left;
@@ -1102,37 +1073,16 @@
                 // Clamp Y
                 currentY = Math.max(16, Math.min(currentY, maxY - 16));
 
-                // Snap X (hide only if dragged to extreme edge)
-                const offset = rect.width * 0.45;
-                const rightEdge = window.innerWidth - rect.width;
+                // Always snap half-way off screen
                 const isLeftHalf = (currentX + rect.width / 2) < window.innerWidth / 2;
-                
-                let snapX;
-                let isHidden = false;
-                
-                if (isLeftHalf) {
-                    if (currentX <= 8) {
-                        snapX = -offset;
-                        isHidden = true;
-                    } else {
-                        snapX = 16;
-                    }
-                } else {
-                    if (currentX >= rightEdge - 8) {
-                        snapX = rightEdge + offset;
-                        isHidden = true;
-                    } else {
-                        snapX = rightEdge - 16;
-                    }
-                }
+                let snapX = isLeftHalf ? -rect.width / 2 : window.innerWidth - rect.width / 2;
 
                 fab.style.transition = 'left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease';
                 fab.style.left = snapX + 'px';
                 fab.style.top = currentY + 'px';
                 fab.style.bottom = 'auto';
                 fab.style.right = 'auto';
-                fab.style.opacity = isHidden ? '0.6' : '1';
-                fab.dataset.isHidden = isHidden ? 'true' : 'false';
+                fab.style.opacity = '0.8';
             }
 
             const savedPos = localStorage.getItem('pt_chatbot_fab_pos');
@@ -1188,7 +1138,7 @@
                 const dx = currentX - startX;
                 const dy = currentY - startY;
 
-                if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                if (Math.abs(dx) > 12 || Math.abs(dy) > 12) {
                     hasMoved = true;
                 }
 
@@ -1199,11 +1149,11 @@
                 let newX = initialX + dx;
                 let newY = initialY + dy;
 
-                const offset = fab.offsetWidth * 0.45;
-                const maxX = window.innerWidth - fab.offsetWidth + offset;
+                const maxX = window.innerWidth - fab.offsetWidth + (fab.offsetWidth / 2);
+                const minX = -fab.offsetWidth / 2;
                 const maxY = window.innerHeight - fab.offsetHeight;
 
-                newX = Math.max(-offset, Math.min(newX, maxX));
+                newX = Math.max(minX, Math.min(newX, maxX));
                 newY = Math.max(0, Math.min(newY, maxY));
 
                 fab.style.left = newX + 'px';
@@ -1221,27 +1171,26 @@
                     document.removeEventListener('mouseup', onEnd);
                 }
 
-                if (!hasMoved) {
-                    if (fab.dataset.isHidden === 'true') {
-                        // Ignore clicks entirely when hidden. Must be dragged to un-hide.
-                        return;
-                    }
+                if (hasMoved) {
+                    clampAndSnap();
+                    setTimeout(() => {
+                        localStorage.setItem('pt_chatbot_fab_pos', JSON.stringify({
+                            left: fab.style.left,
+                            top: fab.style.top
+                        }));
+                    }, 350);
+                }
+            }
 
-                    if (window.openChatbotSheet) {
-                        window.openChatbotSheet({ triggerEl: fab });
-                    }
+            fab.addEventListener('click', (e) => {
+                if (hasMoved) {
+                    // Prevent opening if the user was dragging
                     return;
                 }
-
-                clampAndSnap();
-
-                setTimeout(() => {
-                    localStorage.setItem('pt_chatbot_fab_pos', JSON.stringify({
-                        left: fab.style.left,
-                        top: fab.style.top
-                    }));
-                }, 350);
-            }
+                if (window.openChatbotSheet) {
+                    window.openChatbotSheet({ triggerEl: fab });
+                }
+            });
 
             fab.addEventListener('touchstart', onStart, { passive: false });
             fab.addEventListener('touchmove', onMove, { passive: false });

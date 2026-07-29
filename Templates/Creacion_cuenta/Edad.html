@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/Scripts/ui_transparencia_apply.js"></script>
-    <script src="/Scripts/ui_canvas_bg.js"></script>
+
     <script src="/Scripts/ui_idioma.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,12 +19,12 @@
 
     <style>
         :root {
-            --my-primary: #ff073a;
-            --my-primary-dim: rgba(255, 7, 58, 0.14);
-            --my-primary-rim: rgba(255, 7, 58, 0.22);
-            --my-glass: rgba(255, 255, 255, 0.05);
-            --my-glass-rim: rgba(255, 255, 255, 0.10);
-            --my-glass-hover: rgba(255, 255, 255, 0.08);
+            --my-primary: #6e8caa;
+            --my-primary-dim: rgba(110, 140, 170, 0.15);
+            --my-primary-rim: rgba(110, 140, 170, 0.25);
+            --my-glass: #242830;
+            --my-glass-rim: #2e3340;
+            --my-glass-hover: #2c3038;
             --my-radius-card: 26px;
             --my-radius-sm: 16px;
             --my-radius-pill: 999px;
@@ -36,7 +35,7 @@
         }
         body {
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background: #000000;
+            background: #1a1d22;
             color: rgba(255, 255, 255, .88);
             margin: 0;
             min-height: 100svh;
@@ -44,11 +43,9 @@
 
         /* ── HEADER ── */
         body>header {
-            background-color: var(--my-glass, rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(14px) saturate(140%);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            border: 1px solid var(--my-glass-rim, rgba(255, 255, 255, 0.10));
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
+            background-color: #242830;
+            border: 1px solid #2e3340;
+            box-shadow: none;
             text-align: center;
             width: fit-content;
             gap: 14px;
@@ -107,8 +104,6 @@
             border-radius: var(--my-radius-card);
             border: 1px solid var(--my-glass-rim);
             background: var(--my-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             padding: 24px;
             display: flex;
             flex-direction: column;
@@ -215,23 +210,6 @@
         }
 
         /* ── FLOATING HOME BUTTON ── */
-        :root {
-            --anim--hover-time: 0.2s;
-            --anim--hover-ease: ease;
-        }
-
-        @property --angle-1 {
-            syntax: '<angle>';
-            inherits: false;
-            initial-value: 45deg;
-        }
-
-        @property --angle-2 {
-            syntax: '<angle>';
-            inherits: false;
-            initial-value: -45deg;
-        }
-
         .footer-float {
             position: fixed;
             bottom: calc(24px + env(safe-area-inset-bottom));
@@ -247,7 +225,6 @@
             border-radius: 999vw;
             background: transparent;
             pointer-events: none;
-            transition: all var(--anim--hover-time) var(--anim--hover-ease);
         }
 
         .button-shadow {
@@ -264,13 +241,11 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: var(--my-glass, rgba(255, 255, 255, 0.05));
+            background: #242830;
             border-radius: 999px;
-            border: 1px solid var(--my-glass-rim, rgba(255, 255, 255, 0.10));
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
-            backdrop-filter: blur(14px) saturate(140%);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            transition: all var(--anim--hover-time) var(--anim--hover-ease);
+            border: 1px solid #2e3340;
+            box-shadow: none;
+            transition: background 0.18s ease, transform 0.12s ease;
             width: 60px;
             height: 60px;
             text-decoration: none;
@@ -290,30 +265,12 @@
         }
 
         .btn-home:hover {
+            background: #2c3038;
             transform: scale(0.975);
-            backdrop-filter: blur(0.01em);
-            -webkit-backdrop-filter: blur(0.01em);
         }
 
         .btn-home:active {
             transform: scale(0.95);
-        }
-
-        /* ── No-transparency fallback ── */
-        html.no-transparency .btn-home {
-            background: #2a2a2e;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        html.no-transparency .btn-home::after {
-            display: none;
-        }
-
-        html.no-transparency .button-shadow {
-            display: none;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

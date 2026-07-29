@@ -6,7 +6,7 @@ const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession
 const username = localStorage.getItem("username_usuario");
 const avatar = localStorage.getItem("avatar_usuario");
 
-const getColorWithOpacity = (varName, alpha = 1, defaultHex = '#ff073a') => {
+const getColorWithOpacity = (varName, alpha = 1, defaultHex = '#9DF3FF') => {
     try {
         const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || defaultHex;
         const hex = val.replace(/^#/, '');
@@ -86,7 +86,7 @@ const openConfirmSheet = async ({
             triggerEl,
             showClose: false,
             showHandle: true,
-            showBack: false,
+            showBack: true,
             allowOutsideClose: true,
             allowEscapeClose: true,
             allowDragClose: true,
@@ -95,26 +95,17 @@ const openConfirmSheet = async ({
                     <div class="pt-status-row" style="align-items:flex-start;">
                         <div class="pt-status-text">${escapeHtml(safeMessage)}</div>
                     </div>
-                    <div class="pt-status-actions" style="margin-top:14px; display:flex; gap:8px; justify-content:flex-end;">
-                        <button type="button" class="btn-secondary" data-pt-cancel>${escapeHtml(safeCancelText)}</button>
-                        <button type="button" class="btn-primary" data-pt-confirm>${escapeHtml(safeOkText)}</button>
-                    </div>
                 </div>
             `,
-            didOpen: (sheet) => {
-                try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
-                const btnCancel = sheet.querySelector("[data-pt-cancel]");
-                const btnConfirm = sheet.querySelector("[data-pt-confirm]");
-
-                btnCancel?.addEventListener("click", () => {
-                    finish(false);
-                    try { globalThis.PTBottomSheet?.close?.(); } catch { }
-                });
-
-                btnConfirm?.addEventListener("click", () => {
+            extraTopBtn: {
+                html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M20 6 9 17l-5-5"/></svg><span style="vertical-align: middle;">${escapeHtml(safeOkText)}</span>`,
+                onClick: () => {
                     finish(true);
                     try { globalThis.PTBottomSheet?.close?.(); } catch { }
-                });
+                }
+            },
+            didOpen: (sheet) => {
+                try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
             },
             willClose: () => {
                 if (!settled) finish(false);
@@ -292,16 +283,6 @@ const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro,
                             <div><span class="pt-cal-k">${escapeHtml(tLang("Hora", "Time"))}</span><span class="pt-cal-v">${escapeHtml(hora)}</span></div>
                         </div>
                         ${descripcion}
-                        <div class="pt-cal-registro-actions">
-                            <button
-                                type="button"
-                                data-limpiar-registro
-                                data-reg-id="${escapeHtml(registro.id)}"
-                                class="pt-cal-clear-btn"
-                            >
-                                ${escapeHtml(tLang("Limpiar registro", "Clear record"))}
-                            </button>
-                        </div>
                     </div>
                 </div>
             `;
@@ -333,37 +314,36 @@ const renderDetalleEntreno = async (fechaIso, registrosDelDia, onDeleteRegistro,
         html,
         showClose: false,
         showHandle: true,
+        showBack: true,
         allowOutsideClose: true,
         allowEscapeClose: true,
         allowDragClose: true,
         triggerEl,
+        extraTopBtn: (registrosDelDia && registrosDelDia.length > 0) ? {
+            html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg><span style="vertical-align: middle;">${escapeHtml(tLang("Limpiar registro", "Clear record"))}</span>`,
+            onClick: async () => {
+                const regId = String(registrosDelDia[0]?.id ?? "").trim();
+                if (!regId) return;
+
+                const ok = await openConfirmSheet({
+                    title: tLang("Confirmar eliminación", "Confirm deletion"),
+                    message: tLang("¿Eliminar este registro de entreno?", "Delete this workout record?"),
+                    okText: tLang("Eliminar", "Delete"),
+                    cancelText: tLang("Cancelar", "Cancel"),
+                });
+                if (!ok) return;
+
+                const deleted = await onDeleteRegistro(regId);
+                if (!deleted) return;
+
+                try { globalThis.PTBottomSheet?.close?.(); } catch { }
+
+                const nuevosRegistrosDia = getRegistrosByFecha(fechaIso);
+                await renderDetalleEntreno(fechaIso, nuevosRegistrosDia, onDeleteRegistro, getRegistrosByFecha, triggerEl);
+            }
+        } : null,
         didOpen: (sheet) => {
             try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
-
-            const botonesLimpiar = Array.from(sheet.querySelectorAll("[data-limpiar-registro]"));
-            botonesLimpiar.forEach((btn) => {
-                btn.addEventListener("click", async () => {
-                    const regId = String(btn.getAttribute("data-reg-id") ?? "").trim();
-                    if (!regId) return;
-
-                    const ok = await openConfirmSheet({
-                        title: tLang("Confirmar eliminación", "Confirm deletion"),
-                        message: tLang("¿Eliminar este registro de entreno?", "Delete this workout record?"),
-                        okText: tLang("Eliminar", "Delete"),
-                        cancelText: tLang("Cancelar", "Cancel"),
-                        triggerEl: btn,
-                    });
-                    if (!ok) return;
-
-                    const deleted = await onDeleteRegistro(regId);
-                    if (!deleted) return;
-
-                    try { globalThis.PTBottomSheet?.close?.(); } catch { }
-
-                    const nuevosRegistrosDia = getRegistrosByFecha(fechaIso);
-                    await renderDetalleEntreno(fechaIso, nuevosRegistrosDia, onDeleteRegistro, getRegistrosByFecha, triggerEl);
-                });
-            });
         },
     });
 };
@@ -710,8 +690,8 @@ async function initCalendario() {
 
         // Bars
         const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
-        grad.addColorStop(0, getColorWithOpacity('--accent', 0.9, '#ff073a'));
-        grad.addColorStop(1, getColorWithOpacity('--accent', 0.25, '#ff073a'));
+        grad.addColorStop(0, getColorWithOpacity('--accent', 0.9, '#9DF3FF'));
+        grad.addColorStop(1, getColorWithOpacity('--accent', 0.25, '#9DF3FF'));
 
         data.forEach((val, i) => {
             const barH = (val / maxVal) * plotH;
@@ -753,8 +733,8 @@ async function initCalendario() {
 
         // Area fill
         const gradFill = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
-        gradFill.addColorStop(0, getColorWithOpacity('--accent2', 0.25, '#ff3b65'));
-        gradFill.addColorStop(1, getColorWithOpacity('--accent2', 0.02, '#ff3b65'));
+        gradFill.addColorStop(0, getColorWithOpacity('--accent2', 0.25, '#B6A8FF'));
+        gradFill.addColorStop(1, getColorWithOpacity('--accent2', 0.02, '#B6A8FF'));
         ctx.beginPath();
         ctx.moveTo(pad.l, pad.t + plotH);
         data.forEach((val, i) => {
@@ -768,7 +748,7 @@ async function initCalendario() {
         ctx.fill();
 
         // Line
-        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#9DF3FF';
         ctx.lineWidth = 2;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -787,7 +767,7 @@ async function initCalendario() {
             const y = pad.t + plotH - (val / maxVal) * plotH;
             ctx.beginPath();
             ctx.arc(x, y, 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#9DF3FF';
             ctx.fill();
         });
 
@@ -823,8 +803,8 @@ async function initCalendario() {
             const startAngle = -Math.PI / 2;
             const endAngle = startAngle + pctActive * Math.PI * 2;
             const grad = ctx.createConicGradient(startAngle, cx, cy);
-            const activeColor1 = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
-            const activeColor2 = getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#ff3b65';
+            const activeColor1 = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#9DF3FF';
+            const activeColor2 = getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#B6A8FF';
             const activeColor3 = getComputedStyle(document.documentElement).getPropertyValue('--accent3').trim() || '#cc062e';
             grad.addColorStop(0, activeColor1);
             grad.addColorStop(pctActive * 0.7, activeColor2);
@@ -853,7 +833,7 @@ async function initCalendario() {
         ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
         ctx.textAlign = 'center';
         // Active legend
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#ff073a';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#9DF3FF';
         ctx.beginPath(); ctx.arc(cx - 48, legY, 4, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.58)';
         ctx.textAlign = 'left';
@@ -979,7 +959,7 @@ async function initCalendario() {
                 dotsHtml = '<div class="custom-cal-dots">';
                 dayEvents.forEach(e => {
                     const status = e.extendedProps?.status || "otro";
-                    const color = status === "completado" ? (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#ff073a") : "#d0c9c3";
+                    const color = status === "completado" ? (getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#9DF3FF") : "#d0c9c3";
                     dotsHtml += `<div class="custom-cal-dot" style="background:${color}"></div>`;
                 });
                 dotsHtml += '</div>';
