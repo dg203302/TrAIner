@@ -3882,34 +3882,60 @@ window.openChatbotSheet = async ({ triggerEl }) => {
         <style>
             .pt-chatbot-sheet .pt-sheet {
                 height: 80vh !important;
+                height: 80dvh !important;
+                max-height: 85vh !important;
+                max-height: 85dvh !important;
+                display: flex !important;
+                flex-direction: column !important;
             }
             .pt-chatbot-sheet .pt-sheet-content {
+                flex: 1 1 0% !important;
+                min-height: 0 !important;
                 overflow: hidden !important;
-                display: flex;
-                flex-direction: column;
+                display: flex !important;
+                flex-direction: column !important;
                 padding: 20px !important;
             }
+            .pt-chatbot-sheet .pt-sheet-content > div {
+                flex: 1 1 0% !important;
+                min-height: 0 !important;
+                height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+            }
             .chatbot-container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                min-height: 0;
-                margin: -20px;
-                position: relative;
-                overflow: hidden;
+                flex: 1 1 0% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                min-height: 0 !important;
+                margin: -20px !important;
+                position: relative !important;
+                overflow: hidden !important;
             }
             .chatbot-messages {
-                flex: 1 1 auto;
-                min-height: 0;
-                overflow-y: auto;
-                overflow-x: hidden;
-                overscroll-behavior-y: contain;
-                -webkit-overflow-scrolling: touch;
+                flex: 1 1 0% !important;
+                min-height: 0 !important;
+                height: 100% !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                touch-action: pan-y !important;
+                overscroll-behavior-y: contain !important;
+                -webkit-overflow-scrolling: touch !important;
                 scroll-behavior: smooth;
-                padding: 20px 20px 90px 20px;
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
+                padding: 20px 20px 90px 20px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            @media (max-width: 767px) {
+                .pt-chatbot-sheet .pt-sheet {
+                    height: 85vh !important;
+                    height: 85dvh !important;
+                    max-height: 90vh !important;
+                    max-height: 90dvh !important;
+                }
             }
             .chatbot-messages::-webkit-scrollbar {
                 width: 6px;
@@ -4094,6 +4120,11 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                 textarea.style.height = (textarea.scrollHeight) + 'px';
             };
             textarea.addEventListener("input", autoResize);
+            textarea.addEventListener("focus", () => {
+                setTimeout(() => {
+                    if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 300);
+            });
 
             let savedHistory = [];
             try {
