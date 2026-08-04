@@ -3893,17 +3893,36 @@ window.openChatbotSheet = async ({ triggerEl }) => {
                 display: flex;
                 flex-direction: column;
                 height: 100%;
+                min-height: 0;
                 margin: -20px;
                 position: relative;
                 overflow: hidden;
             }
             .chatbot-messages {
-                flex: 1;
+                flex: 1 1 auto;
+                min-height: 0;
                 overflow-y: auto;
+                overflow-x: hidden;
+                overscroll-behavior-y: contain;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
                 padding: 20px 20px 90px 20px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
+            }
+            .chatbot-messages::-webkit-scrollbar {
+                width: 6px;
+            }
+            .chatbot-messages::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .chatbot-messages::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+            }
+            .chatbot-messages::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.4);
             }
             .chat-msg {
                 display: flex;
