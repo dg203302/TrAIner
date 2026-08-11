@@ -429,7 +429,7 @@
 		if (extraTopBtn) {
 			extraBtnEl = document.createElement("button");
 			extraBtnEl.type = "button";
-			extraBtnEl.className = "pt-sheet-action-btn";
+			extraBtnEl.className = "pt-sheet-action-btn pt-sheet-extra-btn";
 			if (extraTopBtn.ariaLabel) extraBtnEl.setAttribute("aria-label", extraTopBtn.ariaLabel);
 			extraBtnEl.innerHTML = extraTopBtn.html || "";
 			if (typeof extraTopBtn.onClick === "function") {

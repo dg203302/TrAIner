@@ -1768,6 +1768,50 @@ async function recuperar_planes() {
     }
 }
 
+const diasOrden = [
+    "lunes",
+    "martes",
+    "miércoles",
+    "miercoles",
+    "jueves",
+    "viernes",
+    "sábado",
+    "sabado",
+    "domingo",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+];
+
+const getDaySortIndex = (dayName) => {
+    if (!dayName) return 999;
+    const s = String(dayName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (s.includes("lunes") || s.includes("monday") || s === "l") return 0;
+    if (s.includes("martes") || s.includes("tuesday") || s === "m") return 1;
+    if (s.includes("miercoles") || s.includes("wednesday") || s === "x") return 2;
+    if (s.includes("jueves") || s.includes("thursday") || s === "j") return 3;
+    if (s.includes("viernes") || s.includes("friday") || s === "v") return 4;
+    if (s.includes("sabado") || s.includes("saturday") || s === "s") return 5;
+    if (s.includes("domingo") || s.includes("sunday") || s === "d") return 6;
+    return 999;
+};
+
+const sortDiasArray = (arr) => {
+    if (!Array.isArray(arr)) return [];
+    return [...arr].sort((a, b) => {
+        const nameA = a?.dia ?? a?.nombre ?? a?.day ?? a?.key ?? (typeof a === "string" ? a : "");
+        const nameB = b?.dia ?? b?.nombre ?? b?.day ?? b?.key ?? (typeof b === "string" ? b : "");
+        const ia = getDaySortIndex(nameA);
+        const ib = getDaySortIndex(nameB);
+        if (ia !== ib) return ia - ib;
+        return (a?.originalIndex ?? a?._origIdx ?? 0) - (b?.originalIndex ?? b?._origIdx ?? 0);
+    });
+};
+
 function mapear_plan(plan_entrenamiento_json) {
     const raw = plan_entrenamiento_json;
     if (raw == null) {
@@ -1826,50 +1870,6 @@ function mapear_plan(plan_entrenamiento_json) {
             repeticiones: repeticiones ?? "-",
         };
     };
-
-const getDaySortIndex = (dayName) => {
-    if (!dayName) return 999;
-    const s = String(dayName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    if (s.includes("lunes") || s.includes("monday") || s === "l") return 0;
-    if (s.includes("martes") || s.includes("tuesday") || s === "m") return 1;
-    if (s.includes("miercoles") || s.includes("wednesday") || s === "x") return 2;
-    if (s.includes("jueves") || s.includes("thursday") || s === "j") return 3;
-    if (s.includes("viernes") || s.includes("friday") || s === "v") return 4;
-    if (s.includes("sabado") || s.includes("saturday") || s === "s") return 5;
-    if (s.includes("domingo") || s.includes("sunday") || s === "d") return 6;
-    return 999;
-};
-
-const sortDiasArray = (arr) => {
-    if (!Array.isArray(arr)) return [];
-    return [...arr].sort((a, b) => {
-        const nameA = a?.dia ?? a?.nombre ?? a?.day ?? a?.key ?? (typeof a === "string" ? a : "");
-        const nameB = b?.dia ?? b?.nombre ?? b?.day ?? b?.key ?? (typeof b === "string" ? b : "");
-        const ia = getDaySortIndex(nameA);
-        const ib = getDaySortIndex(nameB);
-        if (ia !== ib) return ia - ib;
-        return (a?.originalIndex ?? a?._origIdx ?? 0) - (b?.originalIndex ?? b?._origIdx ?? 0);
-    });
-};
-
-    const diasOrden = [
-        "lunes",
-        "martes",
-        "miércoles",
-        "miercoles",
-        "jueves",
-        "viernes",
-        "sábado",
-        "sabado",
-        "domingo",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-        "sunday",
-    ];
 
     const parse = () => {
         const extracted = extractLikelyJson(asString);
@@ -2161,9 +2161,10 @@ function parsePlanDiasDetallados(planRaw) {
         const rawDays = maybeDiasArray.map((d, i) => {
             const dia = d?.dia ?? d?.nombre ?? d?.day ?? tLang(`Día ${i + 1}`, `Day ${i + 1}`);
             const enfoque = d?.enfoque ?? d?.focus ?? d?.objetivo ?? d?.titulo ?? d?.title ?? "";
-            const ejercicios = Array.isArray(d?.ejercicios)
-                ? d.ejercicios.map(normalizeExDet).filter(Boolean)
-                : [];
+            const rawExList = Array.isArray(d?.ejercicios)
+                ? d.ejercicios
+                : (d?.entrenamiento ?? d?.exercises ?? d?.rutina ?? d?.items ?? []);
+            const ejercicios = (Array.isArray(rawExList) ? rawExList : []).map(normalizeExDet).filter(Boolean);
             return { dia, enfoque, ejercicios, originalIndex: i, raw: d };
         });
         return sortDiasArray(rawDays);
@@ -2177,10 +2178,17 @@ function parsePlanDiasDetallados(planRaw) {
             return ia - ib;
         });
         const days = orderedKeys.map((k) => {
-            const ejercicios = Array.isArray(root[k]) ? root[k].map(normalizeExDet).filter(Boolean) : [];
+            const rawExList = Array.isArray(root[k]) ? root[k] : [];
+            const ejercicios = rawExList.map(normalizeExDet).filter(Boolean);
             return { dia: k, enfoque: "", ejercicios };
         });
         return days;
+    }
+
+    const rawEjercicios = root?.ejercicios ?? root?.plan ?? root?.entrenamiento ?? root?.exercises ?? root?.rutina ?? [];
+    if (Array.isArray(rawEjercicios) && rawEjercicios.length > 0) {
+        const normalized = rawEjercicios.map(normalizeExDet).filter(Boolean);
+        return [{ dia: tLang("Entrenamiento", "Workout"), enfoque: "", ejercicios: normalized, originalIndex: 0 }];
     }
 
     return null;
@@ -3375,37 +3383,31 @@ function initDetallePorDiaPlan() {
 
                         if (Array.isArray(maybeDiasArray)) {
                             const sortedDays = sortDiasArray(maybeDiasArray.map((d, i) => ({ ...d, originalIndex: i })));
-                            let filteredIdx = 0;
-                            for (let i = 0; i < sortedDays.length; i++) {
-                                const d = sortedDays[i];
-                                const ejerciciosList = Array.isArray(d?.ejercicios) ? d.ejercicios : [];
-                                if (ejerciciosList.length > 0) {
-                                    if (filteredIdx === dayIdx) {
-                                        targetList = maybeDiasArray[d.originalIndex]?.ejercicios || d.ejercicios;
-                                        break;
-                                    }
-                                    filteredIdx++;
+                            if (dayIdx >= 0 && dayIdx < sortedDays.length) {
+                                const chosen = sortedDays[dayIdx];
+                                const origDay = maybeDiasArray[chosen.originalIndex] || chosen;
+                                if (!Array.isArray(origDay.ejercicios) && Array.isArray(origDay.entrenamiento || origDay.exercises || origDay.rutina || origDay.items)) {
+                                    origDay.ejercicios = origDay.entrenamiento || origDay.exercises || origDay.rutina || origDay.items;
+                                }
+                                targetList = origDay.ejercicios;
+                            }
+                        } else if (actualRoot && typeof actualRoot === "object") {
+                            const weekdayKeys = Object.keys(actualRoot).filter((k) => diasOrden.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
+                            if (weekdayKeys.length > 0) {
+                                const orderedKeys = [...weekdayKeys].sort((a, b) => {
+                                    const ia = getDaySortIndex(a);
+                                    const ib = getDaySortIndex(b);
+                                    return ia - ib;
+                                });
+                                if (dayIdx >= 0 && dayIdx < orderedKeys.length) {
+                                    const k = orderedKeys[dayIdx];
+                                    targetList = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
                                 }
                             }
-                        } else {
-                            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
-                            const orderedKeys = [...weekdayKeys].sort((a, b) => {
-                                const ia = getDaySortIndex(a);
-                                const ib = getDaySortIndex(b);
-                                return ia - ib;
-                            });
+                        }
 
-                            let filteredIdx = 0;
-                            for (const k of orderedKeys) {
-                                const ejerciciosList = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
-                                if (ejerciciosList.length > 0) {
-                                    if (filteredIdx === dayIdx) {
-                                        targetList = ejerciciosList;
-                                        break;
-                                    }
-                                    filteredIdx++;
-                                }
-                            }
+                        if (!targetList) {
+                            targetList = actualRoot?.ejercicios ?? planRoot?.ejercicios ?? null;
                         }
 
                         if (targetList && targetList[exIdx]) {
@@ -3730,14 +3732,27 @@ const openEditarDiasModal = async () => {
             <div class="pt-edit-dias-list">
                 ${daysHtml}
             </div>
-
+            <button type="button" id="btn-save-edit-dias" class="btn-primary" style="width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; font-weight: 700;">
+                ${escapeHtml(tLang("Guardar cambios", "Save changes"))}
+            </button>
         </div>
     `;
+
+    let handleSaveRef = null;
 
     await globalThis.PTBottomSheet.open({
         title: tLang("Gestionar días", "Manage days"),
         html,
         showClose: true,
+        extraTopBtn: {
+            html: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span style="vertical-align: middle;">${escapeHtml(tLang("Guardar", "Save"))}</span>`,
+            ariaLabel: tLang("Guardar cambios", "Save changes"),
+            onClick: async () => {
+                if (typeof handleSaveRef === "function") {
+                    await handleSaveRef();
+                }
+            }
+        },
         didOpen: (sheet) => {
             try { globalThis.UIIdioma?.translatePage?.(sheet); } catch { }
 
@@ -3768,7 +3783,7 @@ const openEditarDiasModal = async () => {
                 });
             });
 
-            sheet.querySelector("#btn-save-edit-dias").onclick = async () => {
+            handleSaveRef = async () => {
                 const checkedSet = new Set(
                     Array.from(sheet.querySelectorAll('.pt-edit-dia-btn[aria-pressed="true"]'))
                         .map((el) => String(el.getAttribute("data-day") || "").toLowerCase().replace("é", "e").replace("á", "a"))
@@ -3824,13 +3839,20 @@ const openEditarDiasModal = async () => {
                 localStorage.setItem("plan_entreno_usuario", JSON.stringify(parsed));
 
                 const btn = sheet.querySelector("#btn-save-edit-dias");
-                btn.disabled = true;
-                btn.textContent = tLang("Guardando...", "Saving...");
+                if (btn) {
+                    btn.disabled = true;
+                    btn.textContent = tLang("Guardando...", "Saving...");
+                }
 
                 await actualizar_cambios_plan_entreno();
                 verificacion_plan_entrenamiento();
                 globalThis.PTBottomSheet.close();
             };
+
+            const btn = sheet.querySelector("#btn-save-edit-dias");
+            if (btn) {
+                btn.onclick = handleSaveRef;
+            }
         }
     });
 };
