@@ -2195,12 +2195,35 @@ function initDetallePorDiaPlan() {
         }
     };
 
-    const openDetalleDia = async (headerEl) => {
+    const openDetalleDia = async (headerEl, triggerBtn = null) => {
         const dia_ent = headerEl?.querySelector(".plan-dia-titulo")?.textContent?.replace(/\s+/g, " ")?.trim()
             || headerEl?.querySelector(".plan-dia-titulos")?.textContent?.replace(/\s+/g, " ")?.trim()
             || headerEl?.textContent?.replace(/\s+/g, " ")?.trim();
         const desc_ent = headerEl?.querySelector(".plan-dia-subtitle")?.textContent?.trim() ?? "";
         const dia_Actual = getHoraActualLocal().fecha;
+
+        const regBtn = triggerBtn || headerEl?.querySelector(".chip-registrar");
+        let origBtnHtml = "";
+        if (regBtn) {
+            origBtnHtml = regBtn.innerHTML;
+            regBtn.style.pointerEvents = "none";
+            regBtn.style.opacity = "0.75";
+            regBtn.innerHTML = `
+                <svg style="animation: pt-spin 0.8s linear infinite;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+                <span>${tLang("Cargando...", "Loading...")}</span>
+            `;
+        }
+
+        const restoreRegBtn = () => {
+            if (regBtn && origBtnHtml) {
+                regBtn.innerHTML = origBtnHtml;
+                regBtn.style.pointerEvents = "";
+                regBtn.style.opacity = "";
+            }
+        };
+
         const normalizarDiasCale = (value) => {
             if (Array.isArray(value)) return value;
             if (value == null) return [];
@@ -2241,7 +2264,15 @@ function initDetallePorDiaPlan() {
             }
         };
 
-        const registrosPrevios = await obtenerRegistrosPrevios();
+        let registrosPrevios = [];
+        try {
+            registrosPrevios = await obtenerRegistrosPrevios();
+        } catch (e) {
+            console.error(e);
+        } finally {
+            restoreRegBtn();
+        }
+
         const registrosDelDia = registrosPrevios.filter((item) => item?.start === dia_Actual || item?.fecha === dia_Actual);
         const registroPrevio = registrosDelDia.length ? registrosDelDia[registrosDelDia.length - 1] : null;
         const caloriasPrevias = "";
@@ -2406,6 +2437,7 @@ function initDetallePorDiaPlan() {
                 onClick: async () => {
                     const sheet = document.querySelector(".pt-detalle-entreno-sheet");
                     if (!sheet) return;
+                    const confirmBtn = sheet.querySelector(".pt-sheet-extra-btn");
                     const caloriasEl = sheet.querySelector("[data-pt-calorias]");
                     const tiempoEl = sheet.querySelector("[data-pt-tiempo]");
 
@@ -2429,6 +2461,27 @@ function initDetallePorDiaPlan() {
                         });
                         return;
                     }
+
+                    let origConfirmHtml = "";
+                    if (confirmBtn) {
+                        origConfirmHtml = confirmBtn.innerHTML;
+                        confirmBtn.style.pointerEvents = "none";
+                        confirmBtn.style.opacity = "0.75";
+                        confirmBtn.innerHTML = `
+                            <svg style="animation: pt-spin 0.8s linear infinite; vertical-align: middle; margin-right: 4px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                            </svg>
+                            <span style="vertical-align: middle;">${escapeHtml(tLang("Guardando...", "Saving..."))}</span>
+                        `;
+                    }
+
+                    const restoreConfirmBtn = () => {
+                        if (confirmBtn && origConfirmHtml) {
+                            confirmBtn.innerHTML = origConfirmHtml;
+                            confirmBtn.style.pointerEvents = "";
+                            confirmBtn.style.opacity = "";
+                        }
+                    };
 
                     const now = getHoraActualLocal();
                     const idRegistro = (globalThis.crypto && typeof globalThis.crypto.randomUUID === "function")
@@ -2481,11 +2534,13 @@ function initDetallePorDiaPlan() {
                         if (!res || !res.ok) {
                             const txt = res ? await res.text().catch(() => null) : null;
                             console.warn("No se pudo guardar Dias_cale:", res?.status, txt);
+                            restoreConfirmBtn();
                             await openStatusSheet({ title: tLang("Error", "Error"), message: tLang("No se pudo guardar el registro. Intenta de nuevo.", "Could not save the record. Please try again.") });
                             return;
                         }
                     } catch (err) {
                         console.error("Error al guardar Dias_cale:", err);
+                        restoreConfirmBtn();
                         await openStatusSheet({ title: tLang("Error", "Error"), message: tLang("Error al guardar el registro.", "Error saving the record.") });
                         return;
                     }
@@ -3406,7 +3461,7 @@ function initDetallePorDiaPlan() {
             chipRegistrarEl.blur();
             const headerEl = chipRegistrarEl.closest(".plan-dia-header");
             if (headerEl) {
-                await openDetalleDia(headerEl);
+                await openDetalleDia(headerEl, chipRegistrarEl);
             }
         }
     });
@@ -3438,7 +3493,7 @@ function initDetallePorDiaPlan() {
             ev.preventDefault();
             const headerEl = chipRegistrarEl.closest(".plan-dia-header");
             if (headerEl) {
-                await openDetalleDia(headerEl);
+                await openDetalleDia(headerEl, chipRegistrarEl);
             }
         }
     });
@@ -3447,49 +3502,6 @@ function initDetallePorDiaPlan() {
 function initPlanDiaPager() {
     const scroller = document.getElementById("Plan_ejercicio");
     if (!scroller) return;
-
-    const mqDesktop = (() => {
-        try {
-            return window.matchMedia ? window.matchMedia("(min-width: 1024px)") : null;
-        } catch {
-            return null;
-        }
-    })();
-
-    const mode = mqDesktop && mqDesktop.matches ? "desktop" : "mobile";
-
-    // Reconfigurar automáticamente al cruzar el breakpoint.
-    if (mqDesktop && scroller.dataset.diaPagerMqInit !== "1") {
-        scroller.dataset.diaPagerMqInit = "1";
-        const onChange = () => initPlanDiaPager();
-        try {
-            mqDesktop.addEventListener("change", onChange);
-        } catch {
-            // Safari antiguo
-            try { mqDesktop.addListener(onChange); } catch { }
-        }
-    }
-
-    const prevMode = scroller.dataset.diaPagerMode || "";
-    if (prevMode && prevMode !== mode) {
-        if (typeof scroller.__diaPagerCleanup === "function") {
-            try {
-                scroller.__diaPagerCleanup();
-            } catch {
-                // ignore
-            }
-        }
-        scroller.__diaPagerCleanup = null;
-        scroller.dataset.diaPagerInit = "0";
-    }
-
-    scroller.dataset.diaPagerMode = mode;
-
-    // En escritorio los días se muestran en horizontal por CSS.
-    // No interceptamos wheel/touch para no romper el scroll nativo.
-    if (mode === "desktop") {
-        return;
-    }
 
     if (scroller.dataset.diaPagerInit === "1") return;
     scroller.dataset.diaPagerInit = "1";
@@ -3533,51 +3545,6 @@ function initPlanDiaPager() {
             gestureLock = false;
         }, 420);
     };
-
-    const canScrollInnerGrid = (gridEl, deltaY) => {
-        if (!(gridEl instanceof HTMLElement)) return false;
-        const canScroll = gridEl.scrollHeight > gridEl.clientHeight + 1;
-        if (!canScroll) return false;
-        if (deltaY > 0) {
-            return gridEl.scrollTop < (gridEl.scrollHeight - gridEl.clientHeight - 1);
-        }
-        if (deltaY < 0) {
-            return gridEl.scrollTop > 0;
-        }
-        return false;
-    };
-
-    let wheelAccum = 0;
-    let wheelTimer = null;
-    const WHEEL_THRESHOLD = 26;
-
-    const onWheel = (e) => {
-        const days = getDays();
-        if (days.length <= 1) return;
-        if (e.ctrlKey) return; // pinch zoom
-
-        const deltaY = e.deltaY;
-        const target = e.target;
-        const grid = (target instanceof Element) ? target.closest(".plan-grid") : null;
-        if (grid && canScrollInnerGrid(grid, deltaY)) {
-            return;
-        }
-
-        e.preventDefault();
-        wheelAccum += deltaY;
-
-        if (wheelTimer) window.clearTimeout(wheelTimer);
-        wheelTimer = window.setTimeout(() => {
-            wheelAccum = 0;
-        }, 140);
-
-        if (Math.abs(wheelAccum) < WHEEL_THRESHOLD) return;
-        const dir = wheelAccum > 0 ? 1 : -1;
-        wheelAccum = 0;
-        stepBy(dir);
-    };
-
-    scroller.addEventListener("wheel", onWheel, { passive: false });
 
     let touchStartY = 0;
     let touchStartX = 0;
@@ -3625,7 +3592,6 @@ function initPlanDiaPager() {
     scroller.addEventListener("touchend", onTouchEnd, { passive: true });
 
     scroller.__diaPagerCleanup = () => {
-        scroller.removeEventListener("wheel", onWheel);
         scroller.removeEventListener("touchstart", onTouchStart);
         scroller.removeEventListener("touchend", onTouchEnd);
         scroller.dataset.diaPagerInit = "0";

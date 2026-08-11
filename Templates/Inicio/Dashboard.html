@@ -23,16 +23,18 @@
         }
 
         .pt-plan-selector-container {
-            display: none;
+            display: flex !important;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin: 15px auto 25px !important;
-            padding: 6px !important;
+            gap: 6px;
+            margin: 75px auto 14px !important;
+            padding: 5px !important;
             border-radius: 999px !important;
             width: fit-content !important;
-            background: var(--my-glass) !important;
-            border: 1px solid var(--my-glass-rim) !important;
+            max-width: calc(100% - 32px) !important;
+            background: #1e2228 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
             z-index: 10;
         }
 
@@ -40,17 +42,18 @@
             background: transparent !important;
             border: none !important;
             color: rgba(255, 255, 255, 0.6) !important;
-            padding: 10px 24px !important;
-            font-size: 14px !important;
+            padding: 8px 18px !important;
+            font-size: 13.5px !important;
             font-weight: 700 !important;
             border-radius: 999px !important;
             cursor: pointer !important;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            white-space: nowrap !important;
         }
 
         .pt-plan-selector-btn:hover {
             color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.04) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
         }
 
         .pt-plan-selector-btn.active {
@@ -258,6 +261,31 @@
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
+        }
+
+        .pfh-toggle-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .pfh-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(1.05);
+        }
+
+        .pfh-toggle-btn:active {
+            transform: scale(0.95);
         }
 
         /* Container for action buttons (now below title) */
@@ -704,7 +732,6 @@
         <div style="position: relative; width: 64px; height: 64px;">
             <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;">
             </div>
-            <div
             <div style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: var(--my-primary, #6e8caa); border-radius: 50%; animation: pt-spin 1s linear infinite;">
             </div>
         </div>
@@ -765,7 +792,12 @@
         <!-- Floating Plan Header (fixed pill) -->
         <div id="plan-floating-header" class="plan-floating-header">
             <div class="pfh-top-row">
-                <span id="pfh-title" class="pfh-title">Plan de Entreno</span>
+                <span id="pfh-title" class="pfh-title" title="Cambiar plan">Plan de Entreno</span>
+                <button id="pfh-toggle-btn" class="pfh-toggle-btn" aria-label="Cambiar plan" title="Cambiar plan">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
             </div>
             <div id="pfh-actions" class="pfh-actions">
                 <!-- Actions moved here by JS -->
@@ -781,7 +813,7 @@
         </div>
 
         <div id="pt-plan-swipe" class="pt-plan-swipe" aria-label="Planes" data-i18n-en-aria-label="Plans"
-            style="margin-top: 70px;">
+            style="margin-top: 10px;">
 
             <!-- ── Entreno ─────────────────────────────────────────── -->
             <section id="Ejercicios" class="pt-plan-page" tabindex="-1">
@@ -890,25 +922,7 @@
     <script src="/Scripts/dashboard.js" type="module"></script>
 
 
-    <script>
-        (function () {
-            const pe = document.getElementById('Plan_ejercicio');
-            const pa = document.getElementById('Plan_alimentacion');
-            if (!pe || !pa) return;
-            const syncAlimentacion = () => {
-                if (pe.offsetHeight > 100 && pe.innerHTML.trim() !== '') {
-                    pa.style.maxHeight = pe.offsetHeight + 'px';
-                    pa.style.overflowY = 'auto';
-                } else {
-                    pa.style.maxHeight = '';
-                }
-            };
-            const ob = new MutationObserver(syncAlimentacion);
-            ob.observe(pe, { childList: true, subtree: true });
-            window.addEventListener('resize', syncAlimentacion, { passive: true });
-            setTimeout(syncAlimentacion, 100);
-        })();
-    </script>
+
 
     <script>
         (function () {
@@ -972,12 +986,17 @@
                 });
             }
 
-            /* ── Toggle collapse/expand ── */
+            /* ── Toggle collapse/expand on action buttons ── */
+            var pfhToggleBtn = document.getElementById('pfh-toggle-btn');
+            if (pfhToggleBtn) {
+                pfhToggleBtn.addEventListener('click', function () {
+                    showTab(currentTab === 'entreno' ? 'alimentacion' : 'entreno');
+                });
+            }
+
             if (pfhTitle) {
                 pfhTitle.addEventListener('click', function () {
-                    if (pfhActions) {
-                        pfhActions.classList.toggle('collapsed');
-                    }
+                    showTab(currentTab === 'entreno' ? 'alimentacion' : 'entreno');
                 });
             }
 
@@ -997,22 +1016,6 @@
                 }
                 syncHeader(tab);
                 window.dispatchEvent(new Event('resize'));
-            }
-
-            /* ── Swipe detection (mobile) ── */
-            var swipeContainer = document.getElementById('pt-plan-swipe');
-            if (swipeContainer) {
-                var scrollTimer = null;
-                swipeContainer.addEventListener('scroll', function () {
-                    clearTimeout(scrollTimer);
-                    scrollTimer = setTimeout(function () {
-                        var sl = swipeContainer.scrollLeft;
-                        var w = swipeContainer.offsetWidth;
-                        var idx = Math.round(sl / w);
-                        var newTab = idx === 0 ? 'entreno' : 'alimentacion';
-                        if (newTab !== currentTab) showTab(newTab);
-                    }, 80);
-                }, { passive: true });
             }
 
             btnEntreno.addEventListener('click', function () { showTab('entreno'); });

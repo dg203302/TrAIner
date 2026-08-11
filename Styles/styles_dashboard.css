@@ -2042,166 +2042,95 @@ html.no-transparency .translucent-bar {
 	}
 }
 
-@media (min-width: 860px) {
-	:root {
-		--pad: 22px;
-	}
-
-	main {
-		grid-template-columns: 1fr 1fr;
-		align-items: start;
-	}
-
-	/* En escritorio: mostrar Entreno + Alimentación lado a lado (sin swipe) */
-	.pt-plan-swipe {
-		grid-column: 1 / -1;
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		gap: 14px;
-		overflow-x: hidden;
-		overflow-y: visible;
-		scroll-snap-type: none;
-	}
-
-	.pt-plan-page {
-		flex: initial;
-		min-width: 0;
-		scroll-snap-align: unset;
-	}
-
-	section {
-		padding: 18px;
-	}
+/* Pantallas anchas: mantener vista centrada tipo app idéntica a móvil con laterales vacíos */
+main {
+	max-width: 580px !important;
+	margin: 0 auto !important;
+	padding: 0 16px 120px !important;
+	display: block !important;
+	position: relative !important;
 }
 
-/* Escritorio / pantallas anchas: sidebar derecha (perfil + navegación), plan más ancho,
-   días del plan en horizontal y anuncios debajo del plan. */
-@media (min-width: 1024px) {
-	:root {
-		--sidebar-btn-w: 48px;
-		--sidebar-w: calc(var(--sidebar-btn-w) + (var(--pad) * 2));
-		/* En escritorio el footer pasa a ser sidebar, no reservamos espacio inferior */
-		--footer-fixed: 0px !important;
-	}
+.pt-plan-swipe {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	overflow: visible !important;
+	scroll-snap-type: none !important;
+}
 
-	/* Reservar el ancho de la sidebar para que el contenido no quede por debajo */
-	body {
-		padding-right: calc(var(--sidebar-w) + env(safe-area-inset-right));
-	}
+.pt-plan-page {
+	display: none !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	flex: none !important;
+	scroll-snap-align: unset !important;
+	padding: 0 0 20px 0 !important;
+}
 
-	/* Columna izquierda (contenido): que no quede debajo de la sidebar */
-	body>header {
-		right: calc(var(--sidebar-w) + env(safe-area-inset-right));
-	}
+.pt-plan-page.active {
+	display: block !important;
+}
 
-	main {
-		max-width: none;
-		grid-template-columns: 1fr 1fr;
-		align-items: start;
-		margin: calc(var(--header-fixed, 72px) + env(safe-area-inset-top)) 0 0;
-		position: relative !important;
-	}
+#Plan_ejercicio,
+#Plan_alimentacion {
+	width: 100% !important;
+	max-width: 100% !important;
+	overflow: visible !important;
+	height: auto !important;
+}
 
-	/* Reordenar visualmente para que los anuncios queden debajo del plan */
-	main>section {
-		grid-column: 1 / -1;
-		grid-row: 1;
-	}
+.plan-container.plan-snap {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 14px !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	height: auto !important;
+}
 
-	main>#anuncios {
-		grid-row: 2;
-	}
+.plan-container.plan-snap .plan-dia {
+	flex: 0 0 auto !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	height: auto !important;
+}
 
-	main>#anuncios:first-of-type {
-		grid-column: 1;
-	}
+.plan-grid {
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 10px !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
 
-	main>#anuncios:nth-of-type(2) {
-		grid-column: 2;
-	}
+footer.footer-wrap {
+	position: fixed !important;
+	z-index: 900 !important;
+	left: 50% !important;
+	transform: translateX(-50%) !important;
+	bottom: 20px !important;
+	width: calc(100% - 32px) !important;
+	max-width: 500px !important;
+	height: 70px !important;
+	display: flex !important;
+	justify-content: center !important;
+	padding: 0 !important;
+	background: transparent !important;
+	pointer-events: none !important;
+}
 
-	/* En escritorio mantenemos el saludo/usuario en el header */
-	#usuario {
-		display: flex;
-	}
+footer .footer-nav {
+	width: 100% !important;
+	max-width: 100% !important;
+	height: 70px !important;
+	border-radius: 35px !important;
+}
 
-	/* Plan: sin overflow, todo visible */
-	#Plan_ejercicio,
-	#Plan_alimentacion {
-		overflow: visible;
-	}
-
-	.plan-container.plan-snap {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-		gap: 12px;
-		height: auto;
-	}
-
-	.plan-container.plan-snap .plan-dia {
-		min-width: 0;
-		height: auto;
-	}
-
-	/* Cambio entre planes por botones solo en pantallas de escritorio (alineado a la derecha con los botones de acción) */
-	.pt-plan-selector-container {
-		display: flex !important;
-		position: absolute !important;
-		top: 24px !important;
-		right: 90px !important;
-		margin: 0 !important;
-		z-index: 100 !important;
-	}
-
-	.pt-plan-swipe {
-		display: block !important;
-		overflow-x: hidden !important;
-		scroll-snap-type: none !important;
-	}
-
-	.pt-plan-page {
-		flex: none !important;
-		min-width: 0 !important;
-		scroll-snap-align: unset !important;
-		display: none !important;
-	}
-
-	.pt-plan-page.active {
-		display: block !important;
-	}
-
-	/* Sidebar derecha: reutiliza el footer (centrado en el borde derecho, ocupa solo sus botones) */
-	footer.footer-wrap {
-		bottom: 0 !important;
-		padding: 0 !important;
-		width: 100% !important;
-		max-width: none !important;
-		left: 0 !important;
-		transform: none !important;
-		top: auto !important;
-		height: calc(56px + env(safe-area-inset-bottom)) !important;
-		display: flex !important;
-		align-items: stretch !important;
-		justify-content: center !important;
-		pointer-events: auto !important;
-	}
-
-	.footer-nav.translucent-bar {
-		border-radius: 0 !important;
-		border: none !important;
-		border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-		background: #111217 !important;
-		width: 100% !important;
-		height: 100% !important;
-		box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3) !important;
-		padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
-	}
-
-	.footer-btn {
-		flex: 1 1 0 !important;
-		width: auto !important;
-		max-width: none !important;
-	}
+footer .footer-nav::before {
+	border-radius: 35px !important;
+	border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

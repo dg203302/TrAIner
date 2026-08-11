@@ -765,53 +765,6 @@ const initDetallePorDiaPlanAliment = (contenedor) => {
 const initPlanDiaPagerAliment = (scroller) => {
     if (!scroller) return;
 
-    const mqDesktop = (() => {
-        try {
-            return window.matchMedia ? window.matchMedia("(min-width: 1024px)") : null;
-        } catch {
-            return null;
-        }
-    })();
-
-    const mode = mqDesktop && mqDesktop.matches ? "desktop" : "mobile";
-
-    // Reconfigurar automáticamente al cruzar el breakpoint.
-    if (mqDesktop && scroller.dataset.diaPagerMqInit !== "1") {
-        scroller.dataset.diaPagerMqInit = "1";
-        const onChange = () => initPlanDiaPagerAliment(scroller);
-        try {
-            mqDesktop.addEventListener("change", onChange);
-        } catch {
-            // Safari antiguo
-            try {
-                mqDesktop.addListener(onChange);
-            } catch {
-                // ignore
-            }
-        }
-    }
-
-    const prevMode = scroller.dataset.diaPagerMode || "";
-    if (prevMode && prevMode !== mode) {
-        if (typeof scroller.__diaPagerCleanup === "function") {
-            try {
-                scroller.__diaPagerCleanup();
-            } catch {
-                // ignore
-            }
-        }
-        scroller.__diaPagerCleanup = null;
-        scroller.dataset.diaPagerInit = "0";
-    }
-
-    scroller.dataset.diaPagerMode = mode;
-
-    // En escritorio los días se muestran en grilla por CSS.
-    // No interceptamos wheel/touch para no romper el scroll nativo.
-    if (mode === "desktop") {
-        return;
-    }
-
     if (scroller.dataset.diaPagerInit === "1") return;
     scroller.dataset.diaPagerInit = "1";
 
@@ -856,49 +809,6 @@ const initPlanDiaPagerAliment = (scroller) => {
             gestureLock = false;
         }, 420);
     };
-
-    const canScrollInnerGrid = (gridEl, deltaY) => {
-        if (!(gridEl instanceof HTMLElement)) return false;
-        const canScroll = gridEl.scrollHeight > gridEl.clientHeight + 1;
-        if (!canScroll) return false;
-        if (deltaY > 0) {
-            return gridEl.scrollTop < (gridEl.scrollHeight - gridEl.clientHeight - 1);
-        }
-        if (deltaY < 0) {
-            return gridEl.scrollTop > 0;
-        }
-        return false;
-    };
-
-    let wheelAccum = 0;
-    let wheelTimer = null;
-    const WHEEL_THRESHOLD = 26;
-
-    const onWheel = (e) => {
-        const days = getDays();
-        if (days.length <= 1) return;
-        if (e.ctrlKey) return; // pinch zoom
-
-        const deltaY = e.deltaY;
-        const target = e.target;
-        const grid = target instanceof Element ? target.closest(".plan-grid") : null;
-        if (grid && canScrollInnerGrid(grid, deltaY)) return;
-
-        e.preventDefault();
-        wheelAccum += deltaY;
-
-        if (wheelTimer) window.clearTimeout(wheelTimer);
-        wheelTimer = window.setTimeout(() => {
-            wheelAccum = 0;
-        }, 140);
-
-        if (Math.abs(wheelAccum) < WHEEL_THRESHOLD) return;
-        const dir = wheelAccum > 0 ? 1 : -1;
-        wheelAccum = 0;
-        stepBy(dir);
-    };
-
-    scroller.addEventListener("wheel", onWheel, { passive: false });
 
     let touchStartY = 0;
     let touchStartX = 0;
@@ -945,7 +855,6 @@ const initPlanDiaPagerAliment = (scroller) => {
     scroller.addEventListener("touchend", onTouchEnd, { passive: true });
 
     scroller.__diaPagerCleanup = () => {
-        scroller.removeEventListener("wheel", onWheel);
         scroller.removeEventListener("touchstart", onTouchStart);
         scroller.removeEventListener("touchend", onTouchEnd);
         scroller.dataset.diaPagerInit = "0";
