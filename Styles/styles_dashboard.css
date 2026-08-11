@@ -2052,24 +2052,30 @@ main {
 }
 
 .pt-plan-swipe {
-	display: block !important;
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: flex-start !important;
+	overflow-x: auto !important;
+	scroll-snap-type: x mandatory !important;
 	width: 100% !important;
 	max-width: 100% !important;
-	overflow: visible !important;
-	scroll-snap-type: none !important;
+	scrollbar-width: none !important;
+	-webkit-overflow-scrolling: touch !important;
+	padding: 0 !important;
+}
+
+.pt-plan-swipe::-webkit-scrollbar {
+	display: none !important;
 }
 
 .pt-plan-page {
-	display: none !important;
+	flex: 0 0 100% !important;
+	scroll-snap-align: start !important;
+	scroll-snap-stop: always !important;
+	min-width: 100% !important;
 	width: 100% !important;
-	max-width: 100% !important;
-	min-width: 0 !important;
-	flex: none !important;
-	scroll-snap-align: unset !important;
+	margin: 0 !important;
 	padding: 0 0 20px 0 !important;
-}
-
-.pt-plan-page.active {
 	display: block !important;
 }
 
