@@ -23,7 +23,7 @@
         }
 
         .pt-plan-selector-container {
-            display: flex !important;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 6px;
@@ -36,6 +36,16 @@
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
             z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .pt-plan-selector-container {
+                display: flex !important;
+            }
+
+            #pt-plan-swipe {
+                margin-top: 10px !important;
+            }
         }
 
         .pt-plan-selector-btn {
@@ -783,7 +793,7 @@
         </div>
 
         <div id="pt-plan-swipe" class="pt-plan-swipe" aria-label="Planes" data-i18n-en-aria-label="Plans"
-            style="margin-top: 10px;">
+            style="margin-top: 70px;">
 
             <!-- ── Entreno ─────────────────────────────────────────── -->
             <section id="Ejercicios" class="pt-plan-page" tabindex="-1">

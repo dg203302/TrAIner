@@ -1827,6 +1827,31 @@ function mapear_plan(plan_entrenamiento_json) {
         };
     };
 
+const getDaySortIndex = (dayName) => {
+    if (!dayName) return 999;
+    const s = String(dayName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (s.includes("lunes") || s.includes("monday") || s === "l") return 0;
+    if (s.includes("martes") || s.includes("tuesday") || s === "m") return 1;
+    if (s.includes("miercoles") || s.includes("wednesday") || s === "x") return 2;
+    if (s.includes("jueves") || s.includes("thursday") || s === "j") return 3;
+    if (s.includes("viernes") || s.includes("friday") || s === "v") return 4;
+    if (s.includes("sabado") || s.includes("saturday") || s === "s") return 5;
+    if (s.includes("domingo") || s.includes("sunday") || s === "d") return 6;
+    return 999;
+};
+
+const sortDiasArray = (arr) => {
+    if (!Array.isArray(arr)) return [];
+    return [...arr].sort((a, b) => {
+        const nameA = a?.dia ?? a?.nombre ?? a?.day ?? a?.key ?? (typeof a === "string" ? a : "");
+        const nameB = b?.dia ?? b?.nombre ?? b?.day ?? b?.key ?? (typeof b === "string" ? b : "");
+        const ia = getDaySortIndex(nameA);
+        const ib = getDaySortIndex(nameB);
+        if (ia !== ib) return ia - ib;
+        return (a?.originalIndex ?? a?._origIdx ?? 0) - (b?.originalIndex ?? b?._origIdx ?? 0);
+    });
+};
+
     const diasOrden = [
         "lunes",
         "martes",
@@ -1987,7 +2012,7 @@ function mapear_plan(plan_entrenamiento_json) {
     let html = "";
 
     if (hasDiasArray) {
-        const days = (Array.isArray(maybeDiasArray) ? maybeDiasArray : [])
+        const rawDays = (Array.isArray(maybeDiasArray) ? maybeDiasArray : [])
             .map((d, originalIndex) => {
                 const dia = d?.dia ?? d?.nombre ?? d?.day ?? tLang(`Día ${originalIndex + 1}`, `Day ${originalIndex + 1}`);
                 const enfoque = d?.enfoque ?? d?.focus ?? d?.objetivo ?? d?.titulo ?? d?.title;
@@ -1995,8 +2020,10 @@ function mapear_plan(plan_entrenamiento_json) {
                 const normalized = (Array.isArray(ejercicios) ? ejercicios : [])
                     .map(normalizeExercise)
                     .filter(Boolean);
-                return { dia, enfoque, ejercicios, normalized, originalIndex };
+                return { dia, enfoque, ejercicios, normalized, originalIndex, raw: d };
             });
+
+        const days = sortDiasArray(rawDays);
 
         if (!days.length) {
             html = `<div class="plan-vacio" data-i18n-en="No days have exercises assigned.">No hay días con ejercicios asignados.</div>`;
@@ -2008,9 +2035,9 @@ function mapear_plan(plan_entrenamiento_json) {
         }
     } else if (hasWeekdayObject) {
         const orderedKeys = [...weekdayKeys].sort((a, b) => {
-            const ia = diasOrden.indexOf(String(a).toLowerCase());
-            const ib = diasOrden.indexOf(String(b).toLowerCase());
-            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            const ia = getDaySortIndex(a);
+            const ib = getDaySortIndex(b);
+            return ia - ib;
         });
 
         const days = orderedKeys
@@ -2131,23 +2158,23 @@ function parsePlanDiasDetallados(planRaw) {
         root?.planSemanal;
 
     if (Array.isArray(maybeDiasArray)) {
-        const days = maybeDiasArray.map((d, i) => {
+        const rawDays = maybeDiasArray.map((d, i) => {
             const dia = d?.dia ?? d?.nombre ?? d?.day ?? tLang(`Día ${i + 1}`, `Day ${i + 1}`);
             const enfoque = d?.enfoque ?? d?.focus ?? d?.objetivo ?? d?.titulo ?? d?.title ?? "";
             const ejercicios = Array.isArray(d?.ejercicios)
                 ? d.ejercicios.map(normalizeExDet).filter(Boolean)
                 : [];
-            return { dia, enfoque, ejercicios };
+            return { dia, enfoque, ejercicios, originalIndex: i, raw: d };
         });
-        return days;
+        return sortDiasArray(rawDays);
     }
 
-    const weekdayKeys = Object.keys(root || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+    const weekdayKeys = Object.keys(root || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
     if (weekdayKeys.length > 0) {
         const orderedKeys = [...weekdayKeys].sort((a, b) => {
-            const ia = diasOrden.indexOf(String(a).toLowerCase());
-            const ib = diasOrden.indexOf(String(b).toLowerCase());
-            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+            const ia = getDaySortIndex(a);
+            const ib = getDaySortIndex(b);
+            return ia - ib;
         });
         const days = orderedKeys.map((k) => {
             const ejercicios = Array.isArray(root[k]) ? root[k].map(normalizeExDet).filter(Boolean) : [];
@@ -2647,25 +2674,22 @@ function initDetallePorDiaPlan() {
 
         if (Array.isArray(maybeDiasArray)) {
             isArrayStructure = true;
-            // Use direct index (same as renderer - counts ALL days including empty ones)
-            if (dayIdx >= 0 && dayIdx < maybeDiasArray.length) {
-                targetDayObj = maybeDiasArray[dayIdx];
+            const sortedDays = sortDiasArray(maybeDiasArray.map((d, i) => ({ ...d, originalIndex: i })));
+            if (dayIdx >= 0 && dayIdx < sortedDays.length) {
+                const chosen = sortedDays[dayIdx];
+                targetDayObj = maybeDiasArray[chosen.originalIndex] || chosen;
             }
         } else {
-            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
             if (weekdayKeys.length > 0) {
                 const orderedKeys = [...weekdayKeys].sort((a, b) => {
-                    const ia = diasOrden.indexOf(String(a).toLowerCase());
-                    const ib = diasOrden.indexOf(String(b).toLowerCase());
-                    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+                    const ia = getDaySortIndex(a);
+                    const ib = getDaySortIndex(b);
+                    return ia - ib;
                 });
-
-                // Use direct index (same as renderer)
                 if (dayIdx >= 0 && dayIdx < orderedKeys.length) {
-                    const k = orderedKeys[dayIdx];
-                    const ejercicios = Array.isArray(actualRoot[k]) ? actualRoot[k] : [];
-                    targetDayObj = { dia: k, enfoque: "", ejercicios };
-                    objectKey = k;
+                    objectKey = orderedKeys[dayIdx];
+                    targetDayObj = { dia: objectKey, ejercicios: actualRoot[objectKey] };
                 }
             }
         }
@@ -3350,25 +3374,25 @@ function initDetallePorDiaPlan() {
                         let targetList = null;
 
                         if (Array.isArray(maybeDiasArray)) {
+                            const sortedDays = sortDiasArray(maybeDiasArray.map((d, i) => ({ ...d, originalIndex: i })));
                             let filteredIdx = 0;
-                            for (let i = 0; i < maybeDiasArray.length; i++) {
-                                const d = maybeDiasArray[i];
+                            for (let i = 0; i < sortedDays.length; i++) {
+                                const d = sortedDays[i];
                                 const ejerciciosList = Array.isArray(d?.ejercicios) ? d.ejercicios : [];
                                 if (ejerciciosList.length > 0) {
                                     if (filteredIdx === dayIdx) {
-                                        targetList = ejerciciosList;
+                                        targetList = maybeDiasArray[d.originalIndex]?.ejercicios || d.ejercicios;
                                         break;
                                     }
                                     filteredIdx++;
                                 }
                             }
                         } else {
-                            const diasOrden = ["lunes", "martes", "miércoles", "miercoles", "jueves", "viernes", "sábado", "sabado", "domingo", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-                            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+                            const weekdayKeys = Object.keys(actualRoot || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
                             const orderedKeys = [...weekdayKeys].sort((a, b) => {
-                                const ia = diasOrden.indexOf(String(a).toLowerCase());
-                                const ib = diasOrden.indexOf(String(b).toLowerCase());
-                                return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+                                const ia = getDaySortIndex(a);
+                                const ib = getDaySortIndex(b);
+                                return ia - ib;
                             });
 
                             let filteredIdx = 0;

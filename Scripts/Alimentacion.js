@@ -378,6 +378,31 @@ const tryParseJson = (value) => {
     }
 };
 
+const getDaySortIndex = (dayName) => {
+    if (!dayName) return 999;
+    const s = String(dayName).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    if (s.includes("lunes") || s.includes("monday") || s === "l") return 0;
+    if (s.includes("martes") || s.includes("tuesday") || s === "m") return 1;
+    if (s.includes("miercoles") || s.includes("wednesday") || s === "x") return 2;
+    if (s.includes("jueves") || s.includes("thursday") || s === "j") return 3;
+    if (s.includes("viernes") || s.includes("friday") || s === "v") return 4;
+    if (s.includes("sabado") || s.includes("saturday") || s === "s") return 5;
+    if (s.includes("domingo") || s.includes("sunday") || s === "d") return 6;
+    return 999;
+};
+
+const sortDiasArray = (arr) => {
+    if (!Array.isArray(arr)) return [];
+    return [...arr].sort((a, b) => {
+        const nameA = a?.dia ?? a?.nombre ?? a?.day ?? a?.key ?? (typeof a === "string" ? a : "");
+        const nameB = b?.dia ?? b?.nombre ?? b?.day ?? b?.key ?? (typeof b === "string" ? b : "");
+        const ia = getDaySortIndex(nameA);
+        const ib = getDaySortIndex(nameB);
+        if (ia !== ib) return ia - ib;
+        return (a?.originalIndex ?? 0) - (b?.originalIndex ?? 0);
+    });
+};
+
 const DIAS_ORDEN = [
     "lunes",
     "martes",
@@ -461,8 +486,8 @@ const parsePlanDiasDetalladosAliment = (planRaw) => {
         root.planSemanal;
 
     if (Array.isArray(maybeDiasArray)) {
-        return maybeDiasArray
-            .map((d) => {
+        const days = maybeDiasArray
+            .map((d, originalIndex) => {
                 if (!d || typeof d !== "object") return null;
                 return {
                     dia: normalizeDayLabel(d.dia ?? d.day ?? d.nombre_dia ?? d.nombreDia, tLang("Día", "Day")),
@@ -477,15 +502,17 @@ const parsePlanDiasDetalladosAliment = (planRaw) => {
                     tips: Array.isArray(d.tips ?? d.consejos)
                         ? (d.tips ?? d.consejos).map((x) => String(x)).filter(Boolean)
                         : [],
+                    originalIndex,
                 };
             })
             .filter(Boolean);
+        return sortDiasArray(days);
     }
 
     // Alternativa: objeto con keys de días
-    const weekdayKeys = Object.keys(root || {}).filter((k) => DIAS_ORDEN.includes(String(k).toLowerCase()));
+    const weekdayKeys = Object.keys(root || {}).filter((k) => DIAS_ORDEN.includes(String(k).toLowerCase()) || getDaySortIndex(k) < 999);
     if (weekdayKeys.length > 0) {
-        const ordered = [...weekdayKeys].sort((a, b) => DIAS_ORDEN.indexOf(a.toLowerCase()) - DIAS_ORDEN.indexOf(b.toLowerCase()));
+        const ordered = [...weekdayKeys].sort((a, b) => getDaySortIndex(a) - getDaySortIndex(b));
         return ordered
             .map((k) => {
                 const d = root[k];
