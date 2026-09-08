@@ -86,7 +86,7 @@ async function verificarUsuario() {
                     tLang("Comencemos configurando tu perfil...", "Let's configure your profile...")
                 );
 
-                window.location.href = "/Templates/templates_nuevas/creacionCuen/datosUnuevo.html";
+                window.location.href = "/Templates/creacionCuen/datosUnuevo.html";
                 return;
             }
 
@@ -129,7 +129,7 @@ async function verificarUsuario() {
             );
 
             // Redirigir al nuevo Dashboard renovado
-            window.location.href = "/Templates/templates_nuevas/dashboard.html";
+            window.location.href = "/Templates/dashboard.html";
             return;
 
         } else {

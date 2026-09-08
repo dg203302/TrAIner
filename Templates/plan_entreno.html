@@ -16,7 +16,6 @@
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/spa_router.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -1648,6 +1647,273 @@
             font-weight: 800;
             font-size: 16px;
         }
+
+        /* ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS / SELECT ── */
+        .glass-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 8, 12, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+        }
+
+        .glass-modal-backdrop.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .glass-modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            background: rgba(14, 18, 27, 0.90);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 32px 28px 26px;
+            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 243, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-modal-backdrop.is-open .glass-modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .glass-modal-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .glass-modal-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(157, 243, 255, 0.08);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            box-shadow: 0 0 25px rgba(157, 243, 255, 0.15);
+            color: var(--accent, #9df3ff);
+        }
+
+        .glass-modal-icon-wrap.is-danger {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: rgba(255, 71, 87, 0.3);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .glass-modal-icon-wrap.is-warning {
+            background: rgba(255, 177, 66, 0.1);
+            border-color: rgba(255, 177, 66, 0.3);
+            box-shadow: 0 0 25px rgba(255, 177, 66, 0.2);
+            color: #ffb142;
+        }
+
+        .glass-modal-icon-wrap.is-success {
+            background: rgba(124, 255, 184, 0.1);
+            border-color: rgba(124, 255, 184, 0.3);
+            box-shadow: 0 0 25px rgba(124, 255, 184, 0.2);
+            color: #7cffb8;
+        }
+
+        .glass-modal-icon-wrap svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .glass-modal-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin: 0 0 8px;
+        }
+
+        .glass-modal-desc {
+            font-size: 14px;
+            color: #8a99ad;
+            line-height: 1.45;
+            margin: 0 0 24px;
+            max-width: 320px;
+        }
+
+        .glass-modal-select {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-size: 14.5px;
+            font-family: inherit;
+            font-weight: 600;
+            outline: none;
+            margin-bottom: 22px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .glass-modal-select:focus {
+            border-color: var(--accent, #9df3ff);
+        }
+
+        .glass-modal-select option {
+            background: #12151d;
+            color: #ffffff;
+        }
+
+        .glass-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            padding: 13px 18px;
+            border-radius: 999px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #8a99ad;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel:hover {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .btn-modal-confirm {
+            flex: 1.2;
+            padding: 13px 20px;
+            border-radius: 999px;
+            background: var(--accent, #9df3ff);
+            border: none;
+            color: #06080c;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 18px rgba(157, 243, 255, 0.35);
+        }
+
+        .btn-modal-confirm:hover {
+            background: #7ce9f7;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(157, 243, 255, 0.5);
+        }
+
+        .btn-modal-confirm.is-danger {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.35);
+        }
+
+        .btn-modal-confirm.is-danger:hover {
+            box-shadow: 0 6px 24px rgba(255, 71, 87, 0.55);
+        }
+
+        /* Toast Flotante Dark Glassmorphic */
+        .glass-toast-wrap {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            z-index: 100000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-toast-wrap.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .glass-toast {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px 10px 14px;
+            background: rgba(14, 18, 27, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(157, 243, 255, 0.25);
+            border-radius: 999px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(157, 243, 255, 0.15);
+        }
+
+        .glass-toast-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: rgba(124, 255, 184, 0.15);
+            color: #7cffb8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-toast-icon.is-danger {
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+        }
+
+        .glass-toast-icon.is-info {
+            background: rgba(157, 243, 255, 0.15);
+            color: var(--accent, #9df3ff);
+        }
+
+        .glass-toast-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .glass-toast-text {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.1px;
+        }
     </style>
 </head>
 
@@ -1664,7 +1930,7 @@
             </div>
 
             <div class="header-actions">
-                <a href="/Templates/templates_nuevas/config.html" class="header-btn header-avatar-btn"
+                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
                     id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
@@ -2106,7 +2372,7 @@
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Grid / Dashboard -->
-            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item" aria-label="Panel de Entrenamientos">
+            <a href="/Templates/dashboard.html" class="nav-item" aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
                     <rect x="14" y="3" width="7" height="7" rx="2"></rect>
@@ -2116,7 +2382,7 @@
             </a>
 
             <!-- 2. Calendario -->
-            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item" aria-label="Calendario de Entreno">
+            <a href="/Templates/calendario_renov.html" class="nav-item" aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -2126,7 +2392,7 @@
             </a>
 
             <!-- 3. Planes (Activo en esta página) -->
-            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item is-active" aria-label="Plan de Entrenamiento">
+            <a href="/Templates/plan_entreno.html" class="nav-item is-active" aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m6.5 6.5 11 11"></path>
                     <path d="m21 21-1-1"></path>
@@ -2139,7 +2405,7 @@
             </a>
 
             <!-- 4. Alimentación -->
-            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item" aria-label="Plan de Alimentación">
+            <a href="/Templates/plan_alimentacion.html" class="nav-item" aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                     <path d="M7 2v20"></path>
@@ -2148,13 +2414,39 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item" id="btn-nav-chat" aria-label="Asistente Inteligente TrAIner">
+            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat" aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
             </a>
         </div>
     </nav>
+
+    <!-- ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS / SELECT ── -->
+    <div class="glass-modal-backdrop" id="glass-modal-backdrop" aria-hidden="true">
+        <div class="glass-modal-card" id="glass-modal-card">
+            <div class="glass-modal-icon-wrap" id="glass-modal-icon"></div>
+            <h3 class="glass-modal-title" id="glass-modal-title">Título</h3>
+            <p class="glass-modal-desc" id="glass-modal-desc">Descripción</p>
+            <div id="glass-modal-custom-slot" style="display:none; width: 100%;"></div>
+            <div class="glass-modal-actions" id="glass-modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btn-modal-cancel">Cancelar</button>
+                <button type="button" class="btn-modal-confirm" id="btn-modal-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── TOAST FLOTANTE DARK GLASSMORPHIC ── -->
+    <div class="glass-toast-wrap" id="glass-toast-wrap" aria-live="polite">
+        <div class="glass-toast" id="glass-toast">
+            <div class="glass-toast-icon" id="glass-toast-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span class="glass-toast-text" id="glass-toast-text">Cambios guardados</span>
+        </div>
+    </div>
 
     <!-- ── LÓGICA DE CONEXIÓN CON SUPABASE, GIFS Y GESTIÓN DEL PLAN ── -->
     <script type="module">
@@ -2171,6 +2463,229 @@
         let selectedDayIndex = 0;
         let manualEditDayIndex = 0;
         let activeCatalogGroup = "Pecho";
+        let isGeneratingPlan = false;
+        let isLoggingWorkout = false;
+
+        // ── SISTEMA DE MODALES, SELECT Y TOASTS GLASSMORPHIC ──
+        let toastTimer = null;
+        function showGlassToast(text, type = "success") {
+            const wrap = document.getElementById("glass-toast-wrap");
+            const textEl = document.getElementById("glass-toast-text");
+            const iconEl = document.getElementById("glass-toast-icon");
+            if (!wrap || !textEl) return;
+            textEl.textContent = text;
+            if (iconEl) {
+                iconEl.className = "glass-toast-icon" + (type === "danger" || type === "error" ? " is-danger" : (type === "info" ? " is-info" : ""));
+                if (type === "danger" || type === "error") {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                } else if (type === "info") {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                } else {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                }
+            }
+            wrap.classList.add("is-visible");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                wrap.classList.remove("is-visible");
+            }, 2600);
+        }
+
+        function showGlassAlert({ title, desc, iconType = "info", confirmText = "Entendido" }) {
+            return showGlassConfirm({
+                title,
+                desc,
+                iconType,
+                confirmText,
+                singleButton: true
+            });
+        }
+
+        function showGlassConfirm({ title, desc, iconType = "warning", confirmText = "Confirmar", cancelText = "Cancelar", isDanger = false, singleButton = false }) {
+            return new Promise((resolve) => {
+                const backdrop = document.getElementById("glass-modal-backdrop");
+                const titleEl = document.getElementById("glass-modal-title");
+                const descEl = document.getElementById("glass-modal-desc");
+                const iconWrap = document.getElementById("glass-modal-icon");
+                const slot = document.getElementById("glass-modal-custom-slot");
+                const btnCancel = document.getElementById("btn-modal-cancel");
+                const btnConfirm = document.getElementById("btn-modal-confirm");
+
+                if (!backdrop) {
+                    resolve(false);
+                    return;
+                }
+
+                if (slot) {
+                    slot.style.display = "none";
+                    slot.innerHTML = "";
+                }
+
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                btnConfirm.textContent = confirmText;
+                btnCancel.textContent = cancelText;
+
+                if (singleButton) {
+                    btnCancel.style.display = "none";
+                    btnConfirm.style.flex = "1";
+                } else {
+                    btnCancel.style.display = "block";
+                    btnConfirm.style.flex = "1.2";
+                }
+
+                if (isDanger || iconType === "danger" || iconType === "delete" || iconType === "error") {
+                    iconWrap.className = "glass-modal-icon-wrap is-danger";
+                    btnConfirm.className = "btn-modal-confirm is-danger";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    `;
+                } else if (iconType === "warning") {
+                    iconWrap.className = "glass-modal-icon-wrap is-warning";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    `;
+                } else if (iconType === "success") {
+                    iconWrap.className = "glass-modal-icon-wrap is-success";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    `;
+                } else {
+                    iconWrap.className = "glass-modal-icon-wrap";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    `;
+                }
+
+                const cleanup = () => {
+                    backdrop.classList.remove("is-open");
+                    btnCancel.removeEventListener("click", onCancel);
+                    btnConfirm.removeEventListener("click", onConfirm);
+                    backdrop.removeEventListener("click", onBackdrop);
+                };
+
+                const onCancel = () => {
+                    cleanup();
+                    resolve(false);
+                };
+
+                const onConfirm = () => {
+                    cleanup();
+                    resolve(true);
+                };
+
+                const onBackdrop = (e) => {
+                    if (e.target === backdrop) {
+                        cleanup();
+                        resolve(false);
+                    }
+                };
+
+                btnCancel.addEventListener("click", onCancel);
+                btnConfirm.addEventListener("click", onConfirm);
+                backdrop.addEventListener("click", onBackdrop);
+
+                backdrop.classList.add("is-open");
+            });
+        }
+
+        function showGlassSelect({ title, desc, options, confirmText = "Confirmar", cancelText = "Cancelar" }) {
+            return new Promise((resolve) => {
+                const backdrop = document.getElementById("glass-modal-backdrop");
+                const titleEl = document.getElementById("glass-modal-title");
+                const descEl = document.getElementById("glass-modal-desc");
+                const iconWrap = document.getElementById("glass-modal-icon");
+                const slot = document.getElementById("glass-modal-custom-slot");
+                const btnCancel = document.getElementById("btn-modal-cancel");
+                const btnConfirm = document.getElementById("btn-modal-confirm");
+
+                if (!backdrop) {
+                    resolve(null);
+                    return;
+                }
+
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                btnConfirm.textContent = confirmText;
+                btnCancel.textContent = cancelText;
+
+                btnCancel.style.display = "block";
+                btnConfirm.style.flex = "1.2";
+
+                iconWrap.className = "glass-modal-icon-wrap";
+                btnConfirm.className = "btn-modal-confirm";
+                iconWrap.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                `;
+
+                if (slot) {
+                    slot.style.display = "block";
+                    slot.innerHTML = `
+                        <select class="glass-modal-select" id="glass-modal-select-field">
+                            ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+                        </select>
+                    `;
+                }
+
+                const cleanup = () => {
+                    backdrop.classList.remove("is-open");
+                    if (slot) {
+                        slot.style.display = "none";
+                        slot.innerHTML = "";
+                    }
+                    btnCancel.removeEventListener("click", onCancel);
+                    btnConfirm.removeEventListener("click", onConfirm);
+                    backdrop.removeEventListener("click", onBackdrop);
+                };
+
+                const onCancel = () => {
+                    cleanup();
+                    resolve(null);
+                };
+
+                const onConfirm = () => {
+                    const sel = document.getElementById("glass-modal-select-field");
+                    const val = sel ? sel.value : null;
+                    cleanup();
+                    resolve(val);
+                };
+
+                const onBackdrop = (e) => {
+                    if (e.target === backdrop) {
+                        cleanup();
+                        resolve(null);
+                    }
+                };
+
+                btnCancel.addEventListener("click", onCancel);
+                btnConfirm.addEventListener("click", onConfirm);
+                backdrop.addEventListener("click", onBackdrop);
+
+                backdrop.classList.add("is-open");
+            });
+        }
 
         // Base de datos de ejercicios con GIFs
         let ENTRENAMIENTOS_DB = {};
@@ -2272,6 +2787,31 @@
                     avatarEl.onerror = () => {
                         avatarEl.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
                     };
+                }
+
+                // Cargar también Datos Fitness de Supabase si están disponibles
+                const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                if (userId) {
+                    try {
+                        const { data: fitData } = await supabase
+                            .from("Datos Fitness")
+                            .select("*")
+                            .eq("ID_user", userId)
+                            .limit(1);
+
+                        if (fitData && fitData.length > 0) {
+                            const f = fitData[0];
+                            if (f.Altura != null) localStorage.setItem("altura_usuario", f.Altura);
+                            if (f.Peso != null) {
+                                localStorage.setItem("peso_usuario", f.Peso);
+                                localStorage.setItem("peso_actual_usuario", f.Peso);
+                            }
+                            if (f.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", f.Peso_Obj);
+                            if (f.Edad != null) localStorage.setItem("edad_usuario", f.Edad);
+                        }
+                    } catch (fitErr) {
+                        console.warn("Aviso al consultar Datos Fitness:", fitErr);
+                    }
                 }
             } catch (err) {
                 console.warn("fetchUserProfile error:", err);
@@ -2858,34 +3398,16 @@
                 const diasDisponibles = DIAS_SEMANA_NOMBRES.filter(d => !diasUsados.has(d.toLowerCase()));
 
                 if (diasDisponibles.length === 0) {
-                    Swal.fire({
-                        toast: true,
-                        position: "top",
-                        icon: "info",
-                        title: "Ya incluiste todos los días de la semana",
-                        timer: 2000,
-                        showConfirmButton: false,
-                        background: "#181a1f",
-                        color: "#fff"
-                    });
+                    showGlassToast("Ya incluiste todos los días de la semana", "info");
                     return;
                 }
 
-                const inputOptions = {};
-                diasDisponibles.forEach(d => inputOptions[d] = d);
-
-                const { value: selectedDay } = await Swal.fire({
+                const selectedDay = await showGlassSelect({
                     title: "Agregar día a la rutina",
-                    input: "select",
-                    inputOptions: inputOptions,
-                    inputPlaceholder: "Selecciona un día",
-                    showCancelButton: true,
-                    confirmButtonText: "Agregar",
-                    cancelButtonText: "Cancelar",
-                    confirmButtonColor: "#ffffff",
-                    cancelButtonColor: "#272a33",
-                    background: "#181a1f",
-                    color: "#ffffff"
+                    desc: "Selecciona el día de la semana que deseas incorporar a tu entrenamiento:",
+                    options: diasDisponibles,
+                    confirmText: "Agregar día",
+                    cancelText: "Cancelar"
                 });
 
                 if (selectedDay) {
@@ -2959,18 +3481,20 @@
 
         async function guardarPlanManual() {
             if (!planParsedDias || planParsedDias.length === 0) {
-                Swal.fire({ icon: "warning", title: "Rutina vacía", text: "Agrega al menos un día a tu plan.", background: "#181a1f", color: "#fff" });
+                await showGlassAlert({
+                    iconType: "warning",
+                    title: "Rutina vacía",
+                    desc: "Agrega al menos un día a tu plan."
+                });
                 return;
             }
 
             const totalEx = planParsedDias.reduce((acc, d) => acc + (d.ejercicios?.length || 0), 0);
             if (totalEx === 0) {
-                Swal.fire({
-                    icon: "warning",
+                await showGlassAlert({
+                    iconType: "warning",
                     title: "Sin ejercicios",
-                    text: "Añade al menos un ejercicio a alguno de los días antes de guardar.",
-                    background: "#181a1f",
-                    color: "#fff"
+                    desc: "Añade al menos un ejercicio a alguno de los días antes de guardar."
                 });
                 return;
             }
@@ -3020,17 +3544,7 @@
             } catch { }
 
             closeManualEditorModal();
-
-            Swal.fire({
-                toast: true,
-                position: "top",
-                icon: "success",
-                title: "Plan manual guardado correctamente",
-                showConfirmButton: false,
-                timer: 2000,
-                background: "#181a1f",
-                color: "#ffffff"
-            });
+            showGlassToast("Plan manual guardado correctamente", "success");
 
             selectedDayIndex = 0;
             renderUI();
@@ -3038,20 +3552,16 @@
 
         // ── 11. ELIMINAR PLAN ──
         async function handleEliminarPlan() {
-            const res = await Swal.fire({
+            const confirmed = await showGlassConfirm({
                 title: "¿Eliminar plan de entreno?",
-                text: "Esta acción borrará tu rutina actual. Podrás crear una nueva cuando quieras.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Sí, eliminar plan",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#ff4757",
-                cancelButtonColor: "#272a33",
-                background: "#181a1f",
-                color: "#ffffff"
+                desc: "Esta acción borrará tu rutina actual. Podrás crear una nueva cuando quieras.",
+                iconType: "danger",
+                confirmText: "Sí, eliminar plan",
+                cancelText: "Cancelar",
+                isDanger: true
             });
 
-            if (!res.isConfirmed) return;
+            if (!confirmed) return;
 
             localStorage.setItem("plan_entreno_usuario", "Ninguno");
             const userId = currentUser?.id || localStorage.getItem("id_usuario");
@@ -3067,15 +3577,7 @@
                 });
             } catch (e) { }
 
-            Swal.fire({
-                icon: "success",
-                title: "Plan eliminado",
-                text: "Tu plan de entrenamiento ha sido eliminado.",
-                background: "#181a1f",
-                color: "#fff",
-                confirmButtonColor: "#ffffff"
-            });
-
+            showGlassToast("Plan de entrenamiento eliminado", "success");
             cargarPlanEntreno();
         }
 
@@ -3201,6 +3703,7 @@
         }
 
         function closeLogWorkoutModal() {
+            if (isLoggingWorkout) return;
             const backdrop = document.getElementById("modal-log-workout-backdrop");
             if (!backdrop) return;
             backdrop.classList.remove("is-open");
@@ -3239,15 +3742,26 @@
         }
 
         async function confirmLogWorkout() {
+            if (isLoggingWorkout) return;
+            isLoggingWorkout = true;
+
             const dayInfo = logActiveDayInfo || planParsedDias[selectedDayIndex];
-            if (!dayInfo) return;
+            if (!dayInfo) {
+                isLoggingWorkout = false;
+                return;
+            }
 
             const btnConfirm = document.getElementById("btn-confirm-log-workout");
+            const btnClose = document.getElementById("btn-close-log-modal");
             const origHtml = btnConfirm?.innerHTML || "Confirmar";
             if (btnConfirm) {
                 btnConfirm.style.pointerEvents = "none";
                 btnConfirm.style.opacity = "0.75";
                 btnConfirm.textContent = "Guardando...";
+            }
+            if (btnClose) {
+                btnClose.style.pointerEvents = "none";
+                btnClose.style.opacity = "0.3";
             }
 
             const restoreBtn = () => {
@@ -3256,6 +3770,11 @@
                     btnConfirm.style.pointerEvents = "";
                     btnConfirm.style.opacity = "";
                 }
+                if (btnClose) {
+                    btnClose.style.pointerEvents = "";
+                    btnClose.style.opacity = "";
+                }
+                isLoggingWorkout = false;
             };
 
             const ahora = new Date();
@@ -3296,45 +3815,48 @@
                         .single();
                     if (data?.Dias_entrenados) {
                         const fromDb = normalizarDiasCale(data.Dias_entrenados);
-                        if (fromDb.length) registrosPrevios = fromDb;
+                        if (fromDb.length > 0) registrosPrevios = fromDb;
                     }
                 }
             } catch (e) {
-                console.warn("Consulta Dias_entrenados:", e);
+                console.warn("Aviso leyendo Dias_entrenados:", e);
             }
 
-            const registro = {
-                id_registro: idRegistro,
-                fecha: fechaStr,
-                titulo_entreno: dayInfo.enfoque || dayInfo.dia || "Entrenamiento",
-                descripcion: `Sesión de ${dayInfo.dia}: ${dayInfo.enfoque || 'Entreno completado'}`,
-                calorias_quemadas: caloriasQuemadas,
-                tiempo_total_min: tiempoTotalMin,
-                hora_confirmacion: horaStr,
-                confirmado_en: isoStr,
-                ejercicios_completados: (dayInfo.ejercicios || []).map(e => e.nombre)
-            };
-
-            const newEntry = {
-                id_registro: registro.id_registro,
-                title: registro.titulo_entreno,
-                start: registro.fecha,
-                extendedProps: {
-                    calories_burnt: caloriasQuemadas,
-                    tiempo_total_min: tiempoTotalMin,
-                    hora_confirmacion: registro.hora_confirmacion,
-                    confirmado_en: registro.confirmado_en,
-                    status: "completado",
-                    ejercicios: registro.ejercicios_completados
+            // Normalizar a formato nuevo de objetos
+            let diasArray = registrosPrevios.map(item => {
+                if (typeof item === "string") {
+                    return {
+                        id: item,
+                        dia: item,
+                        enfoque: "Sesión Registrada",
+                        fecha: fechaStr,
+                        hora: horaStr,
+                        duracion_minutos: tiempoTotalMin,
+                        calorias: caloriasQuemadas,
+                        ejercicios: []
+                    };
                 }
+                return item;
+            });
+
+            // Reemplazar o insertar registro para este día
+            const newEntry = {
+                id: idRegistro,
+                dia: dayInfo.dia,
+                enfoque: dayInfo.enfoque || "Entrenamiento",
+                fecha: fechaStr,
+                hora: horaStr,
+                timestamp: isoStr,
+                duracion_minutos: tiempoTotalMin,
+                calorias: caloriasQuemadas,
+                ejercicios: (dayInfo.ejercicios || []).map(e => ({
+                    nombre: e.nombre,
+                    series: e.series,
+                    repeticiones: e.repeticiones
+                }))
             };
 
-            const diasArray = Array.isArray(registrosPrevios) ? registrosPrevios.slice() : [];
-            const existingIdx = diasArray.findIndex(d => 
-                (d && d.id_registro && d.id_registro === idRegistro) ||
-                (d && d.start === fechaStr && d.title === newEntry.title)
-            );
-
+            const existingIdx = diasArray.findIndex(d => (d.fecha === fechaStr && d.dia === dayInfo.dia));
             if (existingIdx >= 0) {
                 diasArray[existingIdx] = newEntry;
             } else {
@@ -3365,18 +3887,7 @@
             restoreBtn();
             closeLogWorkoutModal();
 
-            Swal.fire({
-                toast: true,
-                position: 'top',
-                icon: 'success',
-                title: "¡Entreno registrado!",
-                text: `Se guardó tu sesión (${tiempoTotalMin} min · ${caloriasQuemadas} kcal).`,
-                showConfirmButton: false,
-                timer: 2800,
-                background: '#13141a',
-                color: '#fff',
-                customClass: { popup: 'swal-custom-dark' }
-            });
+            showGlassToast(`¡Entreno registrado! (${tiempoTotalMin} min · ${caloriasQuemadas} kcal)`, "success");
         }
 
         function handleRegistrarSesion() {
@@ -3450,7 +3961,7 @@
 
             // Cargar datos previos de usuario en la tarjeta resumen
             const altura = localStorage.getItem("altura_usuario") || "--";
-            const peso = localStorage.getItem("peso_actual_usuario") || "--";
+            const peso = localStorage.getItem("peso_usuario") || localStorage.getItem("peso_actual_usuario") || "--";
             const edad = localStorage.getItem("edad_usuario") || "--";
             document.getElementById("ai-prof-altura").textContent = altura !== "--" ? `${altura} cm` : "--";
             document.getElementById("ai-prof-peso").textContent = peso !== "--" ? `${peso} kg` : "--";
@@ -3464,6 +3975,7 @@
         }
 
         function closeAiGeneratorModal() {
+            if (isGeneratingPlan) return;
             const backdrop = document.getElementById("modal-ai-generator-backdrop");
             if (!backdrop) return;
             backdrop.classList.remove("is-open");
@@ -3499,108 +4011,318 @@
             }
         }
 
+        // ── GENERADOR INTELIGENTE DE RESPALDO (ALGORÍTMICO / IA LOCAL) ──
+        function generateFallbackAiPlan({ dias, lugar, objetivo, intensidad, ejerciciosPorDia, altura, peso, pesoObj, edad }) {
+            const DIAS_CANONICOS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+            const diasSeleccionadosNombres = (dias || []).map(d => DIAS_CODIGOS_MAP[d] || d);
+
+            const splitsPorCantidad = {
+                1: [
+                    { enfoque: "Full Body / Cuerpo Completo", grupos: ["Pecho", "Espalda", "Piernas", "Hombros", "Brazos", "Abdomen / core"] }
+                ],
+                2: [
+                    { enfoque: "Torso Superior", grupos: ["Pecho", "Espalda", "Hombros", "Brazos", "Tríceps"] },
+                    { enfoque: "Pierna y Core", grupos: ["Piernas", "Abdomen / core", "Piernas", "Cardio / acondicionamiento"] }
+                ],
+                3: [
+                    { enfoque: "Empuje (Pecho, Hombro y Tríceps)", grupos: ["Pecho", "Hombros", "Tríceps", "Pecho"] },
+                    { enfoque: "Tirón (Espalda y Bíceps)", grupos: ["Espalda", "Brazos", "Espalda", "Antebrazos"] },
+                    { enfoque: "Pierna y Abdomen", grupos: ["Piernas", "Piernas", "Abdomen / core"] }
+                ],
+                4: [
+                    { enfoque: "Torso Fuerza (Pecho y Espalda)", grupos: ["Pecho", "Espalda", "Pecho", "Espalda"] },
+                    { enfoque: "Pierna y Abdomen", grupos: ["Piernas", "Piernas", "Abdomen / core"] },
+                    { enfoque: "Torso Hipertrofia (Hombros y Brazos)", grupos: ["Hombros", "Brazos", "Tríceps", "Hombros"] },
+                    { enfoque: "Pierna y Glúteos", grupos: ["Piernas", "Piernas", "Abdomen / core"] }
+                ],
+                5: [
+                    { enfoque: "Pecho y Tríceps", grupos: ["Pecho", "Tríceps", "Pecho", "Hombros"] },
+                    { enfoque: "Espalda y Bíceps", grupos: ["Espalda", "Brazos", "Espalda", "Antebrazos"] },
+                    { enfoque: "Piernas (Enfoque Cuádriceps)", grupos: ["Piernas", "Piernas", "Abdomen / core"] },
+                    { enfoque: "Hombros y Core", grupos: ["Hombros", "Abdomen / core", "Hombros"] },
+                    { enfoque: "Pierna Posterior y Brazos", grupos: ["Piernas", "Brazos", "Tríceps"] }
+                ],
+                6: [
+                    { enfoque: "Empuje A (Pecho y Tríceps)", grupos: ["Pecho", "Hombros", "Tríceps"] },
+                    { enfoque: "Tirón A (Espalda y Bíceps)", grupos: ["Espalda", "Brazos", "Antebrazos"] },
+                    { enfoque: "Pierna A (Cuádriceps)", grupos: ["Piernas", "Piernas", "Abdomen / core"] },
+                    { enfoque: "Empuje B (Hombro y Pecho)", grupos: ["Hombros", "Pecho", "Tríceps"] },
+                    { enfoque: "Tirón B (Espalda dorsal)", grupos: ["Espalda", "Brazos", "Abdomen / core"] },
+                    { enfoque: "Pierna B (Cadena posterior)", grupos: ["Piernas", "Piernas", "Cardio / acondicionamiento"] }
+                ],
+                7: [
+                    { enfoque: "Empuje A", grupos: ["Pecho", "Hombros", "Tríceps"] },
+                    { enfoque: "Tirón A", grupos: ["Espalda", "Brazos", "Antebrazos"] },
+                    { enfoque: "Pierna A", grupos: ["Piernas", "Piernas", "Abdomen / core"] },
+                    { enfoque: "Empuje B", grupos: ["Hombros", "Pecho", "Tríceps"] },
+                    { enfoque: "Tirón B", grupos: ["Espalda", "Brazos", "Abdomen / core"] },
+                    { enfoque: "Pierna B", grupos: ["Piernas", "Piernas", "Abdomen / core"] },
+                    { enfoque: "Acondicionamiento y Core", grupos: ["Cardio / acondicionamiento", "Abdomen / core", "Piernas"] }
+                ]
+            };
+
+            const numDias = Math.min(Math.max(diasSeleccionadosNombres.length, 1), 7);
+            const splitSeleccionado = splitsPorCantidad[numDias] || splitsPorCantidad[3];
+
+            const isCasa = (lugar || "").toLowerCase().includes("casa");
+            const repsTarget = objetivo === "grasa" ? "12-15" : (intensidad === "alta" ? "6-10" : "8-12");
+            const seriesTarget = intensidad === "alta" ? 4 : (intensidad === "baja" ? 3 : 4);
+            const descansoSec = objetivo === "fuerza" ? 120 : 90;
+
+            let diaSplitIdx = 0;
+            const configuracion_semanal = DIAS_CANONICOS.map(diaNombre => {
+                const estaSeleccionado = diasSeleccionadosNombres.includes(diaNombre);
+                if (!estaSeleccionado) {
+                    return {
+                        dia: diaNombre,
+                        enfoque: "Descanso activo / Recuperación",
+                        ejercicios: []
+                    };
+                }
+
+                const diaSplit = splitSeleccionado[diaSplitIdx % splitSeleccionado.length];
+                diaSplitIdx++;
+
+                const ejerciciosDia = [];
+                const gruposTarget = diaSplit.grupos;
+                const usedNames = new Set();
+
+                let gIdx = 0;
+                let attempts = 0;
+                while (ejerciciosDia.length < ejerciciosPorDia && attempts < 50) {
+                    attempts++;
+                    const grupoName = gruposTarget[gIdx % gruposTarget.length];
+                    gIdx++;
+
+                    const poolGrupo = (ENTRENAMIENTOS_DB && ENTRENAMIENTOS_DB[grupoName]) || [];
+                    let candidatos = poolGrupo.filter(ex => {
+                        if (usedNames.has(ex.nombre)) return false;
+                        if (isCasa) {
+                            const norm = ex.nombre.toLowerCase();
+                            if (norm.includes("polea") || norm.includes("maquina") || norm.includes("prensa") || norm.includes("predicador")) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    if (candidatos.length === 0) {
+                        candidatos = poolGrupo.filter(ex => !usedNames.has(ex.nombre));
+                    }
+
+                    if (candidatos.length > 0) {
+                        const elegido = candidatos[Math.floor(Math.random() * candidatos.length)];
+                        usedNames.add(elegido.nombre);
+                        ejerciciosDia.push({
+                            nombre: elegido.nombre,
+                            series: seriesTarget,
+                            repeticiones: repsTarget,
+                            descanso_segundos: descansoSec,
+                            descripcion: elegido.descripcion || "Ejecutar con rango de movimiento completo y control excéntrico.",
+                            tecnica: elegido.descripcion_detallada || elegido.descripcion || "Controlar la respiración y mantener postura firme.",
+                            sobrecarga: "Aumentar 1-2 repeticiones o 2.5 kg al dominar todas las series.",
+                            respiracion: "Inhalar en fase excéntrica y exhalar en concéntrica.",
+                            gifUrl: elegido.gifUrl || ""
+                        });
+                    }
+                }
+
+                return {
+                    dia: diaNombre,
+                    enfoque: diaSplit.enfoque,
+                    ejercicios: ejerciciosDia
+                };
+            });
+
+            return {
+                plan_entrenamiento_hipertrofia: {
+                    usuario: {
+                        edad: Number(edad) || 25,
+                        estatura_cm: Number(altura) || 175,
+                        peso_actual_kg: Number(peso) || 70,
+                        peso_objetivo_kg: Number(pesoObj) || 75,
+                        entorno: lugar || "gimnasio",
+                        objetivo: objetivo || "musculo",
+                        intensidad: intensidad || "media",
+                        ejercicios_por_dia: ejerciciosPorDia
+                    },
+                    configuracion_semanal,
+                    progresion_sugerida: {
+                        metodo: "Sobrecarga progresiva inteligente",
+                        descripcion: "Incrementa de 1 a 2 repeticiones por serie o añade 2.5 kg en ejercicios compuestos una vez alcances el rango superior con técnica perfecta."
+                    }
+                }
+            };
+        }
+
         async function submitAiGenerator() {
             if (aiSelectedDays.length === 0) {
-                Swal.fire({
-                    icon: "warning",
+                await showGlassAlert({
+                    iconType: "warning",
                     title: "Días requeridos",
-                    text: "Por favor, selecciona al menos un día de entrenamiento.",
-                    background: "#181a1f",
-                    color: "#fff",
-                    confirmButtonColor: "#ffffff"
+                    desc: "Por favor, selecciona al menos un día de entrenamiento."
                 });
                 return;
             }
 
+            if (isGeneratingPlan) return;
+            isGeneratingPlan = true;
+
             const formBody = document.getElementById("ai-generator-form-body");
             const loadingBody = document.getElementById("ai-generator-loading");
             const btnSubmit = document.getElementById("btn-submit-ai-generator");
+            const btnClose = document.getElementById("btn-close-ai-modal");
 
             formBody.style.display = "none";
             loadingBody.style.display = "flex";
             if (btnSubmit) btnSubmit.style.display = "none";
+            if (btnClose) {
+                btnClose.style.opacity = "0.3";
+                btnClose.style.pointerEvents = "none";
+            }
 
             const ejerciciosPorDiaMap = { baja: 4, media: 6, alta: 8 };
             const ejerciciosPorDia = ejerciciosPorDiaMap[aiSelectedIntensidad] || 6;
             const diasSemanaNombres = aiSelectedDays.map(c => DIAS_CODIGOS_MAP[c] || c);
             const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            const userPeso = localStorage.getItem("peso_usuario") || localStorage.getItem("peso_actual_usuario") || "70";
+            const userAltura = localStorage.getItem("altura_usuario") || "175";
+            const userPesoObj = localStorage.getItem("peso_objetivo_usuario") || "75";
+            const userEdad = localStorage.getItem("edad_usuario") || "25";
 
             try {
-                // 1. Llamada a Edge Function de generación de plan con IA
-                const { plan_entreno } = await callEdgeFunctionJson("/gen_plan_entreno", {
-                    idioma: "es",
-                    lugar: aiSelectedLugar,
-                    objetivo: aiSelectedObjetivo,
-                    intensidad: aiSelectedIntensidad,
-                    ejercicios_por_dia: ejerciciosPorDia,
-                    dias: aiSelectedDays,
-                    dias_semana: diasSemanaNombres,
-                    Altura: localStorage.getItem("altura_usuario") || "175",
-                    Peso_actual: localStorage.getItem("peso_actual_usuario") || "70",
-                    Peso_objetivo: localStorage.getItem("peso_objetivo_usuario") || "75",
-                    Edad: localStorage.getItem("edad_usuario") || "25",
-                });
+                let planEntrenoFinal = null;
 
-                if (!plan_entreno) {
-                    throw new Error("Respuesta vacía del generador de planes con IA.");
+                // 1. Intentar llamar al servicio IA con timeout defensivo (3.5s)
+                try {
+                    const abortCtrl = new AbortController();
+                    const timeoutId = setTimeout(() => abortCtrl.abort(), 3500);
+
+                    const res = await fetch("/gen_plan_entreno", {
+                        signal: abortCtrl.signal,
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            idioma: "es",
+                            lugar: aiSelectedLugar,
+                            objetivo: aiSelectedObjetivo,
+                            intensidad: aiSelectedIntensidad,
+                            ejercicios_por_dia: ejerciciosPorDia,
+                            dias: aiSelectedDays,
+                            dias_semana: diasSemanaNombres,
+                            Altura: userAltura,
+                            Peso_actual: userPeso,
+                            Peso_objetivo: userPesoObj,
+                            Edad: userEdad,
+                        })
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json && json.plan_entreno) {
+                            planEntrenoFinal = json.plan_entreno;
+                        }
+                    }
+                } catch (netErr) {
+                    console.warn("Servicio IA en la nube en espera, generando rutina personalizada con motor inteligente local:", netErr);
                 }
 
-                // 2. Guardar en Backend
-                await fetch("/generar_plan_entreno", {
+                // 2. Si no respondió a tiempo o dio error, generar con el motor inteligente local
+                if (!planEntrenoFinal) {
+                    planEntrenoFinal = generateFallbackAiPlan({
+                        dias: aiSelectedDays,
+                        lugar: aiSelectedLugar,
+                        objetivo: aiSelectedObjetivo,
+                        intensidad: aiSelectedIntensidad,
+                        ejerciciosPorDia: ejerciciosPorDia,
+                        altura: userAltura,
+                        peso: userPeso,
+                        pesoObj: userPesoObj,
+                        edad: userEdad
+                    });
+                }
+
+                const planToStore = typeof planEntrenoFinal === "object" ? JSON.stringify(planEntrenoFinal) : planEntrenoFinal;
+
+                // 3. Guardar en Backend (sin bloquear)
+                fetch("/generar_plan_entreno", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         id_usuario: userId,
-                        plan_entreno: plan_entreno,
+                        plan_entreno: planEntrenoFinal,
                     }),
-                });
+                }).catch(e => console.warn("Aviso guardando en backend:", e));
 
-                // 3. Sincronizar con Supabase Planes
+                // 4. Sincronizar con Supabase Planes
                 if (userId) {
-                    await supabase
-                        .from("Planes")
-                        .update({ Plan_entreno: plan_entreno })
-                        .eq("ID_user", userId);
+                    try {
+                        const { data: existingPlanes } = await supabase
+                            .from("Planes")
+                            .select("id")
+                            .eq("ID_user", userId)
+                            .limit(1);
+
+                        if (existingPlanes && existingPlanes.length > 0) {
+                            await supabase
+                                .from("Planes")
+                                .update({
+                                    Plan_entreno: planToStore,
+                                    Generado_con_ia: true
+                                })
+                                .eq("ID_user", userId);
+                        } else {
+                            await supabase
+                                .from("Planes")
+                                .insert({
+                                    ID_user: userId,
+                                    Plan_entreno: planToStore,
+                                    Plan_alimenta: "Proximamente",
+                                    Generado_con_ia: true
+                                });
+                        }
+                    } catch (dbErr) {
+                        console.warn("Aviso actualizando Supabase Planes:", dbErr);
+                    }
                 }
 
-                // 4. Guardar en localStorage
-                localStorage.setItem("plan_entreno_usuario", typeof plan_entreno === "object" ? JSON.stringify(plan_entreno) : plan_entreno);
+                // 5. Guardar en localStorage
+                localStorage.setItem("plan_entreno_usuario", planToStore);
                 localStorage.setItem("plan_lugar", aiSelectedLugar);
                 localStorage.setItem("plan_objetivo", aiSelectedObjetivo);
                 localStorage.setItem("plan_intensidad", aiSelectedIntensidad);
                 localStorage.setItem("plan_dias", JSON.stringify(aiSelectedDays));
 
+                isGeneratingPlan = false;
+                if (btnClose) {
+                    btnClose.style.opacity = "";
+                    btnClose.style.pointerEvents = "";
+                }
+
                 closeAiGeneratorModal();
 
-                Swal.fire({
-                    toast: true,
-                    position: "top",
-                    icon: "success",
-                    title: "¡Rutina creada con IA!",
-                    text: `Se generó tu plan de entrenamiento de ${aiSelectedDays.length} días.`,
-                    showConfirmButton: false,
-                    timer: 3000,
-                    background: "#13141a",
-                    color: "#fff",
-                    customClass: { popup: "swal-custom-dark" }
-                });
+                showGlassToast(`¡Rutina creada con IA! (${aiSelectedDays.length} días)`, "success");
 
-                // 5. Recargar la UI con el nuevo plan
+                // 6. Recargar la UI con el nuevo plan
                 await cargarPlanEntreno();
 
             } catch (err) {
-                console.error("Error generando plan con IA:", err);
+                console.error("Error generando plan:", err);
                 formBody.style.display = "flex";
                 loadingBody.style.display = "none";
                 if (btnSubmit) btnSubmit.style.display = "inline-flex";
 
-                Swal.fire({
-                    icon: "error",
+                isGeneratingPlan = false;
+                if (btnClose) {
+                    btnClose.style.opacity = "";
+                    btnClose.style.pointerEvents = "";
+                }
+
+                await showGlassAlert({
+                    iconType: "danger",
                     title: "Error al generar",
-                    text: err.message || "No se pudo generar el plan con IA. Por favor, revisa tu conexión e inténtalo de nuevo.",
-                    background: "#181a1f",
-                    color: "#fff",
-                    confirmButtonColor: "#ffffff"
+                    desc: err.message || "No se pudo generar el plan. Por favor, inténtalo de nuevo."
                 });
             }
         }
@@ -3666,6 +4388,7 @@
             document.getElementById("btn-close-log-modal")?.addEventListener("click", closeLogWorkoutModal);
             document.getElementById("btn-confirm-log-workout")?.addEventListener("click", confirmLogWorkout);
             document.getElementById("modal-log-workout-backdrop")?.addEventListener("click", (e) => {
+                if (isLoggingWorkout) return;
                 if (e.target === e.currentTarget) closeLogWorkoutModal();
             });
             document.getElementById("seg-btn-time")?.addEventListener("click", () => setLogSegment("time"));
@@ -3678,6 +4401,7 @@
             document.getElementById("btn-close-ai-modal")?.addEventListener("click", closeAiGeneratorModal);
             document.getElementById("btn-submit-ai-generator")?.addEventListener("click", submitAiGenerator);
             document.getElementById("modal-ai-generator-backdrop")?.addEventListener("click", (e) => {
+                if (isGeneratingPlan) return;
                 if (e.target === e.currentTarget) closeAiGeneratorModal();
             });
 

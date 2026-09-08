@@ -15,6 +15,7 @@
 
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/spa_router.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -704,8 +705,7 @@
         </a>
 
         <div class="navbar-actions">
-            <a href="/Templates/templates_nuevas/creacionCuen/loginGoogle.html" class="btn-header-cta"
-                data-i18n-en="Get started!">
+            <a href="/Templates/creacionCuen/loginGoogle.html" class="btn-header-cta" data-i18n-en="Get started!">
                 ¡Empecemos!
             </a>
         </div>
@@ -1004,8 +1004,7 @@
                 Inicia sesión con Google en segundos y deja que la IA configure tu plan de entrenamiento y nutrición a
                 medida.
             </p>
-            <a href="/Templates/templates_nuevas/creacionCuen/loginGoogle.html" class="btn-cta-big"
-                data-i18n-en="Get started now">
+            <a href="/Templates/creacionCuen/loginGoogle.html" class="btn-cta-big" data-i18n-en="Get started now">
                 <span data-i18n-en="Get started now">Empezar ahora</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M5 12h14"></path>
@@ -1018,7 +1017,7 @@
     <!-- ── FOOTER FLOTANTE CON CRÉDITOS ── -->
     <div class="footer-credits-bar" role="contentinfo">
         <span>2026 &copy;</span>
-        <a href="https://diegogarcia-dev.com.ar" target="_blank" rel="noopener">Dg-dev</a>
+        <a href="https://diegogarcia-dev.com.ar" target="_blank" rel="noopener">Diego Garcia</a>
         <span>· TrAIner</span>
     </div>
 
@@ -1041,7 +1040,7 @@
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session && session.user) {
-                    window.location.href = "/Templates/templates_nuevas/dashboard.html";
+                    window.location.href = "/Templates/dashboard.html";
                 }
             } catch (err) {
                 console.warn("Aviso comprobando sesión previa:", err);

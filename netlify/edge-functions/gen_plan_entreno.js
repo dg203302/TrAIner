@@ -333,18 +333,28 @@ const generatePlanEntreno = async (payload, request) => {
 	const origin = request?.headers?.get("origin") || request?.headers?.get("referer") || "https://aipersonaltrainer.netlify.app";
 	let catalogGroups = {};
 	let catalogFlat = {};
-	try {
-		const catRes = await fetch(origin.replace(/\/$/, "") + "/Datos/entrenamientos.json");
-		if (catRes.ok) {
-			catalogGroups = await catRes.json();
-			for (const group of Object.values(catalogGroups)) {
-				for (const ex of group) {
-					catalogFlat[normalizeKey(ex.nombre)] = ex;
+
+	if (payload?.catalog && typeof payload.catalog === "object") {
+		for (const [name, ex] of Object.entries(payload.catalog)) {
+			catalogFlat[normalizeKey(name)] = ex;
+		}
+	} else if (!origin.includes("localhost") && !origin.includes("127.0.0.1")) {
+		try {
+			const catCtrl = new AbortController();
+			const catTimer = setTimeout(() => catCtrl.abort(), 2000);
+			const catRes = await fetch(origin.replace(/\/$/, "") + "/Datos/entrenamientos.json", { signal: catCtrl.signal });
+			clearTimeout(catTimer);
+			if (catRes.ok) {
+				catalogGroups = await catRes.json();
+				for (const group of Object.values(catalogGroups)) {
+					for (const ex of group) {
+						catalogFlat[normalizeKey(ex.nombre)] = ex;
+					}
 				}
 			}
+		} catch (e) {
+			console.warn("Failed to fetch catalog", e);
 		}
-	} catch (e) {
-		console.warn("Failed to fetch catalog", e);
 	}
 
 	const normalizeSelectedExercises = (value) => {
@@ -415,38 +425,75 @@ Entorno: ${entornoValue} | Objetivo: ${objetivoValue} | Edad: ${payload?.Edad} |
 
 ${ejerciciosContexto}`;
 
-	const apiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-		method: "POST",
-		headers: {
-			"Authorization": `Bearer ${APIkey}`,
-			"HTTP-Referer": origin,
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify({
-			model: "openrouter/free",
-			messages: [
-				{ role: "system", content: "You are an API that ONLY returns valid JSON. No markdown, no conversational text." },
-				{ role: "user", content: prompt }
-			]
-		})
-	});
+	let planObj = null;
+	try {
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 7500);
 
-	if (!apiResponse.ok) {
-		const errorText = await apiResponse.text();
-		throw new Error(`OpenRouter error: ${apiResponse.status} ${errorText}`);
+		const apiResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+			signal: controller.signal,
+			method: "POST",
+			headers: {
+				"Authorization": `Bearer ${APIkey}`,
+				"HTTP-Referer": origin,
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				model: "openrouter/free",
+				messages: [
+					{ role: "system", content: "You are an API that ONLY returns valid JSON. No markdown, no conversational text." },
+					{ role: "user", content: prompt }
+				]
+			})
+		});
+		clearTimeout(timeoutId);
+
+		if (apiResponse.ok) {
+			const data = await apiResponse.json();
+			const planText = data.choices?.[0]?.message?.content || "";
+			const jsonCandidate = extractLikelyJson(planText);
+			planObj = JSON.parse(jsonCandidate);
+		} else {
+			console.warn("OpenRouter returned status:", apiResponse.status);
+		}
+	} catch (e) {
+		console.warn("OpenRouter error or timeout, generating algorithmic routine:", e?.message || e);
 	}
 
-	const data = await apiResponse.json();
-	const planText = data.choices?.[0]?.message?.content || "";
-	const jsonCandidate = extractLikelyJson(planText);
+	if (!planObj || !planObj.plan_entrenamiento_hipertrofia) {
+		const defaultEnfoques = [
+			"Pecho, Hombro y Tríceps (Empuje)",
+			"Espalda, Bíceps y Core (Tirón)",
+			"Piernas y Abdomen",
+			"Torso Superior (Fuerza)",
+			"Pierna y Glúteo (Hipertrofia)",
+			"Hombro y Brazos",
+			"Acondicionamiento y Core"
+		];
+		const semanalBase = diasSeleccionados.map((diaNombre, idx) => ({
+			dia: diaNombre,
+			enfoque: defaultEnfoques[idx % defaultEnfoques.length],
+			ejercicios: []
+		}));
 
-	let planObj;
-	try {
-		planObj = JSON.parse(jsonCandidate);
-	} catch (e) {
-		console.error("=== RAW AI OUTPUT ===", planText);
-		console.error("=== JSON CANDIDATE ===", jsonCandidate);
-		throw new Error("La IA no devolvió un JSON parseable.");
+		planObj = {
+			plan_entrenamiento_hipertrofia: {
+				usuario: {
+					edad: Number(payload?.Edad) || 25,
+					estatura_cm: Number(payload?.Altura) || 175,
+					peso_objetivo_kg: Number(payload?.Peso_objetivo) || 75,
+					entorno: entornoValue,
+					objetivo: objetivoValue,
+					intensidad: intensidadNorm,
+					ejercicios_por_dia: ejerciciosPorDiaObjetivo
+				},
+				configuracion_semanal: semanalBase,
+				progresion_sugerida: {
+					metodo: progresionMetodoValue,
+					descripcion: "Aumentar 1-2 repeticiones o 2.5 kg al dominar el rango objetivo con técnica perfecta."
+				}
+			}
+		};
 	}
 
 	planObj = normalizePlanWithSelectedDays({

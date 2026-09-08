@@ -16,7 +16,6 @@
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/spa_router.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -744,13 +743,6 @@
             transform: translateY(0);
         }
 
-        .modal-handle-bar {
-            width: 44px;
-            height: 4.5px;
-            border-radius: var(--radius-pill);
-            background: rgba(255, 255, 255, 0.2);
-            margin: 0 auto 4px auto;
-        }
 
         .modal-sheet-header {
             display: flex;
@@ -1039,6 +1031,235 @@
             flex-direction: column;
             gap: 16px;
         }
+
+        /* ── MODALES Y TOASTS DARK GLASSMORPHIC ── */
+        .glass-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 99998;
+            background: rgba(6, 8, 12, 0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+        }
+
+        .glass-modal-backdrop.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .glass-modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            background: rgba(14, 18, 27, 0.92);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 32px 28px 26px;
+            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(157, 243, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-modal-backdrop.is-open .glass-modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .glass-modal-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .glass-modal-icon-wrap {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(157, 243, 255, 0.08);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            box-shadow: 0 0 25px rgba(157, 243, 255, 0.15);
+            color: var(--accent, #9df3ff);
+        }
+
+        .glass-modal-icon-wrap.is-danger {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: rgba(255, 71, 87, 0.3);
+            box-shadow: 0 0 25px rgba(255, 71, 87, 0.2);
+            color: #ff4757;
+        }
+
+        .glass-modal-icon-wrap.is-warning {
+            background: rgba(255, 170, 0, 0.1);
+            border-color: rgba(255, 170, 0, 0.3);
+            box-shadow: 0 0 25px rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+
+        .glass-modal-icon-wrap.is-success {
+            background: rgba(124, 255, 184, 0.1);
+            border-color: rgba(124, 255, 184, 0.3);
+            box-shadow: 0 0 25px rgba(124, 255, 184, 0.2);
+            color: #7cffb8;
+        }
+
+        .glass-modal-icon-wrap svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .glass-modal-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin: 0 0 8px;
+        }
+
+        .glass-modal-desc {
+            font-size: 14px;
+            color: #8a99ad;
+            line-height: 1.45;
+            margin: 0 0 26px;
+            max-width: 320px;
+        }
+
+        .glass-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            padding: 13px 18px;
+            border-radius: 999px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #8a99ad;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-cancel:hover {
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .btn-modal-confirm {
+            flex: 1.2;
+            padding: 13px 20px;
+            border-radius: 999px;
+            background: #9df3ff;
+            border: none;
+            color: #06080c;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 18px rgba(157, 243, 255, 0.35);
+        }
+
+        .btn-modal-confirm:hover {
+            background: #7ce9f7;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 22px rgba(157, 243, 255, 0.5);
+        }
+
+        .btn-modal-confirm.is-danger {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(255, 71, 87, 0.35);
+        }
+
+        .btn-modal-confirm.is-danger:hover {
+            box-shadow: 0 6px 24px rgba(255, 71, 87, 0.55);
+        }
+
+        /* Toast Flotante Glassmorphic */
+        .glass-toast-wrap {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            z-index: 100000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-toast-wrap.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .glass-toast {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px 10px 14px;
+            background: rgba(14, 18, 27, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(157, 243, 255, 0.25);
+            border-radius: 999px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(157, 243, 255, 0.15);
+        }
+
+        .glass-toast-icon {
+            width: 20px;
+            height: 20px;
+            color: #7cffb8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-toast-icon.is-danger { color: #ff4757; }
+        .glass-toast-icon.is-info { color: #9df3ff; }
+
+        .glass-toast-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .glass-toast-text {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.1px;
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -1055,7 +1276,7 @@
             </div>
 
             <div class="header-actions">
-                <a href="/Templates/templates_nuevas/config.html" class="header-btn header-avatar-btn"
+                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
                     id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
@@ -1315,7 +1536,6 @@
     <!-- ── MODAL BOTTOM-SHEET: DETALLE DEL DÍA ── -->
     <div class="modal-sheet-backdrop" id="modal-day-detail-backdrop" aria-hidden="true">
         <div class="modal-sheet-panel" id="modal-day-detail-panel">
-            <div class="modal-handle-bar"></div>
             
             <div class="modal-sheet-header">
                 <div class="modal-sheet-title-wrap">
@@ -1342,7 +1562,7 @@
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Grid / Dashboard -->
-            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item"
+            <a href="/Templates/dashboard.html" class="nav-item"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
@@ -1353,7 +1573,7 @@
             </a>
 
             <!-- 2. Calendario (Activo en esta página) -->
-            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item is-active"
+            <a href="/Templates/calendario_renov.html" class="nav-item is-active"
                 aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
@@ -1364,7 +1584,7 @@
             </a>
 
             <!-- 3. Planes -->
-            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item"
+            <a href="/Templates/plan_entreno.html" class="nav-item"
                 aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -1379,7 +1599,7 @@
             </a>
 
             <!-- 4. Alimentación -->
-            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item"
+            <a href="/Templates/plan_alimentacion.html" class="nav-item"
                 aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
@@ -1389,7 +1609,7 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item" id="btn-nav-chat"
+            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
                 aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -1397,6 +1617,31 @@
             </a>
         </div>
     </nav>
+
+    <!-- ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS ── -->
+    <div class="glass-modal-backdrop" id="glass-modal-backdrop" aria-hidden="true">
+        <div class="glass-modal-card" id="glass-modal-card">
+            <div class="glass-modal-icon-wrap" id="glass-modal-icon"></div>
+            <h3 class="glass-modal-title" id="glass-modal-title">Título</h3>
+            <p class="glass-modal-desc" id="glass-modal-desc">Descripción</p>
+            <div class="glass-modal-actions" id="glass-modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btn-modal-cancel">Cancelar</button>
+                <button type="button" class="btn-modal-confirm" id="btn-modal-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── TOAST FLOTANTE DARK GLASSMORPHIC ── -->
+    <div class="glass-toast-wrap" id="glass-toast-wrap" aria-live="polite">
+        <div class="glass-toast" id="glass-toast">
+            <div class="glass-toast-icon" id="glass-toast-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <span class="glass-toast-text" id="glass-toast-text">Cambios guardados</span>
+        </div>
+    </div>
 
     <!-- ── LÓGICA Y CONEXIONES (ES MODULE) ── -->
     <script type="module">
@@ -1407,6 +1652,140 @@
         const supabase = createClient(supabaseUrl, supabaseKey, {
             auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
         });
+
+        // ── SISTEMA DE MODALES Y TOASTS GLASSMORPHIC ──
+        let toastTimer = null;
+        function showGlassToast(text, type = "success") {
+            const wrap = document.getElementById("glass-toast-wrap");
+            const textEl = document.getElementById("glass-toast-text");
+            const iconEl = document.getElementById("glass-toast-icon");
+            if (!wrap || !textEl) return;
+            textEl.textContent = text;
+            if (iconEl) {
+                iconEl.className = "glass-toast-icon" + (type === "danger" || type === "error" ? " is-danger" : (type === "info" ? " is-info" : ""));
+                if (type === "danger" || type === "error") {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                } else if (type === "info") {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                } else {
+                    iconEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                }
+            }
+            wrap.classList.add("is-visible");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                wrap.classList.remove("is-visible");
+            }, 2600);
+        }
+
+        function showGlassAlert({ title, desc, iconType = "info", confirmText = "Entendido" }) {
+            return showGlassConfirm({
+                title,
+                desc,
+                iconType,
+                confirmText,
+                singleButton: true
+            });
+        }
+
+        function showGlassConfirm({ title, desc, iconType = "warning", confirmText = "Confirmar", cancelText = "Cancelar", isDanger = false, singleButton = false }) {
+            return new Promise((resolve) => {
+                const backdrop = document.getElementById("glass-modal-backdrop");
+                const titleEl = document.getElementById("glass-modal-title");
+                const descEl = document.getElementById("glass-modal-desc");
+                const iconWrap = document.getElementById("glass-modal-icon");
+                const btnCancel = document.getElementById("btn-modal-cancel");
+                const btnConfirm = document.getElementById("btn-modal-confirm");
+
+                if (!backdrop) {
+                    resolve(false);
+                    return;
+                }
+
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                btnConfirm.textContent = confirmText;
+                btnCancel.textContent = cancelText;
+
+                if (singleButton) {
+                    btnCancel.style.display = "none";
+                    btnConfirm.style.flex = "1";
+                } else {
+                    btnCancel.style.display = "block";
+                    btnConfirm.style.flex = "1.2";
+                }
+
+                if (isDanger || iconType === "danger" || iconType === "delete" || iconType === "error") {
+                    iconWrap.className = "glass-modal-icon-wrap is-danger";
+                    btnConfirm.className = "btn-modal-confirm is-danger";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    `;
+                } else if (iconType === "warning") {
+                    iconWrap.className = "glass-modal-icon-wrap is-warning";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    `;
+                } else if (iconType === "success") {
+                    iconWrap.className = "glass-modal-icon-wrap is-success";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    `;
+                } else {
+                    iconWrap.className = "glass-modal-icon-wrap";
+                    btnConfirm.className = "btn-modal-confirm";
+                    iconWrap.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    `;
+                }
+
+                const cleanup = () => {
+                    backdrop.classList.remove("is-open");
+                    btnCancel.removeEventListener("click", onCancel);
+                    btnConfirm.removeEventListener("click", onConfirm);
+                    backdrop.removeEventListener("click", onBackdrop);
+                };
+
+                const onCancel = () => {
+                    cleanup();
+                    resolve(false);
+                };
+
+                const onConfirm = () => {
+                    cleanup();
+                    resolve(true);
+                };
+
+                const onBackdrop = (e) => {
+                    if (e.target === backdrop) {
+                        cleanup();
+                        resolve(false);
+                    }
+                };
+
+                btnCancel.addEventListener("click", onCancel);
+                btnConfirm.addEventListener("click", onConfirm);
+                backdrop.addEventListener("click", onBackdrop);
+
+                backdrop.classList.add("is-open");
+            });
+        }
 
         // Estado Global
         let currentUser = null;
@@ -2347,20 +2726,16 @@
         };
 
         const confirmAndDeleteWorkout = async (regId, dateIso) => {
-            const result = await Swal.fire({
+            const confirmed = await showGlassConfirm({
                 title: "¿Eliminar este registro?",
-                text: "Esta sesión se eliminará de tu historial y se recalcularán tus estadísticas.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#ff4757",
-                cancelButtonColor: "#20232a",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar",
-                background: "#181a1f",
-                color: "#ffffff"
+                desc: "Esta sesión se eliminará de tu historial y se recalcularán tus estadísticas.",
+                iconType: "danger",
+                confirmText: "Sí, eliminar",
+                cancelText: "Cancelar",
+                isDanger: true
             });
 
-            if (!result.isConfirmed) return;
+            if (!confirmed) return;
 
             // Filtrar registro
             const prev = Array.isArray(registros) ? registros.slice() : [];
@@ -2374,15 +2749,7 @@
             // Actualizar vista del modal
             openDayDetailModal(dateIso);
 
-            Swal.fire({
-                title: "Eliminado",
-                text: "El registro ha sido eliminado correctamente.",
-                icon: "success",
-                timer: 1600,
-                showConfirmButton: false,
-                background: "#181a1f",
-                color: "#ffffff"
-            });
+            showGlassToast("Registro eliminado correctamente");
         };
 
         // ── INICIALIZACIÓN PRINCIPAL DE LA PÁGINA ──

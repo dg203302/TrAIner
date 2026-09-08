@@ -1230,7 +1230,7 @@
 
             <div class="header-actions">
                 <!-- Botón de perfil del usuario que redirige a Perfil de Usuario -->
-                <a href="/Templates/templates_nuevas/config.html" class="header-btn header-avatar-btn"
+                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
                     id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
@@ -1437,7 +1437,7 @@
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Grid / Workouts (Activo) -->
-            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item is-active"
+            <a href="/Templates/dashboard.html" class="nav-item is-active"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
@@ -1448,7 +1448,7 @@
             </a>
 
             <!-- 2. Calendario -->
-            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item"
+            <a href="/Templates/calendario_renov.html" class="nav-item"
                 aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
@@ -1459,7 +1459,7 @@
             </a>
 
             <!-- 3. Gráficas / Analytics / Planes -->
-            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item"
+            <a href="/Templates/plan_entreno.html" class="nav-item"
                 aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -1474,7 +1474,7 @@
             </a>
 
             <!-- 4. Alimentación -->
-            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item"
+            <a href="/Templates/plan_alimentacion.html" class="nav-item"
                 aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
@@ -1484,7 +1484,7 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item" id="btn-nav-chat"
+            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
                 aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -2114,7 +2114,7 @@
             const cardWorkout = document.getElementById("card-workout-today");
             if (cardWorkout) {
                 cardWorkout.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
+                    window.location.href = "/Templates/plan_entreno.html";
                 });
             }
 
@@ -2122,7 +2122,7 @@
             const cardSlideshow = document.getElementById("today-slideshow-card");
             if (cardSlideshow) {
                 cardSlideshow.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
+                    window.location.href = "/Templates/plan_entreno.html";
                 });
             }
 
@@ -2134,7 +2134,7 @@
             const cardDiet = document.getElementById("card-diet");
             if (cardDiet) {
                 cardDiet.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/plan_alimentacion.html";
+                    window.location.href = "/Templates/plan_alimentacion.html";
                 });
             }
 
@@ -2143,7 +2143,7 @@
             if (subitemNext) {
                 subitemNext.addEventListener("click", (e) => {
                     e.stopPropagation();
-                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
+                    window.location.href = "/Templates/plan_entreno.html";
                 });
             }
 
@@ -2151,7 +2151,7 @@
             const cardWeight = document.getElementById("card-weight");
             if (cardWeight) {
                 cardWeight.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/config.html";
+                    window.location.href = "/Templates/config.html";
                 });
             }
 
@@ -2161,7 +2161,7 @@
             if (cardCalendar) {
                 cardCalendar.addEventListener("click", (e) => {
                     if (!e.target.closest("#cal-subitem-next")) {
-                        window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                        window.location.href = "/Templates/calendario_renov.html";
                     }
                 });
             }
@@ -2170,14 +2170,14 @@
             const cardMetricRow = document.querySelector(".card-metric-row");
             if (cardMetricRow) {
                 cardMetricRow.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                    window.location.href = "/Templates/calendario_renov.html";
                 });
             }
 
             // 3. Triplete de métricas (Tiempo, Calorías y Racha)
             document.querySelectorAll(".metric-mini-card").forEach((card) => {
                 card.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                    window.location.href = "/Templates/calendario_renov.html";
                 });
             });
 
