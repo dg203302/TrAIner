@@ -1,5 +1,12 @@
 {
+  "scripts": {
+    "dev": "netlify dev -d . --framework #static",
+    "serve": "npx serve ."
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.91.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.5.0"
   }
 }

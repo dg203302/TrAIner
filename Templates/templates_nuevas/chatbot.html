@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/spa_router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=5"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --dot-active: #ffffff;
+            --dot-inactive: #282b33;
+            --accent-glow: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.06);
+            --radius-card: 26px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+            --nav-height: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Contenedor responsivo centrado idéntico a las demás plantillas */
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            height: 100%;
+            height: 100dvh;
+            padding: 16px 20px 0 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* ── HEADER FLOTANTE / STICKY ── */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: -16px -20px 0 -20px;
+            padding: calc(14px + env(safe-area-inset-top, 6px)) 20px 14px 20px;
+            background: rgba(12, 13, 16, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .header-user-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .header-user-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #2ed573;
+            box-shadow: 0 0 10px rgba(46, 213, 115, 0.6);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .header-btn:hover {
+            background: var(--bg-card-elevated);
+            transform: scale(1.04);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .header-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header-btn.danger-btn:hover {
+            color: #ff5252;
+            background: rgba(255, 82, 82, 0.14);
+            border-color: rgba(255, 82, 82, 0.3);
+        }
+
+        .header-avatar-btn {
+            padding: 2px;
+            overflow: hidden;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #252830;
+        }
+
+        /* ── CONTENIDO PRINCIPAL: CHAT INTEGRADO EN LA PLANTILLA ── */
+        .page-content {
+            flex: 1 1 0%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-messages {
+            flex: 1 1 0%;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 16px 0 calc(64px + 36px + 64px + env(safe-area-inset-bottom, 12px)) 0;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+        }
+
+        .chat-msg {
+            display: flex;
+            max-width: 88%;
+            animation: fadeInMsg 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInMsg {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-msg-user {
+            align-self: flex-end;
+        }
+
+        .chat-msg-bot {
+            align-self: flex-start;
+        }
+
+        .chat-bubble {
+            padding: 13px 18px;
+            border-radius: 22px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        /* Mensaje del Usuario: Blanco puro con texto oscuro */
+        .chat-msg-user .chat-bubble {
+            background: #ffffff;
+            color: #0c0d10;
+            font-weight: 600;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Mensaje del Bot: Tarjeta oscura de la app con borde suave */
+        .chat-msg-bot .chat-bubble {
+            background: var(--bg-card);
+            color: #f1f3f7;
+            border: 1px solid var(--border-card);
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .chat-bubble ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .chat-bubble li {
+            margin: 4px 0;
+        }
+
+        .chat-bubble strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .chat-msg-user .chat-bubble strong {
+            color: #0c0d10;
+        }
+
+        /* Indicador de tipeo */
+        .chat-typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 2px;
+        }
+
+        .chat-typing-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.55);
+            animation: typingPulse 1.2s infinite ease-in-out;
+        }
+
+        .chat-typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .chat-typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.7);
+                opacity: 0.35;
+            }
+
+            40% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .btn-chat-resend {
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #ff6b6b;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-chat-resend:hover {
+            opacity: 0.85;
+        }
+
+        /* ── BARRA FLOTANTE DE ENTRADA (Separada con holgura sobre el Dock Inferior) ── */
+        .chat-input-wrapper {
+            position: fixed;
+            bottom: calc(64px + 32px + env(safe-area-inset-bottom, 12px));
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 36px);
+            max-width: 380px;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 990;
+        }
+
+        .chat-input-inner {
+            pointer-events: auto;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px 6px 18px;
+            background: rgba(22, 25, 31, 0.94);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-pill);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chat-input-inner:focus-within {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.75);
+        }
+
+        .chat-input-inner textarea {
+            flex: 1;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 14.5px;
+            resize: none;
+            max-height: 100px;
+            min-height: 24px;
+            line-height: 1.4;
+            padding: 8px 0;
+        }
+
+        .chat-input-inner textarea::placeholder {
+            color: #6b7280;
+        }
+
+        .chat-input-inner button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: none;
+            color: #0c0d10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        .chat-input-inner button:hover {
+            background: #e2e4e9;
+        }
+
+        .chat-input-inner button:active {
+            transform: scale(0.9);
+        }
+
+        .chat-input-inner button svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.3;
+            stroke: #0c0d10;
+        }
+
+        /* ── BARRA INFERIOR DE NAVEGACIÓN (DOCK FLOTANTE IDÉNTICO A LAS DEMÁS PLANTILLAS) ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 36px);
+            max-width: 380px;
+            height: 64px;
+            padding: 0 8px;
+            background: rgba(22, 25, 31, 0.84);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            z-index: 1000;
+        }
+
+        .bottom-nav-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0;
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #535866;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.1;
+            stroke: currentColor;
+            fill: none;
+            transition: stroke 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+        .nav-item:hover svg {
+            stroke: #ffffff;
+        }
+
+        .nav-item:active {
+            transform: scale(0.88);
+        }
+
+        .nav-item.is-active {
+            color: #ffffff;
+        }
+
+        .nav-item.is-active svg {
+            stroke: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- HEADER FLOTANTE IDÉNTICO -->
+        <header class="app-header">
+            <div class="header-title-wrap">
+                <h1 class="header-title" data-i18n-en="Chat">Chat</h1>
+                <div class="header-user-status" id="header-user-status">
+                    <span class="header-user-dot"></span>
+                    <span id="header-bot-status" data-i18n-en="TrAIner AI · Online">TrAIner AI · En línea</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Botón para limpiar historial de conversación -->
+                <button type="button" class="header-btn danger-btn" id="chatbot-btn-clear"
+                    aria-label="Limpiar historial" title="Borrar conversación">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 19px; height: 19px; stroke-width: 2;">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </button>
+
+                <!-- Botón de perfil del usuario que redirige a Configuración -->
+                <a href="/Templates/templates_nuevas/config.html" class="header-btn header-avatar-btn"
+                    id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
+                    <img id="header-user-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                        alt="Foto de perfil" class="header-avatar-img">
+                </a>
+            </div>
+        </header>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- CONTENIDO PRINCIPAL: Mensajes del Chat         -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <main class="page-content" id="page-content">
+            <div class="chat-messages" id="chatbot-messages">
+                <!-- Se poblará dinámicamente con historial o mensaje de bienvenida -->
+            </div>
+        </main>
+    </div>
+
+    <!-- ── BARRA DE ENTRADA FLOTANTE ── -->
+    <div class="chat-input-wrapper">
+        <div class="chat-input-inner">
+            <textarea id="chatbot-input" placeholder="Pregúntale a tu entrenador..." rows="1"></textarea>
+            <button id="chatbot-send" aria-label="Enviar mensaje">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── BARRA INFERIOR DE NAVEGACIÓN DOCK FLOTANTE ── -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <!-- 1. Grid / Dashboard -->
+            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item"
+                aria-label="Panel de Entrenamientos">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                </svg>
+            </a>
+
+            <!-- 2. Calendario -->
+            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item"
+                aria-label="Calendario de Entreno">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </a>
+
+            <!-- 3. Entreno -->
+            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item"
+                aria-label="Plan de Entrenamiento">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m6.5 6.5 11 11"></path>
+                    <path d="m21 21-1-1"></path>
+                    <path d="m3 3 1 1"></path>
+                    <path d="m18 22 4-4"></path>
+                    <path d="m2 6 4-4"></path>
+                    <path d="m3 10 7-7"></path>
+                    <path d="m14 21 7-7"></path>
+                </svg>
+            </a>
+
+            <!-- 4. Alimentación -->
+            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item"
+                aria-label="Plan de Alimentación">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                    <path d="M7 2v20"></path>
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                </svg>
+            </a>
+
+            <!-- 5. Chat Asistente IA (Activo en esta página) -->
+            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item is-active" id="btn-nav-chat"
+                aria-label="Asistente Inteligente TrAIner">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ── LÓGICA DE CONEXIÓN CON SUPABASE Y CHATBOT ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        // Conexión idéntica a Supabase
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: false, storage: localStorage }
+        });
+
+        let currentUser = null;
+
+        // Recuperar usuario y datos necesarios
+        async function fetchUserData() {
+            try {
+                const { data: authData, error: authErr } = await supabase.auth.getUser();
+                if (authErr || !authData?.user) {
+                    const localId = localStorage.getItem("id_usuario");
+                    if (localId) {
+                        currentUser = { id: localId };
+                    }
+                } else {
+                    currentUser = authData.user;
+                    localStorage.setItem("id_usuario", currentUser.id);
+                    if (currentUser.user_metadata?.full_name) {
+                        localStorage.setItem("username_usuario", currentUser.user_metadata.full_name);
+                    }
+                    const metaAvatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+                    if (metaAvatar) {
+                        localStorage.setItem("avatar_usuario", metaAvatar);
+                    }
+                }
+
+                // Renderizar perfil en cabecera
+                const avatarUrl = localStorage.getItem("avatar_usuario") ||
+                    currentUser?.user_metadata?.avatar_url ||
+                    currentUser?.user_metadata?.picture ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                const avatarImg = document.getElementById("header-user-avatar");
+                if (avatarImg) {
+                    avatarImg.src = avatarUrl;
+                    avatarImg.onerror = () => {
+                        avatarImg.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                    };
+                }
+
+                // Asegurar que existan datos de fitness y planes en localStorage
+                if (currentUser?.id) {
+                    const { data: fitnessData } = await supabase
+                        .from("Datos Fitness")
+                        .select("id, Altura, Peso, Peso_Obj, Edad")
+                        .eq("ID_user", currentUser.id)
+                        .maybeSingle();
+
+                    if (fitnessData) {
+                        if (fitnessData.Peso != null) localStorage.setItem("peso_usuario", fitnessData.Peso);
+                        if (fitnessData.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", fitnessData.Peso_Obj);
+                        if (fitnessData.Altura != null) localStorage.setItem("altura_usuario", fitnessData.Altura);
+                        if (fitnessData.Edad != null) localStorage.setItem("edad_usuario", fitnessData.Edad);
+                    }
+
+                    const { data: planesData } = await supabase
+                        .from("Planes")
+                        .select("id, Plan_entreno, Plan_alimenta")
+                        .eq("ID_user", currentUser.id)
+                        .maybeSingle();
+
+                    if (planesData) {
+                        if (planesData.Plan_entreno) localStorage.setItem("plan_entreno_usuario", planesData.Plan_entreno);
+                        if (planesData.Plan_alimenta) localStorage.setItem("plan_dieta_usuario", planesData.Plan_alimenta);
+                    }
+                }
+            } catch (err) {
+                console.error("Error al obtener datos del usuario:", err);
+            }
+        }
+
+        // Formateador de Markdown
+        const escapeHtml = (text) => {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return String(text ?? '').replace(/[&<>"']/g, (m) => map[m]);
+        };
+
+        const formatChatbotMsg = (text) => {
+            let html = escapeHtml(text);
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/^[\-\*]\s+(.*)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>(?:\n<li>.*<\/li>)*)/g, '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
+            html = html.replace(/\n/g, '<br>');
+            html = html.replace(/<br><ul/g, '<ul');
+            html = html.replace(/<\/ul><br>/g, '</ul>');
+            html = html.replace(/<\/li><br>/g, '</li>');
+            return html;
+        };
+
+        // Inicialización del Chatbot
+        function setupChatbot() {
+            const messagesContainer = document.getElementById("chatbot-messages");
+            const textarea = document.getElementById("chatbot-input");
+            const sendBtn = document.getElementById("chatbot-send");
+            const clearBtn = document.getElementById("chatbot-btn-clear");
+
+            const username = localStorage.getItem("username_usuario") || currentUser?.user_metadata?.full_name || currentUser?.email?.split("@")[0] || "Atleta";
+            const welcomeMsg = `¡Hola ${username}! Soy tu asistente inteligente TrAIner.\n¿En qué te puedo ayudar hoy con tu entrenamiento o nutrición?`;
+
+            // Cargar historial previo guardado
+            let savedHistory = [];
+            try {
+                savedHistory = JSON.parse(localStorage.getItem("pt_chatbot_history")) || [];
+            } catch (e) {
+                savedHistory = [];
+            }
+
+            // Renderizar historial o mensaje inicial
+            messagesContainer.innerHTML = "";
+            if (savedHistory.length === 0) {
+                const welcomeEl = document.createElement("div");
+                welcomeEl.className = "chat-msg chat-msg-bot";
+                welcomeEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(welcomeMsg)}</div>`;
+                messagesContainer.appendChild(welcomeEl);
+            } else {
+                savedHistory.forEach((msg) => {
+                    const msgEl = document.createElement("div");
+                    msgEl.className = msg.role === "user" ? "chat-msg chat-msg-user" : "chat-msg chat-msg-bot";
+                    msgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(msg.content)}</div>`;
+                    messagesContainer.appendChild(msgEl);
+                });
+            }
+
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 120);
+
+            // Redimensionamiento dinámico del textarea
+            const autoResize = () => {
+                textarea.style.height = "auto";
+                textarea.style.height = Math.min(textarea.scrollHeight, 110) + "px";
+            };
+            textarea.addEventListener("input", autoResize);
+            textarea.addEventListener("focus", () => {
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 300);
+            });
+
+            // Botón de limpiar historial
+            if (clearBtn) {
+                clearBtn.addEventListener("click", async () => {
+                    let confirmed = false;
+                    if (window.Swal) {
+                        const res = await window.Swal.fire({
+                            title: "¿Borrar historial?",
+                            text: "Se eliminarán los mensajes previos de la conversación.",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#ff4757",
+                            cancelButtonColor: "#272a33",
+                            confirmButtonText: "Sí, borrar",
+                            cancelButtonText: "Cancelar",
+                            background: "#181a1f",
+                            color: "#ffffff"
+                        });
+                        confirmed = res.isConfirmed;
+                    } else {
+                        confirmed = window.confirm("¿Deseas eliminar todo el historial con el entrenador IA?");
+                    }
+
+                    if (confirmed) {
+                        localStorage.removeItem("pt_chatbot_history");
+                        savedHistory = [];
+                        messagesContainer.innerHTML = `
+                            <div class="chat-msg chat-msg-bot">
+                                <div class="chat-bubble">
+                                    ${formatChatbotMsg(`¡Historial borrado!\n¿Qué te gustaría consultar ahora, ${username}?`)}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Función de envío de mensajes
+            const sendMessage = async () => {
+                const text = textarea.value.trim();
+                if (!text) return;
+
+                // Mensaje del usuario
+                const userMsgEl = document.createElement("div");
+                userMsgEl.className = "chat-msg chat-msg-user";
+                userMsgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(text)}</div>`;
+                messagesContainer.appendChild(userMsgEl);
+
+                textarea.value = "";
+                autoResize();
+                textarea.disabled = true;
+                sendBtn.disabled = true;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Indicador de tipeo
+                const loadingEl = document.createElement("div");
+                loadingEl.className = "chat-msg chat-msg-bot";
+                loadingEl.innerHTML = `
+                    <div class="chat-bubble">
+                        <div class="chat-typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(loadingEl);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                try {
+                    const payload = {
+                        idioma: window.UIIdioma?.getIdioma?.() || "es",
+                        P_ent: localStorage.getItem("plan_entreno_usuario") || "Ninguno",
+                        P_alim: localStorage.getItem("plan_dieta_usuario") || localStorage.getItem("plan_alim_usuario") || "Ninguno",
+                        D_user: {
+                            edad: localStorage.getItem("edad_usuario") || "",
+                            altura: localStorage.getItem("altura_usuario") || "",
+                            peso: localStorage.getItem("peso_usuario") || "",
+                            peso_objetivo: localStorage.getItem("peso_objetivo_usuario") || ""
+                        },
+                        consulta: text,
+                        historial: savedHistory
+                    };
+
+                    const res = await fetch("/IA_chatbot", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) throw new Error("Error en la respuesta del servidor");
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error);
+
+                    loadingEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(data.respuesta)}</div>`;
+
+                    savedHistory.push({ role: "user", content: text });
+                    savedHistory.push({ role: "assistant", content: data.respuesta });
+
+                    try {
+                        localStorage.setItem("pt_chatbot_history", JSON.stringify(savedHistory));
+                    } catch (e) { }
+                } catch (err) {
+                    console.error("Error chatbot:", err);
+                    loadingEl.innerHTML = `
+                        <div class="chat-bubble" style="color: #ff6b6b; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                            <span>Error al conectar con la IA.</span>
+                            <button type="button" class="btn-chat-resend">Reintentar</button>
+                        </div>
+                    `;
+                    const retryBtn = loadingEl.querySelector(".btn-chat-resend");
+                    if (retryBtn) {
+                        retryBtn.addEventListener("click", () => {
+                            loadingEl.remove();
+                            userMsgEl.remove();
+                            textarea.value = text;
+                            sendMessage();
+                        });
+                    }
+                } finally {
+                    textarea.disabled = false;
+                    sendBtn.disabled = false;
+                    textarea.focus();
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
+            };
+
+            sendBtn.addEventListener("click", sendMessage);
+            textarea.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        // Inicializar al cargar el DOM
+        window.addEventListener("DOMContentLoaded", async () => {
+            const cachedAvatar = localStorage.getItem("avatar_usuario");
+            if (cachedAvatar) {
+                const avatarEl = document.getElementById("header-user-avatar");
+                if (avatarEl) avatarEl.src = cachedAvatar;
+            }
+
+            await fetchUserData();
+            setupChatbot();
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        });
+    </script>
+</body>
+
+</html>

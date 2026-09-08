@@ -873,8 +873,7 @@ const initPlanDiaPagerAliment = (scroller) => {
         const dx = t.clientX - touchStartX;
         if (Math.abs(dy) < TOUCH_THRESHOLD) return;
         if (Math.abs(dy) < Math.abs(dx)) return;
-        if (touchFromGrid) return;
-
+        // Permite que se pueda deslizar si el usuario arrastra desde los contenedores
         const dir = dy < 0 ? 1 : -1;
         stepBy(dir);
     };
@@ -1173,7 +1172,7 @@ const verificacion_plan_alimentacion = (ctx) => {
         if (botonEliminar) botonEliminar.style.display = "inline-block";
 
         if (boton) {
-            boton.innerHTML = '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1yb3RhdGUtY3ctaWNvbiBsdWNpZGUtcm90YXRlLWN3Ij48cGF0aCBkPSJNMjEgMTJhOSA5IDAgMSAxLTktOWMyLjUyIDAgNC45MyAxIDYuNzQgMi43NEwyMSA4Ii8+PHBhdGggZD0iTTIxIDN2NWgtNSIvPjwvc3ZnPg==">';
+            boton.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>';
             boton.classList.add("btn-icon-sm");
             boton.style.width = "";
             boton.style.height = "";

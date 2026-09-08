@@ -1,3 +1,4 @@
 .netlify
 elementos_depreciados
 .env
+node_modules

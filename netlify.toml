@@ -1,3 +1,11 @@
+[build]
+  publish = "."
+
+[dev]
+  publish = "."
+  port = 8888
+  framework = "#static"
+
 [[edge_functions]]
   function = "gen_plan_entreno"
   path = "/gen_plan_entreno"

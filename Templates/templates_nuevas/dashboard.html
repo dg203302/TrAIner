@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Inicio · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/spa_router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=5"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --dot-active: #ffffff;
+            --dot-inactive: #282b33;
+            --accent-glow: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.06);
+            --radius-card: 26px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+            --nav-height: 78px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: calc(var(--nav-height) + 24px + env(safe-area-inset-bottom, 20px));
+        }
+
+        /* Contenedor responsivo centrado */
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── HEADER FLOTANTE / STICKY ── */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: -16px -20px 0 -20px;
+            padding: calc(14px + env(safe-area-inset-top, 6px)) 20px 14px 20px;
+            background: rgba(12, 13, 16, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            transition: all 0.25s ease;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .header-user-status {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-user-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #2ed573;
+            box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-avatar-btn {
+            border: 1.8px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+            padding: 0;
+            background: #181a20;
+        }
+
+        .header-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            background: #1e222a;
+            transition: transform 0.2s ease;
+        }
+
+        .header-avatar-btn:hover .header-avatar-img {
+            transform: scale(1.08);
+        }
+
+        .header-btn:active {
+            transform: scale(0.92);
+            background: var(--bg-card-elevated);
+        }
+
+        /* ── GRID SUPERIOR (2 COLUMNAS) ── */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .card-top-icon {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            color: var(--text-muted);
+            width: 18px;
+            height: 18px;
+            opacity: 0.6;
+        }
+
+        /* Tarjeta Workout de hoy */
+        .card-workout-summary {
+            min-height: 180px;
+            cursor: pointer;
+        }
+
+        /* Círculo indicador de workout (1) */
+        .workout-indicator-wrap {
+            width: 58px;
+            height: 58px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .workout-indicator-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .workout-indicator-bg {
+            fill: none;
+            stroke: #262932;
+            stroke-width: 3.2;
+        }
+
+        .workout-indicator-progress {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 3.2;
+            stroke-linecap: round;
+            stroke-dasharray: 160;
+            stroke-dashoffset: 45;
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .workout-indicator-num {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .workout-title {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #fff;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .workout-subtitle {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Tarjeta Body Weight */
+        .card-weight {
+            min-height: 180px;
+        }
+
+        .weight-value-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-top: 14px;
+            margin-bottom: 24px;
+        }
+
+        .weight-number {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .weight-unit {
+            font-size: 18px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .weight-label {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .weight-sub {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ── SLIDESHOW DE ENTRENAMIENTO DE HOY (GIFS) ── */
+        .slideshow-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .slideshow-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1b1e24;
+        }
+
+        .slideshow-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .slideshow-header-title {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-secondary);
+        }
+
+        .slideshow-counter {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--bg-card-elevated);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+        }
+
+        .slideshow-body {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-card-subtle);
+            border-radius: var(--radius-inner);
+            padding: 12px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            min-height: 110px;
+        }
+
+        .slideshow-media {
+            width: 86px;
+            height: 86px;
+            border-radius: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slideshow-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+
+        .slideshow-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .slideshow-ex-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .slideshow-ex-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .slideshow-badge {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .slideshow-nav-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .slideshow-dots-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .slideshow-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #333742;
+            transition: all 0.25s ease;
+        }
+
+        .slideshow-dot.is-active {
+            width: 20px;
+            border-radius: var(--radius-pill);
+            background: #fff;
+        }
+
+        .slideshow-arrows {
+            display: flex;
+            gap: 8px;
+        }
+
+        .slideshow-arrow-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--border-card);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .slideshow-arrow-btn:active {
+            transform: scale(0.9);
+        }
+
+        .slideshow-arrow-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.5;
+        }
+
+        /* ── PLAN DE ALIMENTACIÓN DEL DÍA ── */
+        .card-diet {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-diet:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1b1e24;
+        }
+
+        .diet-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .diet-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #6e8caa;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .diet-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .diet-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+        }
+
+        .diet-kcal-badge {
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--border-card);
+            padding: 10px 14px;
+            border-radius: 16px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .diet-kcal-val {
+            font-size: 19px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .diet-kcal-lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* ── CALENDARIO DE PUNTOS (HEATMAP SIMPLE) ── */
+        .card-calendar-dots {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 22px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-calendar-dots:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1b1e24;
+        }
+
+        .months-dot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .month-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .month-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .dots-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 7px 6px;
+            justify-items: center;
+        }
+
+        .dot-day {
+            width: 7.5px;
+            height: 7.5px;
+            border-radius: 50%;
+            background-color: var(--dot-inactive);
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .dot-day.trained {
+            background-color: var(--dot-active);
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
+            transform: scale(1.2);
+        }
+
+        .dot-day.today {
+            outline: 1.5px solid rgba(255, 255, 255, 0.6);
+            outline-offset: 1.5px;
+        }
+
+        /* Sub-item dentro de la tarjeta de calendario: Workout 2 */
+        .card-cal-subitem {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .card-cal-subitem:hover {
+            opacity: 0.85;
+        }
+
+        .cal-subitem-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cal-subitem-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cal-subitem-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ── TARJETA MÉTRICAS (VOLUME LIFTED / RESUMEN MES) ── */
+        .card-metric-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-metric-row:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1b1e24;
+        }
+
+        .metric-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .metric-label {
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .metric-sub {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-right {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-right: 28px;
+        }
+
+        .metric-big-num {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #ffffff;
+        }
+
+        .metric-unit {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Triplete de métricas (Tiempo, Calorías y Racha) */
+        .metrics-triplet {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .metric-mini-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .metric-mini-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: #1b1e24;
+        }
+
+        .mini-metric-title {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .mini-metric-num {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .mini-metric-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ── BARRA DE NAVEGACIÓN INFERIOR FLOTANTE ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 36px);
+            max-width: 380px;
+            height: 64px;
+            padding: 0 8px;
+            background: rgba(22, 25, 31, 0.84);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            z-index: 1000;
+        }
+
+        .bottom-nav-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0;
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #535866;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.1;
+            stroke: currentColor;
+            fill: none;
+            transition: stroke 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+        .nav-item:hover svg {
+            stroke: #ffffff;
+        }
+
+        .nav-item:active {
+            transform: scale(0.88);
+        }
+
+        /* Ítem Activo (Blanco Puro) */
+        .nav-item.is-active {
+            color: #ffffff;
+        }
+
+        .nav-item.is-active svg {
+            stroke: #ffffff;
+        }
+
+        /* ── ESTILOS DEL CHATBOT CON ESTÉTICA OSCURA PREMIUM ── */
+        .pt-sheet.pt-chatbot-sheet,
+        .pt-chatbot-sheet,
+        .pt-chatbot-sheet .pt-sheet {
+            background: #13151a !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-bottom: none !important;
+            border-radius: 32px 32px 0 0 !important;
+            height: 82vh !important;
+            height: 82dvh !important;
+            max-height: 88vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.85) !important;
+        }
+
+        @media (min-width: 768px) {
+            .pt-sheet.pt-chatbot-sheet,
+            .pt-chatbot-sheet,
+            .pt-chatbot-sheet .pt-sheet {
+                border-radius: 28px !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+                max-width: 440px !important;
+                height: 80vh !important;
+            }
+        }
+
+        .pt-sheet.pt-chatbot-sheet .pt-sheet-header,
+        .pt-chatbot-sheet .pt-sheet-header {
+            display: none !important;
+        }
+
+        .pt-sheet.pt-chatbot-sheet .pt-sheet-top-actions,
+        .pt-chatbot-sheet .pt-sheet-top-actions {
+            display: none !important;
+        }
+
+        .pt-sheet.pt-chatbot-sheet .pt-sheet-content,
+        .pt-chatbot-sheet .pt-sheet-content {
+            flex: 1 1 0% !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 0 !important;
+            background: #13151a !important;
+        }
+
+        .pt-sheet.pt-chatbot-sheet .pt-sheet-content>div,
+        .pt-chatbot-sheet .pt-sheet-content>div {
+            flex: 1 1 0% !important;
+            min-height: 0 !important;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+        }
+
+        .chatbot-container {
+            flex: 1 1 0% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            min-height: 0 !important;
+            position: relative !important;
+            overflow: hidden !important;
+            background: #13151a;
+        }
+
+        /* Cabecera personalizada del Chatbot */
+        .chatbot-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: #13151a;
+            flex-shrink: 0;
+            z-index: 5;
+        }
+
+        .chatbot-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #1e2128;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .chatbot-avatar svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+        }
+
+        .chatbot-header-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-header-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+        }
+
+        .chatbot-header-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .status-dot {
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 50%;
+            background-color: #2ed573;
+            box-shadow: 0 0 8px rgba(46, 213, 115, 0.7);
+        }
+
+        .chatbot-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chatbot-head-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1c1f26;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #8a909a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chatbot-head-btn:hover {
+            color: #ffffff;
+            background: #262a33;
+        }
+
+        .chatbot-head-btn:active {
+            transform: scale(0.9);
+        }
+
+        .chatbot-head-btn.danger:hover {
+            color: #ff5252;
+            background: rgba(255, 82, 82, 0.12);
+            border-color: rgba(255, 82, 82, 0.25);
+        }
+
+        .chatbot-head-btn svg {
+            width: 17px;
+            height: 17px;
+            stroke-width: 2;
+        }
+
+        /* Mensajes del chat */
+        .chatbot-messages {
+            flex: 1 1 0% !important;
+            min-height: 0 !important;
+            height: 100% !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding: 18px 18px 86px 18px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            scroll-behavior: smooth;
+        }
+
+        .chatbot-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+        }
+
+        .chat-msg {
+            display: flex;
+            max-width: 86%;
+            animation: fadeInMsg 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInMsg {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-msg-user {
+            align-self: flex-end;
+        }
+
+        .chat-msg-bot {
+            align-self: flex-start;
+        }
+
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 14.5px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        /* Mensaje del Usuario: Blanco puro con texto oscuro */
+        .chat-msg-user .chat-bubble {
+            background: #ffffff;
+            color: #0c0d10;
+            font-weight: 600;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Mensaje de la IA: Gris oscuro con borde suave y texto blanco */
+        .chat-msg-bot .chat-bubble {
+            background: #1e2128;
+            color: #f1f3f7;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-bubble ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .chat-bubble li {
+            margin: 4px 0;
+        }
+
+        .chat-bubble strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .chat-msg-user .chat-bubble strong {
+            color: #0c0d10;
+        }
+
+        /* Indicador de tipeo */
+        .chat-typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 2px;
+        }
+
+        .chat-typing-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.55);
+            animation: typingPulse 1.2s infinite ease-in-out;
+        }
+
+        .chat-typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .chat-typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingPulse {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0.7);
+                opacity: 0.35;
+            }
+
+            40% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .btn-chat-resend {
+            background: rgba(255, 82, 82, 0.15);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #ff6b6b;
+            border-radius: 999px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-chat-resend:hover {
+            opacity: 0.85;
+        }
+
+        /* Área de input píldora flotante */
+        .chatbot-input-area {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px 6px 16px;
+            background: rgba(28, 31, 38, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .chatbot-input-area textarea {
+            flex: 1;
+            background: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 14.5px;
+            resize: none;
+            max-height: 100px;
+            min-height: 24px;
+            line-height: 1.4;
+            padding: 8px 0;
+        }
+
+        .chatbot-input-area textarea::placeholder {
+            color: #6b7280;
+        }
+
+        .chatbot-input-area button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: none;
+            color: #0c0d10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        .chatbot-input-area button:hover {
+            background: #e2e4e9;
+        }
+
+        .chatbot-input-area button:active {
+            transform: scale(0.9);
+        }
+
+        .chatbot-input-area button svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.3;
+            stroke: #0c0d10;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- HEADER FLOTANTE -->
+        <header class="app-header">
+            <div class="header-title-wrap">
+                <h1 class="header-title" data-i18n-en="Home">Inicio</h1>
+                <div class="header-user-status" id="header-user-status">
+                    <span class="header-user-dot"></span>
+                    <span id="header-username-text">Sincronizando...</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Botón de perfil del usuario que redirige a Perfil de Usuario -->
+                <a href="/Templates/templates_nuevas/config.html" class="header-btn header-avatar-btn"
+                    id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
+                    <img id="header-user-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                        alt="Foto de perfil" class="header-avatar-img">
+                </a>
+            </div>
+        </header>
+
+        <!-- PRIMERA FILA (2 COLUMNAS): WORKOUT HOY + BODY WEIGHT -->
+        <section class="hero-grid">
+            <!-- Tarjeta: Workout de Hoy -->
+            <div class="card card-workout-summary" id="card-workout-today">
+                <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+
+                <div class="workout-indicator-wrap">
+                    <svg class="workout-indicator-svg" viewBox="0 0 58 58">
+                        <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
+                        <circle class="workout-indicator-progress" id="workout-ring-progress" cx="29" cy="29" r="25">
+                        </circle>
+                    </svg>
+                    <span class="workout-indicator-num" id="workout-num-display"></span>
+                </div>
+
+                <div>
+                    <h2 class="workout-title" id="workout-today-title">Cargando...</h2>
+                    <p class="workout-subtitle" id="workout-today-subtitle">Consultando BD...</p>
+                </div>
+            </div>
+
+            <!-- Tarjeta: Body Weight (Datos Fitness -> Peso y Peso_Obj) -->
+            <div class="card card-weight" id="card-weight">
+                <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+
+                <div class="weight-value-wrap">
+                    <span class="weight-number" id="weight-display-val">--</span>
+                    <span class="weight-unit">kg</span>
+                </div>
+
+                <div>
+                    <h2 class="weight-label" data-i18n-en="Body weight">Peso corporal</h2>
+                    <p class="weight-sub" id="weight-sub-display">Meta: -- kg</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEGUNDA SECCIÓN: SLIDESHOW CON GIFS DE LOS EJERCICIOS DE HOY -->
+        <section class="slideshow-card" id="today-slideshow-card">
+            <div class="slideshow-header">
+                <span class="slideshow-header-title" data-i18n-en="Today's Exercises">Ejercicios de hoy</span>
+                <span class="slideshow-counter" id="slideshow-counter">1 / --</span>
+            </div>
+
+            <div class="slideshow-body" id="slideshow-body">
+                <div class="slideshow-media" id="slideshow-media">
+                    <img id="slideshow-gif" src="" alt="Demostración ejercicio" style="display: none;">
+                    <div id="slideshow-placeholder" style="color: #666; font-size: 11px;">TrAIner</div>
+                </div>
+
+                <div class="slideshow-info">
+                    <div class="slideshow-ex-name" id="slideshow-name">Cargando ejercicios...</div>
+                    <div class="slideshow-ex-meta">
+                        <span class="slideshow-badge" id="slideshow-series">-- series</span>
+                        <span class="slideshow-badge" id="slideshow-reps">-- reps</span>
+                        <span class="slideshow-badge" id="slideshow-rest">--s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slideshow-nav-controls">
+                <div class="slideshow-dots-bar" id="slideshow-dots-bar"></div>
+                <div class="slideshow-arrows">
+                    <button class="slideshow-arrow-btn" id="btn-slide-prev" aria-label="Anterior">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="slideshow-arrow-btn" id="btn-slide-next" aria-label="Siguiente">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TERCERA SECCIÓN: PLAN DE ALIMENTACIÓN DE HOY (Planes -> Plan_alimenta) -->
+        <section class="card-diet" id="card-diet" role="button" tabindex="0">
+            <div class="diet-info">
+                <span class="diet-tag" data-i18n-en="Nutrition for today">Plan Nutricional de hoy</span>
+                <h3 class="diet-title" id="diet-today-title">Cargando plan...</h3>
+                <p class="diet-desc" id="diet-today-desc">Comidas y macronutrientes asignados</p>
+            </div>
+            <div class="diet-kcal-badge">
+                <div class="diet-kcal-val" id="diet-today-kcal">--</div>
+                <div class="diet-kcal-lbl">kcal</div>
+            </div>
+        </section>
+
+        <!-- CUARTA SECCIÓN: CALENDARIO DE PUNTOS (Planes -> Dias_entrenados) + WORKOUT 2 -->
+        <section class="card-calendar-dots">
+            <!-- 3 Columnas de Meses con Dots -->
+            <div class="months-dot-grid" id="months-dot-grid">
+                <!-- Se llenan con los datos reales de Dias_entrenados de la BD -->
+            </div>
+
+            <!-- Subitem de segundo entreno / próximo entreno -->
+            <div class="card-cal-subitem" id="cal-subitem-next">
+                <div class="workout-indicator-wrap" style="width: 46px; height: 46px; margin-bottom: 0;">
+                    <svg class="workout-indicator-svg" viewBox="0 0 58 58">
+                        <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
+                        <circle class="workout-indicator-progress" cx="29" cy="29" r="25"
+                            style="stroke-dashoffset: 80;"></circle>
+                    </svg>
+                    <span class="workout-indicator-num" style="font-size: 16px;"></span>
+                </div>
+
+                <div class="cal-subitem-info">
+                    <div class="cal-subitem-title" id="cal-subitem-title">Próxima sesión</div>
+                    <div class="cal-subitem-sub" id="cal-subitem-sub">--</div>
+                </div>
+
+                <svg style="width: 18px; height: 18px; color: var(--text-muted); opacity: 0.6;" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+            </div>
+        </section>
+
+        <!-- QUINTA SECCIÓN: VOLUMEN / ENTRENOS DEL MES (Calculado de Dias_entrenados) -->
+        <section class="card-metric-row">
+            <div class="metric-left">
+                <div class="metric-label" data-i18n-en="Monthly sessions">Entrenos del mes</div>
+                <div class="metric-sub" id="metric-month-name">Mes actual</div>
+            </div>
+            <div class="metric-right">
+                <span class="metric-big-num" id="metric-sessions-num">0</span>
+                <span class="metric-unit" data-i18n-en="ses">ses</span>
+            </div>
+
+            <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+        </section>
+
+        <!-- RESUMEN EN TRIPLETE (TIEMPO, CALORÍAS Y RACHA) -->
+        <section class="metrics-triplet">
+            <div class="metric-mini-card">
+                <span class="mini-metric-title" data-i18n-en="Time">Tiempo</span>
+                <span class="mini-metric-num" id="metric-total-time">0m</span>
+                <span class="mini-metric-sub" data-i18n-en="This month">este mes</span>
+            </div>
+
+            <div class="metric-mini-card">
+                <span class="mini-metric-title" data-i18n-en="Calories">Calorías</span>
+                <span class="mini-metric-num" id="metric-total-calories">0</span>
+                <span class="mini-metric-sub">kcal totales</span>
+            </div>
+
+            <div class="metric-mini-card">
+                <span class="mini-metric-title" data-i18n-en="Streak">Racha</span>
+                <span class="mini-metric-num" id="metric-streak-count">0d</span>
+                <span class="mini-metric-sub">consecutivos</span>
+            </div>
+        </section>
+    </div>
+
+    <!-- ── BARRA INFERIOR DE NAVEGACIÓN (IDÉNTICA A LA CAPTURA) ── -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <!-- 1. Grid / Workouts (Activo) -->
+            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item is-active"
+                aria-label="Panel de Entrenamientos">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                </svg>
+            </a>
+
+            <!-- 2. Calendario -->
+            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item"
+                aria-label="Calendario de Entreno">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </a>
+
+            <!-- 3. Gráficas / Analytics / Planes -->
+            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item"
+                aria-label="Plan de Entrenamiento">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m6.5 6.5 11 11"></path>
+                    <path d="m21 21-1-1"></path>
+                    <path d="m3 3 1 1"></path>
+                    <path d="m18 22 4-4"></path>
+                    <path d="m2 6 4-4"></path>
+                    <path d="m3 10 7-7"></path>
+                    <path d="m14 21 7-7"></path>
+                </svg>
+            </a>
+
+            <!-- 4. Alimentación -->
+            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item"
+                aria-label="Plan de Alimentación">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                    <path d="M7 2v20"></path>
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                </svg>
+            </a>
+
+            <!-- 5. Chat Asistente IA -->
+            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item" id="btn-nav-chat"
+                aria-label="Asistente Inteligente TrAIner">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ── LÓGICA DE RECUPERACIÓN Y CONEXIÓN CON SUPABASE ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        // Inicialización de cliente Supabase idéntico al backend existente
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: false, storage: localStorage }
+        });
+
+        // Estado en memoria
+        let currentUser = null;
+        let userFitnessData = null;
+        let userPlanesData = null;
+        let exercisesFlatDb = {};
+        let currentDayExercises = [];
+        let slideIndex = 0;
+        let slideInterval = null;
+
+        const DIAS_MAP = {
+            0: "domingo",
+            1: "lunes",
+            2: "martes",
+            3: "miercoles",
+            4: "jueves",
+            5: "viernes",
+            6: "sabado"
+        };
+
+        const DIAS_NAMES_ES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
+        const normalizeStr = (str) =>
+            String(str ?? "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim()
+                .toLowerCase();
+
+        // 1. Cargar base de datos local de ejercicios y GIFs
+        async function loadExercisesDatabase() {
+            try {
+                const res = await fetch("/Datos/entrenamientos.json");
+                if (!res.ok) return;
+                const data = await res.json();
+                for (const [category, list] of Object.entries(data)) {
+                    if (Array.isArray(list)) {
+                        list.forEach((ex) => {
+                            if (ex?.nombre) {
+                                exercisesFlatDb[normalizeStr(ex.nombre)] = ex;
+                            }
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn("No se pudo cargar entrenamientos.json:", e);
+            }
+        }
+
+        // 2. RECUPERAR DATOS DE SUPABASE (auth.users.id -> "Datos Fitness" & "Planes")
+        async function fetchUserDataFromDatabase() {
+            try {
+                // Verificar sesión del usuario
+                const { data: authData, error: authErr } = await supabase.auth.getUser();
+                if (authErr || !authData?.user) {
+                    console.warn("Sin sesión activa en Supabase. Utilizando caché de localStorage.");
+                    // Fallback a localStorage si ya existía sesión guardada
+                    const localId = localStorage.getItem("id_usuario");
+                    if (!localId) {
+                        // Redirigir a inicio si no hay usuario identificado
+                        document.getElementById("header-username-text").textContent = "Invitado";
+                        return;
+                    }
+                    currentUser = { id: localId };
+                } else {
+                    currentUser = authData.user;
+                    localStorage.setItem("id_usuario", currentUser.id);
+                    if (currentUser.user_metadata?.full_name) {
+                        localStorage.setItem("username_usuario", currentUser.user_metadata.full_name);
+                    }
+                    const metaAvatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+                    if (metaAvatar) {
+                        localStorage.setItem("avatar_usuario", metaAvatar);
+                    }
+                }
+
+                const userId = currentUser.id;
+
+                // Actualizar nombre y foto de perfil en cabecera
+                const username = localStorage.getItem("username_usuario") || currentUser.email?.split("@")[0] || "Usuario";
+                document.getElementById("header-username-text").textContent = username;
+
+                const avatarUrl = localStorage.getItem("avatar_usuario") ||
+                    currentUser.user_metadata?.avatar_url ||
+                    currentUser.user_metadata?.picture ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                const avatarImg = document.getElementById("header-user-avatar");
+                if (avatarImg) {
+                    avatarImg.src = avatarUrl;
+                    avatarImg.onerror = () => {
+                        avatarImg.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                    };
+                }
+
+                // Consulta a la tabla: "Datos Fitness" (Altura, Peso, Peso_Obj, Edad)
+                const { data: fitnessData, error: fitErr } = await supabase
+                    .from("Datos Fitness")
+                    .select("id, Altura, Peso, Peso_Obj, Edad")
+                    .eq("ID_user", userId)
+                    .maybeSingle();
+
+                if (!fitErr && fitnessData) {
+                    userFitnessData = fitnessData;
+                    if (fitnessData.Peso != null) localStorage.setItem("peso_usuario", fitnessData.Peso);
+                    if (fitnessData.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", fitnessData.Peso_Obj);
+                    if (fitnessData.Altura != null) localStorage.setItem("altura_usuario", fitnessData.Altura);
+                    if (fitnessData.Edad != null) localStorage.setItem("edad_usuario", fitnessData.Edad);
+                }
+
+                // Consulta a la tabla: "Planes" (Plan_entreno, Plan_alimenta, Dias_entrenados)
+                const { data: planesData, error: planErr } = await supabase
+                    .from("Planes")
+                    .select("id, Plan_entreno, Plan_alimenta, Dias_entrenados")
+                    .eq("ID_user", userId)
+                    .maybeSingle();
+
+                if (!planErr && planesData) {
+                    userPlanesData = planesData;
+                    if (planesData.Plan_entreno) localStorage.setItem("plan_entreno_usuario", planesData.Plan_entreno);
+                    if (planesData.Plan_alimenta) localStorage.setItem("plan_dieta_usuario", planesData.Plan_alimenta);
+                    if (planesData.Dias_entrenados) {
+                        const strDias = typeof planesData.Dias_entrenados === "string"
+                            ? planesData.Dias_entrenados
+                            : JSON.stringify(planesData.Dias_entrenados);
+                        localStorage.setItem("Dias_cale", strDias);
+                    }
+                }
+            } catch (err) {
+                console.error("Error al recuperar datos de la base de datos:", err);
+            }
+        }
+
+        // 3. MOSTRAR INFORMACIÓN: Body Weight
+        function displayBodyWeight() {
+            const peso = userFitnessData?.Peso ?? localStorage.getItem("peso_usuario");
+            const pesoObj = userFitnessData?.Peso_Obj ?? localStorage.getItem("peso_objetivo_usuario");
+
+            const weightValEl = document.getElementById("weight-display-val");
+            const weightSubEl = document.getElementById("weight-sub-display");
+
+            if (peso != null && !isNaN(Number(peso))) {
+                weightValEl.textContent = Math.round(Number(peso));
+            } else {
+                weightValEl.textContent = "70";
+            }
+
+            if (pesoObj != null && !isNaN(Number(pesoObj))) {
+                weightSubEl.textContent = `Meta: ${Math.round(Number(pesoObj))} kg`;
+            } else {
+                weightSubEl.textContent = "Sin meta fijada";
+            }
+        }
+
+        // 4. MOSTRAR INFORMACIÓN: Entreno de Hoy (Plan_entreno)
+        function displayTodayWorkout() {
+            const rawPlan = userPlanesData?.Plan_entreno ?? localStorage.getItem("plan_entreno_usuario");
+            const todayIdx = new Date().getDay();
+            const todayNameNorm = DIAS_MAP[todayIdx];
+
+            const ringEl = document.getElementById("workout-ring-progress");
+            const numEl = document.getElementById("workout-num-display");
+            const titleEl = document.getElementById("workout-today-title");
+            const subEl = document.getElementById("workout-today-subtitle");
+
+            if (!rawPlan || rawPlan === "Ninguno") {
+                titleEl.textContent = "Sin plan cargado";
+                subEl.textContent = "Genera tu rutina en Planes";
+                ringEl.style.strokeDashoffset = "160";
+                numEl.textContent = "-";
+                document.getElementById("today-slideshow-card").style.display = "none";
+                document.getElementById("cal-subitem-title").textContent = "Sin plan de entreno";
+                document.getElementById("cal-subitem-sub").textContent = "Ve a la sección Planes para crearlo";
+                return;
+            }
+
+            let parsedPlan = null;
+            try {
+                parsedPlan = typeof rawPlan === "string" ? JSON.parse(rawPlan) : rawPlan;
+                if (parsedPlan.plan_entrenamiento_hipertrofia) parsedPlan = parsedPlan.plan_entrenamiento_hipertrofia;
+                if (parsedPlan.plan_entrenamiento) parsedPlan = parsedPlan.plan_entrenamiento;
+            } catch (e) {
+                console.warn("Error parseando Plan_entreno:", e);
+            }
+
+            const weekly = parsedPlan?.configuracion_semanal || parsedPlan?.semana || [];
+            let todayDayConfig = null;
+            let nextDayConfig = null;
+
+            if (Array.isArray(weekly) && weekly.length > 0) {
+                todayDayConfig = weekly.find(d => normalizeStr(d?.dia).includes(todayNameNorm));
+
+                // Buscar siguiente entreno para el sub-ítem 2
+                const currentIndex = weekly.findIndex(d => normalizeStr(d?.dia).includes(todayNameNorm));
+                for (let i = 1; i <= 6; i++) {
+                    const candidate = weekly[(currentIndex + i) % weekly.length];
+                    if (candidate && Array.isArray(candidate.ejercicios) && candidate.ejercicios.length > 0 && !normalizeStr(candidate.enfoque).includes("descanso")) {
+                        nextDayConfig = candidate;
+                        break;
+                    }
+                }
+            }
+
+            if (todayDayConfig) {
+                const isRest = !todayDayConfig.ejercicios || todayDayConfig.ejercicios.length === 0 || normalizeStr(todayDayConfig.enfoque).includes("descanso");
+                if (isRest) {
+                    titleEl.textContent = "Día de Descanso";
+                    subEl.textContent = `${DIAS_NAMES_ES[todayIdx]} · Recuperación`;
+                    ringEl.style.strokeDashoffset = "160";
+                    numEl.textContent = "R";
+                    document.getElementById("today-slideshow-card").style.display = "none";
+                } else {
+                    titleEl.textContent = todayDayConfig.enfoque || "Entrenamiento de hoy";
+                    subEl.textContent = `${DIAS_NAMES_ES[todayIdx]}s · ${todayDayConfig.ejercicios.length} ejercicios`;
+                    ringEl.style.strokeDashoffset = "40";
+                    numEl.textContent = "1";
+
+                    currentDayExercises = todayDayConfig.ejercicios;
+                    setupSlideshow();
+                }
+            } else {
+                titleEl.textContent = "Rutina Semanal";
+                subEl.textContent = `${DIAS_NAMES_ES[todayIdx]}`;
+            }
+
+            // Subitem: Próxima sesión (2)
+            if (nextDayConfig) {
+                document.getElementById("cal-subitem-title").textContent = nextDayConfig.enfoque || "Próxima sesión";
+                document.getElementById("cal-subitem-sub").textContent = nextDayConfig.dia || "Próximamente";
+            } else {
+                document.getElementById("cal-subitem-title").textContent = "Plan semanal";
+                document.getElementById("cal-subitem-sub").textContent = "Al día con los entrenamientos";
+            }
+        }
+
+        // 5. SLIDESHOW DE EJERCICIOS Y GIFS
+        function setupSlideshow() {
+            const cardEl = document.getElementById("today-slideshow-card");
+            if (!currentDayExercises || currentDayExercises.length === 0) {
+                cardEl.style.display = "none";
+                return;
+            }
+
+            cardEl.style.display = "flex";
+            slideIndex = 0;
+
+            const dotsBar = document.getElementById("slideshow-dots-bar");
+            dotsBar.innerHTML = "";
+            currentDayExercises.forEach((_, idx) => {
+                const dot = document.createElement("div");
+                dot.className = `slideshow-dot ${idx === 0 ? "is-active" : ""}`;
+                dotsBar.appendChild(dot);
+            });
+
+            updateSlideContent();
+
+            document.getElementById("btn-slide-prev").onclick = () => {
+                changeSlide((slideIndex - 1 + currentDayExercises.length) % currentDayExercises.length);
+            };
+
+            document.getElementById("btn-slide-next").onclick = () => {
+                changeSlide((slideIndex + 1) % currentDayExercises.length);
+            };
+
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                changeSlide((slideIndex + 1) % currentDayExercises.length);
+            }, 4200);
+
+            cardEl.onmouseenter = () => clearInterval(slideInterval);
+            cardEl.onmouseleave = () => {
+                slideInterval = setInterval(() => {
+                    changeSlide((slideIndex + 1) % currentDayExercises.length);
+                }, 4200);
+            };
+        }
+
+        function changeSlide(newIdx) {
+            slideIndex = newIdx;
+            updateSlideContent();
+        }
+
+        function updateSlideContent() {
+            if (!currentDayExercises[slideIndex]) return;
+            const ex = currentDayExercises[slideIndex];
+            const normName = normalizeStr(ex.nombre);
+
+            let matched = exercisesFlatDb[normName];
+            if (!matched) {
+                for (const [key, val] of Object.entries(exercisesFlatDb)) {
+                    if (normName.includes(key) || key.includes(normName)) {
+                        matched = val;
+                        break;
+                    }
+                }
+            }
+
+            const gifEl = document.getElementById("slideshow-gif");
+            const placeholderEl = document.getElementById("slideshow-placeholder");
+
+            if (matched && matched.gifUrl) {
+                gifEl.src = matched.gifUrl;
+                gifEl.style.display = "block";
+                placeholderEl.style.display = "none";
+            } else {
+                gifEl.style.display = "none";
+                placeholderEl.style.display = "block";
+                placeholderEl.textContent = ex.nombre.slice(0, 10);
+            }
+
+            document.getElementById("slideshow-name").textContent = ex.nombre;
+            document.getElementById("slideshow-counter").textContent = `${slideIndex + 1} / ${currentDayExercises.length}`;
+            document.getElementById("slideshow-series").textContent = `${ex.series || 3} series`;
+            document.getElementById("slideshow-reps").textContent = `${ex.repeticiones || "8-12"} reps`;
+            document.getElementById("slideshow-rest").textContent = `${ex.descanso_segundos || 60}s desc`;
+
+            const dots = document.querySelectorAll(".slideshow-dot");
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle("is-active", idx === slideIndex);
+            });
+        }
+
+        // 6. MOSTRAR INFORMACIÓN: Plan de Alimentación (Plan_alimenta)
+        function displayTodayDiet() {
+            const rawDiet = userPlanesData?.Plan_alimenta ?? localStorage.getItem("plan_dieta_usuario");
+            const todayIdx = new Date().getDay();
+            const todayNameNorm = DIAS_MAP[todayIdx];
+
+            const titleEl = document.getElementById("diet-today-title");
+            const descEl = document.getElementById("diet-today-desc");
+            const kcalEl = document.getElementById("diet-today-kcal");
+
+            if (!rawDiet || rawDiet === "Ninguno" || rawDiet === "Proximamente") {
+                titleEl.textContent = "Sin plan nutricional";
+                descEl.textContent = "Genera tu plan de comidas en Planes";
+                kcalEl.textContent = "--";
+                return;
+            }
+
+            let parsed = null;
+            try {
+                parsed = typeof rawDiet === "string" ? JSON.parse(rawDiet) : rawDiet;
+                if (parsed.plan_alimentacion) parsed = parsed.plan_alimentacion;
+            } catch { }
+
+            const weekly = parsed?.configuracion_semanal || parsed?.dias || [];
+            let todayDay = null;
+
+            if (Array.isArray(weekly)) {
+                todayDay = weekly.find(d => normalizeStr(d?.dia).includes(todayNameNorm));
+            }
+
+            if (todayDay) {
+                titleEl.textContent = `${todayDay.dia || "Hoy"}`;
+                const mealsCount = todayDay.comidas?.length || 4;
+                const macros = todayDay.macros_porcentaje || {};
+                const macroStr = (macros.carbohidratos && macros.proteinas)
+                    ? `${macros.carbohidratos}%C · ${macros.proteinas}%P · ${macros.grasas || 25}%G`
+                    : `${mealsCount} comidas planificadas`;
+
+                descEl.textContent = macroStr;
+                kcalEl.textContent = todayDay.calorias_objetivo ? Math.round(todayDay.calorias_objetivo).toLocaleString() : "2.400";
+            } else {
+                titleEl.textContent = "Plan Nutricional";
+                descEl.textContent = "Distribución de macronutrientes diaria";
+                kcalEl.textContent = "2.400";
+            }
+        }
+
+        // 7. MOSTRAR INFORMACIÓN: Calendario de Puntos (Planes -> Dias_entrenados)
+        function displayDotsCalendar() {
+            let registros = [];
+            const rawDias = userPlanesData?.Dias_entrenados ?? localStorage.getItem("Dias_cale");
+            if (rawDias) {
+                try {
+                    registros = typeof rawDias === "string" ? JSON.parse(rawDias) : rawDias;
+                    if (!Array.isArray(registros)) registros = [];
+                } catch {
+                    registros = [];
+                }
+            }
+
+            const trainedDates = new Set();
+            registros.forEach(r => {
+                const d = String(r?.start ?? r?.fecha ?? "").trim().slice(0, 10);
+                if (d) trainedDates.add(d);
+            });
+
+            const monthsContainer = document.getElementById("months-dot-grid");
+            monthsContainer.innerHTML = "";
+
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+
+            const monthsToDisplay = [
+                new Date(currentYear, currentMonth - 2, 1),
+                new Date(currentYear, currentMonth - 1, 1),
+                new Date(currentYear, currentMonth, 1)
+            ];
+
+            const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            monthsToDisplay.forEach((mDate) => {
+                const year = mDate.getFullYear();
+                const month = mDate.getMonth();
+                const monthName = MONTH_NAMES[month];
+
+                const col = document.createElement("div");
+                col.className = "month-column";
+
+                const title = document.createElement("div");
+                title.className = "month-title";
+                title.textContent = monthName;
+                col.appendChild(title);
+
+                const dotsGrid = document.createElement("div");
+                dotsGrid.className = "dots-grid";
+
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayStr = String(day).padStart(2, "0");
+                    const monthStr = String(month + 1).padStart(2, "0");
+                    const dateIso = `${year}-${monthStr}-${dayStr}`;
+
+                    const dot = document.createElement("div");
+                    dot.className = "dot-day";
+
+                    if (trainedDates.has(dateIso)) {
+                        dot.classList.add("trained");
+                    }
+
+                    const isToday = (year === now.getFullYear() && month === now.getMonth() && day === now.getDate());
+                    if (isToday) {
+                        dot.classList.add("today");
+                    }
+
+                    dot.title = dateIso;
+                    dotsGrid.appendChild(dot);
+                }
+
+                col.appendChild(dotsGrid);
+                monthsContainer.appendChild(col);
+            });
+        }
+
+        // 8. MOSTRAR INFORMACIÓN: Métricas Mensuales (Planes -> Dias_entrenados)
+        function displayMonthlyMetrics() {
+            let registros = [];
+            const rawDias = userPlanesData?.Dias_entrenados ?? localStorage.getItem("Dias_cale");
+            if (rawDias) {
+                try {
+                    registros = typeof rawDias === "string" ? JSON.parse(rawDias) : rawDias;
+                    if (!Array.isArray(registros)) registros = [];
+                } catch {
+                    registros = [];
+                }
+            }
+
+            const now = new Date();
+            const currentMonthPrefix = now.toISOString().slice(0, 7);
+
+            let sessionsMonth = 0;
+            let totalMinutes = 0;
+            let totalCalories = 0;
+            const allTrainedDates = new Set();
+
+            registros.forEach(reg => {
+                const d = String(reg?.start ?? reg?.fecha ?? "").trim();
+                const props = reg?.extendedProps || {};
+
+                if (d.startsWith(currentMonthPrefix)) {
+                    sessionsMonth++;
+                    const min = Number(props.tiempo_total_min ?? reg?.tiempo_total_min ?? 45);
+                    const cal = Number(props.calories_burnt ?? reg?.calorias_quemadas ?? 300);
+                    totalMinutes += (Number.isFinite(min) ? min : 45);
+                    totalCalories += (Number.isFinite(cal) ? cal : 300);
+                }
+
+                if (d) allTrainedDates.add(d.slice(0, 10));
+            });
+
+            document.getElementById("metric-sessions-num").textContent = sessionsMonth;
+            document.getElementById("metric-total-time").textContent = `${totalMinutes}m`;
+            document.getElementById("metric-total-calories").textContent = totalCalories.toLocaleString();
+
+            const monthNamesFull = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            document.getElementById("metric-month-name").textContent = `${monthNamesFull[now.getMonth()]} ${now.getFullYear()}`;
+
+            // Cálculo de racha consecutiva
+            let streak = 0;
+            let checkDate = new Date();
+            for (let i = 0; i < 30; i++) {
+                const iso = checkDate.toISOString().slice(0, 10);
+                if (allTrainedDates.has(iso)) {
+                    streak++;
+                } else if (i > 0) {
+                    break;
+                }
+                checkDate.setDate(checkDate.getDate() - 1);
+            }
+            document.getElementById("metric-streak-count").textContent = `${streak}d`;
+        }
+
+        // 9. EVENTOS Y REDIRECCIONES
+        function setupEventListeners() {
+            // ── REDIRECCIONES A PLANES (planes_renov.html) ──
+            // 1. Tarjeta Workout de hoy
+            const cardWorkout = document.getElementById("card-workout-today");
+            if (cardWorkout) {
+                cardWorkout.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                });
+            }
+
+            // 2. Slideshow de ejercicios de hoy
+            const cardSlideshow = document.getElementById("today-slideshow-card");
+            if (cardSlideshow) {
+                cardSlideshow.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                });
+            }
+
+            // Evitar que las flechas del slideshow activen la redirección
+            document.getElementById("btn-slide-prev")?.addEventListener("click", (e) => e.stopPropagation());
+            document.getElementById("btn-slide-next")?.addEventListener("click", (e) => e.stopPropagation());
+
+            // 3. Tarjeta de plan de alimentación
+            const cardDiet = document.getElementById("card-diet");
+            if (cardDiet) {
+                cardDiet.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/plan_alimentacion.html";
+                });
+            }
+
+            // 4. Sub-ítem de próximo entreno (dentro de la tarjeta de calendario)
+            const subitemNext = document.getElementById("cal-subitem-next");
+            if (subitemNext) {
+                subitemNext.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                });
+            }
+
+            // ── REDIRECCIONES A CALENDARIO (calendario_renov.html) ──
+            // 1. Tarjeta de calendario de puntos (Heatmap de meses)
+            const cardCalendar = document.querySelector(".card-calendar-dots");
+            if (cardCalendar) {
+                cardCalendar.addEventListener("click", (e) => {
+                    if (!e.target.closest("#cal-subitem-next")) {
+                        window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                    }
+                });
+            }
+
+            // 2. Tarjeta grande de entrenos del mes ("Volume lifted / Entrenos del mes")
+            const cardMetricRow = document.querySelector(".card-metric-row");
+            if (cardMetricRow) {
+                cardMetricRow.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                });
+            }
+
+            // 3. Triplete de métricas (Tiempo, Calorías y Racha)
+            document.querySelectorAll(".metric-mini-card").forEach((card) => {
+                card.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/calendario_renov.html";
+                });
+            });
+
+            // ── ASISTENTE CHAT IA ──
+            const openChatbotSheet = async ({ triggerEl } = {}) => {
+                if (!window.PTBottomSheet) return;
+
+                const username = localStorage.getItem("username_usuario") || currentUser?.user_metadata?.full_name || currentUser?.email?.split("@")[0] || "Atleta";
+
+                const escapeHtml = (text) => {
+                    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+                    return String(text ?? '').replace(/[&<>"']/g, (m) => map[m]);
+                };
+
+                const formatChatbotMsg = (text) => {
+                    let html = escapeHtml(text);
+                    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    html = html.replace(/^[\-\*]\s+(.*)$/gm, '<li>$1</li>');
+                    html = html.replace(/(<li>.*<\/li>(?:\n<li>.*<\/li>)*)/g, '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
+                    html = html.replace(/\n/g, '<br>');
+                    html = html.replace(/<br><ul/g, '<ul');
+                    html = html.replace(/<\/ul><br>/g, '</ul>');
+                    html = html.replace(/<\/li><br>/g, '</li>');
+                    return html;
+                };
+
+                const welcomeMsg = `¡Hola! Soy tu asistente inteligente TrAIner.\n¿En qué te puedo ayudar hoy con tu entrenamiento o nutrición, ${username}?`;
+
+                const html = `
+                    <div class="chatbot-container">
+                        <div class="chatbot-header">
+                            <div class="chatbot-header-left">
+                                <div class="chatbot-avatar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path>
+                                        <rect x="4" y="6" width="16" height="14" rx="4"></rect>
+                                        <path d="M9 13h.01"></path>
+                                        <path d="M15 13h.01"></path>
+                                        <path d="M10 17h4"></path>
+                                    </svg>
+                                </div>
+                                <div class="chatbot-header-info">
+                                    <div class="chatbot-header-title">TrAIner AI</div>
+                                    <div class="chatbot-header-status">
+                                        <span class="status-dot"></span>
+                                        <span>En línea · Asistente Fitness</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chatbot-header-actions">
+                                <button type="button" class="chatbot-head-btn danger" id="chatbot-btn-clear" aria-label="Limpiar historial" title="Borrar conversación">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                </button>
+                                <button type="button" class="chatbot-head-btn" id="chatbot-btn-close" aria-label="Cerrar chat" title="Cerrar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chatbot-messages" id="chatbot-messages">
+                            <div class="chat-msg chat-msg-bot">
+                                <div class="chat-bubble">
+                                    ${formatChatbotMsg(welcomeMsg)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chatbot-input-area">
+                            <textarea id="chatbot-input" placeholder="Pregúntale a tu entrenador..." rows="1"></textarea>
+                            <button id="chatbot-send" aria-label="Enviar mensaje">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                await window.PTBottomSheet.open({
+                    className: "pt-chatbot-sheet",
+                    html,
+                    showClose: false,
+                    triggerEl: triggerEl || document.getElementById("btn-nav-chat"),
+                    hideAd: true,
+                    didOpen: (sheet) => {
+                        const messagesContainer = sheet.querySelector("#chatbot-messages");
+                        const textarea = sheet.querySelector("#chatbot-input");
+                        const sendBtn = sheet.querySelector("#chatbot-send");
+                        const closeBtn = sheet.querySelector("#chatbot-btn-close");
+                        const clearBtn = sheet.querySelector("#chatbot-btn-clear");
+
+                        if (closeBtn) {
+                            closeBtn.addEventListener("click", () => window.PTBottomSheet.close());
+                        }
+
+                        // Cargar historial previo guardado
+                        let savedHistory = [];
+                        try {
+                            savedHistory = JSON.parse(localStorage.getItem("pt_chatbot_history")) || [];
+                        } catch (e) {
+                            savedHistory = [];
+                        }
+
+                        savedHistory.forEach((msg) => {
+                            const msgEl = document.createElement("div");
+                            msgEl.className = msg.role === "user" ? "chat-msg chat-msg-user" : "chat-msg chat-msg-bot";
+                            msgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(msg.content)}</div>`;
+                            messagesContainer.appendChild(msgEl);
+                        });
+
+                        setTimeout(() => {
+                            if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }, 120);
+
+                        // Redimensionamiento dinámico del textarea
+                        const autoResize = () => {
+                            textarea.style.height = "auto";
+                            textarea.style.height = Math.min(textarea.scrollHeight, 110) + "px";
+                        };
+                        textarea.addEventListener("input", autoResize);
+                        textarea.addEventListener("focus", () => {
+                            setTimeout(() => {
+                                if (messagesContainer) messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }, 300);
+                        });
+
+                        // Botón de limpiar historial con confirmación moderna
+                        if (clearBtn) {
+                            clearBtn.addEventListener("click", async () => {
+                                let confirmed = false;
+                                if (window.Swal) {
+                                    const res = await window.Swal.fire({
+                                        title: "¿Borrar historial?",
+                                        text: "Se eliminarán los mensajes previos de la conversación.",
+                                        icon: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#ff4757",
+                                        cancelButtonColor: "#272a33",
+                                        confirmButtonText: "Sí, borrar",
+                                        cancelButtonText: "Cancelar",
+                                        background: "#181a1f",
+                                        color: "#ffffff"
+                                    });
+                                    confirmed = res.isConfirmed;
+                                } else {
+                                    confirmed = window.confirm("¿Deseas eliminar todo el historial con el entrenador IA?");
+                                }
+
+                                if (confirmed) {
+                                    localStorage.removeItem("pt_chatbot_history");
+                                    savedHistory = [];
+                                    messagesContainer.innerHTML = `
+                                        <div class="chat-msg chat-msg-bot">
+                                            <div class="chat-bubble">
+                                                ${formatChatbotMsg(`¡Historial borrado!\n¿Qué te gustaría consultar ahora, ${username}?`)}
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                            });
+                        }
+
+                        // Función de envío de mensajes
+                        const sendMessage = async () => {
+                            const text = textarea.value.trim();
+                            if (!text) return;
+
+                            // Mensaje del usuario
+                            const userMsgEl = document.createElement("div");
+                            userMsgEl.className = "chat-msg chat-msg-user";
+                            userMsgEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(text)}</div>`;
+                            messagesContainer.appendChild(userMsgEl);
+
+                            textarea.value = "";
+                            autoResize();
+                            textarea.disabled = true;
+                            sendBtn.disabled = true;
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                            // Indicador de tipeo
+                            const loadingEl = document.createElement("div");
+                            loadingEl.className = "chat-msg chat-msg-bot";
+                            loadingEl.innerHTML = `
+                                <div class="chat-bubble">
+                                    <div class="chat-typing-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            `;
+                            messagesContainer.appendChild(loadingEl);
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                            try {
+                                const payload = {
+                                    idioma: window.UIIdioma?.getIdioma?.() || "es",
+                                    P_ent: localStorage.getItem("plan_entreno_usuario") || "Ninguno",
+                                    P_alim: localStorage.getItem("plan_dieta_usuario") || localStorage.getItem("plan_alim_usuario") || "Ninguno",
+                                    D_user: {
+                                        edad: localStorage.getItem("edad_usuario") || "",
+                                        altura: localStorage.getItem("altura_usuario") || "",
+                                        peso: localStorage.getItem("peso_usuario") || "",
+                                        peso_objetivo: localStorage.getItem("peso_objetivo_usuario") || ""
+                                    },
+                                    consulta: text,
+                                    historial: savedHistory
+                                };
+
+                                const res = await fetch("/IA_chatbot", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify(payload)
+                                });
+
+                                if (!res.ok) throw new Error("Error en la respuesta del servidor");
+                                const data = await res.json();
+                                if (data.error) throw new Error(data.error);
+
+                                loadingEl.innerHTML = `<div class="chat-bubble">${formatChatbotMsg(data.respuesta)}</div>`;
+
+                                savedHistory.push({ role: "user", content: text });
+                                savedHistory.push({ role: "assistant", content: data.respuesta });
+
+                                try {
+                                    localStorage.setItem("pt_chatbot_history", JSON.stringify(savedHistory));
+                                } catch (e) { }
+                            } catch (err) {
+                                console.error("Error chatbot:", err);
+                                loadingEl.innerHTML = `
+                                    <div class="chat-bubble" style="color: #ff6b6b; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                        <span>Error al conectar con la IA.</span>
+                                        <button type="button" class="btn-chat-resend">Reintentar</button>
+                                    </div>
+                                `;
+                                const retryBtn = loadingEl.querySelector(".btn-chat-resend");
+                                if (retryBtn) {
+                                    retryBtn.addEventListener("click", () => {
+                                        loadingEl.remove();
+                                        userMsgEl.remove();
+                                        textarea.value = text;
+                                        sendMessage();
+                                    });
+                                }
+                            } finally {
+                                textarea.disabled = false;
+                                sendBtn.disabled = false;
+                                textarea.focus();
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }
+                        };
+
+                        sendBtn.addEventListener("click", sendMessage);
+                        textarea.addEventListener("keydown", (e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        });
+                    }
+                });
+            };
+
+            window.openChatbotSheet = openChatbotSheet;
+        }
+
+        // INICIALIZACIÓN COMPLETA
+        window.addEventListener("DOMContentLoaded", async () => {
+            // 0. Cargar foto de perfil y usuario en caché de forma inmediata
+            const cachedAvatar = localStorage.getItem("avatar_usuario");
+            if (cachedAvatar) {
+                const avatarEl = document.getElementById("header-user-avatar");
+                if (avatarEl) avatarEl.src = cachedAvatar;
+            }
+            const cachedName = localStorage.getItem("username_usuario");
+            if (cachedName) {
+                const nameEl = document.getElementById("header-username-text");
+                if (nameEl) nameEl.textContent = cachedName;
+            }
+
+            // 1. Cargar biblioteca de gifs
+            await loadExercisesDatabase();
+
+            // 2. Traer datos frescos de Supabase ("Datos Fitness" y "Planes")
+            await fetchUserDataFromDatabase();
+
+            // 3. Renderizar cada componente de la interfaz
+            displayBodyWeight();
+            displayTodayWorkout();
+            displayTodayDiet();
+            displayDotsCalendar();
+            displayMonthlyMetrics();
+
+            // 4. Vincular eventos
+            setupEventListeners();
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        });
+    </script>
+</body>
+
+</html>

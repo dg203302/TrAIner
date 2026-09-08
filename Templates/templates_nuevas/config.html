@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Perfil y Configuración · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/spa_router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/Scripts/ui_bottom_sheet.js?v=5"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --accent: #9df3ff;
+            --accent-glow: rgba(157, 243, 255, 0.15);
+            --danger: #ff5252;
+            --danger-glow: rgba(255, 82, 82, 0.15);
+            --border-card: rgba(255, 255, 255, 0.06);
+            --border-card-hover: rgba(255, 255, 255, 0.14);
+            --radius-card: 26px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+            --nav-height: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: calc(var(--nav-height) + 36px + env(safe-area-inset-bottom, 20px));
+        }
+
+        /* Contenedor responsivo centrado */
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── HEADER FLOTANTE / STICKY ── */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: -16px -20px 0 -20px;
+            padding: calc(14px + env(safe-area-inset-top, 6px)) 20px 14px 20px;
+            background: rgba(12, 13, 16, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            transition: all 0.25s ease;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .header-user-status {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-user-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #2ed573;
+            box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-btn:hover {
+            background: var(--bg-card-elevated);
+            transform: scale(1.04);
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .header-btn:active {
+            transform: scale(0.94);
+        }
+
+        .header-avatar-btn {
+            border: 1.8px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+            padding: 0;
+            background: #181a20;
+        }
+
+        .header-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ── CONTENIDO PRINCIPAL: SECCIONES Y TARJETAS COHESIVAS ── */
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 1. Tarjeta Hero de Perfil */
+        .card-profile-hero {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 22px 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        .card-profile-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(157, 243, 255, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .profile-avatar-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-large {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.16);
+            background: #252830;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            display: block;
+        }
+
+        .profile-badge-online {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #2ed573;
+            border: 2.5px solid var(--bg-card);
+            box-shadow: 0 0 8px rgba(46, 213, 115, 0.8);
+        }
+
+        .profile-hero-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-tags-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .profile-pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .profile-pill-badge.bmi-pill {
+            background: var(--accent-glow);
+            border-color: rgba(157, 243, 255, 0.25);
+            color: var(--accent);
+        }
+
+        /* 2. Sección de Métricas Físicas */
+        .section-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .section-header-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .metrics-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card-metric-editable {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 106px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-metric-editable:hover {
+            background: var(--bg-card-elevated);
+            border-color: var(--border-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-metric-editable:active {
+            transform: scale(0.97);
+        }
+
+        .metric-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .metric-card-icon svg {
+            width: 17px;
+            height: 17px;
+            stroke-width: 2;
+        }
+
+        .metric-btn-edit {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+        }
+
+        .card-metric-editable:hover .metric-btn-edit {
+            background: #ffffff;
+            color: #0c0d10;
+            border-color: #ffffff;
+        }
+
+        .metric-btn-edit svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+        }
+
+        .metric-card-body {
+            display: flex;
+            flex-direction: column;
+            margin-top: 8px;
+        }
+
+        .metric-card-val-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .metric-card-number {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .metric-card-unit {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .metric-card-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* 3. Tarjeta de Opciones y Configuración */
+
+
+        /* 4. Tarjeta de Zona de Cuenta y Sesión */
+        .card-danger-zone {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-action-full {
+            width: 100%;
+            height: 48px;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+        }
+
+        .btn-logout {
+            background: var(--bg-card-elevated);
+            color: #ffffff;
+            border: 1px solid var(--border-card);
+        }
+
+        .btn-logout:hover {
+            background: #282c35;
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-logout:active {
+            transform: scale(0.98);
+        }
+
+        .btn-delete-account {
+            background: rgba(255, 82, 82, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 82, 82, 0.22);
+        }
+
+        .btn-delete-account:hover {
+            background: rgba(255, 82, 82, 0.18);
+            border-color: rgba(255, 82, 82, 0.35);
+        }
+
+        .btn-delete-account:active {
+            transform: scale(0.98);
+        }
+
+        /* Footer Info Créditos */
+        .app-credits-footer {
+            text-align: center;
+            padding: 12px 0 6px 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .app-credits-footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .app-credits-footer a:hover {
+            color: #ffffff;
+        }
+
+        /* ── BARRA INFERIOR DE NAVEGACIÓN (DOCK FLOTANTE) ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 36px);
+            max-width: 380px;
+            height: 64px;
+            padding: 0 8px;
+            background: rgba(22, 25, 31, 0.84);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            z-index: 1000;
+        }
+
+        .bottom-nav-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0;
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #535866;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.1;
+            stroke: currentColor;
+            fill: none;
+            transition: stroke 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+        .nav-item:hover svg {
+            stroke: #ffffff;
+        }
+
+        .nav-item:active {
+            transform: scale(0.88);
+        }
+
+        .nav-item.is-active {
+            color: #ffffff;
+        }
+
+        .nav-item.is-active svg {
+            stroke: #ffffff;
+        }
+
+        /* ── IOS STYLE DRUM / WHEEL PICKER MODAL (SOLO SLIDERS) ── */
+        .ios-drum-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 2200;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-drum-modal-backdrop.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ios-drum-sheet {
+            width: 100%;
+            max-width: 440px;
+            background: #0c0d10;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-bottom: none;
+            padding: 20px 22px calc(24px + env(safe-area-inset-bottom, 20px)) 22px;
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.95);
+            transform: translateY(100%);
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ios-drum-modal-backdrop.is-open .ios-drum-sheet {
+            transform: translateY(0);
+        }
+
+        /* Top Bar de la modal */
+        .ios-drum-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .ios-drum-btn-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .ios-drum-btn-circle:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.04);
+        }
+
+        .ios-drum-btn-circle:active {
+            transform: scale(0.94);
+        }
+
+        .ios-drum-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ios-drum-btn-pill-save {
+            background: #ffffff;
+            color: #0c0d10;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 14.5px;
+            padding: 9px 24px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+            transition: all 0.15s ease;
+        }
+
+        .ios-drum-btn-pill-save:hover {
+            background: #f2f2f2;
+            transform: scale(1.03);
+        }
+
+        .ios-drum-btn-pill-save:active {
+            transform: scale(0.96);
+        }
+
+        /* Títulos */
+        .ios-drum-headings {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .ios-drum-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #ffffff;
+            line-height: 1.15;
+        }
+
+        .ios-drum-subtitle {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .ios-drum-unit-label {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 18px;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        /* ── WHEEL PICKER CONTAINER ── */
+        .ios-drum-wheel-box {
+            position: relative;
+            height: 216px;
+            width: 100%;
+            overflow: hidden;
+            margin: 4px 0 16px 0;
+            display: flex;
+            justify-content: center;
+            background: #0c0d10;
+        }
+
+        /* Líneas horizontales fijas del centro (separadores exactos del screenshot) */
+        .ios-drum-selection-frame {
+            position: absolute;
+            top: 72px;
+            left: 0;
+            right: 0;
+            height: 72px;
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Gradientes de desvanecimiento superior e inferior */
+        .ios-drum-gradient-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: linear-gradient(to bottom, #0c0d10 25%, rgba(12, 13, 16, 0) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .ios-drum-gradient-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: linear-gradient(to top, #0c0d10 25%, rgba(12, 13, 16, 0) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        /* Columnas */
+        .ios-drum-columns {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .ios-drum-col {
+            height: 216px;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 72px 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 130px;
+        }
+
+        .ios-drum-col::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ios-drum-item {
+            height: 72px;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: center;
+            font-size: 58px;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            color: rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s ease, transform 0.15s ease;
+            font-variant-numeric: tabular-nums;
+            width: 100%;
+        }
+
+        .ios-drum-item.is-selected {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        /* Modificador 3 columnas (Edad: Día, Mes, Año) */
+        .ios-drum-wheel-box.cols-3 .ios-drum-columns {
+            gap: 8px;
+        }
+        .ios-drum-wheel-box.cols-3 .ios-drum-col {
+            width: 96px;
+        }
+        .ios-drum-wheel-box.cols-3 .ios-drum-item {
+            font-size: 34px;
+            letter-spacing: -0.6px;
+        }
+
+        /* Modificador 1 columna (Altura) */
+        .ios-drum-wheel-box.cols-1 .ios-drum-col {
+            width: 200px;
+        }
+        .ios-drum-wheel-box.cols-1 .ios-drum-item {
+            font-size: 60px;
+        }
+
+        /* Sección de registro previo / info reciente idéntica al screenshot */
+        .ios-drum-footer-card {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ios-drum-footer-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.2px;
+        }
+
+        .ios-drum-log-item {
+            background: #14161c;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ios-drum-log-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ios-drum-log-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .ios-drum-log-texts {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ios-drum-log-val {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .ios-drum-log-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- HEADER FLOTANTE -->
+        <header class="app-header">
+            <div class="header-title-wrap">
+                <h1 class="header-title" data-i18n-en="Settings">Perfil</h1>
+                <div class="header-user-status" id="header-user-status">
+                    <span class="header-user-dot"></span>
+                    <span id="header-username-text">Sincronizando...</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Botón para cerrar sesión rápida -->
+                <button type="button" class="header-btn" id="btn-quick-logout" aria-label="Desloguear"
+                    title="Cerrar sesión">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="width: 19px; height: 19px;">
+                        <path d="m16 17 5-5-5-5"></path>
+                        <path d="M21 12H9"></path>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    </svg>
+                </button>
+
+                <!-- Avatar Activo en Configuración -->
+                <div class="header-btn header-avatar-btn" style="cursor: default;">
+                    <img id="header-user-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                        alt="Foto de perfil" class="header-avatar-img">
+                </div>
+            </div>
+        </header>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- CONTENIDO PRINCIPAL: PERFIL Y CONFIGURACIÓN     -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <main class="page-content" id="page-content">
+            <!-- 1. HERO CARD DEL USUARIO -->
+            <section class="card-profile-hero">
+                <div class="profile-avatar-wrap">
+                    <img id="profile-hero-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                        alt="Avatar usuario" class="profile-avatar-large">
+                    <span class="profile-badge-online"></span>
+                </div>
+                <div class="profile-hero-info">
+                    <h2 class="profile-name" id="profile-hero-name">Cargando...</h2>
+                    <p class="profile-email" id="profile-hero-email">usuario@trainer.ai</p>
+                    <div class="profile-tags-row">
+                        <span class="profile-pill-badge" data-i18n-en="TrAIner Athlete">Atleta TrAIner</span>
+                        <span class="profile-pill-badge bmi-pill" id="bmi-badge-display">BMI: --</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. MÉTRICAS FÍSICAS EDITABLES (4 tarjetas en 2x2) -->
+            <section class="section-container">
+                <span class="section-header-title" data-i18n-en="Body Metrics">Métricas Corporales</span>
+                <div class="metrics-grid-2x2">
+                    <!-- Tarjeta: Altura -->
+                    <div class="card-metric-editable" id="card-edit-altura" role="button" tabindex="0">
+                        <div class="metric-card-top">
+                            <div class="metric-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 3v18"></path>
+                                    <path d="M3 21h18"></path>
+                                    <path d="m3 3 18 18"></path>
+                                </svg>
+                            </div>
+                            <div class="metric-btn-edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-card-val-wrap">
+                                <span class="metric-card-number" id="val-altura">--</span>
+                                <span class="metric-card-unit">cm</span>
+                            </div>
+                            <span class="metric-card-label" data-i18n-en="Height">Altura</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Edad -->
+                    <div class="card-metric-editable" id="card-edit-edad" role="button" tabindex="0">
+                        <div class="metric-card-top">
+                            <div class="metric-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div class="metric-btn-edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-card-val-wrap">
+                                <span class="metric-card-number" id="val-edad">--</span>
+                                <span class="metric-card-unit" data-i18n-en="yrs">años</span>
+                            </div>
+                            <span class="metric-card-label" data-i18n-en="Age">Edad</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Peso Actual -->
+                    <div class="card-metric-editable" id="card-edit-peso" role="button" tabindex="0">
+                        <div class="metric-card-top">
+                            <div class="metric-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="9"></circle>
+                                    <path d="M12 7v5l3 3"></path>
+                                </svg>
+                            </div>
+                            <div class="metric-btn-edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-card-val-wrap">
+                                <span class="metric-card-number" id="val-peso">--</span>
+                                <span class="metric-card-unit">kg</span>
+                            </div>
+                            <span class="metric-card-label" data-i18n-en="Current Weight">Peso Actual</span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta: Peso Objetivo -->
+                    <div class="card-metric-editable" id="card-edit-peso-obj" role="button" tabindex="0">
+                        <div class="metric-card-top">
+                            <div class="metric-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="metric-btn-edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="metric-card-body">
+                            <div class="metric-card-val-wrap">
+                                <span class="metric-card-number" id="val-peso-obj">--</span>
+                                <span class="metric-card-unit">kg</span>
+                            </div>
+                            <span class="metric-card-label" data-i18n-en="Target Weight">Peso Objetivo</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- 4. ZONA DE SEGURIDAD Y CUENTA -->
+            <section class="section-container">
+                <span class="section-header-title" data-i18n-en="Account & Session">Cuenta y Sesión</span>
+                <div class="card-danger-zone">
+                    <!-- Botón de Cerrar Sesión -->
+                    <button type="button" class="btn-action-full btn-logout" id="btn-logout" aria-label="Desloguear">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                            <path d="m16 17 5-5-5-5"></path>
+                            <path d="M21 12H9"></path>
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        </svg>
+                        <span data-i18n-en="Log out">Cerrar Sesión</span>
+                    </button>
+
+                    <!-- Botón de Eliminar Cuenta -->
+                    <button type="button" class="btn-action-full btn-delete-account" id="btn-delete-account">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                        <span data-i18n-en="Delete account">Eliminar Cuenta</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 5. CRÉDITOS -->
+            <div class="app-credits-footer">
+                <span>TrAIner &copy; 2026</span>
+                <a href="https://diegogarcia-dev.com.ar" target="_blank" rel="noopener noreferrer">Diego García</a>
+            </div>
+        </main>
+    </div>
+
+    <!-- ── BARRA INFERIOR DE NAVEGACIÓN (DOCK FLOTANTE) ── -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <!-- 1. Grid / Dashboard -->
+            <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item"
+                aria-label="Panel de Entrenamientos">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                    <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                    <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                </svg>
+            </a>
+
+            <!-- 2. Calendario -->
+            <a href="/Templates/templates_nuevas/calendario_renov.html" class="nav-item"
+                aria-label="Calendario de Entreno">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </a>
+
+            <!-- 3. Entreno -->
+            <a href="/Templates/templates_nuevas/plan_entreno.html" class="nav-item"
+                aria-label="Plan de Entrenamiento">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m6.5 6.5 11 11"></path>
+                    <path d="m21 21-1-1"></path>
+                    <path d="m3 3 1 1"></path>
+                    <path d="m18 22 4-4"></path>
+                    <path d="m2 6 4-4"></path>
+                    <path d="m3 10 7-7"></path>
+                    <path d="m14 21 7-7"></path>
+                </svg>
+            </a>
+
+            <!-- 4. Alimentación -->
+            <a href="/Templates/templates_nuevas/plan_alimentacion.html" class="nav-item"
+                aria-label="Plan de Alimentación">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                    <path d="M7 2v20"></path>
+                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                </svg>
+            </a>
+
+            <!-- 5. Chat Asistente IA -->
+            <a href="/Templates/templates_nuevas/chatbot.html" class="nav-item" id="btn-nav-chat"
+                aria-label="Asistente Inteligente TrAIner">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ── MODAL DRUM / WHEEL PICKER (ESTILO SLIDER IOS EXACTO DE LA IMAGEN) ── -->
+    <div class="ios-drum-modal-backdrop" id="ios-drum-backdrop" aria-hidden="true">
+        <div class="ios-drum-sheet" id="ios-drum-sheet" role="dialog" aria-modal="true">
+            <!-- Header con botón cerrar '↓' y botón blanco 'Guardar' / 'Log' -->
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="ios-drum-btn-close" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
+                </button>
+                <div class="ios-drum-header-right">
+                    <button type="button" class="ios-drum-btn-pill-save" id="ios-drum-btn-save" data-i18n-en="Save">Guardar</button>
+                </div>
+            </div>
+
+            <!-- Títulos -->
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title" id="ios-drum-title">Peso</h2>
+                <p class="ios-drum-subtitle" id="ios-drum-subtitle">Añadir nuevo registro</p>
+            </div>
+
+            <!-- Etiqueta de Unidad -->
+            <div class="ios-drum-unit-label" id="ios-drum-unit-label">Kilos</div>
+
+            <!-- Tambor / Selector de rueda -->
+            <div class="ios-drum-wheel-box" id="ios-drum-wheel-box">
+                <div class="ios-drum-selection-frame"></div>
+                <div class="ios-drum-gradient-top"></div>
+                <div class="ios-drum-gradient-bottom"></div>
+                <div class="ios-drum-columns" id="ios-drum-columns">
+                    <!-- Generado dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Sección 'Recent logs' / Registro actual idéntica a la imagen -->
+            <div class="ios-drum-footer-card">
+                <span class="ios-drum-footer-title" id="ios-drum-footer-title">Registro actual</span>
+                <div class="ios-drum-log-item">
+                    <div class="ios-drum-log-left">
+                        <div class="ios-drum-log-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="4"></circle>
+                                <path d="M12 2v2"></path>
+                                <path d="M12 20v2"></path>
+                                <path d="m4.93 4.93 1.41 1.41"></path>
+                                <path d="m17.66 17.66 1.41 1.41"></path>
+                                <path d="M2 12h2"></path>
+                                <path d="M20 12h2"></path>
+                                <path d="m6.34 17.66-1.41 1.41"></path>
+                                <path d="m19.07 4.93-1.41 1.41"></path>
+                            </svg>
+                        </div>
+                        <div class="ios-drum-log-texts">
+                            <span class="ios-drum-log-val" id="ios-drum-log-val">--</span>
+                            <span class="ios-drum-log-sub" id="ios-drum-log-sub">Guardado en tu perfil</span>
+                        </div>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="#8a909a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── LÓGICA DE RECUPERACIÓN, EDICIÓN Y CONEXIÓN CON SUPABASE ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        // Inicialización idéntica a las demás plantillas
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: false, storage: localStorage }
+        });
+
+        let currentUser = null;
+        let userFitnessData = null;
+
+        // 1. CARGAR DATOS DEL USUARIO Y DE SUPABASE
+        async function fetchUserProfileData() {
+            try {
+                // Obtener sesión
+                const { data: authData, error: authErr } = await supabase.auth.getUser();
+                if (authErr || !authData?.user) {
+                    const localId = localStorage.getItem("id_usuario");
+                    if (localId) {
+                        currentUser = { id: localId, email: localStorage.getItem("email_usuario") || "Atleta" };
+                    }
+                } else {
+                    currentUser = authData.user;
+                    localStorage.setItem("id_usuario", currentUser.id);
+                    if (currentUser.email) localStorage.setItem("email_usuario", currentUser.email);
+                    if (currentUser.user_metadata?.full_name) {
+                        localStorage.setItem("username_usuario", currentUser.user_metadata.full_name);
+                    }
+                    const metaAvatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+                    if (metaAvatar) {
+                        localStorage.setItem("avatar_usuario", metaAvatar);
+                    }
+                }
+
+                // Renderizar identidad
+                const username = localStorage.getItem("username_usuario") || currentUser?.email?.split("@")[0] || "Atleta";
+                document.getElementById("header-username-text").textContent = username;
+                document.getElementById("profile-hero-name").textContent = username;
+
+                const email = currentUser?.email || localStorage.getItem("email_usuario") || "usuario@trainer.ai";
+                document.getElementById("profile-hero-email").textContent = email;
+
+                const avatarUrl = localStorage.getItem("avatar_usuario") ||
+                    currentUser?.user_metadata?.avatar_url ||
+                    currentUser?.user_metadata?.picture ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar").forEach((img) => {
+                    img.src = avatarUrl;
+                    img.onerror = () => {
+                        img.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                    };
+                });
+
+                // Cargar datos fitness de Supabase
+                const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                if (userId) {
+                    const { data: fitData, error: fitErr } = await supabase
+                        .from("Datos Fitness")
+                        .select("id, Altura, Peso, Peso_Obj, Edad")
+                        .eq("ID_user", userId)
+                        .maybeSingle();
+
+                    if (!fitErr && fitData) {
+                        userFitnessData = fitData;
+                        if (fitData.Altura != null) localStorage.setItem("altura_usuario", fitData.Altura);
+                        if (fitData.Edad != null) localStorage.setItem("edad_usuario", fitData.Edad);
+                        if (fitData.Peso != null) localStorage.setItem("peso_usuario", fitData.Peso);
+                        if (fitData.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", fitData.Peso_Obj);
+                    }
+                }
+
+                renderMetricDisplays();
+                renderBMI();
+            } catch (err) {
+                console.error("Error cargando perfil:", err);
+            }
+        }
+
+        // 2. RENDERIZAR MÉTRICAS EN PANTALLA
+        function renderMetricDisplays() {
+            const alt = localStorage.getItem("altura_usuario") || userFitnessData?.Altura || "--";
+            const edad = localStorage.getItem("edad_usuario") || userFitnessData?.Edad || "--";
+            const peso = localStorage.getItem("peso_usuario") || userFitnessData?.Peso || "--";
+            const pesoObj = localStorage.getItem("peso_objetivo_usuario") || userFitnessData?.Peso_Obj || "--";
+
+            document.getElementById("val-altura").textContent = alt;
+            document.getElementById("val-edad").textContent = edad;
+            document.getElementById("val-peso").textContent = peso;
+            document.getElementById("val-peso-obj").textContent = pesoObj;
+        }
+
+        // 3. CALCULAR Y RENDERIZAR BMI
+        function renderBMI() {
+            const peso = parseFloat(localStorage.getItem("peso_usuario") || userFitnessData?.Peso);
+            const alt = parseFloat(localStorage.getItem("altura_usuario") || userFitnessData?.Altura);
+            const badge = document.getElementById("bmi-badge-display");
+
+            if (peso > 0 && alt > 0) {
+                const heightMeters = alt / 100;
+                const bmi = (peso / (heightMeters * heightMeters)).toFixed(1);
+                let estado = "Normal";
+                if (bmi < 18.5) estado = "Bajo peso";
+                else if (bmi >= 25 && bmi < 30) estado = "Sobrepeso";
+                else if (bmi >= 30) estado = "Obesidad";
+
+                badge.textContent = `BMI: ${bmi} · ${estado}`;
+            } else {
+                badge.textContent = "BMI: --";
+            }
+        }
+
+        // 4. GUARDAR CAMBIOS EN LA BASE DE DATOS (Backend Edge Function + Supabase Sync)
+        async function subirCambiosPerfil() {
+            const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            const payload = {
+                id_usuario: userId,
+                altura_usuario: localStorage.getItem("altura_usuario"),
+                edad_usuario: localStorage.getItem("edad_usuario"),
+                peso_usuario: localStorage.getItem("peso_usuario"),
+                peso_objetivo_usuario: localStorage.getItem("peso_objetivo_usuario")
+            };
+
+            // 1. Sincronización directa con Supabase client
+            try {
+                if (userId) {
+                    await supabase
+                        .from("Datos Fitness")
+                        .update({
+                            Altura: payload.altura_usuario,
+                            Edad: payload.edad_usuario,
+                            Peso: payload.peso_usuario,
+                            Peso_Obj: payload.peso_objetivo_usuario
+                        })
+                        .eq("ID_user", userId);
+                }
+            } catch (e) {
+                console.warn("Sync local Supabase:", e);
+            }
+
+            // 2. Llamada a Edge Function existente
+            try {
+                const res = await fetch("/cargar_cambios_perfil", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    if (window.Swal) {
+                        Swal.fire({
+                            toast: true,
+                            position: "top",
+                            icon: "success",
+                            title: "Cambios guardados",
+                            showConfirmButton: false,
+                            timer: 2000,
+                            background: "#181a1f",
+                            color: "#ffffff"
+                        });
+                    }
+                }
+            } catch (err) {
+                console.warn("Llamada /cargar_cambios_perfil:", err);
+            }
+        }
+
+        // 5. DRUM / WHEEL PICKER ESTILO IOS (PARA ALTURA, EDAD Y PESOS)
+        let activeDrumController = null;
+
+        function closeDrumPicker() {
+            const backdrop = document.getElementById("ios-drum-backdrop");
+            if (backdrop) {
+                backdrop.classList.remove("is-open");
+                backdrop.setAttribute("aria-hidden", "true");
+            }
+            activeDrumController = null;
+        }
+
+        function openDrumPicker({
+            title,
+            subtitle,
+            unitLabel,
+            colsClass = "",
+            currentLogVal = "--",
+            columns = [],
+            onLiveChange = null,
+            onSave = null
+        }) {
+            const backdrop = document.getElementById("ios-drum-backdrop");
+            const sheet = document.getElementById("ios-drum-sheet");
+            const titleEl = document.getElementById("ios-drum-title");
+            const subEl = document.getElementById("ios-drum-subtitle");
+            const unitEl = document.getElementById("ios-drum-unit-label");
+            const wheelBox = document.getElementById("ios-drum-wheel-box");
+            const colsContainer = document.getElementById("ios-drum-columns");
+            const logValEl = document.getElementById("ios-drum-log-val");
+            const btnSave = document.getElementById("ios-drum-btn-save");
+
+            if (!backdrop || !sheet) return;
+
+            titleEl.textContent = title;
+            subEl.textContent = subtitle;
+            unitEl.textContent = unitLabel;
+            logValEl.textContent = currentLogVal;
+
+            // Resetear clases de columnas
+            wheelBox.className = "ios-drum-wheel-box " + colsClass;
+            colsContainer.innerHTML = "";
+
+            const columnControllers = [];
+            const selectedIndices = columns.map(c => c.defaultIndex ?? 0);
+
+            // Generar cada columna
+            columns.forEach((colConfig, colIdx) => {
+                const colEl = document.createElement("div");
+                colEl.className = "ios-drum-col";
+                colEl.setAttribute("data-col-index", colIdx);
+
+                colEl.innerHTML = colConfig.items.map((item, itemIdx) => {
+                    const isSel = itemIdx === colConfig.defaultIndex;
+                    return `<div class="ios-drum-item ${isSel ? 'is-selected' : ''}" data-index="${itemIdx}">${item}</div>`;
+                }).join("");
+
+                colsContainer.appendChild(colEl);
+
+                // Función de actualización de selección
+                const updateSelection = () => {
+                    const currentTop = colEl.scrollTop;
+                    const rawIdx = Math.round(currentTop / 72);
+                    const clampedIdx = Math.max(0, Math.min(colConfig.items.length - 1, rawIdx));
+
+                    if (selectedIndices[colIdx] !== clampedIdx) {
+                        selectedIndices[colIdx] = clampedIdx;
+                        const itemsDom = colEl.querySelectorAll(".ios-drum-item");
+                        itemsDom.forEach((el, i) => {
+                            if (i === clampedIdx) el.classList.add("is-selected");
+                            else el.classList.remove("is-selected");
+                        });
+
+                        if (onLiveChange) {
+                            onLiveChange(selectedIndices, columns.map(c => c.items), { titleEl, subEl, unitEl });
+                        }
+                    }
+                };
+
+                // Listener de scroll
+                let scrollTicking = false;
+                colEl.addEventListener("scroll", () => {
+                    if (!scrollTicking) {
+                        requestAnimationFrame(() => {
+                            updateSelection();
+                            scrollTicking = false;
+                        });
+                        scrollTicking = true;
+                    }
+                }, { passive: true });
+
+                // Click en elementos para centrar
+                colEl.addEventListener("click", (e) => {
+                    const item = e.target.closest(".ios-drum-item");
+                    if (item) {
+                        const targetIdx = parseInt(item.getAttribute("data-index"), 10);
+                        if (!isNaN(targetIdx)) {
+                            colEl.scrollTo({ top: targetIdx * 72, behavior: "smooth" });
+                        }
+                    }
+                });
+
+                columnControllers.push({
+                    colEl,
+                    scrollToDefault: () => {
+                        const def = Math.max(0, Math.min(colConfig.items.length - 1, colConfig.defaultIndex || 0));
+                        colEl.scrollTop = def * 72;
+                    }
+                });
+            });
+
+            // Guardar
+            btnSave.onclick = async () => {
+                btnSave.disabled = true;
+                btnSave.style.opacity = "0.7";
+                try {
+                    if (onSave) {
+                        await onSave(selectedIndices, columns.map(c => c.items));
+                    }
+                    closeDrumPicker();
+                } finally {
+                    btnSave.disabled = false;
+                    btnSave.style.opacity = "1";
+                }
+            };
+
+            // Abrir modal
+            backdrop.classList.add("is-open");
+            backdrop.setAttribute("aria-hidden", "false");
+
+            // Posicionar las ruedas después de que la modal esté visible
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    columnControllers.forEach(c => c.scrollToDefault());
+                    if (onLiveChange) {
+                        onLiveChange(selectedIndices, columns.map(c => c.items), { titleEl, subEl, unitEl });
+                    }
+                }, 40);
+            });
+
+            activeDrumController = { close: closeDrumPicker };
+        }
+
+        function setupMetricEditListeners() {
+            // Cerrar modal al click en fondo o botón ↓
+            document.getElementById("ios-drum-backdrop")?.addEventListener("click", (e) => {
+                if (e.target === e.currentTarget) {
+                    closeDrumPicker();
+                }
+            });
+            document.getElementById("ios-drum-btn-close")?.addEventListener("click", () => {
+                closeDrumPicker();
+            });
+
+            // 1. EDITAR ALTURA (1 Columna: 100 - 230 cm)
+            document.getElementById("card-edit-altura")?.addEventListener("click", () => {
+                const currentVal = parseInt(localStorage.getItem("altura_usuario") || userFitnessData?.Altura || "175", 10);
+                const items = [];
+                for (let i = 100; i <= 230; i++) items.push(String(i));
+
+                const defaultIndex = Math.max(0, Math.min(items.length - 1, currentVal - 100));
+
+                openDrumPicker({
+                    title: "Altura",
+                    subtitle: "Ajusta tu estatura",
+                    unitLabel: "Centímetros",
+                    colsClass: "cols-1",
+                    currentLogVal: `${currentVal} cm`,
+                    columns: [
+                        { items, defaultIndex }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const val = allItems[0][indices[0]];
+                        dom.subEl.textContent = `Seleccionado: ${val} cm`;
+                    },
+                    onSave: async (indices, allItems) => {
+                        const newVal = allItems[0][indices[0]];
+                        localStorage.setItem("altura_usuario", newVal);
+                        renderMetricDisplays();
+                        renderBMI();
+                        await subirCambiosPerfil();
+                    }
+                });
+            });
+
+            // 2. EDITAR EDAD (DÍA, MES Y AÑO - 3 Columnas)
+            document.getElementById("card-edit-edad")?.addEventListener("click", () => {
+                const cachedAge = parseInt(localStorage.getItem("edad_usuario") || userFitnessData?.Edad || "25", 10);
+                const savedBirthDate = localStorage.getItem("fecha_nacimiento_usuario"); // YYYY-MM-DD
+                
+                const now = new Date();
+                const currentYear = now.getFullYear();
+
+                let defDay = 15;
+                let defMonth = 6;
+                let defYear = currentYear - (cachedAge > 0 ? cachedAge : 25);
+
+                if (savedBirthDate && savedBirthDate.includes("-")) {
+                    const parts = savedBirthDate.split("-");
+                    if (parts.length === 3) {
+                        defYear = parseInt(parts[0], 10) || defYear;
+                        defMonth = parseInt(parts[1], 10) || defMonth;
+                        defDay = parseInt(parts[2], 10) || defDay;
+                    }
+                }
+
+                // Generar ítems
+                const days = [];
+                for (let d = 1; d <= 31; d++) days.push(String(d).padStart(2, "0"));
+
+                const months = [];
+                for (let m = 1; m <= 12; m++) months.push(String(m).padStart(2, "0"));
+
+                const years = [];
+                for (let y = 1930; y <= currentYear; y++) years.push(String(y));
+
+                const dayIdx = Math.max(0, Math.min(days.length - 1, defDay - 1));
+                const monthIdx = Math.max(0, Math.min(months.length - 1, defMonth - 1));
+                const yearIdx = Math.max(0, Math.min(years.length - 1, defYear - 1930));
+
+                const computeAge = (dStr, mStr, yStr) => {
+                    const d = parseInt(dStr, 10);
+                    const m = parseInt(mStr, 10);
+                    const y = parseInt(yStr, 10);
+                    let age = currentYear - y;
+                    const mDiff = (now.getMonth() + 1) - m;
+                    if (mDiff < 0 || (mDiff === 0 && now.getDate() < d)) {
+                        age--;
+                    }
+                    return Math.max(0, age);
+                };
+
+                openDrumPicker({
+                    title: "Edad",
+                    subtitle: "Selecciona tu fecha de nacimiento",
+                    unitLabel: "Día · Mes · Año",
+                    colsClass: "cols-3",
+                    currentLogVal: `${cachedAge} años`,
+                    columns: [
+                        { items: days, defaultIndex: dayIdx },
+                        { items: months, defaultIndex: monthIdx },
+                        { items: years, defaultIndex: yearIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const selD = allItems[0][indices[0]];
+                        const selM = allItems[1][indices[1]];
+                        const selY = allItems[2][indices[2]];
+                        const calcYears = computeAge(selD, selM, selY);
+                        dom.subEl.textContent = `Calculado: ${calcYears} años (${selD}/${selM}/${selY})`;
+                    },
+                    onSave: async (indices, allItems) => {
+                        const selD = allItems[0][indices[0]];
+                        const selM = allItems[1][indices[1]];
+                        const selY = allItems[2][indices[2]];
+                        const calcYears = computeAge(selD, selM, selY);
+
+                        localStorage.setItem("edad_usuario", String(calcYears));
+                        localStorage.setItem("fecha_nacimiento_usuario", `${selY}-${selM}-${selD}`);
+                        renderMetricDisplays();
+                        await subirCambiosPerfil();
+                    }
+                });
+            });
+
+            // 3. EDITAR PESO ACTUAL (2 Columnas: Entero 35..220 y Decimal .0...9)
+            document.getElementById("card-edit-peso")?.addEventListener("click", () => {
+                const currentVal = parseFloat(localStorage.getItem("peso_usuario") || userFitnessData?.Peso || "70.0");
+                const currentInt = Math.floor(currentVal);
+                const currentDec = Math.round((currentVal - currentInt) * 10);
+
+                const intItems = [];
+                for (let i = 35; i <= 220; i++) intItems.push(String(i));
+
+                const decItems = [".0", ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9"];
+
+                const intIdx = Math.max(0, Math.min(intItems.length - 1, currentInt - 35));
+                const decIdx = Math.max(0, Math.min(decItems.length - 1, currentDec));
+
+                openDrumPicker({
+                    title: "Peso Actual",
+                    subtitle: "Añadir nuevo registro",
+                    unitLabel: "Kilos",
+                    colsClass: "cols-2",
+                    currentLogVal: `${currentVal.toFixed(1)} kg`,
+                    columns: [
+                        { items: intItems, defaultIndex: intIdx },
+                        { items: decItems, defaultIndex: decIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        dom.subEl.textContent = `Seleccionado: ${intP}${decP} kg`;
+                    },
+                    onSave: async (indices, allItems) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        const finalWeight = `${intP}${decP}`;
+
+                        localStorage.setItem("peso_usuario", finalWeight);
+                        renderMetricDisplays();
+                        renderBMI();
+                        await subirCambiosPerfil();
+                    }
+                });
+            });
+
+            // 4. EDITAR PESO OBJETIVO (2 Columnas: Entero 35..220 y Decimal .0...9)
+            document.getElementById("card-edit-peso-obj")?.addEventListener("click", () => {
+                const currentVal = parseFloat(localStorage.getItem("peso_objetivo_usuario") || userFitnessData?.Peso_Obj || "75.0");
+                const currentInt = Math.floor(currentVal);
+                const currentDec = Math.round((currentVal - currentInt) * 10);
+
+                const intItems = [];
+                for (let i = 35; i <= 220; i++) intItems.push(String(i));
+
+                const decItems = [".0", ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9"];
+
+                const intIdx = Math.max(0, Math.min(intItems.length - 1, currentInt - 35));
+                const decIdx = Math.max(0, Math.min(decItems.length - 1, currentDec));
+
+                openDrumPicker({
+                    title: "Peso Objetivo",
+                    subtitle: "Establece tu meta de peso",
+                    unitLabel: "Kilos",
+                    colsClass: "cols-2",
+                    currentLogVal: `${currentVal.toFixed(1)} kg`,
+                    columns: [
+                        { items: intItems, defaultIndex: intIdx },
+                        { items: decItems, defaultIndex: decIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        dom.subEl.textContent = `Meta: ${intP}${decP} kg`;
+                    },
+                    onSave: async (indices, allItems) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        const finalWeight = `${intP}${decP}`;
+
+                        localStorage.setItem("peso_objetivo_usuario", finalWeight);
+                        renderMetricDisplays();
+                        await subirCambiosPerfil();
+                    }
+                });
+            });
+        }
+
+
+
+        // 7. CERRAR SESIÓN
+        async function handleLogout() {
+            const res = await Swal.fire({
+                title: "¿Cerrar sesión?",
+                text: "Tendrás que volver a iniciar sesión para ver tus planes y progreso.",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sí, cerrar sesión",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#ffffff",
+                cancelButtonColor: "#272a33",
+                background: "#181a1f",
+                color: "#ffffff"
+            });
+
+            if (res.isConfirmed) {
+                try {
+                    await supabase.auth.signOut();
+                } catch { }
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = "/";
+            }
+        }
+
+        // 8. ELIMINAR CUENTA
+        async function handleDeleteAccount() {
+            const res = await Swal.fire({
+                title: "¿Eliminar cuenta?",
+                text: "Esta acción no se puede deshacer. Se borrarán permanentemente todos tus datos personales, rutinas e historial.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar cuenta",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#ff4757",
+                cancelButtonColor: "#272a33",
+                background: "#181a1f",
+                color: "#ffffff"
+            });
+
+            if (!res.isConfirmed) return;
+
+            const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            try {
+                const response = await fetch("/eliminar_cuenta_perfil", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id_usuario: userId })
+                });
+
+                if (response.ok) {
+                    await Swal.fire({
+                        title: "Cuenta eliminada",
+                        text: "Tu cuenta ha sido eliminada correctamente.",
+                        icon: "success",
+                        confirmButtonColor: "#ffffff",
+                        background: "#181a1f",
+                        color: "#ffffff"
+                    });
+                    try { await supabase.auth.signOut(); } catch { }
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = "/";
+                } else {
+                    throw new Error("Error en el servidor");
+                }
+            } catch (err) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudo eliminar la cuenta. Intenta nuevamente.",
+                    icon: "error",
+                    confirmButtonColor: "#ffffff",
+                    background: "#181a1f",
+                    color: "#ffffff"
+                });
+            }
+        }
+
+        // INICIALIZACIÓN
+        window.addEventListener("DOMContentLoaded", async () => {
+            // Caché inicial
+            const cachedName = localStorage.getItem("username_usuario");
+            if (cachedName) {
+                document.getElementById("header-username-text").textContent = cachedName;
+                document.getElementById("profile-hero-name").textContent = cachedName;
+            }
+            const cachedAvatar = localStorage.getItem("avatar_usuario");
+            if (cachedAvatar) {
+                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar").forEach(el => el.src = cachedAvatar);
+            }
+
+            renderMetricDisplays();
+            renderBMI();
+
+            // Cargar datos de Supabase
+            await fetchUserProfileData();
+
+            // Vincular eventos
+            setupMetricEditListeners();
+
+            document.getElementById("btn-logout")?.addEventListener("click", handleLogout);
+            document.getElementById("btn-quick-logout")?.addEventListener("click", handleLogout);
+            document.getElementById("btn-delete-account")?.addEventListener("click", handleDeleteAccount);
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        });
+    </script>
+</body>
+
+</html>

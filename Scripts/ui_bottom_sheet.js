@@ -31,8 +31,8 @@
 			width: 98% !important;
 			max-width: 500px !important;
 			max-height: 90vh !important;
-			background: #1a1d22 !important;
-			border: none !important;
+			background: #14161c !important;
+			border: 1px solid rgba(255, 255, 255, 0.08) !important;
 			border-radius: 24px !important;
 			box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
 			display: flex !important;
@@ -50,8 +50,8 @@
 		}
 		.pt-sheet:has(.pt-new-detail),
 		.pt-sheet.pt-new-detail-sheet {
-			border: none !important;
-			background: #1a1d22 !important;
+			border: 1px solid rgba(255, 255, 255, 0.08) !important;
+			background: #14161c !important;
 			box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5) !important;
 		}
 		.pt-sheet:has(.pt-new-detail) .pt-sheet-header,
@@ -61,6 +61,61 @@
 		.pt-sheet:has(.pt-new-detail) .pt-sheet-content,
 		.pt-sheet.pt-new-detail-sheet .pt-sheet-content {
 			padding: 48px 0 0 0 !important;
+		}
+		@media (max-width: 767px) {
+			.pt-sheet-overlay.overlay-pt-chatbot-sheet,
+			.pt-sheet-overlay:has(.pt-chatbot-sheet) {
+				align-items: flex-end !important;
+				justify-content: center !important;
+				padding: 0 !important;
+			}
+			.pt-sheet.pt-chatbot-sheet {
+				border: 1px solid rgba(255, 255, 255, 0.08) !important;
+				border-bottom: none !important;
+				background: #13151a !important;
+				border-radius: 32px 32px 0 0 !important;
+				width: 100% !important;
+				max-width: 100% !important;
+				height: 82vh !important;
+				height: 82dvh !important;
+				max-height: 88vh !important;
+				margin: 0 auto !important;
+				box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.85) !important;
+				transform: translateY(100%) !important;
+			}
+			.pt-sheet-overlay.is-open .pt-sheet.pt-chatbot-sheet {
+				transform: translateY(0) !important;
+			}
+		}
+		@media (min-width: 768px) {
+			.pt-sheet-overlay.overlay-pt-chatbot-sheet,
+			.pt-sheet-overlay:has(.pt-chatbot-sheet) {
+				align-items: center !important;
+				justify-content: center !important;
+			}
+			.pt-sheet.pt-chatbot-sheet {
+				border: 1px solid rgba(255, 255, 255, 0.08) !important;
+				background: #13151a !important;
+				border-radius: 28px !important;
+				width: 100% !important;
+				max-width: 440px !important;
+				height: 80vh !important;
+				max-height: 88vh !important;
+				margin: 0 auto !important;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75) !important;
+				transform: scale(1) translateY(0) !important;
+			}
+		}
+		.pt-sheet.pt-chatbot-sheet .pt-sheet-header,
+		.pt-sheet.pt-chatbot-sheet .pt-sheet-top-actions {
+			display: none !important;
+		}
+		.pt-sheet.pt-chatbot-sheet .pt-sheet-content {
+			padding: 0 !important;
+			overflow: hidden !important;
+			display: flex !important;
+			flex-direction: column !important;
+			background: #13151a !important;
 		}
 		@media (min-width: 768px) {
 			.pt-sheet.pt-new-detail-sheet,
@@ -145,8 +200,8 @@
 			flex-direction: column-reverse !important;
 			gap: 12px !important;
 			padding: 16px 24px !important;
-			background: #1a1d22 !important;
-			border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+			background: #14161c !important;
+			border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
 			z-index: 2100 !important;
 			pointer-events: auto !important;
 			width: 100% !important;
@@ -319,7 +374,7 @@
 		const unlock = lockScroll();
 
 		const overlay = document.createElement("div");
-		overlay.className = "pt-sheet-overlay";
+		overlay.className = `pt-sheet-overlay${className ? ` overlay-${className}` : ""}`;
 		overlay.setAttribute("role", "presentation");
 
 
