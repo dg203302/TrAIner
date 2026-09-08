@@ -264,6 +264,12 @@
         /* Tarjeta Body Weight */
         .card-weight {
             min-height: 180px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-weight:hover {
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .weight-value-wrap {
@@ -1285,7 +1291,7 @@
 
                 <div>
                     <h2 class="weight-label" data-i18n-en="Body weight">Peso corporal</h2>
-                    <p class="weight-sub" id="weight-sub-display">Meta: -- kg</p>
+                    <p class="weight-sub" id="weight-sub-display">BMI: --</p>
                 </div>
             </div>
         </section>
@@ -1495,7 +1501,7 @@
         const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
         const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
         const supabase = createClient(supabaseUrl, supabaseKey, {
-            auth: { persistSession: true, autoRefreshToken: false, storage: localStorage }
+            auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
         });
 
         // Estado en memoria
@@ -1526,6 +1532,72 @@
                 .trim()
                 .toLowerCase();
 
+        const extractLikelyJsonText = (text) => {
+            const s = String(text ?? "").replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+            const firstObj = s.indexOf("{");
+            const firstArr = s.indexOf("[");
+            if (firstObj === -1 && firstArr === -1) return s;
+            const start = firstArr === -1 ? firstObj : (firstObj === -1 ? firstArr : Math.min(firstObj, firstArr));
+            const lastObj = s.lastIndexOf("}");
+            const lastArr = s.lastIndexOf("]");
+            const end = Math.max(lastObj, lastArr);
+            if (end <= start) return s;
+            return s.slice(start, end + 1);
+        };
+
+        const safeJsonParse = (text) => {
+            if (!text) return null;
+            if (typeof text === "object") return text;
+            try { return JSON.parse(text); } catch { return null; }
+        };
+
+        const normalizarDiasEntrenados = (raw) => {
+            if (!raw) return [];
+            if (Array.isArray(raw)) return raw;
+            if (typeof raw === "string") {
+                const text = raw.trim();
+                if (!text || text === "null" || text === "undefined") return [];
+                try {
+                    let parsed = JSON.parse(text);
+                    if (typeof parsed === "string") {
+                        try { parsed = JSON.parse(parsed); } catch { }
+                    }
+                    if (Array.isArray(parsed)) return parsed;
+                    if (parsed && typeof parsed === "object") {
+                        const inner = parsed.Dias_cale ?? parsed.Dias_entrenados ?? parsed.registro_entreno ?? parsed.dias;
+                        if (Array.isArray(inner)) return inner;
+                        if (typeof inner === "string") {
+                            try {
+                                const parsedInner = JSON.parse(inner);
+                                if (Array.isArray(parsedInner)) return parsedInner;
+                            } catch { }
+                        }
+                        const values = Object.values(parsed);
+                        if (values.length > 0 && values.some(v => v && typeof v === "object" && (v.start || v.fecha || v.id_registro))) {
+                            return values.filter(v => v && typeof v === "object");
+                        }
+                    }
+                } catch {
+                    return [];
+                }
+            }
+            if (typeof raw === "object") {
+                const inner = raw.Dias_cale ?? raw.Dias_entrenados ?? raw.registro_entreno ?? raw.dias;
+                if (Array.isArray(inner)) return inner;
+                if (typeof inner === "string") {
+                    try {
+                        const parsed = JSON.parse(inner);
+                        if (Array.isArray(parsed)) return parsed;
+                    } catch { }
+                }
+                const values = Object.values(raw);
+                if (values.length > 0 && values.some(v => v && typeof v === "object" && (v.start || v.fecha || v.id_registro))) {
+                    return values.filter(v => v && typeof v === "object");
+                }
+            }
+            return [];
+        };
+
         // 1. Cargar base de datos local de ejercicios y GIFs
         async function loadExercisesDatabase() {
             try {
@@ -1549,39 +1621,62 @@
         // 2. RECUPERAR DATOS DE SUPABASE (auth.users.id -> "Datos Fitness" & "Planes")
         async function fetchUserDataFromDatabase() {
             try {
-                // Verificar sesión del usuario
-                const { data: authData, error: authErr } = await supabase.auth.getUser();
-                if (authErr || !authData?.user) {
-                    console.warn("Sin sesión activa en Supabase. Utilizando caché de localStorage.");
-                    // Fallback a localStorage si ya existía sesión guardada
-                    const localId = localStorage.getItem("id_usuario");
-                    if (!localId) {
-                        // Redirigir a inicio si no hay usuario identificado
-                        document.getElementById("header-username-text").textContent = "Invitado";
-                        return;
+                // 2.1 Verificar sesión activa en Supabase (getSession y getUser)
+                let user = null;
+                try {
+                    const { data: sessionData } = await supabase.auth.getSession();
+                    if (sessionData?.session?.user) {
+                        user = sessionData.session.user;
                     }
-                    currentUser = { id: localId };
-                } else {
-                    currentUser = authData.user;
-                    localStorage.setItem("id_usuario", currentUser.id);
-                    if (currentUser.user_metadata?.full_name) {
-                        localStorage.setItem("username_usuario", currentUser.user_metadata.full_name);
-                    }
-                    const metaAvatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
-                    if (metaAvatar) {
-                        localStorage.setItem("avatar_usuario", metaAvatar);
+                } catch (e) {
+                    console.warn("getSession aviso:", e);
+                }
+
+                if (!user) {
+                    try {
+                        const { data: authData } = await supabase.auth.getUser();
+                        if (authData?.user) {
+                            user = authData.user;
+                        }
+                    } catch (e) {
+                        console.warn("getUser aviso:", e);
                     }
                 }
 
-                const userId = currentUser.id;
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem("id_usuario", user.id);
+                    if (user.email) localStorage.setItem("email_usuario", user.email);
+                    if (user.user_metadata?.full_name) {
+                        localStorage.setItem("username_usuario", user.user_metadata.full_name);
+                    }
+                    const metaAvatar = user.user_metadata?.avatar_url || user.user_metadata?.picture;
+                    if (metaAvatar) {
+                        localStorage.setItem("avatar_usuario", metaAvatar);
+                    }
+                } else {
+                    const localId = localStorage.getItem("id_usuario");
+                    if (localId) {
+                        currentUser = { id: localId };
+                    }
+                }
+
+                const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                if (!userId) {
+                    console.warn("Sin sesión ni usuario identificado en Supabase/localStorage.");
+                    const nameEl = document.getElementById("header-username-text");
+                    if (nameEl && !nameEl.textContent) nameEl.textContent = "Invitado";
+                    return;
+                }
 
                 // Actualizar nombre y foto de perfil en cabecera
-                const username = localStorage.getItem("username_usuario") || currentUser.email?.split("@")[0] || "Usuario";
-                document.getElementById("header-username-text").textContent = username;
+                const username = localStorage.getItem("username_usuario") || currentUser?.email?.split("@")[0] || "Atleta";
+                const usernameEl = document.getElementById("header-username-text");
+                if (usernameEl) usernameEl.textContent = username;
 
                 const avatarUrl = localStorage.getItem("avatar_usuario") ||
-                    currentUser.user_metadata?.avatar_url ||
-                    currentUser.user_metadata?.picture ||
+                    currentUser?.user_metadata?.avatar_url ||
+                    currentUser?.user_metadata?.picture ||
                     "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
                 const avatarImg = document.getElementById("header-user-avatar");
                 if (avatarImg) {
@@ -1591,62 +1686,93 @@
                     };
                 }
 
-                // Consulta a la tabla: "Datos Fitness" (Altura, Peso, Peso_Obj, Edad)
-                const { data: fitnessData, error: fitErr } = await supabase
-                    .from("Datos Fitness")
-                    .select("id, Altura, Peso, Peso_Obj, Edad")
-                    .eq("ID_user", userId)
-                    .maybeSingle();
+                // 2.2 Consulta a la tabla: "Datos Fitness" (Altura, Peso, Peso_Obj, Edad)
+                try {
+                    const { data: fitnessRows, error: fitErr } = await supabase
+                        .from("Datos Fitness")
+                        .select("*")
+                        .eq("ID_user", userId)
+                        .limit(1);
 
-                if (!fitErr && fitnessData) {
-                    userFitnessData = fitnessData;
-                    if (fitnessData.Peso != null) localStorage.setItem("peso_usuario", fitnessData.Peso);
-                    if (fitnessData.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", fitnessData.Peso_Obj);
-                    if (fitnessData.Altura != null) localStorage.setItem("altura_usuario", fitnessData.Altura);
-                    if (fitnessData.Edad != null) localStorage.setItem("edad_usuario", fitnessData.Edad);
+                    if (!fitErr && fitnessRows && fitnessRows.length > 0) {
+                        const fitnessData = fitnessRows[0];
+                        userFitnessData = fitnessData;
+                        if (fitnessData.Peso != null) localStorage.setItem("peso_usuario", fitnessData.Peso);
+                        if (fitnessData.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", fitnessData.Peso_Obj);
+                        if (fitnessData.Altura != null) localStorage.setItem("altura_usuario", fitnessData.Altura);
+                        if (fitnessData.Edad != null) localStorage.setItem("edad_usuario", fitnessData.Edad);
+                    }
+                } catch (fitEx) {
+                    console.warn("Aviso consultando Datos Fitness:", fitEx);
                 }
 
-                // Consulta a la tabla: "Planes" (Plan_entreno, Plan_alimenta, Dias_entrenados)
-                const { data: planesData, error: planErr } = await supabase
-                    .from("Planes")
-                    .select("id, Plan_entreno, Plan_alimenta, Dias_entrenados")
-                    .eq("ID_user", userId)
-                    .maybeSingle();
+                // 2.3 Consulta a la tabla: "Planes" (Plan_entreno, Plan_alimenta, Dias_entrenados)
+                try {
+                    const { data: planesRows, error: planErr } = await supabase
+                        .from("Planes")
+                        .select("Plan_entreno, Plan_alimenta, Dias_entrenados")
+                        .eq("ID_user", userId)
+                        .limit(1);
 
-                if (!planErr && planesData) {
-                    userPlanesData = planesData;
-                    if (planesData.Plan_entreno) localStorage.setItem("plan_entreno_usuario", planesData.Plan_entreno);
-                    if (planesData.Plan_alimenta) localStorage.setItem("plan_dieta_usuario", planesData.Plan_alimenta);
-                    if (planesData.Dias_entrenados) {
-                        const strDias = typeof planesData.Dias_entrenados === "string"
-                            ? planesData.Dias_entrenados
-                            : JSON.stringify(planesData.Dias_entrenados);
-                        localStorage.setItem("Dias_cale", strDias);
+                    if (!planErr && planesRows && planesRows.length > 0) {
+                        const planesData = planesRows[0];
+                        userPlanesData = planesData;
+                        if (planesData.Plan_entreno) {
+                            const strPlan = typeof planesData.Plan_entreno === "object"
+                                ? JSON.stringify(planesData.Plan_entreno)
+                                : planesData.Plan_entreno;
+                            localStorage.setItem("plan_entreno_usuario", strPlan);
+                        }
+                        if (planesData.Plan_alimenta) {
+                            const strAlim = typeof planesData.Plan_alimenta === "object"
+                                ? JSON.stringify(planesData.Plan_alimenta)
+                                : planesData.Plan_alimenta;
+                            localStorage.setItem("plan_dieta_usuario", strAlim);
+                        }
+                        if (planesData.Dias_entrenados) {
+                            const strDias = typeof planesData.Dias_entrenados === "string"
+                                ? planesData.Dias_entrenados
+                                : JSON.stringify(planesData.Dias_entrenados);
+                            localStorage.setItem("Dias_cale", strDias);
+                        }
                     }
+                } catch (planEx) {
+                    console.warn("Aviso consultando Planes:", planEx);
                 }
             } catch (err) {
                 console.error("Error al recuperar datos de la base de datos:", err);
             }
         }
 
-        // 3. MOSTRAR INFORMACIÓN: Body Weight
+        // 3. MOSTRAR INFORMACIÓN: Body Weight y BMI
         function displayBodyWeight() {
-            const peso = userFitnessData?.Peso ?? localStorage.getItem("peso_usuario");
-            const pesoObj = userFitnessData?.Peso_Obj ?? localStorage.getItem("peso_objetivo_usuario");
+            const peso = Number(userFitnessData?.Peso ?? localStorage.getItem("peso_usuario"));
+            const pesoObj = Number(userFitnessData?.Peso_Obj ?? localStorage.getItem("peso_objetivo_usuario"));
+            const alturaCm = Number(userFitnessData?.Altura ?? localStorage.getItem("altura_usuario"));
 
             const weightValEl = document.getElementById("weight-display-val");
             const weightSubEl = document.getElementById("weight-sub-display");
 
-            if (peso != null && !isNaN(Number(peso))) {
-                weightValEl.textContent = Math.round(Number(peso));
+            if (!isNaN(peso) && peso > 0) {
+                weightValEl.textContent = Math.round(peso);
             } else {
                 weightValEl.textContent = "70";
             }
 
-            if (pesoObj != null && !isNaN(Number(pesoObj))) {
-                weightSubEl.textContent = `Meta: ${Math.round(Number(pesoObj))} kg`;
+            // Calcular y mostrar el BMI como subtítulo del contenedor de peso corporal
+            if (!isNaN(peso) && peso > 0 && !isNaN(alturaCm) && alturaCm > 0) {
+                const heightMeters = alturaCm / 100;
+                const bmi = (peso / (heightMeters * heightMeters)).toFixed(1);
+                let estado = "Normal";
+                if (bmi < 18.5) estado = "Bajo peso";
+                else if (bmi >= 25 && bmi < 30) estado = "Sobrepeso";
+                else if (bmi >= 30) estado = "Obesidad";
+
+                weightSubEl.textContent = `BMI: ${bmi} · ${estado}`;
+            } else if (!isNaN(pesoObj) && pesoObj > 0) {
+                weightSubEl.textContent = `Meta: ${Math.round(pesoObj)} kg`;
             } else {
-                weightSubEl.textContent = "Sin meta fijada";
+                weightSubEl.textContent = "BMI: --";
             }
         }
 
@@ -1672,27 +1798,24 @@
                 return;
             }
 
-            let parsedPlan = null;
-            try {
-                parsedPlan = typeof rawPlan === "string" ? JSON.parse(rawPlan) : rawPlan;
-                if (parsedPlan.plan_entrenamiento_hipertrofia) parsedPlan = parsedPlan.plan_entrenamiento_hipertrofia;
-                if (parsedPlan.plan_entrenamiento) parsedPlan = parsedPlan.plan_entrenamiento;
-            } catch (e) {
-                console.warn("Error parseando Plan_entreno:", e);
+            let parsedPlan = safeJsonParse(extractLikelyJsonText(rawPlan)) ?? safeJsonParse(rawPlan);
+            if (parsedPlan && typeof parsedPlan === "object") {
+                parsedPlan = parsedPlan.plan_entrenamiento_hipertrofia ?? parsedPlan.plan_entrenamiento ?? parsedPlan.plan ?? parsedPlan;
             }
 
-            const weekly = parsedPlan?.configuracion_semanal || parsedPlan?.semana || [];
+            const weekly = parsedPlan?.configuracion_semanal || parsedPlan?.semana || parsedPlan?.dias || (Array.isArray(parsedPlan) ? parsedPlan : []);
             let todayDayConfig = null;
             let nextDayConfig = null;
 
             if (Array.isArray(weekly) && weekly.length > 0) {
-                todayDayConfig = weekly.find(d => normalizeStr(d?.dia).includes(todayNameNorm));
+                todayDayConfig = weekly.find(d => normalizeStr(d?.dia || d?.nombre || d?.day).includes(todayNameNorm));
 
                 // Buscar siguiente entreno para el sub-ítem 2
-                const currentIndex = weekly.findIndex(d => normalizeStr(d?.dia).includes(todayNameNorm));
+                const currentIndex = weekly.findIndex(d => normalizeStr(d?.dia || d?.nombre || d?.day).includes(todayNameNorm));
                 for (let i = 1; i <= 6; i++) {
                     const candidate = weekly[(currentIndex + i) % weekly.length];
-                    if (candidate && Array.isArray(candidate.ejercicios) && candidate.ejercicios.length > 0 && !normalizeStr(candidate.enfoque).includes("descanso")) {
+                    const candEx = candidate?.ejercicios || candidate?.exercises || [];
+                    if (candidate && Array.isArray(candEx) && candEx.length > 0 && !normalizeStr(candidate.enfoque || candidate.focus).includes("descanso")) {
                         nextDayConfig = candidate;
                         break;
                     }
@@ -1835,17 +1958,16 @@
                 return;
             }
 
-            let parsed = null;
-            try {
-                parsed = typeof rawDiet === "string" ? JSON.parse(rawDiet) : rawDiet;
-                if (parsed.plan_alimentacion) parsed = parsed.plan_alimentacion;
-            } catch { }
+            let parsed = safeJsonParse(extractLikelyJsonText(rawDiet)) ?? safeJsonParse(rawDiet);
+            if (parsed && typeof parsed === "object") {
+                parsed = parsed.plan_alimentacion ?? parsed.plan ?? parsed;
+            }
 
-            const weekly = parsed?.configuracion_semanal || parsed?.dias || [];
+            const weekly = parsed?.configuracion_semanal || parsed?.dias || parsed?.semana || [];
             let todayDay = null;
 
             if (Array.isArray(weekly)) {
-                todayDay = weekly.find(d => normalizeStr(d?.dia).includes(todayNameNorm));
+                todayDay = weekly.find(d => normalizeStr(d?.dia || d?.day || d?.nombre).includes(todayNameNorm));
             }
 
             if (todayDay) {
@@ -1867,16 +1989,8 @@
 
         // 7. MOSTRAR INFORMACIÓN: Calendario de Puntos (Planes -> Dias_entrenados)
         function displayDotsCalendar() {
-            let registros = [];
             const rawDias = userPlanesData?.Dias_entrenados ?? localStorage.getItem("Dias_cale");
-            if (rawDias) {
-                try {
-                    registros = typeof rawDias === "string" ? JSON.parse(rawDias) : rawDias;
-                    if (!Array.isArray(registros)) registros = [];
-                } catch {
-                    registros = [];
-                }
-            }
+            const registros = normalizarDiasEntrenados(rawDias);
 
             const trainedDates = new Set();
             registros.forEach(r => {
@@ -1945,16 +2059,8 @@
 
         // 8. MOSTRAR INFORMACIÓN: Métricas Mensuales (Planes -> Dias_entrenados)
         function displayMonthlyMetrics() {
-            let registros = [];
             const rawDias = userPlanesData?.Dias_entrenados ?? localStorage.getItem("Dias_cale");
-            if (rawDias) {
-                try {
-                    registros = typeof rawDias === "string" ? JSON.parse(rawDias) : rawDias;
-                    if (!Array.isArray(registros)) registros = [];
-                } catch {
-                    registros = [];
-                }
-            }
+            const registros = normalizarDiasEntrenados(rawDias);
 
             const now = new Date();
             const currentMonthPrefix = now.toISOString().slice(0, 7);
@@ -2003,12 +2109,12 @@
 
         // 9. EVENTOS Y REDIRECCIONES
         function setupEventListeners() {
-            // ── REDIRECCIONES A PLANES (planes_renov.html) ──
+            // ── REDIRECCIONES A PLAN DE ENTRENAMIENTO (plan_entreno.html) ──
             // 1. Tarjeta Workout de hoy
             const cardWorkout = document.getElementById("card-workout-today");
             if (cardWorkout) {
                 cardWorkout.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
                 });
             }
 
@@ -2016,11 +2122,11 @@
             const cardSlideshow = document.getElementById("today-slideshow-card");
             if (cardSlideshow) {
                 cardSlideshow.addEventListener("click", () => {
-                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
                 });
             }
 
-            // Evitar que las flechas del slideshow activen la redirección
+            // Evitar que las flechas del slideshow activen la redirección al plan
             document.getElementById("btn-slide-prev")?.addEventListener("click", (e) => e.stopPropagation());
             document.getElementById("btn-slide-next")?.addEventListener("click", (e) => e.stopPropagation());
 
@@ -2037,7 +2143,15 @@
             if (subitemNext) {
                 subitemNext.addEventListener("click", (e) => {
                     e.stopPropagation();
-                    window.location.href = "/Templates/templates_nuevas/planes_renov.html#entreno";
+                    window.location.href = "/Templates/templates_nuevas/plan_entreno.html";
+                });
+            }
+
+            // 5. Tarjeta de peso corporal (abre configuración)
+            const cardWeight = document.getElementById("card-weight");
+            if (cardWeight) {
+                cardWeight.addEventListener("click", () => {
+                    window.location.href = "/Templates/templates_nuevas/config.html";
                 });
             }
 
@@ -2338,9 +2452,9 @@
             window.openChatbotSheet = openChatbotSheet;
         }
 
-        // INICIALIZACIÓN COMPLETA
-        window.addEventListener("DOMContentLoaded", async () => {
-            // 0. Cargar foto de perfil y usuario en caché de forma inmediata
+        // INICIALIZACIÓN ROBUSTA Y SEGURA
+        async function initDashboard() {
+            // 0. Renderizado inmediato desde caché local para que la UI no quede en blanco
             const cachedAvatar = localStorage.getItem("avatar_usuario");
             if (cachedAvatar) {
                 const avatarEl = document.getElementById("header-user-avatar");
@@ -2352,13 +2466,20 @@
                 if (nameEl) nameEl.textContent = cachedName;
             }
 
+            // Primer renderizado con los datos en localStorage
+            displayBodyWeight();
+            displayTodayWorkout();
+            displayTodayDiet();
+            displayDotsCalendar();
+            displayMonthlyMetrics();
+
             // 1. Cargar biblioteca de gifs
             await loadExercisesDatabase();
 
             // 2. Traer datos frescos de Supabase ("Datos Fitness" y "Planes")
             await fetchUserDataFromDatabase();
 
-            // 3. Renderizar cada componente de la interfaz
+            // 3. Re-renderizar componentes con la información actualizada desde la BD
             displayBodyWeight();
             displayTodayWorkout();
             displayTodayDiet();
@@ -2373,7 +2494,13 @@
                     window.UIIdioma.translatePage(document);
                 }
             } catch { }
-        });
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initDashboard);
+        } else {
+            initDashboard();
+        }
     </script>
 </body>
 

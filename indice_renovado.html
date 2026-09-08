@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bienvenido · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --accent: #9df3ff;
+            --accent-glow: rgba(157, 243, 255, 0.15);
+            --accent-purple: #6b52ff;
+            --border-card: rgba(255, 255, 255, 0.07);
+            --border-card-hover: rgba(255, 255, 255, 0.16);
+            --radius-card: 26px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+            --header-height: 68px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 90px;
+            position: relative;
+        }
+
+        /* Iluminación ambiental de fondo */
+        .ambient-glow-hero {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(157, 243, 255, 0.09) 0%, rgba(107, 82, 255, 0.06) 45%, transparent 70%);
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── HEADER STICKY FLOTANTE ── */
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 680px;
+            z-index: 100;
+            padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(12, 13, 16, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.25s ease;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .navbar-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            object-fit: contain;
+            box-shadow: 0 4px 12px rgba(157, 243, 255, 0.2);
+        }
+
+        .navbar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .navbar-title span {
+            color: var(--accent);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Botón Empecemos! */
+        .btn-header-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            background: #ffffff;
+            color: #0c0d10;
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.16);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-header-cta:hover {
+            background: #f0f0f0;
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.22);
+        }
+
+        .btn-header-cta:active {
+            transform: scale(0.96);
+        }
+
+        /* ── CONTENEDOR PRINCIPAL ── */
+        .main-container {
+            width: 100%;
+            max-width: 680px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── SECCIÓN 1: HERO & PRESENTACIÓN ── */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 14px;
+            padding: 24px 8px 12px;
+        }
+
+        .hero-pill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: var(--radius-pill);
+            background: rgba(157, 243, 255, 0.1);
+            border: 1px solid rgba(157, 243, 255, 0.25);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-headline {
+            font-size: clamp(40px, 12vw, 68px);
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            line-height: 1.05;
+            color: #ffffff;
+        }
+
+        .hero-headline span {
+            color: var(--accent);
+            text-shadow: 0 0 30px rgba(157, 243, 255, 0.35);
+        }
+
+        .hero-lead {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 480px;
+        }
+
+        /* Navegación rápida por píldoras */
+        .quick-nav-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .quick-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: var(--text-secondary);
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .quick-pill:hover {
+            background: var(--bg-card-elevated);
+            color: #ffffff;
+            border-color: var(--border-card-hover);
+            transform: translateY(-1px);
+        }
+
+        /* ── SECCIÓN 2: CONFIGURACIÓN RÁPIDA / IDIOMA ── */
+        .card-config-quick {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .config-quick-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .config-quick-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .config-quick-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle switch */
+        .lang-switch-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .lang-label.is-active {
+            color: var(--accent);
+        }
+
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-round {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #242830;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 34px;
+            transition: .24s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slider-round:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            transition: .24s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        input:checked+.slider-round {
+            background-color: var(--accent-purple);
+            border-color: rgba(157, 243, 255, 0.3);
+        }
+
+        input:checked+.slider-round:before {
+            transform: translateX(20px);
+        }
+
+        /* ── SECCIONES DE CONTENIDO ── */
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-heading-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent);
+        }
+
+        .section-lead {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Badges de características */
+        .feature-badges-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            height: 32px;
+            padding: 0 14px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        /* ── EXPLORADOR DINÁMICO DE EJERCICIOS ── */
+        .card-exercises-browser {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+        }
+
+        .browser-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .browser-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .browser-count-pill {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            background: rgba(157, 243, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(157, 243, 255, 0.2);
+        }
+
+        /* Filtros de grupos musculares */
+        .muscle-filter-chips {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .muscle-filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .muscle-chip {
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-card-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.18s ease;
+        }
+
+        .muscle-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .muscle-chip.is-active {
+            background: #ffffff;
+            color: #0c0d10;
+            border-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Rejilla de ejercicios */
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .exercise-item-card {
+            background: var(--bg-card-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.18s ease;
+        }
+
+        .exercise-item-card:hover {
+            background: var(--bg-card-elevated);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateX(2px);
+        }
+
+        .exercise-item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .exercise-item-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .exercise-item-desc {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .exercise-item-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        /* Callout / Card informativa */
+        .card-callout {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .callout-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .callout-desc {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* ── GRID DE TARJETAS 2x2 ── */
+        .grid-cards-2x2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .card-feature {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .card-feature:hover {
+            background: var(--bg-card-elevated);
+            border-color: var(--border-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .feature-card-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-card-desc {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Separadores visuales */
+        .section-separator {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%);
+            margin: 4px 0;
+        }
+
+        /* ── BANNER FINAL CTA ── */
+        .card-cta-banner {
+            background: linear-gradient(135deg, #161822 0%, #12141a 100%);
+            border: 1px solid rgba(157, 243, 255, 0.2);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .cta-banner-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .cta-banner-desc {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 440px;
+        }
+
+        .btn-cta-big {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            height: 52px;
+            border-radius: 16px;
+            background: #ffffff;
+            color: #0c0d10;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.16);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-cta-big:hover {
+            background: #f0f0f0;
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.22);
+        }
+
+        .btn-cta-big:active {
+            transform: scale(0.97);
+        }
+
+        .btn-cta-big svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.3;
+        }
+
+        /* ── FOOTER FLOTANTE CON CRÉDITOS ── */
+        .footer-credits-bar {
+            position: fixed;
+            bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            background: rgba(20, 22, 28, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+
+        .footer-credits-bar a {
+            color: #ffffff;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.18s;
+        }
+
+        .footer-credits-bar a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-glow-hero"></div>
+
+    <!-- ── HEADER STICKY FLOTANTE ── -->
+    <header class="navbar-sticky">
+        <a href="#presentacion" class="navbar-brand">
+            <img src="/Icons/2.png" alt="TrAIner" class="navbar-logo">
+            <span class="navbar-title">Tr<span>AI</span>ner</span>
+        </a>
+
+        <div class="navbar-actions">
+            <a href="/Templates/templates_nuevas/creacionCuen/loginGoogle.html" class="btn-header-cta"
+                data-i18n-en="Get started!">
+                ¡Empecemos!
+            </a>
+        </div>
+    </header>
+
+    <!-- ── CONTENEDOR CENTRAL ── -->
+    <main class="main-container">
+        <!-- 1. HERO DE PRESENTACIÓN -->
+        <section class="hero-section" id="presentacion">
+            <span class="hero-pill-tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 13px; height: 13px;">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span data-i18n-en="Intelligent Training">Entrenamiento Inteligente</span>
+            </span>
+
+            <h1 class="hero-headline">Tr<span>AI</span>ner</h1>
+
+            <p class="hero-lead" data-i18n-en="Your AI-powered personal trainer. Simple, clear, and mobile-first.">
+                Tu entrenador personal potenciado por IA. Rutinas estructuradas, nutrición calibrada y progresión
+                semana a semana sin complicaciones.
+            </p>
+
+            <nav class="quick-nav-pills" aria-label="Navegación de secciones">
+                <a href="#ejercicios" class="quick-pill" data-i18n-en="Workouts">⚡ Entrenamientos</a>
+                <a href="#alimentacion" class="quick-pill" data-i18n-en="Meal Plan">🥗 Nutrición</a>
+                <a href="#detalles" class="quick-pill" data-i18n-en="Features">🎯 Características</a>
+                <a href="#disclaimer_ia" class="quick-pill" data-i18n-en="Privacy">🔒 Privacidad</a>
+            </nav>
+        </section>
+
+        <!-- 2. CONFIGURACIÓN RÁPIDA DE IDIOMA
+        <section class="card-config-quick" id="configuracion">
+            <div class="config-quick-text">
+                <span class="config-quick-title" data-i18n-en="App Language">Idioma de la interfaz</span>
+                <span class="config-quick-desc" data-i18n-en="Switch between Spanish and English instantly">Alterna
+                    entre Español e Inglés al instante</span>
+            </div>
+
+            <div class="lang-switch-wrap">
+                <span class="lang-label is-active" id="lang-label-es">ES</span>
+                <label class="switch-toggle" for="toggle_idioma" aria-label="Cambiar idioma">
+                    <input id="toggle_idioma" type="checkbox" role="switch">
+                    <span class="slider-round"></span>
+                </label>
+                <span class="lang-label" id="lang-label-en">EN</span>
+            </div>
+        </section> -->
+
+        <div class="section-separator"></div>
+
+        <!-- 3. PLAN DE ENTRENAMIENTO & EXPLORADOR DE EJERCICIOS -->
+        <section class="content-section" id="ejercicios">
+            <div class="section-heading-wrap">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="m6.5 6.5 11 11"></path>
+                        <path d="m21 21-1-1a5 5 0 0 0-7.07 0l-.93.93"></path>
+                        <path d="m3 3 1 1a5 5 0 0 0 7.07 0l.93-.93"></path>
+                    </svg>
+                    <span data-i18n-en="Build your workout plan">Generá tu propio plan de entrenamiento</span>
+                </h2>
+                <p class="section-lead"
+                    data-i18n-en="AI Personal Trainer is built to give you a clear, repeatable plan: what to train, how to organize it, and how to progress week by week. Less improvisation, more structure.">
+                    AI Personal Trainer está pensado para darte un plan claro y repetible: qué entrenar, cómo
+                    organizarlo y cómo avanzar semana a semana. Menos improvisación, más estructura.
+                </p>
+            </div>
+
+            <div class="feature-badges-row">
+                <span class="feature-badge" data-i18n-en="Fast plans">Planes rápidos</span>
+                <span class="feature-badge" data-i18n-en="Practical focus">Enfoque práctico</span>
+                <span class="feature-badge" data-i18n-en="Gradual progression">Progresión gradual</span>
+                <span class="feature-badge" data-i18n-en="Mobile-optimized">Optimizado para móvil</span>
+            </div>
+
+            <!-- Explorador interactivo de biblioteca de ejercicios -->
+            <div class="card-exercises-browser">
+                <div class="browser-header">
+                    <span class="browser-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            style="width: 16px; height: 16px; color: var(--accent);">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                            <path d="M6 6h10"></path>
+                            <path d="M6 10h10"></path>
+                        </svg>
+                        <span data-i18n-en="Exercise Library">Biblioteca de Ejercicios</span>
+                    </span>
+                    <span class="browser-count-pill" id="exercises-count-pill">Cargando...</span>
+                </div>
+
+                <!-- Chips selectores de grupo muscular -->
+                <div class="muscle-filter-chips" id="muscle-filter-chips">
+                    <button type="button" class="muscle-chip is-active" data-group="all"
+                        data-i18n-en="All">Todos</button>
+                    <button type="button" class="muscle-chip" data-group="Pecho" data-i18n-en="Chest">Pecho</button>
+                    <button type="button" class="muscle-chip" data-group="Espalda" data-i18n-en="Back">Espalda</button>
+                    <button type="button" class="muscle-chip" data-group="Piernas" data-i18n-en="Legs">Piernas</button>
+                    <button type="button" class="muscle-chip" data-group="Hombros"
+                        data-i18n-en="Shoulders">Hombros</button>
+                    <button type="button" class="muscle-chip" data-group="Brazos" data-i18n-en="Arms">Brazos</button>
+                    <button type="button" class="muscle-chip" data-group="Abdomen" data-i18n-en="Abs">Abdomen</button>
+                </div>
+
+                <!-- Lista de ejercicios cargada dinámicamente -->
+                <div class="exercises-grid" id="exercises-grid-container">
+                    <p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;"
+                        data-i18n-en="Loading exercises...">
+                        Cargando ejercicios...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Callout de enfoque -->
+            <div class="card-callout">
+                <span class="callout-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="width: 16px; height: 16px; color: var(--accent);">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span data-i18n-en="Details that make the difference">Detalles que marcan la diferencia</span>
+                </span>
+                <p class="callout-desc"
+                    data-i18n-en="A good plan isn't just a list of exercises. Order, rest times, and the intent of each block matter too: start with a heavy compound movement, follow with complementary sets for volume, and finish with accessories.">
+                    Un buen plan no es solo una lista de ejercicios. También importa el orden, los descansos y la
+                    intención de cada bloque: empezar con un movimiento principal pesado, seguir con complementarios
+                    para sumar volumen, y cerrar con accesorios.
+                </p>
+            </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <!-- 4. CARACTERÍSTICAS & PILARES -->
+        <section class="content-section" id="detalles">
+            <div class="section-heading-wrap">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="12 6 12 12 16 14"></polygon>
+                    </svg>
+                    <span data-i18n-en="App details">Detalles de la app</span>
+                </h2>
+                <p class="section-lead"
+                    data-i18n-en="A simple, modern, and fast experience. In just a few steps you get a plan that feels made for you—without wasting time configuring a thousand things.">
+                    Una experiencia simple, moderna y rápida. En pocos pasos tienes un plan hecho a tu medida sin
+                    perder tiempo configurando mil cosas.
+                </p>
+            </div>
+
+            <div class="grid-cards-2x2">
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Structured routines">
+                        🏋️ Rutinas con estructura
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Logical structure (main lift + complementary work + accessories) so you train with intent and can repeat it week after week.">
+                        Esquema lógico (principal + complementarios + accesorios) para que entrenes con intención y
+                        puedas repetirlo semana a semana.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Progression without overthinking">
+                        📈 Progresión sin complicarte
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Real progress comes from adding a little: more reps, a bit more load, or an extra set when it's time. Simple and measurable.">
+                        La mejora real viene de sumar pequeñas metas: más reps, algo de carga o una serie extra.
+                        Simple, claro y medible.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Options for your context">
+                        🏡 Opciones según tu contexto
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Gym or home training: we prioritize movements that make sense with the equipment and time you have available.">
+                        Con gym o sin gym: la selección prioriza movimientos que tengan sentido con el equipamiento
+                        y tiempo disponible.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Focus on consistency">
+                        🔥 Enfoque en constancia
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="More than magic routines, we build plans you can sustain. Consistency is the true long-term driver of results.">
+                        Más que rutinas mágicas, armamos planes que puedas sostener en el tiempo. La constancia es el
+                        verdadero catalizador.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <!-- 5. NUTRICIÓN & PLAN DE ALIMENTACIÓN -->
+        <section class="content-section" id="alimentacion">
+            <div class="section-heading-wrap">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                        <line x1="6" y1="1" x2="6" y2="4"></line>
+                        <line x1="10" y1="1" x2="10" y2="4"></line>
+                        <line x1="14" y1="1" x2="14" y2="4"></line>
+                    </svg>
+                    <span data-i18n-en="AI meal plan">Plan de Alimentación con IA</span>
+                </h2>
+                <p class="section-lead"
+                    data-i18n-en="A meal plan shouldn't be a generic list or an impossible diet to maintain. The AI builds a clear, actionable weekly guide so you know what to eat, how much, and how to structure your day.">
+                    Un plan de alimentación no debería ser una lista genérica ni una dieta imposible de sostener. La
+                    IA arma una guía semanal clara y accionable para que sepas qué comer, cuánto y cómo organizar tu
+                    día.
+                </p>
+            </div>
+
+            <div class="grid-cards-2x2">
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Calories per day">
+                        🔥 Calorías por día
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Recommended daily caloric intake calculated to keep you on a clear, healthy path toward your weight goal.">
+                        Ingesta calórica diaria sugerida y ajustada para mantener un rumbo medible hacia tu peso meta.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Suggested meals">
+                        🍽️ Comidas sugeridas
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Meals designed for real life execution: simple recipes, accessible ingredients, and flexible timing.">
+                        Comidas pensadas para la vida real: ingredientes accesibles, preparaciones directas y sin
+                        recetas imposibles.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Day-by-day detail">
+                        📅 Detalle día a día
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Tap any day to inspect full macros, dietary focus, and specific suggestions to distribute your energy.">
+                        Toca cualquier día para consultar macronutrientes, enfoque nutricional y consejos prácticos de
+                        distribución.
+                    </p>
+                </div>
+
+                <div class="card-feature">
+                    <span class="feature-card-title" data-i18n-en="Macros + tips">
+                        🥑 Macros + Consejos
+                    </span>
+                    <p class="feature-card-desc"
+                        data-i18n-en="Clear percentage split of carbs, proteins, and healthy fats tailored to your training intensity.">
+                        Desglose porcentual de carbohidratos, proteínas y grasas saludables adaptado a la intensidad de
+                        tus sesiones.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <!-- 6. USO DE DATOS & PRIVACIDAD -->
+        <section class="content-section" id="disclaimer_ia">
+            <div class="card-callout">
+                <span class="callout-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        style="width: 16px; height: 16px; color: var(--accent);">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span data-i18n-en="Data usage & privacy">Uso de datos y privacidad</span>
+                </span>
+                <p class="callout-desc"
+                    data-i18n-en="Your privacy matters. TrAIner is designed not to collect sensitive personal data for unrelated purposes, and never shares your information with third parties. Everything is transparent and configurable.">
+                    Tu privacidad importa. TrAIner está diseñado para no recolectar datos sensibles ajenos al
+                    funcionamiento de tus rutinas, y nunca comparte tu información con terceros.
+                </p>
+            </div>
+        </section>
+
+        <!-- 7. CTA BANNER FINAL -->
+        <section class="card-cta-banner">
+            <h2 class="cta-banner-title" data-i18n-en="Ready to level up your training?">¿Listo para dar el siguiente
+                paso?</h2>
+            <p class="cta-banner-desc"
+                data-i18n-en="Sign in with your Google account in seconds and let the AI build your personalized training and nutrition plan.">
+                Inicia sesión con Google en segundos y deja que la IA configure tu plan de entrenamiento y nutrición a
+                medida.
+            </p>
+            <a href="/Templates/templates_nuevas/creacionCuen/loginGoogle.html" class="btn-cta-big"
+                data-i18n-en="Get started now">
+                <span data-i18n-en="Get started now">Empezar ahora</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                </svg>
+            </a>
+        </section>
+    </main>
+
+    <!-- ── FOOTER FLOTANTE CON CRÉDITOS ── -->
+    <div class="footer-credits-bar" role="contentinfo">
+        <span>2026 &copy;</span>
+        <a href="https://diegogarcia-dev.com.ar" target="_blank" rel="noopener">Dg-dev</a>
+        <span>· TrAIner</span>
+    </div>
+
+    <!-- ── LÓGICA DE LA PÁGINA (ES MODULE) ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: false,
+                storage: localStorage
+            }
+        });
+
+        // 1. Redirigir al Dashboard si ya existe sesión activa
+        async function checkActiveSession() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user) {
+                    window.location.href = "/Templates/templates_nuevas/dashboard.html";
+                }
+            } catch (err) {
+                console.warn("Aviso comprobando sesión previa:", err);
+            }
+        }
+
+        // 2. Control de Idioma
+        function setupLanguageSwitcher() {
+            const ui = window.UIIdioma;
+            const toggle = document.getElementById("toggle_idioma");
+            const labelEs = document.getElementById("lang-label-es");
+            const labelEn = document.getElementById("lang-label-en");
+
+            if (!toggle) return;
+
+            const isEn = ui ? ui.getIdioma() === "en" : false;
+            toggle.checked = isEn;
+            if (labelEs && labelEn) {
+                labelEs.classList.toggle("is-active", !isEn);
+                labelEn.classList.toggle("is-active", isEn);
+            }
+
+            toggle.addEventListener("change", () => {
+                const targetLang = toggle.checked ? "en" : "es";
+                if (ui) {
+                    ui.setIdioma(targetLang);
+                    ui.translatePage(document);
+                }
+                if (labelEs && labelEn) {
+                    labelEs.classList.toggle("is-active", !toggle.checked);
+                    labelEn.classList.toggle("is-active", toggle.checked);
+                }
+            });
+
+            if (ui) {
+                ui.translatePage(document);
+            }
+        }
+
+        // 3. Cargar Ejercicios Dinámicamente desde /Datos/entrenamientos.json
+        let exercisesDatabase = {};
+        let activeMuscleGroup = "all";
+
+        async function loadExercises() {
+            const container = document.getElementById("exercises-grid-container");
+            const countPill = document.getElementById("exercises-count-pill");
+
+            try {
+                const res = await fetch("/Datos/entrenamientos.json");
+                if (!res.ok) throw new Error("Status " + res.status);
+                exercisesDatabase = await res.json();
+
+                renderExercises();
+                setupFilterChips();
+            } catch (err) {
+                console.warn("Error cargando /Datos/entrenamientos.json:", err);
+                if (container) {
+                    container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">No se pudo cargar la lista de ejercicios.</p>`;
+                }
+                if (countPill) countPill.textContent = "0 ejercicios";
+            }
+        }
+
+        function renderExercises() {
+            const container = document.getElementById("exercises-grid-container");
+            const countPill = document.getElementById("exercises-count-pill");
+            if (!container) return;
+
+            let totalCount = 0;
+            let html = "";
+
+            for (const [groupName, exercises] of Object.entries(exercisesDatabase)) {
+                if (activeMuscleGroup !== "all" && activeMuscleGroup !== groupName) {
+                    continue;
+                }
+
+                exercises.forEach(ex => {
+                    totalCount++;
+                    const desc = ex.descripcion_guia || ex.descripcion || "Ejercicio funcional para el plan.";
+                    html += `
+                        <div class="exercise-item-card">
+                            <div class="exercise-item-left">
+                                <span class="exercise-item-name">${ex.nombre}</span>
+                                <span class="exercise-item-desc">${desc}</span>
+                            </div>
+                            <span class="exercise-item-badge">${groupName}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (html === "") {
+                html = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">No hay ejercicios disponibles en este grupo.</p>`;
+            }
+
+            container.innerHTML = html;
+            if (countPill) {
+                countPill.textContent = `${totalCount} ejercicios`;
+            }
+        }
+
+        function setupFilterChips() {
+            const chips = document.querySelectorAll(".muscle-chip");
+            chips.forEach(chip => {
+                chip.addEventListener("click", () => {
+                    chips.forEach(c => c.classList.remove("is-active"));
+                    chip.classList.add("is-active");
+                    activeMuscleGroup = chip.getAttribute("data-group") || "all";
+                    renderExercises();
+                });
+            });
+        }
+
+        // ── INICIALIZACIÓN ──
+        async function init() {
+            await checkActiveSession();
+            setupLanguageSwitcher();
+            await loadExercises();
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init, { once: true });
+        } else {
+            init();
+        }
+    </script>
+</body>
+
+</html>

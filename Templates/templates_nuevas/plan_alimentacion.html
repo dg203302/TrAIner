@@ -28,9 +28,12 @@
             --text-primary: #ffffff;
             --text-secondary: #8a909a;
             --text-muted: #585d68;
-            --dot-active: #ffffff;
-            --dot-inactive: #282b33;
-            --accent-glow: rgba(255, 255, 255, 0.08);
+            --accent: #9df3ff;
+            --accent-glow: rgba(157, 243, 255, 0.12);
+            --danger: #ff5252;
+            --danger-glow: rgba(255, 82, 82, 0.12);
+            --success: #2ed573;
+            --success-glow: rgba(46, 213, 115, 0.15);
             --border-card: rgba(255, 255, 255, 0.06);
             --radius-card: 26px;
             --radius-inner: 18px;
@@ -58,7 +61,6 @@
             padding-bottom: calc(var(--nav-height) + 24px + env(safe-area-inset-bottom, 20px));
         }
 
-        /* Contenedor responsivo centrado */
         .app-container {
             width: 100%;
             max-width: 440px;
@@ -113,7 +115,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background-color: #2ed573;
+            background-color: var(--success);
             box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
         }
 
@@ -163,6 +165,719 @@
         .header-btn:active {
             transform: scale(0.92);
             background: var(--bg-card-elevated);
+        }
+
+        /* ── CONTENIDO PRINCIPAL ── */
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ── HERO CARD DEL PLAN DE ALIMENTACIÓN ── */
+        .plan-hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .plan-hero-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .plan-badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .plan-badge-tag.highlight {
+            background: var(--accent-glow);
+            border-color: rgba(157, 243, 255, 0.25);
+            color: var(--accent);
+        }
+
+        .plan-hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon-hero {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .btn-icon-hero:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .btn-icon-hero.btn-danger-action:hover {
+            background: var(--danger-glow);
+            border-color: rgba(255, 82, 82, 0.3);
+            color: var(--danger);
+        }
+
+        .plan-hero-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .plan-hero-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .plan-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .plan-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .plan-meta-item svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+            color: var(--text-secondary);
+        }
+
+        /* ── EMPTY STATE CARD ── */
+        .plan-empty-card {
+            background: var(--bg-card);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-card);
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 14px;
+        }
+
+        .plan-empty-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .plan-empty-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2;
+        }
+
+        .plan-empty-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .plan-empty-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            max-width: 320px;
+        }
+
+        .btn-primary-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-pill);
+            background: #ffffff;
+            color: #0c0d10;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary-action:hover {
+            background: #f0f2f5;
+            transform: scale(1.02);
+        }
+
+        .btn-primary-action:active {
+            transform: scale(0.97);
+        }
+
+        /* ── SELECTOR DE DÍAS (SCROLL HORIZONTAL) ── */
+        .days-nav-wrapper {
+            position: relative;
+            margin: -4px 0 2px;
+        }
+
+        .days-nav-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .days-nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-pill-btn {
+            padding: 9px 18px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .day-pill-btn:hover {
+            color: #ffffff;
+            background: var(--bg-card-elevated);
+        }
+
+        .day-pill-btn.is-active {
+            background: #ffffff;
+            color: #0c0d10;
+            border-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.18);
+        }
+
+        /* ── CABECERA Y RESUMEN DEL DÍA SELECCIONADO ── */
+        .day-focus-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .day-focus-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-focus-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.4px;
+        }
+
+        .day-cal-badge {
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--border-card);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .day-macros-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .macro-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 11px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        .macro-pill strong {
+            color: #ffffff;
+        }
+
+        .macro-pill.carb-pill strong {
+            color: #ffd166;
+        }
+
+        .macro-pill.prot-pill strong {
+            color: #06d6a0;
+        }
+
+        .macro-pill.fat-pill strong {
+            color: #ef476f;
+        }
+
+        .day-btn-summary {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .day-btn-summary:hover {
+            opacity: 0.8;
+        }
+
+        /* ── TARJETAS DE COMIDAS (NUEVOS CONTENEDORES COHESIVOS) ── */
+        .meals-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+
+        .meals-section-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-secondary);
+        }
+
+        .meals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .meal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .meal-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+            background: #1b1e24;
+            transform: translateY(-2px);
+        }
+
+        .meal-card:active {
+            transform: scale(0.98);
+        }
+
+        .meal-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .meal-badge {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meal-kcal-chip {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #ffffff;
+            background: var(--bg-card-elevated);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .meal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+
+        .meal-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .meal-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 2px;
+        }
+
+        .meal-view-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.18s ease;
+        }
+
+        .meal-card:hover .meal-view-link {
+            color: #ffffff;
+        }
+
+        /* ── TARJETA DE TIPS Y RECOMENDACIONES ── */
+        .diet-tips-card {
+            background: var(--bg-card-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-inner);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .diet-tips-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .diet-tips-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .diet-tip-item {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .diet-tip-bullet {
+            color: var(--accent);
+            font-size: 14px;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        /* ── MODALES BOTTOM-SHEET ── */
+        .custom-sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 2000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.28s ease;
+        }
+
+        .custom-sheet-backdrop.is-open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .custom-sheet-card {
+            width: 100%;
+            max-width: 440px;
+            max-height: 88vh;
+            background: #0f1015;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: none;
+            box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(100%);
+            transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .custom-sheet-backdrop.is-open .custom-sheet-card {
+            transform: translateY(0);
+        }
+
+        .sheet-drag-handle-wrap {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 0 6px;
+        }
+
+        .sheet-drag-handle {
+            width: 38px;
+            height: 4px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 20px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .sheet-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .sheet-close-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .sheet-body {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Selector de opciones en modal */
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            font-size: 12.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .option-cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-select-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .option-select-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--bg-card-elevated);
+        }
+
+        .option-select-card.is-selected {
+            border-color: var(--accent);
+            background: rgba(157, 243, 255, 0.08);
+        }
+
+        .option-select-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .option-select-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .option-check-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            transition: all 0.18s ease;
+        }
+
+        .option-select-card.is-selected .option-check-circle {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #0c0d10;
+        }
+
+        /* Biometrics strip */
+        .bio-strip {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 12px 14px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .bio-strip-item-num {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .bio-strip-item-lbl {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Loader animado en modal */
+        .ai-loading-wrap {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 16px;
+            padding: 30px 10px;
+        }
+
+        .ai-pulse-ring {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid rgba(157, 243, 255, 0.15);
+            border-top-color: var(--accent);
+            animation: spinRing 0.9s linear infinite;
+        }
+
+        @keyframes spinRing {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .ai-loading-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .ai-loading-sub {
+            font-size: 13px;
+            color: var(--text-secondary);
+            max-width: 280px;
+            line-height: 1.4;
         }
 
         /* ── BARRA DE NAVEGACIÓN INFERIOR FLOTANTE ── */
@@ -240,13 +955,6 @@
         .nav-item.is-active svg {
             stroke: #ffffff;
         }
-
-        /* ── CONTENIDO PRINCIPAL (espacio para elementos de esta plantilla) ── */
-        .page-content {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
     </style>
 </head>
 
@@ -272,19 +980,280 @@
             </div>
         </header>
 
-        <!-- ═══════════════════════════════════════════════ -->
-        <!-- CONTENIDO PRINCIPAL: Plan de Alimentación       -->
-        <!-- Aquí van los elementos propios de esta vista    -->
-        <!-- ═══════════════════════════════════════════════ -->
+        <!-- CONTENIDO PRINCIPAL: Plan de Alimentación -->
         <main class="page-content" id="page-content">
-            <!-- TODO: Agregar contenido del plan de alimentación -->
+
+            <!-- 1. HERO CONTAINER (Activo o Vacío) -->
+            <section id="diet-hero-container">
+                <!-- Se inyecta dinámicamente con renderHeroCard() -->
+                <div class="plan-empty-card">
+                    <div class="plan-empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                            <path d="M7 2v20"></path>
+                            <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="plan-empty-title">Cargando Plan...</h2>
+                    <p class="plan-empty-desc">Conectando con tu base de datos...</p>
+                </div>
+            </section>
+
+            <!-- 2. SELECTOR DE DÍAS (Horizontal) -->
+            <section class="days-nav-wrapper" id="days-nav-wrapper" style="display: none;">
+                <div class="days-nav-container" id="days-nav-container">
+                    <!-- Se llena con las píldoras de los días -->
+                </div>
+            </section>
+
+            <!-- 3. CABECERA DEL DÍA SELECCIONADO (Metas y Macros) -->
+            <section class="day-focus-card" id="day-focus-card" style="display: none;">
+                <div class="day-focus-top">
+                    <h2 class="day-focus-title" id="day-focus-title">Día</h2>
+                    <div class="day-cal-badge" id="day-cal-badge">
+                        <span id="day-cal-val">--</span>
+                        <span>kcal</span>
+                    </div>
+                </div>
+
+                <div class="day-macros-row" id="day-macros-row">
+                    <span class="macro-pill carb-pill">Carbos: <strong id="macro-c-val">--%</strong></span>
+                    <span class="macro-pill prot-pill">Proteína: <strong id="macro-p-val">--%</strong></span>
+                    <span class="macro-pill fat-pill">Grasas: <strong id="macro-f-val">--%</strong></span>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                    <button class="day-btn-summary" id="btn-open-day-summary">
+                        <span>Ver tips y recomendaciones</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 4. LISTA DE COMIDAS DEL DÍA (Nuevos contenedores cohesivos) -->
+            <section class="meals-container" id="meals-container" style="display: none;">
+                <div class="meals-section-header" style="margin-bottom: 10px;">
+                    <span class="meals-section-title">Comidas Planificadas</span>
+                    <span id="meals-count-badge" style="font-size: 12px; font-weight: 700; color: var(--text-muted);">-- comidas</span>
+                </div>
+                <div class="meals-list" id="meals-list">
+                    <!-- Se inyectan las tarjetas de comidas -->
+                </div>
+            </section>
+
+            <!-- 5. TIPS PRÁCTICOS DEL DÍA -->
+            <section class="diet-tips-card" id="diet-tips-card" style="display: none;">
+                <div class="diet-tips-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Consejos de Nutrición de Hoy</span>
+                </div>
+                <ul class="diet-tips-list" id="diet-tips-list">
+                    <!-- Se llenan dinámicamente -->
+                </ul>
+            </section>
         </main>
+    </div>
+
+    <!-- ── MODAL 1: GENERADOR DE PLAN CON IA (BOTTOM-SHEET) ── -->
+    <div class="custom-sheet-backdrop" id="modal-ai-generator-backdrop">
+        <div class="custom-sheet-card">
+            <div class="sheet-drag-handle-wrap">
+                <div class="sheet-drag-handle"></div>
+            </div>
+            <div class="sheet-header">
+                <h3 class="sheet-title">Generar Plan Nutricional</h3>
+                <button class="sheet-close-btn" id="btn-close-ai-modal" aria-label="Cerrar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="sheet-body" id="ai-generator-body">
+                <!-- Biometría resumida -->
+                <div class="bio-strip">
+                    <div>
+                        <div class="bio-strip-item-num" id="bio-age">--</div>
+                        <div class="bio-strip-item-lbl">Edad</div>
+                    </div>
+                    <div>
+                        <div class="bio-strip-item-num" id="bio-height">--</div>
+                        <div class="bio-strip-item-lbl">Altura</div>
+                    </div>
+                    <div>
+                        <div class="bio-strip-item-num" id="bio-weight">--</div>
+                        <div class="bio-strip-item-lbl">Peso</div>
+                    </div>
+                    <div>
+                        <div class="bio-strip-item-num" id="bio-goal">--</div>
+                        <div class="bio-strip-item-lbl">Meta</div>
+                    </div>
+                </div>
+
+                <!-- 1. Objetivo Nutricional -->
+                <div class="option-group">
+                    <span class="option-label">1. Objetivo Principal</span>
+                    <div class="option-cards-grid">
+                        <div class="option-select-card is-selected" data-opt-group="objetivo" data-value="grasa">
+                            <div>
+                                <div class="option-select-title">Perder Grasa</div>
+                                <div class="option-select-sub">Déficit calórico estratégico con alta proteína</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                        <div class="option-select-card" data-opt-group="objetivo" data-value="musculo">
+                            <div>
+                                <div class="option-select-title">Ganar Masa Muscular</div>
+                                <div class="option-select-sub">Superávit limpio enfocado en hipertrofia y rendimiento</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                        <div class="option-select-card" data-opt-group="objetivo" data-value="mantener">
+                            <div>
+                                <div class="option-select-title">Mantener Peso</div>
+                                <div class="option-select-sub">Aporte normocalórico balanceado y salud óptima</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Intensidad y Comidas Diarias -->
+                <div class="option-group">
+                    <span class="option-label">2. Frecuencia de Comidas</span>
+                    <div class="option-cards-grid">
+                        <div class="option-select-card" data-opt-group="intensidad" data-value="baja">
+                            <div>
+                                <div class="option-select-title">Intensidad Baja (3 comidas)</div>
+                                <div class="option-select-sub">Desayuno, Almuerzo y Cena</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                        <div class="option-select-card is-selected" data-opt-group="intensidad" data-value="media">
+                            <div>
+                                <div class="option-select-title">Intensidad Media (4 comidas)</div>
+                                <div class="option-select-sub">Desayuno, Almuerzo, Merienda y Cena (Recomendado)</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                        <div class="option-select-card" data-opt-group="intensidad" data-value="alta">
+                            <div>
+                                <div class="option-select-title">Intensidad Alta (5 comidas)</div>
+                                <div class="option-select-sub">Distribución fraccionada con colación / snack</div>
+                            </div>
+                            <div class="option-check-circle">✓</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary-action" id="btn-submit-generate-ai" style="width: 100%; margin-top: 8px;">
+                    <span>Crear Plan con Inteligencia Artificial</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Loader de procesamiento IA -->
+            <div class="ai-loading-wrap" id="ai-loading-wrap">
+                <div class="ai-pulse-ring"></div>
+                <h4 class="ai-loading-title">Diseñando tu plan nutricional...</h4>
+                <p class="ai-loading-sub" id="ai-loading-status-text">Calculando requerimiento calórico y macronutrientes adaptados a tu cuerpo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MODAL 2: DETALLE DE COMIDA (BOTTOM-SHEET) ── -->
+    <div class="custom-sheet-backdrop" id="modal-meal-detail-backdrop">
+        <div class="custom-sheet-card">
+            <div class="sheet-drag-handle-wrap">
+                <div class="sheet-drag-handle"></div>
+            </div>
+            <div class="sheet-header">
+                <h3 class="sheet-title" id="modal-meal-name">Detalle de Comida</h3>
+                <button class="sheet-close-btn" id="btn-close-meal-modal" aria-label="Cerrar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="sheet-body" id="modal-meal-body">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span class="meal-badge" id="modal-meal-badge">Desayuno</span>
+                    <span class="meal-kcal-chip" id="modal-meal-kcal">-- kcal</span>
+                </div>
+                <div style="font-size: 14.5px; color: var(--text-secondary); line-height: 1.5;" id="modal-meal-desc">
+                    --
+                </div>
+                <div class="option-group" style="margin-top: 10px;">
+                    <span class="option-label">Recomendaciones de Preparación</span>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
+                        Priorizá alimentos enteros y frescos. Mantené una hidratación adecuada con al menos 500 ml de agua alrededor de esta comida.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MODAL 3: RESUMEN Y TIPS DEL DÍA (BOTTOM-SHEET) ── -->
+    <div class="custom-sheet-backdrop" id="modal-day-summary-backdrop">
+        <div class="custom-sheet-card">
+            <div class="sheet-drag-handle-wrap">
+                <div class="sheet-drag-handle"></div>
+            </div>
+            <div class="sheet-header">
+                <h3 class="sheet-title" id="modal-day-summary-title">Resumen del Día</h3>
+                <button class="sheet-close-btn" id="btn-close-day-summary-modal" aria-label="Cerrar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="sheet-body" id="modal-day-summary-body">
+                <div class="bio-strip" style="grid-template-columns: repeat(3, 1fr);">
+                    <div>
+                        <div class="bio-strip-item-num" id="summary-macro-c">--%</div>
+                        <div class="bio-strip-item-lbl">Carbohidratos</div>
+                    </div>
+                    <div>
+                        <div class="bio-strip-item-num" id="summary-macro-p">--%</div>
+                        <div class="bio-strip-item-lbl">Proteínas</div>
+                    </div>
+                    <div>
+                        <div class="bio-strip-item-num" id="summary-macro-f">--%</div>
+                        <div class="bio-strip-item-lbl">Grasas</div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Pautas y Recomendaciones</span>
+                    <ul class="diet-tips-list" id="modal-recoms-list">
+                        <!-- Llenado dinámico -->
+                    </ul>
+                </div>
+
+                <div class="option-group">
+                    <span class="option-label">Tips del Día</span>
+                    <ul class="diet-tips-list" id="modal-tips-list">
+                        <!-- Llenado dinámico -->
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ── BARRA INFERIOR DE NAVEGACIÓN ── -->
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
-            <!-- 1. Grid / Dashboard -->
+            <!-- 1. Dashboard -->
             <a href="/Templates/templates_nuevas/dashboard.html" class="nav-item"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
@@ -340,6 +1309,751 @@
             </a>
         </div>
     </nav>
+
+    <!-- ── LÓGICA Y CONEXIONES DE BASE DE DATOS (ES MODULE) ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+        });
+
+        // Estado en memoria
+        let currentUser = null;
+        let planParsedDias = [];
+        let selectedDayIndex = 0;
+
+        const DIAS_MAP = {
+            0: "domingo",
+            1: "lunes",
+            2: "martes",
+            3: "miercoles",
+            4: "jueves",
+            5: "viernes",
+            6: "sabado"
+        };
+
+        const normalizeStr = (str) =>
+            String(str ?? "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim()
+                .toLowerCase();
+
+        const extractLikelyJsonText = (text) => {
+            const s = String(text ?? "").replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
+            const firstObj = s.indexOf("{");
+            const firstArr = s.indexOf("[");
+            if (firstObj === -1 && firstArr === -1) return s;
+            const start = firstArr === -1 ? firstObj : (firstObj === -1 ? firstArr : Math.min(firstObj, firstArr));
+            const lastObj = s.lastIndexOf("}");
+            const lastArr = s.lastIndexOf("]");
+            const end = Math.max(lastObj, lastArr);
+            if (end <= start) return s;
+            return s.slice(start, end + 1);
+        };
+
+        const safeJsonParse = (text) => {
+            if (!text) return null;
+            if (typeof text === "object") return text;
+            try { return JSON.parse(text); } catch { return null; }
+        };
+
+        // ── 1. SESIÓN Y PERFIL DE USUARIO ──
+        async function fetchUserProfile() {
+            try {
+                let user = null;
+                try {
+                    const { data: sessionData } = await supabase.auth.getSession();
+                    if (sessionData?.session?.user) {
+                        user = sessionData.session.user;
+                    }
+                } catch (e) { }
+
+                if (!user) {
+                    try {
+                        const { data: authData } = await supabase.auth.getUser();
+                        if (authData?.user) {
+                            user = authData.user;
+                        }
+                    } catch (e) { }
+                }
+
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem("id_usuario", currentUser.id);
+                    if (currentUser.email) localStorage.setItem("email_usuario", currentUser.email);
+                    if (currentUser.user_metadata?.full_name) {
+                        localStorage.setItem("username_usuario", currentUser.user_metadata.full_name);
+                    }
+                    const avatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+                    if (avatar) localStorage.setItem("avatar_usuario", avatar);
+                } else {
+                    const localId = localStorage.getItem("id_usuario");
+                    if (localId) currentUser = { id: localId };
+                }
+
+                const username = localStorage.getItem("username_usuario") || currentUser?.email?.split("@")[0] || "Atleta";
+                const usernameEl = document.getElementById("header-username-text");
+                if (usernameEl) usernameEl.textContent = username;
+
+                const avatarUrl = localStorage.getItem("avatar_usuario") ||
+                    currentUser?.user_metadata?.avatar_url ||
+                    "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+                const avatarEl = document.getElementById("header-user-avatar");
+                if (avatarEl) {
+                    avatarEl.src = avatarUrl;
+                    avatarEl.onerror = () => {
+                        avatarEl.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+                    };
+                }
+
+                // Cargar también Datos Fitness si no están en local
+                const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                if (userId) {
+                    try {
+                        const { data: fitData } = await supabase
+                            .from("Datos Fitness")
+                            .select("*")
+                            .eq("ID_user", userId)
+                            .limit(1);
+
+                        if (fitData && fitData.length > 0) {
+                            const f = fitData[0];
+                            if (f.Altura != null) localStorage.setItem("altura_usuario", f.Altura);
+                            if (f.Peso != null) localStorage.setItem("peso_usuario", f.Peso);
+                            if (f.Peso_Obj != null) localStorage.setItem("peso_objetivo_usuario", f.Peso_Obj);
+                            if (f.Edad != null) localStorage.setItem("edad_usuario", f.Edad);
+                        }
+                    } catch (e) { }
+                }
+            } catch (err) {
+                console.warn("fetchUserProfile error:", err);
+            }
+        }
+
+        // ── 2. PARSER DEL PLAN DE ALIMENTACIÓN ──
+        function parsePlanDiasDetalladosAliment(planRaw) {
+            if (!planRaw || planRaw === "Ninguno" || planRaw === "Proximamente") return null;
+            const asString = typeof planRaw === "string" ? planRaw.trim() : JSON.stringify(planRaw);
+            if (!asString || asString === "Ninguno" || asString === "Proximamente") return null;
+
+            const parsed = safeJsonParse(extractLikelyJsonText(asString)) ?? safeJsonParse(asString);
+            if (!parsed || typeof parsed !== "object") return null;
+
+            let root = parsed;
+            if (root.plan_alimentacion) root = root.plan_alimentacion;
+            if (root.plan) root = root.plan;
+
+            const diasOrden = ["lunes", "martes", "miercoles", "miércoles", "jueves", "viernes", "sabado", "sábado", "domingo"];
+
+            const normalizeMeals = (comidas) => {
+                if (!Array.isArray(comidas)) return [];
+                return comidas.map((c, i) => {
+                    if (typeof c === "string") {
+                        return {
+                            nombre: `Comida ${i + 1}`,
+                            descripcion: c,
+                            calorias_aprox: null
+                        };
+                    }
+                    return {
+                        nombre: c?.nombre || c?.titulo || c?.name || `Comida ${i + 1}`,
+                        descripcion: c?.descripcion || c?.comida || c?.plato || c?.alimentos || "",
+                        calorias_aprox: c?.calorias_aprox ?? c?.calorias ?? null
+                    };
+                });
+            };
+
+            const normalizeMacros = (m) => {
+                if (!m || typeof m !== "object") return { carbohidratos: 40, proteinas: 30, grasas: 30 };
+                return {
+                    carbohidratos: Math.round(Number(m.carbohidratos || m.carbs || 40)),
+                    proteinas: Math.round(Number(m.proteinas || m.protein || 30)),
+                    grasas: Math.round(Number(m.grasas || m.fats || 30))
+                };
+            };
+
+            // Estructura A: configuracion_semanal / dias / semana (Array)
+            const maybeArray = root?.configuracion_semanal ?? root?.dias ?? root?.semana;
+            if (Array.isArray(maybeArray)) {
+                return maybeArray.map((d, i) => {
+                    const diaName = d?.dia ?? d?.nombre ?? `Día ${i + 1}`;
+                    const calObjetivo = d?.calorias_objetivo ?? d?.calorias ?? root?.calorias_objetivo_diarias ?? 2400;
+                    const macros = normalizeMacros(d?.macros_porcentaje ?? d?.macros ?? root?.macros_porcentaje);
+                    const comidas = normalizeMeals(d?.comidas ?? d?.meals ?? []);
+                    const recomendaciones = Array.isArray(d?.recomendaciones) ? d.recomendaciones : (root?.recomendaciones || []);
+                    const tips = Array.isArray(d?.tips) ? d.tips : (root?.tips || []);
+
+                    return {
+                        dia: diaName,
+                        calorias_objetivo: Math.round(Number(calObjetivo)),
+                        macros,
+                        comidas,
+                        recomendaciones,
+                        tips,
+                        originalIndex: i
+                    };
+                }).filter(d => d.comidas.length > 0);
+            }
+
+            // Estructura B: Mapa por claves de días ("lunes": {...})
+            const weekdayKeys = Object.keys(root || {}).filter((k) => diasOrden.includes(String(k).toLowerCase()));
+            if (weekdayKeys.length > 0) {
+                return weekdayKeys.map((k, i) => {
+                    const dayData = root[k] || {};
+                    const diaName = k.charAt(0).toUpperCase() + k.slice(1);
+                    const calObjetivo = dayData.calorias_objetivo ?? root?.calorias_objetivo ?? 2400;
+                    const macros = normalizeMacros(dayData.macros_porcentaje ?? dayData.macros ?? root?.macros_porcentaje);
+                    const comidas = normalizeMeals(dayData.comidas ?? (Array.isArray(dayData) ? dayData : []));
+
+                    return {
+                        dia: diaName,
+                        calorias_objetivo: Math.round(Number(calObjetivo)),
+                        macros,
+                        comidas,
+                        recomendaciones: dayData.recomendaciones || [],
+                        tips: dayData.tips || [],
+                        originalIndex: i
+                    };
+                }).filter(d => d.comidas.length > 0);
+            }
+
+            // Estructura C: Array directo de comidas
+            if (Array.isArray(root?.comidas)) {
+                const comidas = normalizeMeals(root.comidas);
+                return [{
+                    dia: "Plan Diario",
+                    calorias_objetivo: Math.round(Number(root.calorias_objetivo || 2400)),
+                    macros: normalizeMacros(root.macros_porcentaje),
+                    comidas,
+                    recomendaciones: root.recomendaciones || [],
+                    tips: root.tips || [],
+                    originalIndex: 0
+                }];
+            }
+
+            return null;
+        }
+
+        // ── 3. CARGAR PLAN (LOCALSTORAGE + SUPABASE) ──
+        async function cargarPlanAlimentacion() {
+            const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            let planRaw = localStorage.getItem("plan_dieta_usuario");
+
+            // Si no está en local o es vacío, consultar Supabase
+            if (userId && (!planRaw || planRaw === "Ninguno" || planRaw === "Proximamente")) {
+                try {
+                    const { data, error } = await supabase
+                        .from("Planes")
+                        .select("Plan_alimenta")
+                        .eq("ID_user", userId)
+                        .limit(1);
+
+                    if (!error && data && data.length > 0 && data[0]?.Plan_alimenta) {
+                        const dbPlan = data[0].Plan_alimenta;
+                        if (dbPlan && dbPlan !== "Ninguno" && dbPlan !== "Proximamente") {
+                            planRaw = typeof dbPlan === "object" ? JSON.stringify(dbPlan) : dbPlan;
+                            localStorage.setItem("plan_dieta_usuario", planRaw);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Error consultando Planes en Supabase:", e);
+                }
+            }
+
+            planParsedDias = parsePlanDiasDetalladosAliment(planRaw);
+
+            // Auto-seleccionar el día de la semana de hoy
+            if (planParsedDias && planParsedDias.length > 0) {
+                const todayName = DIAS_MAP[new Date().getDay()];
+                const foundIdx = planParsedDias.findIndex(d => normalizeStr(d.dia).includes(todayName));
+                selectedDayIndex = foundIdx !== -1 ? foundIdx : 0;
+            }
+
+            renderUI();
+        }
+
+        // ── 4. RENDERIZADO PRINCIPAL ──
+        function renderUI() {
+            const heroContainer = document.getElementById("diet-hero-container");
+            const daysNavWrapper = document.getElementById("days-nav-wrapper");
+            const dayFocusCard = document.getElementById("day-focus-card");
+            const mealsContainer = document.getElementById("meals-container");
+            const dietTipsCard = document.getElementById("diet-tips-card");
+
+            if (!planParsedDias || planParsedDias.length === 0) {
+                // Estado Vacío
+                daysNavWrapper.style.display = "none";
+                dayFocusCard.style.display = "none";
+                mealsContainer.style.display = "none";
+                dietTipsCard.style.display = "none";
+
+                heroContainer.innerHTML = `
+                    <div class="plan-empty-card">
+                        <div class="plan-empty-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                                <path d="M7 2v20"></path>
+                                <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                            </svg>
+                        </div>
+                        <h2 class="plan-empty-title">Sin Plan Nutricional</h2>
+                        <p class="plan-empty-desc">Generá un plan de alimentación semanal personalizado con inteligencia artificial adaptado a tus metas calóricas y biométricas.</p>
+                        <button class="btn-primary-action" id="btn-open-ai-empty" style="margin-top: 8px;">
+                            <span>Crear Plan con IA</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+
+                document.getElementById("btn-open-ai-empty")?.addEventListener("click", openAiGeneratorModal);
+                return;
+            }
+
+            // Estado Activo
+            daysNavWrapper.style.display = "block";
+            dayFocusCard.style.display = "flex";
+            mealsContainer.style.display = "block";
+
+            // 1. Render Hero Card Activa
+            const avgCalories = Math.round(
+                planParsedDias.reduce((acc, d) => acc + (d.calorias_objetivo || 2400), 0) / planParsedDias.length
+            );
+
+            heroContainer.innerHTML = `
+                <div class="plan-hero-card">
+                    <div class="plan-hero-top">
+                        <span class="plan-badge-tag highlight">PLAN NUTRICIONAL ACTIVO</span>
+                        <div class="plan-hero-actions">
+                            <button class="btn-icon-hero" id="btn-hero-regen-ai" title="Regenerar plan con IA" aria-label="Regenerar plan con IA">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
+                                </svg>
+                            </button>
+                            <button class="btn-icon-hero btn-danger-action" id="btn-hero-delete" title="Eliminar plan" aria-label="Eliminar plan">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="plan-hero-title">Plan de Alimentación Semanal</h2>
+                        <p class="plan-hero-desc">Estrategia nutricional adaptada para maximizar tu energía y composición corporal.</p>
+                    </div>
+                    <div class="plan-meta-row">
+                        <div class="plan-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>${planParsedDias.length} días configurados</span>
+                        </div>
+                        <div class="plan-meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2v20"></path>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <span>~${avgCalories.toLocaleString()} kcal / día</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("btn-hero-regen-ai")?.addEventListener("click", openAiGeneratorModal);
+            document.getElementById("btn-hero-delete")?.addEventListener("click", confirmarEliminarPlan);
+
+            // 2. Render Píldoras de Días
+            const daysNavContainer = document.getElementById("days-nav-container");
+            daysNavContainer.innerHTML = "";
+
+            planParsedDias.forEach((d, idx) => {
+                const btn = document.createElement("button");
+                btn.className = `day-pill-btn ${idx === selectedDayIndex ? "is-active" : ""}`;
+                btn.textContent = d.dia;
+                btn.addEventListener("click", () => {
+                    selectedDayIndex = idx;
+                    renderUI();
+                    btn.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                });
+                daysNavContainer.appendChild(btn);
+            });
+
+            // 3. Render Cabecera del Día Seleccionado
+            const currentDay = planParsedDias[selectedDayIndex];
+            if (currentDay) {
+                document.getElementById("day-focus-title").textContent = currentDay.dia;
+                document.getElementById("day-cal-val").textContent = currentDay.calorias_objetivo ? currentDay.calorias_objetivo.toLocaleString() : "2.400";
+                document.getElementById("macro-c-val").textContent = `${currentDay.macros.carbohidratos}%`;
+                document.getElementById("macro-p-val").textContent = `${currentDay.macros.proteinas}%`;
+                document.getElementById("macro-f-val").textContent = `${currentDay.macros.grasas}%`;
+
+                // 4. Render Comidas del Día
+                const mealsList = document.getElementById("meals-list");
+                mealsList.innerHTML = "";
+                document.getElementById("meals-count-badge").textContent = `${currentDay.comidas.length} comidas`;
+
+                currentDay.comidas.forEach((meal, mealIdx) => {
+                    const card = document.createElement("div");
+                    card.className = "meal-card";
+                    const kcalChip = meal.calorias_aprox ? `<span class="meal-kcal-chip">${Math.round(meal.calorias_aprox)} kcal</span>` : "";
+
+                    card.innerHTML = `
+                        <div class="meal-card-top">
+                            <span class="meal-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>${escapeHtml(meal.nombre)}</span>
+                            </span>
+                            ${kcalChip}
+                        </div>
+                        <h3 class="meal-title">${escapeHtml(meal.descripcion.split("\n")[0] || meal.nombre)}</h3>
+                        ${meal.descripcion ? `<p class="meal-desc">${escapeHtml(meal.descripcion)}</p>` : ""}
+                        <div class="meal-card-footer">
+                            <span class="meal-view-link">
+                                <span>Ver detalle</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    `;
+
+                    card.addEventListener("click", () => openMealDetailModal(meal, currentDay.dia));
+                    mealsList.appendChild(card);
+                });
+
+                // 5. Render Tips y Recomendaciones
+                const tipsList = document.getElementById("diet-tips-list");
+                tipsList.innerHTML = "";
+                const allTips = [...(currentDay.recomendaciones || []), ...(currentDay.tips || [])];
+
+                if (allTips.length > 0) {
+                    dietTipsCard.style.display = "flex";
+                    allTips.slice(0, 3).forEach(t => {
+                        const li = document.createElement("li");
+                        li.className = "diet-tip-item";
+                        li.innerHTML = `<span class="diet-tip-bullet">✦</span><span>${escapeHtml(t)}</span>`;
+                        tipsList.appendChild(li);
+                    });
+                } else {
+                    dietTipsCard.style.display = "none";
+                }
+
+                // Modal resumen del día
+                document.getElementById("btn-open-day-summary").onclick = () => openDaySummaryModal(currentDay);
+            }
+        }
+
+        const escapeHtml = (str) =>
+            String(str ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+
+        // ── 5. DETALLE DE COMIDA (MODAL) ──
+        function openMealDetailModal(meal, diaNombre) {
+            const modal = document.getElementById("modal-meal-detail-backdrop");
+            document.getElementById("modal-meal-name").textContent = meal.nombre;
+            document.getElementById("modal-meal-badge").textContent = diaNombre;
+            document.getElementById("modal-meal-kcal").textContent = meal.calorias_aprox ? `${Math.round(meal.calorias_aprox)} kcal` : "Calorías según porción";
+            document.getElementById("modal-meal-desc").textContent = meal.descripcion || "Sin descripción adicional provista.";
+
+            modal.classList.add("is-open");
+        }
+
+        function closeMealDetailModal() {
+            document.getElementById("modal-meal-detail-backdrop")?.classList.remove("is-open");
+        }
+
+        // ── 6. RESUMEN DEL DÍA (MODAL) ──
+        function openDaySummaryModal(diaInfo) {
+            const modal = document.getElementById("modal-day-summary-backdrop");
+            document.getElementById("modal-day-summary-title").textContent = `Resumen · ${diaInfo.dia}`;
+            document.getElementById("summary-macro-c").textContent = `${diaInfo.macros.carbohidratos}%`;
+            document.getElementById("summary-macro-p").textContent = `${diaInfo.macros.proteinas}%`;
+            document.getElementById("summary-macro-f").textContent = `${diaInfo.macros.grasas}%`;
+
+            const recomsList = document.getElementById("modal-recoms-list");
+            recomsList.innerHTML = "";
+            const recoms = diaInfo.recomendaciones && diaInfo.recomendaciones.length > 0
+                ? diaInfo.recomendaciones
+                : ["Asegurar una ingesta hídrica de 2 a 3 litros al día.", "Distribuir las proteínas equitativamente en cada comida."];
+            recoms.forEach(r => {
+                const li = document.createElement("li");
+                li.className = "diet-tip-item";
+                li.innerHTML = `<span class="diet-tip-bullet">✦</span><span>${escapeHtml(r)}</span>`;
+                recomsList.appendChild(li);
+            });
+
+            const tipsList = document.getElementById("modal-tips-list");
+            tipsList.innerHTML = "";
+            const tips = diaInfo.tips && diaInfo.tips.length > 0
+                ? diaInfo.tips
+                : ["Si entrenás temprano, consumí carbohidratos de fácil digestión.", "Priorizá descansar al menos 7-8 horas para optimizar el metabolismo."];
+            tips.forEach(t => {
+                const li = document.createElement("li");
+                li.className = "diet-tip-item";
+                li.innerHTML = `<span class="diet-tip-bullet">✦</span><span>${escapeHtml(t)}</span>`;
+                tipsList.appendChild(li);
+            });
+
+            modal.classList.add("is-open");
+        }
+
+        function closeDaySummaryModal() {
+            document.getElementById("modal-day-summary-backdrop")?.classList.remove("is-open");
+        }
+
+        // ── 7. GENERADOR DE PLAN CON IA (MODAL & LOGIC) ──
+        function openAiGeneratorModal() {
+            const modal = document.getElementById("modal-ai-generator-backdrop");
+            const body = document.getElementById("ai-generator-body");
+            const loader = document.getElementById("ai-loading-wrap");
+
+            body.style.display = "flex";
+            loader.style.display = "none";
+
+            // Cargar biometría
+            document.getElementById("bio-age").textContent = localStorage.getItem("edad_usuario") || "24";
+            document.getElementById("bio-height").textContent = (localStorage.getItem("altura_usuario") || "175") + "cm";
+            document.getElementById("bio-weight").textContent = (localStorage.getItem("peso_usuario") || "70") + "kg";
+            document.getElementById("bio-goal").textContent = (localStorage.getItem("peso_objetivo_usuario") || "70") + "kg";
+
+            modal.classList.add("is-open");
+        }
+
+        function closeAiGeneratorModal() {
+            document.getElementById("modal-ai-generator-backdrop")?.classList.remove("is-open");
+        }
+
+        // Selección de opciones en modal de IA
+        document.querySelectorAll(".option-select-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const group = card.getAttribute("data-opt-group");
+                document.querySelectorAll(`.option-select-card[data-opt-group="${group}"]`).forEach(c => c.classList.remove("is-selected"));
+                card.classList.add("is-selected");
+            });
+        });
+
+        // Envío de generación IA
+        async function submitGenerateDietPlan() {
+            const objetivo = document.querySelector('.option-select-card[data-opt-group="objetivo"].is-selected')?.getAttribute("data-value") || "grasa";
+            const intensidad = document.querySelector('.option-select-card[data-opt-group="intensidad"].is-selected')?.getAttribute("data-value") || "media";
+
+            const body = document.getElementById("ai-generator-body");
+            const loader = document.getElementById("ai-loading-wrap");
+            const statusText = document.getElementById("ai-loading-status-text");
+
+            body.style.display = "none";
+            loader.style.display = "flex";
+
+            const steps = [
+                "Analizando requerimiento calórico y TDEE...",
+                "Optimizando distribución de macronutrientes...",
+                "Diseñando estructura de comidas para la semana...",
+                "Ajustando alimentos según objetivos..."
+            ];
+            let stepIdx = 0;
+            const interval = setInterval(() => {
+                stepIdx = (stepIdx + 1) % steps.length;
+                statusText.textContent = steps[stepIdx];
+            }, 2500);
+
+            try {
+                const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                const perfil = {
+                    Altura: localStorage.getItem("altura_usuario") || "175",
+                    Peso_actual: localStorage.getItem("peso_usuario") || "70",
+                    Peso_objetivo: localStorage.getItem("peso_objetivo_usuario") || "70",
+                    Edad: localStorage.getItem("edad_usuario") || "25",
+                };
+
+                // 1. Llamar a Edge Function /gen_plan_alimenta
+                let planAlimentaObj;
+                try {
+                    const edgeRes = await fetch("/gen_plan_alimenta", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            idioma: "es",
+                            objetivo,
+                            intensidad,
+                            ...perfil
+                        })
+                    });
+                    if (!edgeRes.ok) throw new Error("Fallo al contactar /gen_plan_alimenta");
+                    planAlimentaObj = await edgeRes.json();
+                } catch (edgeErr) {
+                    console.warn("Fallo en /gen_plan_alimenta, intentando vía backend:", edgeErr);
+                    // Fallback
+                    const backRes = await fetch("/generar_plan_alimentacion", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            id_usuario: userId,
+                            idioma: "es",
+                            objetivo,
+                            intensidad,
+                            ...perfil
+                        })
+                    });
+                    if (!backRes.ok) throw new Error("No se pudo generar el plan con el servidor.");
+                    const dataBack = await backRes.json();
+                    planAlimentaObj = dataBack.plan_alimenta || dataBack;
+                }
+
+                clearInterval(interval);
+
+                const planAlimentaToStore = typeof planAlimentaObj === "string" ? planAlimentaObj : JSON.stringify(planAlimentaObj);
+
+                // 2. Persistir en localStorage
+                localStorage.setItem("plan_dieta_usuario", planAlimentaToStore);
+                localStorage.setItem("dieta_objetivo", objetivo);
+                localStorage.setItem("dieta_intensidad", intensidad);
+
+                // 3. Sincronizar con Supabase Planes
+                if (userId) {
+                    try {
+                        await supabase
+                            .from("Planes")
+                            .upsert({ ID_user: userId, Plan_alimenta: planAlimentaToStore }, { onConflict: "ID_user" });
+                    } catch (e) {
+                        console.warn("Aviso al guardar Plan_alimenta en Supabase:", e);
+                    }
+                }
+
+                closeAiGeneratorModal();
+
+                // 4. Re-renderizar la vista inmediatamente
+                await cargarPlanAlimentacion();
+
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Plan Generado!",
+                    text: "Tu plan nutricional ha sido creado y sincronizado exitosamente.",
+                    background: "#181a1f",
+                    color: "#fff",
+                    confirmButtonColor: "#ffffff"
+                });
+
+            } catch (err) {
+                clearInterval(interval);
+                body.style.display = "flex";
+                loader.style.display = "none";
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error al generar",
+                    text: err.message || "No se pudo generar el plan. Por favor, revisá tu conexión.",
+                    background: "#181a1f",
+                    color: "#fff",
+                    confirmButtonColor: "#ffffff"
+                });
+            }
+        }
+
+        // ── 8. ELIMINAR PLAN ──
+        async function confirmarEliminarPlan() {
+            const result = await Swal.fire({
+                title: "¿Eliminar plan nutricional?",
+                text: "Esta acción borrará tu plan de alimentación actual de tu cuenta.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#ff5252",
+                cancelButtonColor: "#262932",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                background: "#181a1f",
+                color: "#ffffff"
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    localStorage.setItem("plan_dieta_usuario", "Ninguno");
+                    const userId = currentUser?.id || localStorage.getItem("id_usuario");
+                    if (userId) {
+                        await supabase.from("Planes").update({ Plan_alimenta: "Ninguno" }).eq("ID_user", userId);
+                    }
+                    await cargarPlanAlimentacion();
+
+                    Swal.fire({
+                        title: "Plan Eliminado",
+                        text: "Tu plan de alimentación ha sido eliminado.",
+                        icon: "success",
+                        background: "#181a1f",
+                        color: "#fff",
+                        confirmButtonColor: "#ffffff"
+                    });
+                } catch (err) {
+                    Swal.fire({
+                        title: "Error",
+                        text: err.message || "No se pudo eliminar el plan.",
+                        icon: "error",
+                        background: "#181a1f",
+                        color: "#fff",
+                        confirmButtonColor: "#ffffff"
+                    });
+                }
+            }
+        }
+
+        // ── 9. INICIALIZACIÓN ──
+        async function initApp() {
+            // Inicializar caché visual inmediata
+            const cachedName = localStorage.getItem("username_usuario");
+            if (cachedName) document.getElementById("header-username-text").textContent = cachedName;
+            const cachedAvatar = localStorage.getItem("avatar_usuario");
+            if (cachedAvatar) document.getElementById("header-user-avatar").src = cachedAvatar;
+
+            // Listeners de modales
+            document.getElementById("btn-close-ai-modal")?.addEventListener("click", closeAiGeneratorModal);
+            document.getElementById("btn-submit-generate-ai")?.addEventListener("click", submitGenerateDietPlan);
+            document.getElementById("modal-ai-generator-backdrop")?.addEventListener("click", (e) => {
+                if (e.target.id === "modal-ai-generator-backdrop") closeAiGeneratorModal();
+            });
+
+            document.getElementById("btn-close-meal-modal")?.addEventListener("click", closeMealDetailModal);
+            document.getElementById("modal-meal-detail-backdrop")?.addEventListener("click", (e) => {
+                if (e.target.id === "modal-meal-detail-backdrop") closeMealDetailModal();
+            });
+
+            document.getElementById("btn-close-day-summary-modal")?.addEventListener("click", closeDaySummaryModal);
+            document.getElementById("modal-day-summary-backdrop")?.addEventListener("click", (e) => {
+                if (e.target.id === "modal-day-summary-backdrop") closeDaySummaryModal();
+            });
+
+            // Cargar perfil y plan
+            await fetchUserProfile();
+            await cargarPlanAlimentacion();
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initApp);
+        } else {
+            initApp();
+        }
+    </script>
 </body>
 
 </html>

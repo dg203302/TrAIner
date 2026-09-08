@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Completa tus Datos · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --accent: #9df3ff;
+            --accent-glow: rgba(157, 243, 255, 0.15);
+            --accent-green: #2ed573;
+            --danger: #ff5252;
+            --border-card: rgba(255, 255, 255, 0.06);
+            --border-card-hover: rgba(255, 255, 255, 0.16);
+            --radius-card: 24px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 24px 16px 40px;
+        }
+
+        /* Contenedor central responsivo */
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ── CABECERA / HERO ── */
+        .header-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 6px;
+        }
+
+        .brand-logo-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            object-fit: contain;
+            box-shadow: 0 4px 12px rgba(157, 243, 255, 0.2);
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        .brand-name span {
+            color: var(--accent);
+        }
+
+        .badge-step {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            background: rgba(157, 243, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(157, 243, 255, 0.25);
+            letter-spacing: 0.2px;
+        }
+
+        /* Hero Text */
+        .hero-banner {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hero-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            line-height: 1.15;
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }
+
+        /* ── GRID DE MÉTRICAS (4 CARDS) ── */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card-metric {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 126px;
+            cursor: pointer;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-metric::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 1px transparent;
+            transition: box-shadow 0.2s ease;
+            pointer-events: none;
+        }
+
+        .card-metric:hover {
+            background: var(--bg-card-elevated);
+            border-color: var(--border-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+        }
+
+        .card-metric:hover::after {
+            box-shadow: inset 0 0 0 1px rgba(157, 243, 255, 0.2);
+        }
+
+        .card-metric:active {
+            transform: scale(0.97);
+        }
+
+        .metric-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .metric-icon-box svg {
+            width: 19px;
+            height: 19px;
+            stroke-width: 2.1;
+        }
+
+        .metric-btn-edit {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.18s ease;
+        }
+
+        .card-metric:hover .metric-btn-edit {
+            background: #ffffff;
+            color: #0c0d10;
+            border-color: #ffffff;
+        }
+
+        .metric-btn-edit svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+        }
+
+        .metric-body {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-val-row {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .metric-val-number {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .metric-val-unit {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        /* ── PREVIEW CARD BMI & METRICAS DERIVADAS ── */
+        .card-summary-preview {
+            background: linear-gradient(145deg, #16181f 0%, #121318 100%);
+            border: 1px solid rgba(157, 243, 255, 0.16);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .summary-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            box-shadow: 0 0 10px rgba(157, 243, 255, 0.6);
+        }
+
+        .bmi-pill {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            background: rgba(46, 213, 115, 0.12);
+            color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.3);
+        }
+
+        .summary-stats-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-val {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* ── BOTÓN PRINCIPAL DE GUARDAR ── */
+        .btn-submit-primary {
+            width: 100%;
+            height: 54px;
+            border-radius: 18px;
+            background: #ffffff;
+            color: #0c0d10;
+            border: none;
+            font-family: inherit;
+            font-size: 15.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.16);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit-primary:hover {
+            background: #f0f0f0;
+            transform: scale(1.02);
+            box-shadow: 0 10px 28px rgba(255, 255, 255, 0.22);
+        }
+
+        .btn-submit-primary:active {
+            transform: scale(0.97);
+        }
+
+        .btn-submit-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit-primary svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.3;
+        }
+
+        /* ── CARD INFORMATIVA (COPY DE TRANSPARENCIA) ── */
+        .card-info-copy {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-copy-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-copy-desc {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-tip-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-tip-icon {
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-tip-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .info-tip-text {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* ═══════════════════════════════════════════════════ */
+        /* IOS STYLE DRUM / WHEEL PICKER MODAL (SLIDERS CONFIG)*/
+        /* ═══════════════════════════════════════════════════ */
+        .ios-drum-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 2200;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ios-drum-modal-backdrop.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ios-drum-sheet {
+            width: 100%;
+            max-width: 440px;
+            background: #0c0d10;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: none;
+            padding: 20px 22px calc(24px + env(safe-area-inset-bottom, 20px)) 22px;
+            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.95);
+            transform: translateY(100%);
+            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ios-drum-modal-backdrop.is-open .ios-drum-sheet {
+            transform: translateY(0);
+        }
+
+        .ios-drum-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .ios-drum-btn-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .ios-drum-btn-circle:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.04);
+        }
+
+        .ios-drum-btn-circle:active {
+            transform: scale(0.94);
+        }
+
+        .ios-drum-btn-pill-save {
+            background: #ffffff;
+            color: #0c0d10;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 14.5px;
+            padding: 9px 24px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+            transition: all 0.15s ease;
+        }
+
+        .ios-drum-btn-pill-save:hover {
+            background: #f2f2f2;
+            transform: scale(1.03);
+        }
+
+        .ios-drum-btn-pill-save:active {
+            transform: scale(0.96);
+        }
+
+        .ios-drum-headings {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .ios-drum-title {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #ffffff;
+            line-height: 1.15;
+        }
+
+        .ios-drum-subtitle {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .ios-drum-unit-label {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 16px;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+
+        /* ── WHEEL PICKER CONTAINER ── */
+        .ios-drum-wheel-box {
+            position: relative;
+            height: 216px;
+            width: 100%;
+            overflow: hidden;
+            margin: 4px 0 16px 0;
+            display: flex;
+            justify-content: center;
+            background: #0c0d10;
+        }
+
+        .ios-drum-selection-frame {
+            position: absolute;
+            top: 72px;
+            left: 0;
+            right: 0;
+            height: 72px;
+            border-top: 1px solid rgba(255, 255, 255, 0.14);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .ios-drum-gradient-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: linear-gradient(to bottom, #0c0d10 25%, rgba(12, 13, 16, 0) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .ios-drum-gradient-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: linear-gradient(to top, #0c0d10 25%, rgba(12, 13, 16, 0) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .ios-drum-columns {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .ios-drum-col {
+            height: 216px;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 72px 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 130px;
+        }
+
+        .ios-drum-col::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ios-drum-item {
+            height: 72px;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: center;
+            font-size: 56px;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            color: rgba(255, 255, 255, 0.22);
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.15s ease, transform 0.15s ease;
+            font-variant-numeric: tabular-nums;
+            width: 100%;
+        }
+
+        .ios-drum-item.is-selected {
+            color: #ffffff;
+            transform: scale(1.02);
+        }
+
+        /* Modificador 3 columnas (Edad: Día, Mes, Año) */
+        .ios-drum-wheel-box.cols-3 .ios-drum-columns {
+            gap: 8px;
+        }
+
+        .ios-drum-wheel-box.cols-3 .ios-drum-col {
+            width: 96px;
+        }
+
+        .ios-drum-wheel-box.cols-3 .ios-drum-item {
+            font-size: 34px;
+            letter-spacing: -0.6px;
+        }
+
+        /* Modificador 1 columna (Altura) */
+        .ios-drum-wheel-box.cols-1 .ios-drum-col {
+            width: 200px;
+        }
+
+        .ios-drum-wheel-box.cols-1 .ios-drum-item {
+            font-size: 60px;
+        }
+
+        /* Indicador en vivo inferior del modal */
+        .ios-drum-footer-card {
+            background: #14161c;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ios-drum-live-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .ios-drum-live-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        /* Spinner de carga */
+        .spinner-inline {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- ── CABECERA BRAND & PASO ── -->
+        <header class="header-brand">
+            <div class="brand-logo-row">
+                <img src="/Icons/2.png" alt="TrAIner" class="brand-logo-img">
+                <span class="brand-name">Tr<span>AI</span>ner</span>
+            </div>
+            <span class="badge-step" data-i18n-en="Initial Profile">Perfil Inicial</span>
+        </header>
+
+        <!-- ── HERO ── -->
+        <section class="hero-banner">
+            <h1 class="hero-title" data-i18n-en="Set your baseline">Completa tus datos</h1>
+            <p class="hero-subtitle"
+                data-i18n-en="We use your age, height, and weights to calculate calories, progression, and realistic plans tailored to your body.">
+                Tu edad, estatura y pesos nos permiten calcular tu ritmo de progresión, rangos óptimos y planes
+                realistas adaptados a vos.
+            </p>
+        </section>
+
+        <!-- ── 4 TARJETAS DE SELECCIÓN CON SLIDERS DRUM ── -->
+        <section class="metrics-grid" aria-label="Métricas corporales">
+            <!-- 1. EDAD -->
+            <div class="card-metric" id="card-metric-edad" role="button" tabindex="0" aria-label="Seleccionar edad">
+                <div class="metric-top-row">
+                    <div class="metric-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="metric-btn-edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-val-row">
+                        <span class="metric-val-number" id="display-val-edad">25</span>
+                        <span class="metric-val-unit" data-i18n-en="yrs">años</span>
+                    </div>
+                    <span class="metric-label" data-i18n-en="Age / Birth">Edad / Fecha</span>
+                </div>
+            </div>
+
+            <!-- 2. ALTURA -->
+            <div class="card-metric" id="card-metric-altura" role="button" tabindex="0" aria-label="Seleccionar altura">
+                <div class="metric-top-row">
+                    <div class="metric-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                        </svg>
+                    </div>
+                    <div class="metric-btn-edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-val-row">
+                        <span class="metric-val-number" id="display-val-altura">175</span>
+                        <span class="metric-val-unit">cm</span>
+                    </div>
+                    <span class="metric-label" data-i18n-en="Height">Estatura</span>
+                </div>
+            </div>
+
+            <!-- 3. PESO ACTUAL -->
+            <div class="card-metric" id="card-metric-peso" role="button" tabindex="0" aria-label="Seleccionar peso actual">
+                <div class="metric-top-row">
+                    <div class="metric-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="m12 14 4-4"></path>
+                            <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
+                        </svg>
+                    </div>
+                    <div class="metric-btn-edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-val-row">
+                        <span class="metric-val-number" id="display-val-peso">72.0</span>
+                        <span class="metric-val-unit">kg</span>
+                    </div>
+                    <span class="metric-label" data-i18n-en="Current Weight">Peso Actual</span>
+                </div>
+            </div>
+
+            <!-- 4. PESO OBJETIVO -->
+            <div class="card-metric" id="card-metric-peso-obj" role="button" tabindex="0" aria-label="Seleccionar peso objetivo">
+                <div class="metric-top-row">
+                    <div class="metric-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                    <div class="metric-btn-edit">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="metric-body">
+                    <div class="metric-val-row">
+                        <span class="metric-val-number" id="display-val-peso-obj">75.0</span>
+                        <span class="metric-val-unit">kg</span>
+                    </div>
+                    <span class="metric-label" data-i18n-en="Goal Weight">Peso Objetivo</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── PREVIEW DE COMPOSICIÓN & BMI ESTIMADO ── -->
+        <section class="card-summary-preview" id="card-summary-preview">
+            <div class="summary-header">
+                <div class="summary-title">
+                    <span class="summary-dot"></span>
+                    <span data-i18n-en="Calculated Profile">Diagnóstico de Perfil</span>
+                </div>
+                <span class="bmi-pill" id="display-bmi-badge">BMI: 23.5 · Normal</span>
+            </div>
+            <div class="summary-stats-row">
+                <div class="stat-item">
+                    <span class="stat-label" data-i18n-en="Objective Focus">Enfoque</span>
+                    <span class="stat-val" id="display-enfoque-text">Ganancia (+3.0 kg)</span>
+                </div>
+                <div class="stat-item" style="text-align: right;">
+                    <span class="stat-label" data-i18n-en="Recommended Pace">Progresión</span>
+                    <span class="stat-val" id="display-ritmo-text">Gradual y Sostenible</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── BOTÓN DE ACCIÓN PRINCIPAL ── -->
+        <button type="button" class="btn-submit-primary" id="btn-submit-datos">
+            <span id="btn-submit-text" data-i18n-en="Save and Continue">Guardar y Continuar</span>
+            <svg id="btn-submit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+            </svg>
+        </button>
+
+        <!-- ── EXPLICACIÓN TRANSPARENTE ── -->
+        <section class="card-info-copy">
+            <h2 class="info-copy-title" data-i18n-en="How we use your metrics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 17px; height: 17px; color: var(--accent);">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" x2="12" y1="16" y2="12"></line>
+                    <line x1="12" x2="12.01" y1="8" y2="8"></line>
+                </svg>
+                ¿Para qué sirven estos datos?
+            </h2>
+            <p class="info-copy-desc"
+                data-i18n-en="We don't look for perfection, but a realistic starting point. Height and weight allow the AI to adapt rep schemes, training volume, and caloric targets without extremes.">
+                No buscamos perfección, sino un punto de partida realista. Tu peso, altura y edad permiten que la IA
+                calibre los descansos, la intensidad del entrenamiento y el balance calórico para evitar planes
+                genéricos.
+            </p>
+            <div class="info-tip-box">
+                <div class="info-tip-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                    </svg>
+                </div>
+                <span class="info-tip-text"
+                    data-i18n-en="Tip: You can always fine-tune or update these values anytime from your Profile Settings.">
+                    Podrás reajustar tus métricas en cualquier momento desde tu Configuración de Perfil.
+                </span>
+            </div>
+        </section>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- MODAL DE SLIDERS IOS DRUM PICKER (ORIGINAL CONFIG)   -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div class="ios-drum-modal-backdrop" id="ios-drum-backdrop" aria-hidden="true">
+        <div class="ios-drum-sheet" id="ios-drum-sheet">
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="ios-drum-btn-close" aria-label="Cerrar modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round" style="width: 20px; height: 20px;">
+                        <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                </button>
+                <div class="ios-drum-header-right">
+                    <button type="button" class="ios-drum-btn-pill-save" id="ios-drum-btn-save" data-i18n-en="Done">Listo</button>
+                </div>
+            </div>
+
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title" id="ios-drum-title">Título</h2>
+                <p class="ios-drum-subtitle" id="ios-drum-subtitle">Subtítulo explicativo</p>
+            </div>
+
+            <div class="ios-drum-unit-label" id="ios-drum-unit-label">Unidad</div>
+
+            <div class="ios-drum-wheel-box" id="ios-drum-wheel-box">
+                <div class="ios-drum-selection-frame"></div>
+                <div class="ios-drum-gradient-top"></div>
+                <div class="ios-drum-gradient-bottom"></div>
+                <div class="ios-drum-columns" id="ios-drum-columns"></div>
+            </div>
+
+            <div class="ios-drum-footer-card">
+                <span class="ios-drum-live-title" data-i18n-en="Live Selection:">Selección actual:</span>
+                <span class="ios-drum-live-val" id="ios-drum-live-val">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── LÓGICA PRINCIPAL (ES MODULE CONEXIÓN SUPABASE) ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                storage: localStorage
+            }
+        });
+
+        // ── ESTADO REACTIVO DE LAS MÉTRICAS ──
+        const state = {
+            edad: 25,
+            birthDate: "2000-06-15",
+            altura: 175,
+            pesoAct: 72.0,
+            pesoObj: 75.0,
+            userId: null
+        };
+
+        const isEnglish = () => (window.UIIdioma?.getIdioma?.() || "es") === "en";
+        const tLang = (es, en) => (isEnglish() ? en : es);
+
+        // ── ACTUALIZACIÓN DE INTERFAZ Y BMI ──
+        function renderDisplays() {
+            document.getElementById("display-val-edad").textContent = state.edad;
+            document.getElementById("display-val-altura").textContent = state.altura;
+            document.getElementById("display-val-peso").textContent = state.pesoAct.toFixed(1);
+            document.getElementById("display-val-peso-obj").textContent = state.pesoObj.toFixed(1);
+
+            // Calcular BMI
+            const hM = state.altura / 100;
+            if (hM > 0 && state.pesoAct > 0) {
+                const bmi = (state.pesoAct / (hM * hM)).toFixed(1);
+                let catEs = "Normal";
+                let catEn = "Normal";
+                let color = "#2ed573";
+                let bg = "rgba(46, 213, 115, 0.12)";
+
+                if (bmi < 18.5) {
+                    catEs = "Bajo peso";
+                    catEn = "Underweight";
+                    color = "#9df3ff";
+                    bg = "rgba(157, 243, 255, 0.12)";
+                } else if (bmi < 25) {
+                    catEs = "Normal";
+                    catEn = "Normal";
+                    color = "#2ed573";
+                    bg = "rgba(46, 213, 115, 0.12)";
+                } else if (bmi < 30) {
+                    catEs = "Sobrepeso";
+                    catEn = "Overweight";
+                    color = "#ffa502";
+                    bg = "rgba(255, 165, 2, 0.12)";
+                } else {
+                    catEs = "Obesidad";
+                    catEn = "Obesity";
+                    color = "#ff4757";
+                    bg = "rgba(255, 71, 87, 0.12)";
+                }
+
+                const badge = document.getElementById("display-bmi-badge");
+                badge.textContent = `BMI: ${bmi} · ${tLang(catEs, catEn)}`;
+                badge.style.color = color;
+                badge.style.borderColor = color;
+                badge.style.background = bg;
+            }
+
+            // Enfoque / Delta
+            const delta = state.pesoObj - state.pesoAct;
+            const enfText = document.getElementById("display-enfoque-text");
+            const ritText = document.getElementById("display-ritmo-text");
+
+            if (Math.abs(delta) < 0.5) {
+                enfText.textContent = tLang("Mantenimiento", "Maintenance");
+                ritText.textContent = tLang("Recomposición / Fuerza", "Recomp / Strength");
+            } else if (delta > 0) {
+                enfText.textContent = tLang(`Ganancia (+${delta.toFixed(1)} kg)`, `Surplus (+${delta.toFixed(1)} kg)`);
+                ritText.textContent = tLang("Hipertrofia progresiva", "Lean muscle growth");
+            } else {
+                enfText.textContent = tLang(`Déficit (${delta.toFixed(1)} kg)`, `Deficit (${delta.toFixed(1)} kg)`);
+                ritText.textContent = tLang("Pérdida de grasa gradual", "Gradual fat loss");
+            }
+        }
+
+        // ── SISTEMA DE SLIDERS IOS DRUM PICKER (IDÉNTICO A CONFIG.HTML) ──
+        let activeDrumController = null;
+
+        function closeDrumPicker() {
+            const backdrop = document.getElementById("ios-drum-backdrop");
+            if (backdrop) {
+                backdrop.classList.remove("is-open");
+                backdrop.setAttribute("aria-hidden", "true");
+            }
+            activeDrumController = null;
+        }
+
+        function openDrumPicker({
+            title = "",
+            subtitle = "",
+            unitLabel = "",
+            colsClass = "cols-1",
+            currentLogVal = "--",
+            columns = [],
+            onLiveChange = null,
+            onSave = null
+        }) {
+            const backdrop = document.getElementById("ios-drum-backdrop");
+            const sheet = document.getElementById("ios-drum-sheet");
+            const titleEl = document.getElementById("ios-drum-title");
+            const subEl = document.getElementById("ios-drum-subtitle");
+            const unitEl = document.getElementById("ios-drum-unit-label");
+            const wheelBox = document.getElementById("ios-drum-wheel-box");
+            const colsContainer = document.getElementById("ios-drum-columns");
+            const liveValEl = document.getElementById("ios-drum-live-val");
+            const btnSave = document.getElementById("ios-drum-btn-save");
+
+            if (!backdrop || !sheet) return;
+
+            titleEl.textContent = title;
+            subEl.textContent = subtitle;
+            unitEl.textContent = unitLabel;
+            liveValEl.textContent = currentLogVal;
+
+            wheelBox.className = "ios-drum-wheel-box " + colsClass;
+            colsContainer.innerHTML = "";
+
+            const columnControllers = [];
+            const selectedIndices = columns.map(c => c.defaultIndex ?? 0);
+
+            columns.forEach((colConfig, colIdx) => {
+                const colEl = document.createElement("div");
+                colEl.className = "ios-drum-col";
+                colEl.setAttribute("data-col-index", colIdx);
+
+                colEl.innerHTML = colConfig.items.map((item, itemIdx) => {
+                    const isSel = itemIdx === colConfig.defaultIndex;
+                    return `<div class="ios-drum-item ${isSel ? 'is-selected' : ''}" data-index="${itemIdx}">${item}</div>`;
+                }).join("");
+
+                colsContainer.appendChild(colEl);
+
+                const updateSelection = () => {
+                    const currentTop = colEl.scrollTop;
+                    const rawIdx = Math.round(currentTop / 72);
+                    const clampedIdx = Math.max(0, Math.min(colConfig.items.length - 1, rawIdx));
+
+                    if (selectedIndices[colIdx] !== clampedIdx) {
+                        selectedIndices[colIdx] = clampedIdx;
+                        const itemsDom = colEl.querySelectorAll(".ios-drum-item");
+                        itemsDom.forEach((el, i) => {
+                            if (i === clampedIdx) el.classList.add("is-selected");
+                            else el.classList.remove("is-selected");
+                        });
+
+                        if (onLiveChange) {
+                            onLiveChange(selectedIndices, columns.map(c => c.items), { titleEl, subEl, unitEl, liveValEl });
+                        }
+                    }
+                };
+
+                let scrollTicking = false;
+                colEl.addEventListener("scroll", () => {
+                    if (!scrollTicking) {
+                        requestAnimationFrame(() => {
+                            updateSelection();
+                            scrollTicking = false;
+                        });
+                        scrollTicking = true;
+                    }
+                }, { passive: true });
+
+                colEl.addEventListener("click", (e) => {
+                    const item = e.target.closest(".ios-drum-item");
+                    if (item) {
+                        const targetIdx = parseInt(item.getAttribute("data-index"), 10);
+                        if (!isNaN(targetIdx)) {
+                            colEl.scrollTo({ top: targetIdx * 72, behavior: "smooth" });
+                        }
+                    }
+                });
+
+                columnControllers.push({
+                    colEl,
+                    scrollToDefault: () => {
+                        const def = Math.max(0, Math.min(colConfig.items.length - 1, colConfig.defaultIndex || 0));
+                        colEl.scrollTop = def * 72;
+                    }
+                });
+            });
+
+            btnSave.onclick = async () => {
+                btnSave.disabled = true;
+                btnSave.style.opacity = "0.7";
+                try {
+                    if (onSave) {
+                        await onSave(selectedIndices, columns.map(c => c.items));
+                    }
+                    closeDrumPicker();
+                } finally {
+                    btnSave.disabled = false;
+                    btnSave.style.opacity = "1";
+                }
+            };
+
+            backdrop.classList.add("is-open");
+            backdrop.setAttribute("aria-hidden", "false");
+
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    columnControllers.forEach(c => c.scrollToDefault());
+                    if (onLiveChange) {
+                        onLiveChange(selectedIndices, columns.map(c => c.items), { titleEl, subEl, unitEl, liveValEl });
+                    }
+                }, 40);
+            });
+
+            activeDrumController = { close: closeDrumPicker };
+        }
+
+        // ── VINCULAR EVENTOS A LAS 4 TARJETAS CON SUS SLIDERS ──
+        function setupMetricSliders() {
+            // Cerrar modal al tap fuera o botón de flecha
+            document.getElementById("ios-drum-backdrop")?.addEventListener("click", (e) => {
+                if (e.target === e.currentTarget) closeDrumPicker();
+            });
+            document.getElementById("ios-drum-btn-close")?.addEventListener("click", () => {
+                closeDrumPicker();
+            });
+
+            // 1. EDITAR EDAD (3 Columnas: Día, Mes, Año)
+            document.getElementById("card-metric-edad")?.addEventListener("click", () => {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+
+                let defDay = 15;
+                let defMonth = 6;
+                let defYear = currentYear - state.edad;
+
+                if (state.birthDate && state.birthDate.includes("-")) {
+                    const parts = state.birthDate.split("-");
+                    if (parts.length === 3) {
+                        defYear = parseInt(parts[0], 10) || defYear;
+                        defMonth = parseInt(parts[1], 10) || defMonth;
+                        defDay = parseInt(parts[2], 10) || defDay;
+                    }
+                }
+
+                const days = [];
+                for (let d = 1; d <= 31; d++) days.push(String(d).padStart(2, "0"));
+
+                const months = [];
+                for (let m = 1; m <= 12; m++) months.push(String(m).padStart(2, "0"));
+
+                const years = [];
+                for (let y = 1930; y <= currentYear; y++) years.push(String(y));
+
+                const dayIdx = Math.max(0, Math.min(days.length - 1, defDay - 1));
+                const monthIdx = Math.max(0, Math.min(months.length - 1, defMonth - 1));
+                const yearIdx = Math.max(0, Math.min(years.length - 1, defYear - 1930));
+
+                const computeAge = (dStr, mStr, yStr) => {
+                    const d = parseInt(dStr, 10);
+                    const m = parseInt(mStr, 10);
+                    const y = parseInt(yStr, 10);
+                    let age = currentYear - y;
+                    const mDiff = (now.getMonth() + 1) - m;
+                    if (mDiff < 0 || (mDiff === 0 && now.getDate() < d)) {
+                        age--;
+                    }
+                    return Math.max(10, age);
+                };
+
+                openDrumPicker({
+                    title: tLang("Fecha de Nacimiento", "Date of Birth"),
+                    subtitle: tLang("Ajusta tu edad con el slider", "Adjust your birth date"),
+                    unitLabel: tLang("Día · Mes · Año", "Day · Month · Year"),
+                    colsClass: "cols-3",
+                    currentLogVal: `${state.edad} ${tLang("años", "yrs")}`,
+                    columns: [
+                        { items: days, defaultIndex: dayIdx },
+                        { items: months, defaultIndex: monthIdx },
+                        { items: years, defaultIndex: yearIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const selD = allItems[0][indices[0]];
+                        const selM = allItems[1][indices[1]];
+                        const selY = allItems[2][indices[2]];
+                        const calcAge = computeAge(selD, selM, selY);
+                        dom.subEl.textContent = `${calcAge} ${tLang("años", "years old")} (${selD}/${selM}/${selY})`;
+                        dom.liveValEl.textContent = `${calcAge} ${tLang("años", "yrs")}`;
+                    },
+                    onSave: (indices, allItems) => {
+                        const selD = allItems[0][indices[0]];
+                        const selM = allItems[1][indices[1]];
+                        const selY = allItems[2][indices[2]];
+                        const calcAge = computeAge(selD, selM, selY);
+
+                        state.edad = calcAge;
+                        state.birthDate = `${selY}-${selM}-${selD}`;
+                        renderDisplays();
+                    }
+                });
+            });
+
+            // 2. EDITAR ALTURA (1 Columna: 100 - 230 cm)
+            document.getElementById("card-metric-altura")?.addEventListener("click", () => {
+                const items = [];
+                for (let i = 100; i <= 230; i++) items.push(String(i));
+                const defaultIndex = Math.max(0, Math.min(items.length - 1, state.altura - 100));
+
+                openDrumPicker({
+                    title: tLang("Estatura / Altura", "Height"),
+                    subtitle: tLang("Desliza para seleccionar tu altura", "Slide to select your height"),
+                    unitLabel: tLang("Centímetros", "Centimeters"),
+                    colsClass: "cols-1",
+                    currentLogVal: `${state.altura} cm`,
+                    columns: [
+                        { items, defaultIndex }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const val = allItems[0][indices[0]];
+                        dom.subEl.textContent = `${tLang("Seleccionado", "Selected")}: ${val} cm`;
+                        dom.liveValEl.textContent = `${val} cm`;
+                    },
+                    onSave: (indices, allItems) => {
+                        const newVal = parseInt(allItems[0][indices[0]], 10);
+                        state.altura = newVal;
+                        renderDisplays();
+                    }
+                });
+            });
+
+            // 3. EDITAR PESO ACTUAL (2 Columnas: 35..220 + Decimales)
+            document.getElementById("card-metric-peso")?.addEventListener("click", () => {
+                const currentInt = Math.floor(state.pesoAct);
+                const currentDec = Math.round((state.pesoAct - currentInt) * 10);
+
+                const intItems = [];
+                for (let i = 35; i <= 220; i++) intItems.push(String(i));
+                const decItems = [".0", ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9"];
+
+                const intIdx = Math.max(0, Math.min(intItems.length - 1, currentInt - 35));
+                const decIdx = Math.max(0, Math.min(decItems.length - 1, currentDec));
+
+                openDrumPicker({
+                    title: tLang("Peso Actual", "Current Weight"),
+                    subtitle: tLang("Desliza para elegir tu peso en kilos", "Slide to pick your weight in kg"),
+                    unitLabel: tLang("Kilogramos", "Kilograms"),
+                    colsClass: "cols-2",
+                    currentLogVal: `${state.pesoAct.toFixed(1)} kg`,
+                    columns: [
+                        { items: intItems, defaultIndex: intIdx },
+                        { items: decItems, defaultIndex: decIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        const finalWeight = parseFloat(`${intP}${decP}`);
+                        dom.subEl.textContent = `${tLang("Seleccionado", "Selected")}: ${finalWeight.toFixed(1)} kg`;
+                        dom.liveValEl.textContent = `${finalWeight.toFixed(1)} kg`;
+                    },
+                    onSave: (indices, allItems) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        state.pesoAct = parseFloat(`${intP}${decP}`);
+                        renderDisplays();
+                    }
+                });
+            });
+
+            // 4. EDITAR PESO OBJETIVO (2 Columnas: 35..220 + Decimales)
+            document.getElementById("card-metric-peso-obj")?.addEventListener("click", () => {
+                const currentInt = Math.floor(state.pesoObj);
+                const currentDec = Math.round((state.pesoObj - currentInt) * 10);
+
+                const intItems = [];
+                for (let i = 35; i <= 220; i++) intItems.push(String(i));
+                const decItems = [".0", ".1", ".2", ".3", ".4", ".5", ".6", ".7", ".8", ".9"];
+
+                const intIdx = Math.max(0, Math.min(intItems.length - 1, currentInt - 35));
+                const decIdx = Math.max(0, Math.min(decItems.length - 1, currentDec));
+
+                openDrumPicker({
+                    title: tLang("Peso Objetivo", "Goal Weight"),
+                    subtitle: tLang("Tu peso meta o ideal a largo plazo", "Your long term goal weight"),
+                    unitLabel: tLang("Kilogramos", "Kilograms"),
+                    colsClass: "cols-2",
+                    currentLogVal: `${state.pesoObj.toFixed(1)} kg`,
+                    columns: [
+                        { items: intItems, defaultIndex: intIdx },
+                        { items: decItems, defaultIndex: decIdx }
+                    ],
+                    onLiveChange: (indices, allItems, dom) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        const finalWeight = parseFloat(`${intP}${decP}`);
+                        dom.subEl.textContent = `${tLang("Meta", "Target")}: ${finalWeight.toFixed(1)} kg`;
+                        dom.liveValEl.textContent = `${finalWeight.toFixed(1)} kg`;
+                    },
+                    onSave: (indices, allItems) => {
+                        const intP = allItems[0][indices[0]];
+                        const decP = allItems[1][indices[1]];
+                        state.pesoObj = parseFloat(`${intP}${decP}`);
+                        renderDisplays();
+                    }
+                });
+            });
+        }
+
+        // ── HIDRATACIÓN INICIAL DESDE SUPABASE & STORAGE ──
+        async function hydrateInitialData() {
+            // 1. Cargar caché de sessionStorage o localStorage
+            const localEdad = localStorage.getItem("edad_usuario") || sessionStorage.getItem("edad_temp");
+            const localAlt = localStorage.getItem("altura_usuario") || sessionStorage.getItem("alt_temp");
+            const localPeso = localStorage.getItem("peso_usuario") || sessionStorage.getItem("peso_act_temp");
+            const localPesoObj = localStorage.getItem("peso_objetivo_usuario") || sessionStorage.getItem("peso_desea_temp");
+            const localBirth = localStorage.getItem("fecha_nacimiento_usuario");
+
+            if (localEdad) state.edad = parseInt(localEdad, 10) || state.edad;
+            if (localAlt) state.altura = parseInt(localAlt, 10) || state.altura;
+            if (localPeso) state.pesoAct = parseFloat(localPeso) || state.pesoAct;
+            if (localPesoObj) state.pesoObj = parseFloat(localPesoObj) || state.pesoObj;
+            if (localBirth) state.birthDate = localBirth;
+
+            // 2. Comprobar sesión de Supabase
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user) {
+                    state.userId = user.id;
+
+                    // Si existen datos en Supabase, los cargamos
+                    const { data: fitData } = await supabase
+                        .from("Datos Fitness")
+                        .select("Altura, Peso, Peso_Obj, Edad")
+                        .eq("ID_user", user.id)
+                        .maybeSingle();
+
+                    if (fitData) {
+                        if (fitData.Altura) state.altura = Number(fitData.Altura);
+                        if (fitData.Peso) state.pesoAct = Number(fitData.Peso);
+                        if (fitData.Peso_Obj) state.pesoObj = Number(fitData.Peso_Obj);
+                        if (fitData.Edad) state.edad = Number(fitData.Edad);
+                    }
+                } else {
+                    state.userId = localStorage.getItem("id_usuario");
+                }
+            } catch (err) {
+                console.warn("Aviso recuperando sesión de Supabase:", err);
+                state.userId = localStorage.getItem("id_usuario");
+            }
+
+            renderDisplays();
+        }
+
+        // ── ACCIÓN DE GUARDADO Y CONEXIÓN CON BASE DE DATOS ──
+        async function guardarDatosUsuario() {
+            const btn = document.getElementById("btn-submit-datos");
+            const btnText = document.getElementById("btn-submit-text");
+            const btnIcon = document.getElementById("btn-submit-icon");
+
+            // Validaciones básicas de seguridad
+            if (!Number.isFinite(state.edad) || state.edad < 12 || state.edad > 120) {
+                Swal.fire({ icon: "error", title: "Error", text: tLang("Edad inválida", "Invalid age") });
+                return;
+            }
+            if (!Number.isFinite(state.altura) || state.altura < 100 || state.altura > 230) {
+                Swal.fire({ icon: "error", title: "Error", text: tLang("Altura inválida", "Invalid height") });
+                return;
+            }
+            if (!Number.isFinite(state.pesoAct) || state.pesoAct < 35 || state.pesoAct > 220) {
+                Swal.fire({ icon: "error", title: "Error", text: tLang("Peso actual inválido", "Invalid current weight") });
+                return;
+            }
+            if (!Number.isFinite(state.pesoObj) || state.pesoObj < 35 || state.pesoObj > 220) {
+                Swal.fire({ icon: "error", title: "Error", text: tLang("Peso objetivo inválido", "Invalid goal weight") });
+                return;
+            }
+
+            // Identificar usuario
+            let userId = state.userId;
+            if (!userId) {
+                const { data: { user } } = await supabase.auth.getUser();
+                userId = user?.id || localStorage.getItem("id_usuario");
+            }
+
+            if (!userId) {
+                Swal.fire({
+                    icon: "warning",
+                    title: tLang("Sesión no detectada", "No session found"),
+                    text: tLang("Inicia sesión para guardar tus métricas en tu cuenta.", "Please log in to save your metrics.")
+                });
+                return;
+            }
+
+            // Bloquear botón y mostrar spinner
+            btn.disabled = true;
+            btnText.textContent = tLang("Guardando...", "Saving...");
+            btnIcon.style.display = "none";
+            const spinner = document.createElement("span");
+            spinner.className = "spinner-inline";
+            btn.appendChild(spinner);
+
+            try {
+                // 1. Guardar en localStorage y sessionStorage de forma inmediata
+                localStorage.setItem("edad_usuario", String(state.edad));
+                localStorage.setItem("altura_usuario", String(state.altura));
+                localStorage.setItem("peso_usuario", String(state.pesoAct));
+                localStorage.setItem("peso_objetivo_usuario", String(state.pesoObj));
+                if (state.birthDate) {
+                    localStorage.setItem("fecha_nacimiento_usuario", state.birthDate);
+                }
+
+                sessionStorage.setItem("edad_temp", String(state.edad));
+                sessionStorage.setItem("alt_temp", String(state.altura));
+                sessionStorage.setItem("peso_act_temp", String(state.pesoAct));
+                sessionStorage.setItem("peso_desea_temp", String(state.pesoObj));
+
+                // 2. Llamada a la Edge Function /registrar_usuario_nuevo (idéntica al flujo original)
+                let edgeSuccess = false;
+                try {
+                    const response = await fetch("/registrar_usuario_nuevo", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            id_usuario: userId,
+                            edad: state.edad,
+                            altura: state.altura,
+                            peso_act: state.pesoAct,
+                            peso_desea: state.pesoObj
+                        })
+                    });
+                    if (response.ok) {
+                        edgeSuccess = true;
+                    } else {
+                        console.warn("Edge function retorno status no-200:", response.status);
+                    }
+                } catch (netErr) {
+                    console.warn("No se pudo invocar Edge Function /registrar_usuario_nuevo:", netErr);
+                }
+
+                // 3. Fallback / Sincronización directa con Supabase ("Datos Fitness")
+                const { error: upsertErr } = await supabase
+                    .from("Datos Fitness")
+                    .upsert({
+                        ID_user: userId,
+                        Altura: state.altura,
+                        Peso: state.pesoAct,
+                        Edad: state.edad,
+                        Peso_Obj: state.pesoObj
+                    }, { onConflict: "ID_user" });
+
+                if (upsertErr && !edgeSuccess) {
+                    throw new Error(upsertErr.message || "Error al sincronizar con Supabase");
+                }
+
+                // 4. Éxito
+                await Swal.fire({
+                    icon: "success",
+                    title: tLang("¡Datos Guardados!", "Data Saved!"),
+                    text: tLang("Tus métricas iniciales están listas. Redirigiendo...", "Your baseline metrics are ready. Redirecting..."),
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: "#181a1f",
+                    color: "#ffffff"
+                });
+
+                // Redirigir al dashboard moderno o al inicio
+                window.location.href = "/Templates/templates_nuevas/dashboard.html";
+
+            } catch (err) {
+                console.error("Error guardando datos:", err);
+                Swal.fire({
+                    icon: "error",
+                    title: tLang("Error al guardar", "Save error"),
+                    text: err.message || tLang("Hubo un problema al registrar tus datos.", "Could not save your metrics."),
+                    background: "#181a1f",
+                    color: "#ffffff"
+                });
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = tLang("Guardar y Continuar", "Save and Continue");
+                btnIcon.style.display = "block";
+                spinner.remove();
+            }
+        }
+
+        // ── INICIALIZACIÓN GENERAL ──
+        async function initApp() {
+            setupMetricSliders();
+            await hydrateInitialData();
+            document.getElementById("btn-submit-datos")?.addEventListener("click", guardarDatosUsuario);
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initApp, { once: true });
+        } else {
+            initApp();
+        }
+    </script>
+</body>
+
+</html>

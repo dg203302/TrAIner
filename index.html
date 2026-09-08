@@ -3,45 +3,92 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/Scripts/ui_transparencia_apply.js"></script>
-    <script>window.PT_CANVAS_MODE = "aggressive";</script>
-    <script src="/Scripts/ui_canvas_bg.js"></script>
-    <script src="/Scripts/ui_idioma.js"></script>
-    <link rel="stylesheet" href="/Styles/styles_verifi_usu_n.css">
-    <meta name="theme-color" content="#0A1226">
-    <link rel="manifest" href="/manifest.json" />
-    <title data-i18n-en="Verifying user">Verificando usuario</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202"
-        crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#06080c">
+    <title data-i18n-en="Verifying user · TrAIner">Verificando usuario · TrAIner</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- PWA y Scripts de Sistema -->
+    <link rel="manifest" href="/manifest.json">
+    <script src="/Scripts/ui_transparencia_apply.js"></script>
+    <script src="/Scripts/ui_idioma.js"></script>
+
+    <!-- Estilos de Verificación Renovados -->
+    <link rel="stylesheet" href="/Styles/styles_verifi_usu_n.css">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202" crossorigin="anonymous"></script>
 </head>
 
 <body>
+    <!-- Luces Ambientales -->
+    <div class="ambient-glow-top" aria-hidden="true"></div>
+    <div class="ambient-glow-bottom" aria-hidden="true"></div>
 
-    <main style="display: grid; place-items: center; min-height: 100vh; position: relative; z-index: 1;">
-        <div id="pt-global-loader" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-            <h1 class="loader-title" style="font-size: clamp(60px, 15vw, 100px); font-weight: 800; color: #fff; text-shadow: 0 4px 40px rgba(0,0,0,0.5); margin: 0 0 40px 0;">
-                Tr<span style="color: #6b52ff;">AI</span>ner
+    <!-- Contenedor Principal de Verificación -->
+    <main class="auth-verification-wrapper">
+        <section class="verification-card" id="pt-global-loader" aria-live="polite">
+            <!-- Isotipo de la Marca -->
+            <div class="brand-icon-wrap">
+                <img src="/Icons/2.png" alt="TrAIner Logo" class="brand-logo">
+            </div>
+
+            <!-- Etiqueta de Categoría -->
+            <span class="brand-pill-tag">
+                <span class="brand-pill-dot" aria-hidden="true"></span>
+                <span data-i18n-en="Intelligent Training">Entrenamiento Inteligente</span>
+            </span>
+
+            <!-- Título de la Aplicación -->
+            <h1 class="brand-title">
+                Tr<span>AI</span>ner
             </h1>
 
-            <div style="position: relative; width: 64px; height: 64px;">
-                <div style="position: absolute; inset: 0; border: 4px solid rgba(255,255,255,0.1); border-radius: 50%;"></div>
-                <div style="position: absolute; inset: 0; border: 4px solid transparent; border-top-color: #6b52ff; border-radius: 50%; animation: pt-spin 1s linear infinite;"></div>
+            <!-- Spinner Orbital Moderno -->
+            <div class="loader-orbital-wrap" aria-hidden="true">
+                <div class="orbital-ring-outer"></div>
+                <div class="orbital-ring-inner"></div>
+                <div class="orbital-core-dot"></div>
             </div>
-            
-            <div style="margin-top: 24px; color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; animation: pt-pulse 1.5s ease-in-out infinite;" data-i18n-en="Verifying user...">Verificando usuario...</div>
-            <span class="sr-only" data-i18n-en="Loading, please wait…">Cargando, por favor esperá…</span>
-        </div>
-        <style>
-            @keyframes pt-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            @keyframes pt-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-            body { margin: 0; overflow: hidden; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; background-color: #0A1226; }
-        </style>
+
+            <!-- Textos Dinámicos de Estado -->
+            <h2 class="status-title" id="status-title" data-i18n-en="Verifying session...">
+                Verificando sesión...
+            </h2>
+            <p class="status-desc" id="status-desc" data-i18n-en="Syncing your fitness space...">
+                Sincronizando tu espacio fitness...
+            </p>
+
+            <span class="sr-only" data-i18n-en="Loading, please wait...">Cargando, por favor espere...</span>
+
+            <!-- Acciones de Contingencia en caso de conexión lenta o error -->
+            <div class="fallback-action-wrap" id="fallback-action-wrap">
+                <a href="/indice_renovado.html" class="btn-fallback-primary" data-i18n-en="Go to Home">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Ir al Inicio
+                </a>
+                <button type="button" class="btn-fallback-secondary" onclick="window.location.reload();" data-i18n-en="Retry connection">
+                    Reintentar conexión
+                </button>
+            </div>
+        </section>
     </main>
-    <footer>
-        <a href="privacy.html">Política de Privacidad</a>
+
+    <!-- Pie de Página -->
+    <footer class="auth-footer">
+        <a href="privacy.html" class="footer-link" data-i18n-en="Privacy Policy">Política de Privacidad</a>
+        <span class="footer-sep">·</span>
+        <span class="footer-copy">2026 &copy; TrAIner</span>
     </footer>
+
+    <!-- Lógica de Verificación y Redirección -->
     <script src="/Scripts/verifi_usu_n.js" type="module"></script>
 </body>
 

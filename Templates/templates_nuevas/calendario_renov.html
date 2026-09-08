@@ -17,7 +17,6 @@
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/spa_router.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/Scripts/ui_bottom_sheet.js?v=5"></script>
 
     <style>
         :root {
@@ -30,8 +29,13 @@
             --text-muted: #585d68;
             --dot-active: #ffffff;
             --dot-inactive: #282b33;
-            --accent-glow: rgba(255, 255, 255, 0.08);
+            --accent: #9DF3FF;
+            --accent-glow: rgba(157, 243, 255, 0.18);
+            --accent2: #B6A8FF;
+            --accent3: #ff4757;
+            --accent-green: #2ed573;
             --border-card: rgba(255, 255, 255, 0.06);
+            --border-active: rgba(157, 243, 255, 0.35);
             --radius-card: 26px;
             --radius-inner: 18px;
             --radius-pill: 999px;
@@ -113,7 +117,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background-color: #2ed573;
+            background-color: var(--accent-green);
             box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
         }
 
@@ -163,6 +167,795 @@
         .header-btn:active {
             transform: scale(0.92);
             background: var(--bg-card-elevated);
+        }
+
+        /* ── CONTROL SEGMENTADO (TABS) ── */
+        .segmented-control {
+            display: flex;
+            background: #121418;
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-pill);
+            padding: 4px;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .segmented-tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-pill);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .segmented-tab-btn svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            transition: transform 0.2s ease;
+        }
+
+        .segmented-tab-btn.is-active {
+            background: #20232b;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .segmented-tab-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* ── VISTAS DINÁMICAS ── */
+        .tab-view {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            animation: fadeInTab 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-view.is-hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeInTab {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── CONTENEDOR PRINCIPAL DEL CALENDARIO ── */
+        .cal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+        }
+
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+
+        .cal-month-title-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .cal-month-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            text-transform: capitalize;
+        }
+
+        .cal-month-year {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .cal-nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cal-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1f2228;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .cal-nav-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .cal-nav-btn:hover {
+            background: #282c35;
+            border-color: rgba(255, 255, 255, 0.16);
+        }
+
+        .cal-nav-btn:active {
+            transform: scale(0.92);
+        }
+
+        .cal-today-pill {
+            background: rgba(157, 243, 255, 0.12);
+            border: 1px solid rgba(157, 243, 255, 0.28);
+            color: var(--accent);
+            border-radius: var(--radius-pill);
+            padding: 5px 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .cal-today-pill:hover {
+            background: rgba(157, 243, 255, 0.2);
+        }
+
+        .cal-today-pill:active {
+            transform: scale(0.94);
+        }
+
+        /* Cabecera de días de la semana */
+        .cal-weekdays-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            padding: 0 2px;
+        }
+
+        .cal-weekday-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding-bottom: 4px;
+        }
+
+        /* Cuadrícula de días */
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .cal-day-cell {
+            aspect-ratio: 1 / 1;
+            border-radius: 15px;
+            background: #131519;
+            border: 1px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .cal-day-cell.is-empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .cal-day-num {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.88);
+            line-height: 1;
+        }
+
+        .cal-day-cell:hover:not(.is-empty) {
+            background: #1b1e25;
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .cal-day-cell:active:not(.is-empty) {
+            transform: scale(0.92);
+        }
+
+        /* Día de hoy */
+        .cal-day-cell.is-today {
+            border-color: var(--accent);
+            background: rgba(157, 243, 255, 0.08);
+            box-shadow: 0 0 14px rgba(157, 243, 255, 0.14);
+        }
+
+        .cal-day-cell.is-today .cal-day-num {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        /* Días con entrenamiento registrado */
+        .cal-day-cell.has-workout {
+            background: #1b1e25;
+            border-color: rgba(157, 243, 255, 0.22);
+        }
+
+        .cal-workout-dot-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 5px;
+            height: 6px;
+        }
+
+        .cal-workout-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px rgba(157, 243, 255, 0.8);
+        }
+
+        .cal-workout-dot.is-secondary {
+            background: var(--accent2);
+            box-shadow: 0 0 6px rgba(182, 168, 255, 0.8);
+        }
+
+        /* ── STRIP DE RESUMEN DEL MES RÁPIDO ── */
+        .cal-month-quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .cal-quick-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-inner);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .cal-quick-stat-card:active {
+            transform: scale(0.98);
+        }
+
+        .cal-quick-stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #20232a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--accent);
+        }
+
+        .cal-quick-stat-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .cal-quick-stat-icon.is-cal {
+            color: #ff9f43;
+            background: rgba(255, 159, 67, 0.12);
+        }
+
+        .cal-quick-stat-icon.is-streak {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.12);
+        }
+
+        .cal-quick-stat-icon.is-time {
+            color: var(--accent2);
+            background: rgba(182, 168, 255, 0.12);
+        }
+
+        .cal-quick-stat-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cal-quick-stat-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+        }
+
+        .cal-quick-stat-lbl {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ── VISTA DE ESTADÍSTICAS Y GRÁFICOS ── */
+        .stats-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stats-kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stats-kpi-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .stats-kpi-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: #20232b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .stats-kpi-badge svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .stats-kpi-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.6px;
+            line-height: 1.1;
+        }
+
+        .stats-kpi-sub {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Tarjeta de Gráfico */
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+        }
+
+        .chart-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chart-card-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .chart-card-tag {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(157, 243, 255, 0.1);
+            border: 1px solid rgba(157, 243, 255, 0.2);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+        }
+
+        .chart-canvas-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: 180px;
+        }
+
+        .chart-canvas-wrap canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-canvas-wrap--donut {
+            aspect-ratio: 1 / 1;
+            max-width: 220px;
+            margin: 0 auto;
+        }
+
+        /* Tarjeta de Métricas en Lista */
+        .metrics-list-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .metrics-section-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 2px;
+        }
+
+        .metric-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .metric-lbl {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .metric-val {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #ffffff;
+            text-align: right;
+        }
+
+        .metric-val.is-accent {
+            color: var(--accent);
+        }
+
+        .metric-val.is-purple {
+            color: var(--accent2);
+        }
+
+        .metric-val.is-green {
+            color: var(--accent-green);
+        }
+
+        /* ── MODAL BOTTOM-SHEET DETALLE DE DÍA ── */
+        .modal-sheet-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 2000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
+        }
+
+        .modal-sheet-backdrop.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-sheet-panel {
+            width: 100%;
+            max-width: 440px;
+            background: #0f1115;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: none;
+            border-radius: 32px 32px 0 0;
+            padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 20px)) 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.7);
+            transform: translateY(100%);
+            transition: transform 0.34s cubic-bezier(0.2, 0.9, 0.2, 1);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-sheet-backdrop.is-open .modal-sheet-panel {
+            transform: translateY(0);
+        }
+
+        .modal-handle-bar {
+            width: 44px;
+            height: 4.5px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 auto 4px auto;
+        }
+
+        .modal-sheet-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-sheet-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .modal-sheet-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.4px;
+            text-transform: capitalize;
+        }
+
+        .modal-sheet-sub {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .modal-close-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #1d2027;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .modal-close-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Tarjeta de Registro de Entreno en Modal */
+        .day-workout-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(157, 243, 255, 0.18);
+            border-radius: var(--radius-inner);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .day-workout-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-workout-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .day-workout-status-badge {
+            background: rgba(46, 213, 115, 0.14);
+            border: 1px solid rgba(46, 213, 115, 0.3);
+            color: var(--accent-green);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .day-workout-grid-badges {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .day-workout-badge-cell {
+            background: #131519;
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 10px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 2px;
+        }
+
+        .day-workout-badge-lbl {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .day-workout-badge-val {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .day-workout-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            background: #131519;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-card);
+        }
+
+        .day-workout-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 4px;
+        }
+
+        .btn-delete-workout {
+            background: rgba(255, 71, 87, 0.12);
+            border: 1px solid rgba(255, 71, 87, 0.28);
+            color: #ff4757;
+            padding: 9px 16px;
+            border-radius: var(--radius-pill);
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete-workout svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+        }
+
+        .btn-delete-workout:hover {
+            background: rgba(255, 71, 87, 0.2);
+        }
+
+        .btn-delete-workout:active {
+            transform: scale(0.95);
+        }
+
+        /* Estado Vacío de Día */
+        .day-empty-state {
+            padding: 32px 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px dashed var(--border-card);
+            border-radius: var(--radius-inner);
+        }
+
+        .day-empty-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #1b1e25;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .day-empty-icon svg {
+            width: 26px;
+            height: 26px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .day-empty-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .day-empty-sub {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            max-width: 260px;
+            line-height: 1.4;
         }
 
         /* ── BARRA DE NAVEGACIÓN INFERIOR FLOTANTE ── */
@@ -241,7 +1034,6 @@
             stroke: #ffffff;
         }
 
-        /* ── CONTENIDO PRINCIPAL (espacio para elementos de esta plantilla) ── */
         .page-content {
             display: flex;
             flex-direction: column;
@@ -273,12 +1065,277 @@
         </header>
 
         <!-- ═══════════════════════════════════════════════ -->
-        <!-- CONTENIDO PRINCIPAL: Calendario                 -->
-        <!-- Aquí van los elementos propios de esta vista    -->
+        <!-- CONTENIDO PRINCIPAL: Calendario Renovado        -->
         <!-- ═══════════════════════════════════════════════ -->
         <main class="page-content" id="page-content">
-            <!-- TODO: Agregar contenido del calendario -->
+
+            <!-- 1. SELECTOR DE MODO (TABS) -->
+            <div class="segmented-control" role="tablist">
+                <button class="segmented-tab-btn is-active" id="tab-btn-calendar" role="tab" aria-selected="true"
+                    data-tab="calendar">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span data-i18n-en="Calendar">Calendario</span>
+                </button>
+                <button class="segmented-tab-btn" id="tab-btn-stats" role="tab" aria-selected="false" data-tab="stats">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 20V10"></path>
+                        <path d="M12 20V4"></path>
+                        <path d="M6 20v-6"></path>
+                    </svg>
+                    <span data-i18n-en="Statistics">Estadísticas</span>
+                </button>
+            </div>
+
+            <!-- 2. VISTA CALENDARIO -->
+            <section class="tab-view" id="view-calendar">
+                <!-- Tarjeta del Calendario Mensual -->
+                <div class="cal-card">
+                    <!-- Cabecera del Mes -->
+                    <div class="cal-header">
+                        <div class="cal-month-title-wrap">
+                            <span class="cal-month-title" id="cal-month-name">Septiembre</span>
+                            <span class="cal-month-year" id="cal-year-num">2026</span>
+                        </div>
+                        <div class="cal-nav-actions">
+                            <button class="cal-today-pill" id="btn-cal-today" title="Ir al mes actual">Hoy</button>
+                            <button class="cal-nav-btn" id="btn-cal-prev" aria-label="Mes anterior">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="m15 18-6-6 6-6"></path>
+                                </svg>
+                            </button>
+                            <button class="cal-nav-btn" id="btn-cal-next" aria-label="Mes siguiente">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="m9 18 6-6-6-6"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fila de nombres de días -->
+                    <div class="cal-weekdays-row" id="cal-weekdays-row">
+                        <span class="cal-weekday-label">L</span>
+                        <span class="cal-weekday-label">M</span>
+                        <span class="cal-weekday-label">X</span>
+                        <span class="cal-weekday-label">J</span>
+                        <span class="cal-weekday-label">V</span>
+                        <span class="cal-weekday-label">S</span>
+                        <span class="cal-weekday-label">D</span>
+                    </div>
+
+                    <!-- Cuadrícula de días -->
+                    <div class="cal-grid" id="cal-days-grid">
+                        <!-- Generado dinámicamente por JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Resumen Rápido Mensual -->
+                <div class="cal-month-quick-stats">
+                    <div class="cal-quick-stat-card">
+                        <div class="cal-quick-stat-icon">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="cal-quick-stat-info">
+                            <span class="cal-quick-stat-val" id="quick-stat-days">0 días</span>
+                            <span class="cal-quick-stat-lbl">Entrenados este mes</span>
+                        </div>
+                    </div>
+
+                    <div class="cal-quick-stat-card">
+                        <div class="cal-quick-stat-icon is-streak">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="cal-quick-stat-info">
+                            <span class="cal-quick-stat-val" id="quick-stat-streak">0 días</span>
+                            <span class="cal-quick-stat-lbl">Racha actual</span>
+                        </div>
+                    </div>
+
+                    <div class="cal-quick-stat-card">
+                        <div class="cal-quick-stat-icon is-cal">
+                            <svg viewBox="0 0 24 24">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="cal-quick-stat-info">
+                            <span class="cal-quick-stat-val" id="quick-stat-calories">0 kcal</span>
+                            <span class="cal-quick-stat-lbl">Calorías quemadas</span>
+                        </div>
+                    </div>
+
+                    <div class="cal-quick-stat-card">
+                        <div class="cal-quick-stat-icon is-time">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2v4"></path>
+                                <path d="M12 18v4"></path>
+                                <path d="M4.93 4.93l2.83 2.83"></path>
+                                <path d="M16.24 16.24l2.83 2.83"></path>
+                                <path d="M2 12h4"></path>
+                                <path d="M18 12h4"></path>
+                                <path d="M4.93 19.07l2.83-2.83"></path>
+                                <path d="M16.24 7.76l2.83-2.83"></path>
+                            </svg>
+                        </div>
+                        <div class="cal-quick-stat-info">
+                            <span class="cal-quick-stat-val" id="quick-stat-minutes">0 min</span>
+                            <span class="cal-quick-stat-lbl">Tiempo acumulado</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. VISTA ESTADÍSTICAS Y GRÁFICOS -->
+            <section class="tab-view is-hidden" id="view-stats">
+                <!-- Grid de 4 KPIs -->
+                <div class="stats-kpi-grid">
+                    <div class="stats-kpi-card">
+                        <div class="stats-kpi-top">
+                            <span class="stats-kpi-title">Calorías Totales</span>
+                            <div class="stats-kpi-badge">
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="stats-kpi-val" id="kpi-total-calories">0 kcal</span>
+                        <span class="stats-kpi-sub" id="kpi-avg-calories">Promedio: 0 kcal/día</span>
+                    </div>
+
+                    <div class="stats-kpi-card">
+                        <div class="stats-kpi-top">
+                            <span class="stats-kpi-title">Minutos Activos</span>
+                            <div class="stats-kpi-badge">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="stats-kpi-val" id="kpi-total-minutes">0 min</span>
+                        <span class="stats-kpi-sub" id="kpi-avg-minutes">Promedio: 0 min/día</span>
+                    </div>
+
+                    <div class="stats-kpi-card">
+                        <div class="stats-kpi-top">
+                            <span class="stats-kpi-title">Días Activos</span>
+                            <div class="stats-kpi-badge">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="stats-kpi-val" id="kpi-days-trained">0</span>
+                        <span class="stats-kpi-sub" id="kpi-pct-active">0% del mes</span>
+                    </div>
+
+                    <div class="stats-kpi-card">
+                        <div class="stats-kpi-top">
+                            <span class="stats-kpi-title">Racha Máxima</span>
+                            <div class="stats-kpi-badge">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="stats-kpi-val" id="kpi-longest-streak">0 días</span>
+                        <span class="stats-kpi-sub" id="kpi-current-streak">Racha actual: 0</span>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Actividad Diaria -->
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <h3 class="chart-card-title">Actividad Diaria</h3>
+                        <span class="chart-card-tag" id="chart-tag-month">Minutos / Día</span>
+                    </div>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chart-canvas-bar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico Donut Días Activos vs Descanso -->
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <h3 class="chart-card-title">Días Activos vs Descanso</h3>
+                        <span class="chart-card-tag">Mes en Curso</span>
+                    </div>
+                    <div class="chart-canvas-wrap chart-canvas-wrap--donut">
+                        <canvas id="chart-canvas-donut"></canvas>
+                    </div>
+                </div>
+
+                <!-- Métricas Detalladas de Rendimiento y Consistencia -->
+                <div class="metrics-list-card">
+                    <span class="metrics-section-title">Rendimiento & Proyección</span>
+                    
+                    <div class="metric-row">
+                        <span class="metric-lbl">Mejor Día del Mes</span>
+                        <span class="metric-val is-accent" id="detail-best-day">N/A</span>
+                    </div>
+
+                    <div class="metric-row">
+                        <span class="metric-lbl">Eficiencia Calórica</span>
+                        <span class="metric-val is-purple" id="detail-efficiency">0 kcal/min</span>
+                    </div>
+
+                    <div class="metric-row">
+                        <span class="metric-lbl">Tendencia Semanal</span>
+                        <span class="metric-val is-green" id="detail-weekly-trend">Sin datos</span>
+                    </div>
+
+                    <div class="metric-row">
+                        <span class="metric-lbl">Variación vs Mes Previo</span>
+                        <span class="metric-val" id="detail-monthly-variation">N/A</span>
+                    </div>
+
+                    <div class="metric-row">
+                        <span class="metric-lbl">Ritmo Proyectado (Cierre)</span>
+                        <span class="metric-val is-accent" id="detail-projected-calories">0 kcal</span>
+                    </div>
+                </div>
+            </section>
         </main>
+    </div>
+
+    <!-- ── MODAL BOTTOM-SHEET: DETALLE DEL DÍA ── -->
+    <div class="modal-sheet-backdrop" id="modal-day-detail-backdrop" aria-hidden="true">
+        <div class="modal-sheet-panel" id="modal-day-detail-panel">
+            <div class="modal-handle-bar"></div>
+            
+            <div class="modal-sheet-header">
+                <div class="modal-sheet-title-wrap">
+                    <h2 class="modal-sheet-title" id="modal-day-title">Detalle del Día</h2>
+                    <span class="modal-sheet-sub" id="modal-day-subtitle">YYYY-MM-DD</span>
+                </div>
+                <button class="modal-close-btn" id="btn-close-day-modal" aria-label="Cerrar detalle">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Contenedor Dinámico del Contenido del Día -->
+            <div id="modal-day-body" style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- Insertado dinámicamente -->
+            </div>
+        </div>
     </div>
 
     <!-- ── BARRA INFERIOR DE NAVEGACIÓN ── -->
@@ -340,6 +1397,1101 @@
             </a>
         </div>
     </nav>
+
+    <!-- ── LÓGICA Y CONEXIONES (ES MODULE) ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: { persistSession: true, autoRefreshToken: true, storage: localStorage }
+        });
+
+        // Estado Global
+        let currentUser = null;
+        let registros = [];
+        let eventos = [];
+        let recordsByDate = new Map();
+        let currentViewDate = new Date();
+        let activeTab = "calendar";
+        let lastStats = null;
+
+        const getIdiomaPreferido = () => {
+            try {
+                const v = globalThis.UIIdioma?.getIdioma?.();
+                if (v) return String(v);
+            } catch { }
+            try {
+                const stored = localStorage.getItem("ui_idioma");
+                if (stored) return String(stored);
+            } catch { }
+            return "es";
+        };
+
+        const isEnglish = () => getIdiomaPreferido() === "en";
+        const tLang = (es, en) => (isEnglish() ? en : es);
+
+        const safeNum = (v) => {
+            const n = Number(String(v ?? "").replace(/[^0-9.-]/g, ""));
+            return Number.isFinite(n) ? n : 0;
+        };
+
+        const escapeHtml = (value) => {
+            const text = String(value ?? "");
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        };
+
+        // Extraer formato ISO limpio YYYY-MM-DD independientemente de si viene como timestamp, fecha local o ISO
+        const extractDateIso = (registro) => {
+            if (!registro) return "";
+            const raw = String(
+                registro?.start ??
+                registro?.fecha ??
+                registro?.confirmado_en ??
+                registro?.hora_confirmacion ??
+                registro?.dia ??
+                ""
+            ).trim();
+
+            if (!raw) return "";
+
+            // Formato YYYY-MM-DD...
+            const matchIso = raw.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+            if (matchIso) {
+                const y = matchIso[1];
+                const m = String(matchIso[2]).padStart(2, "0");
+                const d = String(matchIso[3]).padStart(2, "0");
+                return `${y}-${m}-${d}`;
+            }
+
+            // Formato DD-MM-YYYY o DD/MM/YYYY
+            const matchInv = raw.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+            if (matchInv) {
+                const d = String(matchInv[1]).padStart(2, "0");
+                const m = String(matchInv[2]).padStart(2, "0");
+                const y = matchInv[3];
+                return `${y}-${m}-${d}`;
+            }
+
+            // Intento con objeto Date
+            try {
+                const date = new Date(raw);
+                if (!isNaN(date.getTime())) {
+                    const y = date.getFullYear();
+                    const m = String(date.getMonth() + 1).padStart(2, "0");
+                    const d = String(date.getDate()).padStart(2, "0");
+                    return `${y}-${m}-${d}`;
+                }
+            } catch { }
+
+            return "";
+        };
+
+        const formatearFechaLarga = (fechaIso) => {
+            if (!fechaIso) return "";
+            try {
+                const parts = fechaIso.split("-");
+                if (parts.length === 3) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    const date = new Date(year, month, day);
+                    return new Intl.DateTimeFormat(getIdiomaPreferido(), {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    }).format(date);
+                }
+            } catch { }
+            return fechaIso;
+        };
+
+        // Normalización ultra-robusta de entrenamientos (cubre arrays, JSONs anidados, strings dobles y mapas)
+        const normalizarDiasEntrenados = (value) => {
+            if (value == null) return [];
+            if (Array.isArray(value)) return value;
+
+            if (typeof value === "string") {
+                const text = value.trim();
+                if (!text || text === "null" || text === "undefined") return [];
+                try {
+                    let parsed = JSON.parse(text);
+                    if (typeof parsed === "string") {
+                        try { parsed = JSON.parse(parsed); } catch { }
+                    }
+                    if (Array.isArray(parsed)) return parsed;
+                    if (parsed && typeof parsed === "object") {
+                        const inner = parsed.Dias_cale ?? parsed.Dias_entrenados ?? parsed.registro_entreno ?? parsed.dias;
+                        if (Array.isArray(inner)) return inner;
+                        if (typeof inner === "string") {
+                            try {
+                                const parsedInner = JSON.parse(inner);
+                                if (Array.isArray(parsedInner)) return parsedInner;
+                            } catch { }
+                        }
+                        const values = Object.values(parsed);
+                        if (values.length > 0 && values.some(v => v && typeof v === "object" && (v.start || v.fecha || v.id_registro))) {
+                            return values.filter(v => v && typeof v === "object");
+                        }
+                    }
+                } catch {
+                    return [];
+                }
+            }
+
+            if (typeof value === "object") {
+                const inner = value.Dias_cale ?? value.Dias_entrenados ?? value.registro_entreno ?? value.dias;
+                if (Array.isArray(inner)) return inner;
+                if (typeof inner === "string") {
+                    try {
+                        const parsed = JSON.parse(inner);
+                        if (Array.isArray(parsed)) return parsed;
+                    } catch { }
+                }
+                const values = Object.values(value);
+                if (values.length > 0 && values.some(v => v && typeof v === "object" && (v.start || v.fecha || v.id_registro))) {
+                    return values.filter(v => v && typeof v === "object");
+                }
+            }
+
+            return [];
+        };
+
+        const leerRegistrosLocales = () => {
+            const keys = ["Dias_cale", "dias_cale", "Dias_entrenados", "dias_entrenados", "registro_entreno"];
+            for (const k of keys) {
+                try {
+                    const raw = localStorage.getItem(k) || sessionStorage.getItem(k);
+                    if (raw) {
+                        const norm = normalizarDiasEntrenados(raw);
+                        if (norm.length > 0) return norm;
+                    }
+                } catch { }
+            }
+            return [];
+        };
+
+        // Asegurar que Supabase tenga la sesión restaurada con JWT válido
+        const asegurarUsuarioAutenticado = async () => {
+            let user = null;
+            try {
+                const { data: sessionData } = await supabase.auth.getSession();
+                if (sessionData?.session?.user) {
+                    user = sessionData.session.user;
+                }
+            } catch (e) {
+                console.warn("getSession aviso:", e);
+            }
+
+            if (!user) {
+                try {
+                    const { data: authData } = await supabase.auth.getUser();
+                    if (authData?.user) {
+                        user = authData.user;
+                    }
+                } catch (e) {
+                    console.warn("getUser aviso:", e);
+                }
+            }
+
+            if (user) {
+                currentUser = user;
+                const uId = currentUser.id;
+                localStorage.setItem("id_usuario", uId);
+                if (user.email) localStorage.setItem("email_usuario", user.email);
+
+                const metaName = currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "Atleta";
+                localStorage.setItem("username_usuario", metaName);
+                const userHeader = document.getElementById("header-username-text");
+                if (userHeader) userHeader.textContent = metaName;
+
+                const metaAvatar = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
+                if (metaAvatar) {
+                    localStorage.setItem("avatar_usuario", metaAvatar);
+                    const userAvatar = document.getElementById("header-user-avatar");
+                    if (userAvatar) userAvatar.src = metaAvatar;
+                }
+            } else {
+                const localId = localStorage.getItem("id_usuario");
+                if (localId) currentUser = { id: localId };
+            }
+
+            return currentUser?.id || localStorage.getItem("id_usuario");
+        };
+
+        const obtenerRegistrosEntreno = async () => {
+            const fromLocal = leerRegistrosLocales();
+            const userId = await asegurarUsuarioAutenticado();
+
+            if (!userId) {
+                return fromLocal;
+            }
+
+            // Consultar tabla Planes en Supabase
+            try {
+                const { data, error } = await supabase
+                    .from("Planes")
+                    .select("Dias_entrenados")
+                    .eq("ID_user", userId)
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    const raw = data[0]?.Dias_entrenados;
+                    const fromDb = normalizarDiasEntrenados(raw);
+                    if (fromDb && fromDb.length > 0) {
+                        localStorage.setItem("Dias_cale", JSON.stringify(fromDb));
+                        return fromDb;
+                    }
+                }
+                return fromLocal;
+            } catch (err) {
+                console.warn("Aviso al consultar Dias_entrenados en Supabase:", err);
+                return fromLocal;
+            }
+        };
+
+        const guardarRegistrosEntreno = async (nuevosRegistros) => {
+            localStorage.setItem("Dias_cale", JSON.stringify(nuevosRegistros));
+
+            const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            if (!userId) return;
+
+            // Sincronización con endpoint Python
+            try {
+                await fetch("/guardar_registro_entreno", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id_usuario: userId,
+                        registro_entreno: nuevosRegistros,
+                    }),
+                });
+            } catch (e) {
+                console.warn("Fallo guardando en /guardar_registro_entreno:", e);
+            }
+
+            // Sincronización con Supabase Planes
+            try {
+                await supabase
+                    .from("Planes")
+                    .upsert({ ID_user: userId, Dias_entrenados: nuevosRegistros }, { onConflict: "ID_user" });
+            } catch (e) {
+                console.warn("Fallo actualizando Planes en Supabase:", e);
+            }
+        };
+
+        const getRegistroId = (registro, index) => {
+            const start = extractDateIso(registro) || "sin-fecha";
+            return String(registro?.id_registro ?? registro?.id ?? `${start}-${index}`);
+        };
+
+        const buildRegistroMeta = (registro, index) => {
+            const start = extractDateIso(registro);
+            const title = String(
+                registro?.title ??
+                registro?.titulo_entreno ??
+                registro?.dia ??
+                registro?.nombre_rutina ??
+                registro?.descripcion ??
+                `Entreno ${index + 1}`
+            ).trim();
+
+            const extendedProps = registro?.extendedProps && typeof registro.extendedProps === "object" ? registro.extendedProps : {};
+
+            const calories_burnt = extendedProps.calories_burnt ??
+                extendedProps.calorias_quemadas ??
+                registro?.calorias_quemadas ??
+                registro?.calories_burnt ??
+                registro?.calorias ??
+                registro?.calories ??
+                null;
+
+            const tiempo_total_min = extendedProps.tiempo_total_min ??
+                extendedProps.tiempo ??
+                registro?.tiempo_total_min ??
+                registro?.tiempoTotalMin ??
+                registro?.tiempo ??
+                registro?.minutos ??
+                null;
+
+            const status = extendedProps.status ?? registro?.status ?? "completado";
+
+            const hora_confirmacion = extendedProps.hora_confirmacion ??
+                registro?.hora_confirmacion ??
+                (registro?.confirmado_en ? String(registro.confirmado_en).slice(11, 16) : null) ??
+                "-";
+
+            const descripcion = extendedProps.descripcion ??
+                registro?.descripcion ??
+                registro?.subtitulo ??
+                "";
+
+            return {
+                id: getRegistroId(registro, index),
+                title,
+                start,
+                allDay: true,
+                extendedProps: {
+                    status,
+                    calories_burnt,
+                    tiempo_total_min,
+                    hora_confirmacion,
+                    confirmado_en: registro?.confirmado_en ?? null,
+                    descripcion,
+                    ejercicios: extendedProps.ejercicios ?? registro?.ejercicios ?? null
+                },
+            };
+        };
+
+        const rebuildCalendarData = () => {
+            eventos = registros
+                .map(buildRegistroMeta)
+                .filter((event) => !!event.start);
+
+            recordsByDate = new Map();
+            eventos.forEach((event) => {
+                const d = event.start;
+                if (!recordsByDate.has(d)) {
+                    recordsByDate.set(d, []);
+                }
+                recordsByDate.get(d).push(event);
+            });
+        };
+
+        // ── MOTOR DE CÁLCULO DE ESTADÍSTICAS ──
+        const computeStatsFromEventos = (allEventos, targetDate = null) => {
+            const now = targetDate || new Date();
+            const curYear = now.getFullYear();
+            const curMonth = now.getMonth();
+
+            const eventosThisMonth = allEventos.filter((e) => {
+                try {
+                    const parts = e.start.split("-");
+                    if (parts.length >= 2) {
+                        const evYear = parseInt(parts[0], 10);
+                        const evMonth = parseInt(parts[1], 10) - 1;
+                        return evYear === curYear && evMonth === curMonth;
+                    }
+                    const d = new Date(`${e.start}T00:00:00`);
+                    return d.getFullYear() === curYear && d.getMonth() === curMonth;
+                } catch {
+                    return false;
+                }
+            });
+
+            const aggByDate = new Map();
+            const allDatesSet = new Set();
+            allEventos.forEach((ev) => {
+                const date = ev.start;
+                if (!date) return;
+                allDatesSet.add(date);
+                const calories = safeNum(ev.extendedProps?.calories_burnt);
+                const minutes = safeNum(ev.extendedProps?.tiempo_total_min);
+                const prev = aggByDate.get(date) || { calories: 0, minutes: 0 };
+                prev.calories += calories;
+                prev.minutes += minutes;
+                aggByDate.set(date, prev);
+            });
+
+            let totalCalories = 0;
+            let totalMinutes = 0;
+            const daysTrainedSet = new Set();
+            eventosThisMonth.forEach((ev) => {
+                const date = ev.start;
+                const c = safeNum(ev.extendedProps?.calories_burnt);
+                const m = safeNum(ev.extendedProps?.tiempo_total_min);
+                totalCalories += c;
+                totalMinutes += m;
+                if (date) daysTrainedSet.add(date);
+            });
+
+            const daysTrained = daysTrainedSet.size;
+            const avgDailyMinutes = daysTrained ? Math.round(totalMinutes / daysTrained) : 0;
+            const avgDailyCalories = daysTrained ? Math.round(totalCalories / daysTrained) : 0;
+
+            let bestDay = null;
+            let bestCalories = -1;
+            let bestMinutes = -1;
+            aggByDate.forEach((vals, date) => {
+                if (!date) return;
+                const parts = date.split("-");
+                if (parts.length >= 2) {
+                    const y = parseInt(parts[0], 10);
+                    const m = parseInt(parts[1], 10) - 1;
+                    if (y !== curYear || m !== curMonth) return;
+                }
+                if (vals.calories > bestCalories || (vals.calories === bestCalories && vals.minutes > bestMinutes)) {
+                    bestCalories = vals.calories;
+                    bestMinutes = vals.minutes;
+                    bestDay = { date, calories: vals.calories, minutes: vals.minutes };
+                }
+            });
+
+            const allDates = Array.from(allDatesSet).sort();
+            const dateSet = new Set(allDates);
+
+            // Racha más larga
+            let longestStreak = 0;
+            let currentStreak = 0;
+            let prevTs = null;
+            const sortedAllDates = Array.from(dateSet).map((d) => {
+                const p = d.split("-");
+                return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+            }).sort((a, b) => a - b);
+
+            sortedAllDates.forEach((d, idx) => {
+                if (idx === 0) { currentStreak = 1; prevTs = d.getTime(); longestStreak = 1; return; }
+                const diffDays = Math.round((d.getTime() - prevTs) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) currentStreak += 1;
+                else currentStreak = 1;
+                prevTs = d.getTime();
+                if (currentStreak > longestStreak) longestStreak = currentStreak;
+            });
+
+            // Racha actual (contando hoy o desde ayer si aún no se ha entrenado hoy)
+            let streakCurrent = 0;
+            const todayNow = new Date();
+            const todayIso = `${todayNow.getFullYear()}-${String(todayNow.getMonth() + 1).padStart(2, "0")}-${String(todayNow.getDate()).padStart(2, "0")}`;
+            const startOffset = dateSet.has(todayIso) ? 0 : 1;
+
+            for (let i = startOffset; ; i++) {
+                const check = new Date();
+                check.setDate(check.getDate() - i);
+                const iso = `${check.getFullYear()}-${String(check.getMonth() + 1).padStart(2, "0")}-${String(check.getDate()).padStart(2, "0")}`;
+                if (dateSet.has(iso)) streakCurrent += 1;
+                else break;
+            }
+
+            const efficiency = totalMinutes ? +(totalCalories / totalMinutes).toFixed(2) : 0;
+            const daysInMonth = new Date(curYear, curMonth + 1, 0).getDate();
+            const pctActive = daysInMonth ? +(daysTrained / daysInMonth * 100).toFixed(1) : 0;
+            const daysRest = Math.max(0, daysInMonth - daysTrained);
+
+            // Variación respecto al mes previo
+            const prevMonthDate = new Date(curYear, curMonth - 1, 1);
+            const prevYear = prevMonthDate.getFullYear();
+            const prevMonth = prevMonthDate.getMonth();
+            let prevTotalCalories = 0;
+            allEventos.forEach((ev) => {
+                const parts = ev.start.split("-");
+                if (parts.length >= 2) {
+                    const y = parseInt(parts[0], 10);
+                    const m = parseInt(parts[1], 10) - 1;
+                    if (y === prevYear && m === prevMonth) {
+                        prevTotalCalories += safeNum(ev.extendedProps?.calories_burnt);
+                    }
+                }
+            });
+            const variationAbsolute = totalCalories - prevTotalCalories;
+            const variationPct = prevTotalCalories ? +((variationAbsolute / prevTotalCalories) * 100).toFixed(1) : null;
+
+            // Tendencia semanal
+            const weeks = {};
+            eventosThisMonth.forEach((ev) => {
+                const parts = ev.start.split("-");
+                const dayNum = parts.length >= 3 ? parseInt(parts[2], 10) : 1;
+                const weekIndex = Math.ceil(dayNum / 7);
+                weeks[weekIndex] = weeks[weekIndex] || { calories: 0, minutes: 0 };
+                weeks[weekIndex].calories += safeNum(ev.extendedProps?.calories_burnt);
+                weeks[weekIndex].minutes += safeNum(ev.extendedProps?.tiempo_total_min);
+            });
+
+            const projectedCalories = daysTrained ? Math.round((totalCalories / daysTrained) * daysInMonth) : 0;
+
+            return {
+                totalCalories,
+                totalMinutes,
+                avgDailyMinutes,
+                avgDailyCalories,
+                daysTrained,
+                bestDay,
+                longestStreak,
+                streakCurrent,
+                efficiency,
+                pctActive,
+                daysRest,
+                variationAbsolute,
+                variationPct,
+                weeks,
+                projectedCalories,
+                daysInMonth,
+                aggByDate,
+                curYear,
+                curMonth,
+            };
+        };
+
+        // ── RENDERIZADO DEL CALENDARIO ──
+        const renderCalendar = () => {
+            const year = currentViewDate.getFullYear();
+            const month = currentViewDate.getMonth();
+
+            const monthNames = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+
+            const monthEl = document.getElementById("cal-month-name");
+            const yearEl = document.getElementById("cal-year-num");
+            if (monthEl) monthEl.textContent = monthNames[month];
+            if (yearEl) yearEl.textContent = year;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const startDayIndex = firstDay === 0 ? 6 : firstDay - 1; // Lunes = 0
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const gridEl = document.getElementById("cal-days-grid");
+            if (!gridEl) return;
+
+            let html = "";
+            for (let i = 0; i < startDayIndex; i++) {
+                html += `<div class="cal-day-cell is-empty"></div>`;
+            }
+
+            const todayNow = new Date();
+            const todayIso = `${todayNow.getFullYear()}-${String(todayNow.getMonth() + 1).padStart(2, "0")}-${String(todayNow.getDate()).padStart(2, "0")}`;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isToday = dateStr === todayIso;
+                const dayEvents = recordsByDate.get(dateStr) || [];
+                const hasWorkout = dayEvents.length > 0;
+
+                let dotsHtml = "";
+                if (hasWorkout) {
+                    dotsHtml = `<div class="cal-workout-dot-strip">`;
+                    dayEvents.forEach((ev, idx) => {
+                        dotsHtml += `<div class="cal-workout-dot ${idx > 0 ? 'is-secondary' : ''}"></div>`;
+                    });
+                    dotsHtml += `</div>`;
+                }
+
+                html += `
+                    <div class="cal-day-cell ${isToday ? 'is-today' : ''} ${hasWorkout ? 'has-workout' : ''}" data-date="${dateStr}">
+                        <span class="cal-day-num">${d}</span>
+                        ${dotsHtml}
+                    </div>
+                `;
+            }
+
+            gridEl.innerHTML = html;
+
+            // Eventos de click en celdas de días
+            gridEl.querySelectorAll(".cal-day-cell:not(.is-empty)").forEach((cell) => {
+                cell.addEventListener("click", () => {
+                    const dateIso = cell.getAttribute("data-date");
+                    openDayDetailModal(dateIso);
+                });
+            });
+
+            // Actualizar estadísticas del mes
+            lastStats = computeStatsFromEventos(eventos, currentViewDate);
+            renderQuickStats(lastStats);
+            renderStatsTab(lastStats);
+        };
+
+        // ── ACTUALIZACIÓN DE QUICK STATS ──
+        const renderQuickStats = (stats) => {
+            const daysEl = document.getElementById("quick-stat-days");
+            const streakEl = document.getElementById("quick-stat-streak");
+            const calEl = document.getElementById("quick-stat-calories");
+            const minEl = document.getElementById("quick-stat-minutes");
+
+            if (daysEl) daysEl.textContent = `${stats.daysTrained} ${tLang("días", "days")}`;
+            if (streakEl) streakEl.textContent = `${stats.streakCurrent} ${tLang("días", "days")}`;
+            if (calEl) calEl.textContent = `${stats.totalCalories.toLocaleString()} kcal`;
+            if (minEl) minEl.textContent = `${stats.totalMinutes.toLocaleString()} min`;
+        };
+
+        // ── ACTUALIZACIÓN DE LA VISTA DE ESTADÍSTICAS ──
+        const renderStatsTab = (stats) => {
+            if (!stats) return;
+
+            // KPIs
+            const totalCalEl = document.getElementById("kpi-total-calories");
+            const avgCalEl = document.getElementById("kpi-avg-calories");
+            const totalMinEl = document.getElementById("kpi-total-minutes");
+            const avgMinEl = document.getElementById("kpi-avg-minutes");
+            const daysEl = document.getElementById("kpi-days-trained");
+            const pctActiveEl = document.getElementById("kpi-pct-active");
+            const longestEl = document.getElementById("kpi-longest-streak");
+            const currentEl = document.getElementById("kpi-current-streak");
+
+            if (totalCalEl) totalCalEl.textContent = `${stats.totalCalories.toLocaleString()} kcal`;
+            if (avgCalEl) avgCalEl.textContent = `Promedio: ${stats.avgDailyCalories} kcal/día`;
+            if (totalMinEl) totalMinEl.textContent = `${stats.totalMinutes.toLocaleString()} min`;
+            if (avgMinEl) avgMinEl.textContent = `Promedio: ${stats.avgDailyMinutes} min/día`;
+            if (daysEl) daysEl.textContent = `${stats.daysTrained}`;
+            if (pctActiveEl) pctActiveEl.textContent = `${stats.pctActive}% del mes`;
+            if (longestEl) longestEl.textContent = `${stats.longestStreak} ${tLang("días", "days")}`;
+            if (currentEl) currentEl.textContent = `Racha actual: ${stats.streakCurrent}`;
+
+            // Métricas detalladas
+            const bestDayEl = document.getElementById("detail-best-day");
+            const effEl = document.getElementById("detail-efficiency");
+            const trendEl = document.getElementById("detail-weekly-trend");
+            const varEl = document.getElementById("detail-monthly-variation");
+            const projEl = document.getElementById("detail-projected-calories");
+
+            if (bestDayEl) {
+                bestDayEl.textContent = stats.bestDay
+                    ? `${stats.bestDay.date} (${stats.bestDay.calories} kcal)`
+                    : "N/A";
+            }
+            if (effEl) effEl.textContent = `${stats.efficiency} kcal/min`;
+
+            const weeklyEntries = Object.entries(stats.weeks || {})
+                .map(([k, v]) => [Number(k), v])
+                .filter(([k]) => Number.isFinite(k))
+                .sort((a, b) => a[0] - b[0]);
+            const firstWeek = weeklyEntries[0]?.[1] || null;
+            const lastWeek = weeklyEntries[weeklyEntries.length - 1]?.[1] || null;
+            if (trendEl) {
+                if (!firstWeek || !lastWeek) trendEl.textContent = "Sin datos";
+                else {
+                    const diff = (lastWeek.calories || 0) - (firstWeek.calories || 0);
+                    trendEl.textContent = diff > 0 ? `+${diff} kcal` : `${diff} kcal`;
+                }
+            }
+
+            if (varEl) {
+                const varPct = stats.variationPct === null ? "N/A" : `${stats.variationPct}%`;
+                varEl.textContent = `${stats.variationAbsolute > 0 ? '+' : ''}${stats.variationAbsolute} kcal (${varPct})`;
+            }
+
+            if (projEl) projEl.textContent = `${stats.projectedCalories.toLocaleString()} kcal`;
+
+            // Dibujar gráficos si la pestaña está activa
+            if (activeTab === "stats") {
+                requestAnimationFrame(() => {
+                    drawCharts(stats);
+                });
+            }
+        };
+
+        // ── MOTOR DE DIBUJO DE GRÁFICOS (CANVAS 2D) ──
+        const setupCanvas = (canvas) => {
+            if (!canvas) return null;
+            const wrap = canvas.parentElement;
+            const w = wrap.clientWidth;
+            const h = wrap.clientHeight;
+            if (w === 0 || h === 0) return null;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            const ctx = canvas.getContext("2d");
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, w, h);
+            return { ctx, w, h };
+        };
+
+        const drawCharts = (stats) => {
+            if (!stats) return;
+            drawBarChart(stats);
+            drawDonutChart(stats);
+        };
+
+        const drawBarChart = (stats) => {
+            const canvas = document.getElementById("chart-canvas-bar");
+            const c = setupCanvas(canvas);
+            if (!c) return;
+            const { ctx, w, h } = c;
+
+            const days = stats.daysInMonth || 30;
+            const yr = stats.curYear;
+            const mo = stats.curMonth;
+            const agg = stats.aggByDate || new Map();
+
+            const dailyMin = [];
+            for (let d = 1; d <= days; d++) {
+                const iso = `${yr}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const entry = agg.get(iso);
+                dailyMin.push(entry ? entry.minutes : 0);
+            }
+
+            const pad = { t: 16, b: 24, l: 36, r: 8 };
+            const plotW = w - pad.l - pad.r;
+            const plotH = h - pad.t - pad.b;
+            const barW = Math.max(3, (plotW / days) - 2);
+            const gap = (plotW - barW * days) / (days - 1 || 1);
+
+            const rawMax = Math.max(...dailyMin, 1);
+            const maxVal = Math.max(30, Math.ceil(rawMax / 30) * 30);
+
+            // Líneas de guía horizontales
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+
+            const steps = 3;
+            for (let i = 1; i <= steps; i++) {
+                const val = (maxVal / steps) * i;
+                const y = pad.t + plotH - (val / maxVal) * plotH;
+
+                ctx.beginPath();
+                ctx.moveTo(pad.l, y);
+                ctx.lineTo(w - pad.r, y);
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.fillText(`${Math.round(val)}m`, pad.l - 6, y);
+            }
+
+            // Barras con gradiente cian
+            const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + plotH);
+            grad.addColorStop(0, "#9DF3FF");
+            grad.addColorStop(1, "rgba(157, 243, 255, 0.2)");
+
+            dailyMin.forEach((val, i) => {
+                const barH = (val / maxVal) * plotH;
+                const x = pad.l + i * (barW + gap);
+                const y = pad.t + plotH - barH;
+                ctx.fillStyle = val > 0 ? grad : "rgba(255, 255, 255, 0.04)";
+                ctx.beginPath();
+                const r = Math.min(3, barW / 2);
+                ctx.roundRect(x, y, barW, Math.max(barH, 2), [r, r, 0, 0]);
+                ctx.fill();
+            });
+
+            // Eje X (días)
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+
+            const step = Math.max(2, Math.ceil(days / 10));
+            for (let i = 0; i < days; i += step) {
+                const x = pad.l + i * (barW + gap) + barW / 2;
+                ctx.fillText(String(i + 1), x, h - pad.b + 6);
+            }
+        };
+
+        const drawDonutChart = (stats) => {
+            const canvas = document.getElementById("chart-canvas-donut");
+            const c = setupCanvas(canvas);
+            if (!c) return;
+            const { ctx, w, h } = c;
+
+            const active = stats.daysTrained || 0;
+            const rest = stats.daysRest || 0;
+            const total = active + rest || 1;
+            const pctActive = active / total;
+
+            const cx = w / 2;
+            const cy = h / 2 - 8;
+            const radius = Math.min(cx, cy) - 18;
+            const lineW = Math.max(16, radius * 0.26);
+
+            // Anillo de fondo (descanso)
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.lineWidth = lineW;
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+            ctx.lineCap = "round";
+            ctx.stroke();
+
+            // Anillo activo con gradiente
+            if (active > 0) {
+                const startAngle = -Math.PI / 2;
+                const endAngle = startAngle + pctActive * Math.PI * 2;
+                const grad = ctx.createConicGradient(startAngle, cx, cy);
+                grad.addColorStop(0, "#9DF3FF");
+                grad.addColorStop(pctActive * 0.6, "#B6A8FF");
+                grad.addColorStop(pctActive, "#ff4757");
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.lineWidth = lineW;
+                ctx.strokeStyle = grad;
+                ctx.lineCap = "round";
+                ctx.stroke();
+            }
+
+            // Texto central
+            const pctLabel = `${Math.round(pctActive * 100)}%`;
+            ctx.fillStyle = "#ffffff";
+            ctx.font = `800 ${Math.round(radius * 0.38)}px "Plus Jakarta Sans", sans-serif`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(pctLabel, cx, cy - 3);
+
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.font = `600 ${Math.round(radius * 0.16)}px "Plus Jakarta Sans", sans-serif`;
+            ctx.fillText(tLang("activo", "active"), cx, cy + radius * 0.24);
+
+            // Leyenda inferior
+            const legY = h - 6;
+            ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
+            ctx.textAlign = "center";
+
+            // Activo
+            ctx.fillStyle = "#9DF3FF";
+            ctx.beginPath(); ctx.arc(cx - 50, legY - 3, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.textAlign = "left";
+            ctx.fillText(`${active} ${tLang("activos", "active")}`, cx - 42, legY);
+
+            // Descanso
+            ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+            ctx.beginPath(); ctx.arc(cx + 12, legY - 3, 4, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.fillText(`${rest} ${tLang("descanso", "rest")}`, cx + 20, legY);
+        };
+
+        // ── MODAL DETALLE DE DÍA ──
+        const openDayDetailModal = (dateIso) => {
+            const backdrop = document.getElementById("modal-day-detail-backdrop");
+            const titleEl = document.getElementById("modal-day-title");
+            const subEl = document.getElementById("modal-day-subtitle");
+            const bodyEl = document.getElementById("modal-day-body");
+
+            const fechaLarga = formatearFechaLarga(dateIso);
+            if (titleEl) titleEl.textContent = fechaLarga;
+            if (subEl) subEl.textContent = dateIso;
+
+            const dayEvents = recordsByDate.get(dateIso) || [];
+
+            if (dayEvents.length === 0) {
+                bodyEl.innerHTML = `
+                    <div class="day-empty-state">
+                        <div class="day-empty-icon">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h4 class="day-empty-title">Sin entrenamientos</h4>
+                        <p class="day-empty-sub">No tienes registros de sesiones para este día. ¡Cualquier día es bueno para entrenar!</p>
+                    </div>
+                `;
+            } else {
+                bodyEl.innerHTML = dayEvents.map((ev, index) => {
+                    const props = ev.extendedProps || {};
+                    const titulo = escapeHtml(ev.title || `Sesión de Entreno #${index + 1}`);
+                    const calorias = props.calories_burnt != null ? `${props.calories_burnt} kcal` : "-";
+                    const tiempo = props.tiempo_total_min != null ? `${props.tiempo_total_min} min` : "-";
+                    const hora = props.hora_confirmacion || (props.confirmado_en ? String(props.confirmado_en).slice(11, 16) : null) || "-";
+                    const status = props.status || "completado";
+                    const descripcion = props.descripcion
+                        ? `<div class="day-workout-desc">${escapeHtml(props.descripcion)}</div>`
+                        : "";
+
+                    return `
+                        <div class="day-workout-card">
+                            <div class="day-workout-header">
+                                <h3 class="day-workout-title">${titulo}</h3>
+                                <span class="day-workout-status-badge">${status}</span>
+                            </div>
+
+                            <div class="day-workout-grid-badges">
+                                <div class="day-workout-badge-cell">
+                                    <span class="day-workout-badge-lbl">Calorías</span>
+                                    <span class="day-workout-badge-val">${calorias}</span>
+                                </div>
+                                <div class="day-workout-badge-cell">
+                                    <span class="day-workout-badge-lbl">Tiempo</span>
+                                    <span class="day-workout-badge-val">${tiempo}</span>
+                                </div>
+                                <div class="day-workout-badge-cell">
+                                    <span class="day-workout-badge-lbl">Hora</span>
+                                    <span class="day-workout-badge-val">${hora}</span>
+                                </div>
+                            </div>
+
+                            ${descripcion}
+
+                            <div class="day-workout-actions">
+                                <button class="btn-delete-workout" data-del-id="${ev.id}" data-del-date="${dateIso}">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                    </svg>
+                                    <span>Eliminar Registro</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+                // Bind delete buttons
+                bodyEl.querySelectorAll(".btn-delete-workout").forEach((btn) => {
+                    btn.addEventListener("click", async () => {
+                        const regId = btn.getAttribute("data-del-id");
+                        const dateToDel = btn.getAttribute("data-del-date");
+                        await confirmAndDeleteWorkout(regId, dateToDel);
+                    });
+                });
+            }
+
+            backdrop.classList.add("is-open");
+            backdrop.setAttribute("aria-hidden", "false");
+        };
+
+        const closeDayDetailModal = () => {
+            const backdrop = document.getElementById("modal-day-detail-backdrop");
+            if (backdrop) {
+                backdrop.classList.remove("is-open");
+                backdrop.setAttribute("aria-hidden", "true");
+            }
+        };
+
+        const confirmAndDeleteWorkout = async (regId, dateIso) => {
+            const result = await Swal.fire({
+                title: "¿Eliminar este registro?",
+                text: "Esta sesión se eliminará de tu historial y se recalcularán tus estadísticas.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#ff4757",
+                cancelButtonColor: "#20232a",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                background: "#181a1f",
+                color: "#ffffff"
+            });
+
+            if (!result.isConfirmed) return;
+
+            // Filtrar registro
+            const prev = Array.isArray(registros) ? registros.slice() : [];
+            const next = prev.filter((r, idx) => getRegistroId(r, idx) !== regId);
+
+            registros = next;
+            await guardarRegistrosEntreno(registros);
+            rebuildCalendarData();
+            renderCalendar();
+
+            // Actualizar vista del modal
+            openDayDetailModal(dateIso);
+
+            Swal.fire({
+                title: "Eliminado",
+                text: "El registro ha sido eliminado correctamente.",
+                icon: "success",
+                timer: 1600,
+                showConfirmButton: false,
+                background: "#181a1f",
+                color: "#ffffff"
+            });
+        };
+
+        // ── INICIALIZACIÓN PRINCIPAL DE LA PÁGINA ──
+        async function initApp() {
+            // 1. Mostrar datos de usuario cacheados de inmediato
+            const cachedName = localStorage.getItem("username_usuario");
+            if (cachedName) document.getElementById("header-username-text").textContent = cachedName;
+            const cachedAvatar = localStorage.getItem("avatar_usuario");
+            if (cachedAvatar) document.getElementById("header-user-avatar").src = cachedAvatar;
+
+            // 2. Cargar caché local inmediato de entrenamientos para evitar pantalla en blanco
+            registros = leerRegistrosLocales();
+            rebuildCalendarData();
+            renderCalendar();
+
+            // 3. Control Segmentado de Pestañas
+            const tabCalendarBtn = document.getElementById("tab-btn-calendar");
+            const tabStatsBtn = document.getElementById("tab-btn-stats");
+            const viewCalendar = document.getElementById("view-calendar");
+            const viewStats = document.getElementById("view-stats");
+
+            const switchTab = (tab) => {
+                activeTab = tab;
+                if (tab === "calendar") {
+                    tabCalendarBtn?.classList.add("is-active");
+                    tabCalendarBtn?.setAttribute("aria-selected", "true");
+                    tabStatsBtn?.classList.remove("is-active");
+                    tabStatsBtn?.setAttribute("aria-selected", "false");
+                    viewCalendar?.classList.remove("is-hidden");
+                    viewStats?.classList.add("is-hidden");
+                } else {
+                    tabStatsBtn?.classList.add("is-active");
+                    tabStatsBtn?.setAttribute("aria-selected", "true");
+                    tabCalendarBtn?.classList.remove("is-active");
+                    tabCalendarBtn?.setAttribute("aria-selected", "false");
+                    viewStats?.classList.remove("is-hidden");
+                    viewCalendar?.classList.add("is-hidden");
+                    requestAnimationFrame(() => {
+                        drawCharts(lastStats);
+                    });
+                }
+            };
+
+            tabCalendarBtn?.addEventListener("click", () => switchTab("calendar"));
+            tabStatsBtn?.addEventListener("click", () => switchTab("stats"));
+
+            // 4. Botones de Navegación del Calendario
+            document.getElementById("btn-cal-prev")?.addEventListener("click", () => {
+                currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById("btn-cal-next")?.addEventListener("click", () => {
+                currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+                renderCalendar();
+            });
+
+            document.getElementById("btn-cal-today")?.addEventListener("click", () => {
+                currentViewDate = new Date();
+                renderCalendar();
+            });
+
+            // 5. Modal Cierre
+            document.getElementById("btn-close-day-modal")?.addEventListener("click", closeDayDetailModal);
+            document.getElementById("modal-day-detail-backdrop")?.addEventListener("click", (e) => {
+                if (e.target.id === "modal-day-detail-backdrop") closeDayDetailModal();
+            });
+
+            // 6. Consultar datos en Supabase y refrescar UI
+            try {
+                await asegurarUsuarioAutenticado();
+                const freshRegistros = await obtenerRegistrosEntreno();
+                if (freshRegistros && freshRegistros.length > 0) {
+                    registros = freshRegistros;
+                    rebuildCalendarData();
+                    renderCalendar();
+                    if (activeTab === "stats" && lastStats) {
+                        drawCharts(lastStats);
+                    }
+                }
+            } catch (err) {
+                console.warn("Aviso al refrescar registros de Supabase:", err);
+            }
+
+            // 8. Observador de Redibujado de Gráficos (ResizeObserver)
+            try {
+                const resizeObserver = new ResizeObserver(() => {
+                    if (activeTab === "stats" && lastStats) {
+                        requestAnimationFrame(() => {
+                            drawCharts(lastStats);
+                        });
+                    }
+                });
+                const barWrap = document.getElementById("chart-canvas-bar")?.parentElement;
+                const donutWrap = document.getElementById("chart-canvas-donut")?.parentElement;
+                if (barWrap) resizeObserver.observe(barWrap);
+                if (donutWrap) resizeObserver.observe(donutWrap);
+            } catch (e) {
+                console.warn("ResizeObserver no disponible:", e);
+            }
+        }
+
+        // Ejecutar inmediatamente o tras carga del DOM de forma segura
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initApp);
+        } else {
+            initApp();
+        }
+    </script>
 </body>
 
 </html>

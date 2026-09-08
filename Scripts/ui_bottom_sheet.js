@@ -630,7 +630,16 @@
 	window.addEventListener('resize', updateScrollStates, { passive: true });
 
 	const domObserver = new MutationObserver(updateScrollStates);
-	domObserver.observe(document.body, { childList: true, subtree: true });
+	if (document.body) {
+		domObserver.observe(document.body, { childList: true, subtree: true });
+	} else {
+		document.addEventListener('DOMContentLoaded', () => {
+			if (document.body) {
+				domObserver.observe(document.body, { childList: true, subtree: true });
+			}
+			updateScrollStates();
+		});
+	}
 
 	setTimeout(updateScrollStates, 100);
 })();
