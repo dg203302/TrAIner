@@ -13,6 +13,15 @@
         rel="stylesheet">
     <link rel="icon" type="image/png" href="/Icons/2.png">
 
+    <!-- PWA Manifest y Meta Tags Móviles -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0c0d10">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TrAIner">
+    <link rel="apple-touch-icon" href="/Icons/2.png">
+
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/spa_router.js"></script>
@@ -1213,6 +1222,383 @@
             stroke-width: 2.3;
             stroke: #0c0d10;
         }
+
+        /* ── POPUP / MODAL INSTALACIÓN PWA (DARK GLASSMORPHIC) ── */
+        .pwa-prompt-container {
+            position: fixed;
+            inset: 0;
+            z-index: 2500;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0 16px calc(var(--nav-height, 78px) + 16px + env(safe-area-inset-bottom, 0px));
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+        }
+
+        .pwa-prompt-container.is-visible {
+            pointer-events: auto;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pwa-prompt-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .pwa-prompt-container.is-visible .pwa-prompt-backdrop {
+            opacity: 1;
+        }
+
+        .pwa-prompt-card {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            background: rgba(18, 20, 26, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 26px;
+            padding: 22px 20px 20px 20px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            transform: translateY(35px) scale(0.96);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .pwa-prompt-container.is-visible .pwa-prompt-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .pwa-prompt-glow {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 120px;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            pointer-events: none;
+        }
+
+        .pwa-prompt-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #8a909a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pwa-prompt-close:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.05);
+        }
+
+        .pwa-prompt-close:active {
+            transform: scale(0.92);
+        }
+
+        .pwa-prompt-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .pwa-prompt-app-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            flex-shrink: 0;
+        }
+
+        .pwa-logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .pwa-prompt-header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .pwa-prompt-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: fit-content;
+        }
+
+        .pwa-badge-pulse {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #2ed573;
+            box-shadow: 0 0 8px rgba(46, 213, 115, 0.8);
+        }
+
+        .pwa-prompt-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.4px;
+        }
+
+        .pwa-prompt-description {
+            font-size: 13.5px;
+            line-height: 1.45;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .pwa-prompt-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .pwa-feature-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            font-size: 12px;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .pwa-feature-pill svg {
+            stroke: #60a5fa;
+            flex-shrink: 0;
+        }
+
+        .pwa-ios-guide {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pwa-ios-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .pwa-step-num {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .pwa-step-text .inline-svg {
+            vertical-align: middle;
+            display: inline-block;
+            color: #60a5fa;
+            margin: 0 3px;
+        }
+
+        .pwa-prompt-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pwa-btn-primary {
+            flex: 1.5;
+            height: 48px;
+            background: #ffffff;
+            color: #0c0d10;
+            border: none;
+            border-radius: 999px;
+            font-size: 14.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pwa-btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.28);
+        }
+
+        .pwa-btn-primary:active {
+            transform: scale(0.97);
+        }
+
+        .pwa-btn-secondary {
+            flex: 1;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pwa-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+        }
+
+        .pwa-btn-secondary:active {
+            transform: scale(0.97);
+        }
+
+        /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
+        .pt-ad-container {
+            width: 100%;
+            margin: 4px 0 8px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pt-ad-card {
+            width: 100%;
+            background: rgba(24, 26, 31, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-card, 26px);
+            padding: 12px 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .pt-ad-card:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(28, 31, 38, 0.85);
+        }
+
+        .pt-ad-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pt-ad-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted, #585d68);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .pt-ad-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--text-muted, #585d68);
+            opacity: 0.7;
+        }
+
+        .pt-ad-provider {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .pt-ad-slot-wrapper {
+            width: 100%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: var(--radius-inner, 18px);
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
+        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -1431,6 +1817,23 @@
                 <span class="mini-metric-sub">consecutivos</span>
             </div>
         </section>
+
+        <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
+        <section class="pt-ad-container" aria-label="Espacio publicitario">
+            <div class="pt-ad-card">
+                <div class="pt-ad-header">
+                    <span class="pt-ad-tag">
+                        <span class="pt-ad-dot" aria-hidden="true"></span>
+                        <span data-i18n-en="Sponsored">Publicidad</span>
+                    </span>
+                    <span class="pt-ad-provider">Patrocinado</span>
+                </div>
+                <div class="pt-ad-slot-wrapper">
+                    <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
+                    <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- ── BARRA INFERIOR DE NAVEGACIÓN (IDÉNTICA A LA CAPTURA) ── -->
@@ -1492,6 +1895,77 @@
             </a>
         </div>
     </nav>
+
+    <!-- ── POPUP / MODAL INSTALACIÓN PWA (SOLO MÓVIL Y NO INSTALADA) ── -->
+    <div id="pwa-install-banner" class="pwa-prompt-container" aria-hidden="true">
+        <div class="pwa-prompt-backdrop" id="pwa-prompt-backdrop"></div>
+        <div class="pwa-prompt-card" role="dialog" aria-modal="true" aria-labelledby="pwa-prompt-title">
+            <div class="pwa-prompt-glow" aria-hidden="true"></div>
+            
+            <button class="pwa-prompt-close" id="pwa-btn-dismiss" aria-label="Cerrar notificación">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="pwa-prompt-header">
+                <div class="pwa-prompt-app-icon">
+                    <img src="/Icons/2.png" alt="TrAIner Logo" class="pwa-logo-img">
+                </div>
+                <div class="pwa-prompt-header-info">
+                    <div class="pwa-prompt-badge">
+                        <span class="pwa-badge-pulse"></span>
+                        <span data-i18n-en="Official App">App Oficial</span>
+                    </div>
+                    <h3 class="pwa-prompt-title" id="pwa-prompt-title">Instalá Tr<span>AI</span>ner</h3>
+                </div>
+            </div>
+
+            <p class="pwa-prompt-description" data-i18n-en="Install TrAIner on your home screen for full-screen workouts, faster loading, and offline access.">
+                Instalá la app en tu pantalla de inicio para una experiencia a pantalla completa, entrenamientos fluidos y acceso instantáneo.
+            </p>
+
+            <div class="pwa-prompt-features">
+                <div class="pwa-feature-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span data-i18n-en="Fast & fluid">Rápida y fluida</span>
+                </div>
+                <div class="pwa-feature-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                    <span data-i18n-en="Full screen">Sin barras de navegador</span>
+                </div>
+                <div class="pwa-feature-pill">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span data-i18n-en="Safe & lightweight">Ligera y segura</span>
+                </div>
+            </div>
+
+            <!-- Guía especial para iOS Safari -->
+            <div class="pwa-ios-guide" id="pwa-ios-guide" style="display: none;">
+                <div class="pwa-ios-step">
+                    <span class="pwa-step-num">1</span>
+                    <span class="pwa-step-text" data-i18n-en="Tap the Share button in Safari">Toca el botón <strong>Compartir</strong> <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="inline-svg"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg></span>
+                </div>
+                <div class="pwa-ios-step">
+                    <span class="pwa-step-num">2</span>
+                    <span class="pwa-step-text" data-i18n-en="Select 'Add to Home Screen'">Selecciona <strong>«Agregar al inicio»</strong> <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="inline-svg"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></span>
+                </div>
+            </div>
+
+            <div class="pwa-prompt-actions">
+                <button class="pwa-btn-primary" id="pwa-btn-install">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span id="pwa-install-btn-text" data-i18n-en="Install App">Instalar App</span>
+                </button>
+                <button class="pwa-btn-secondary" id="pwa-btn-later" data-i18n-en="Not now">Ahora no</button>
+            </div>
+        </div>
+    </div>
 
     <!-- ── LÓGICA DE RECUPERACIÓN Y CONEXIÓN CON SUPABASE ── -->
     <script type="module">
@@ -2488,12 +2962,175 @@
 
             // 4. Vincular eventos
             setupEventListeners();
+            initPWAInstallPrompt();
 
             try {
                 if (window.UIIdioma?.translatePage) {
                     window.UIIdioma.translatePage(document);
                 }
             } catch { }
+        }
+
+        // ── CONTROL DE POPUP INSTALACIÓN PWA (VERIFICACIÓN MÓVIL Y NO INSTALADA) ──
+        let deferredPwaPrompt = null;
+        let pwaPromptInitialized = false;
+
+        // Capturar tempranamente el evento de instalación para navegadores Chromium (Chrome, Edge, Samsung)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            if (pwaPromptInitialized) {
+                evaluateAndShowPWAPrompt();
+            }
+        });
+
+        // Evento cuando la app se instala con éxito
+        window.addEventListener('appinstalled', () => {
+            localStorage.setItem('trainer_pwa_installed', 'true');
+            const container = document.getElementById('pwa-install-banner');
+            if (container) {
+                container.classList.remove('is-visible');
+                container.setAttribute('aria-hidden', 'true');
+            }
+            deferredPwaPrompt = null;
+        });
+
+        function isAppInstalledAsPWA() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                window.matchMedia('(display-mode: fullscreen)').matches ||
+                window.matchMedia('(display-mode: minimal-ui)').matches ||
+                window.navigator.standalone === true ||
+                document.referrer.includes('android-app://');
+            
+            const markedInstalled = localStorage.getItem('trainer_pwa_installed') === 'true';
+            return isStandalone || markedInstalled;
+        }
+
+        function isUserOnMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera || '';
+            const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+            const isMobileUA = mobileRegex.test(userAgent);
+            const hasTouch = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+            const isSmallScreen = window.innerWidth <= 820;
+
+            return isMobileUA || (hasTouch && isSmallScreen);
+        }
+
+        function evaluateAndShowPWAPrompt() {
+            // CONDICIÓN 1: Verificar que NO esté instalada como PWA
+            if (isAppInstalledAsPWA()) {
+                return;
+            }
+
+            // CONDICIÓN 2: Verificar que se encuentre en dispositivo MÓVIL
+            if (!isUserOnMobileDevice()) {
+                return;
+            }
+
+            // Cortesía: si el usuario descartó el popup recientemente (48 hrs), no insistir
+            const dismissedAt = localStorage.getItem('trainer_pwa_dismissed_at');
+            if (dismissedAt) {
+                const elapsedHours = (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60);
+                if (elapsedHours < 48) {
+                    return;
+                }
+            }
+
+            const container = document.getElementById('pwa-install-banner');
+            const iosGuide = document.getElementById('pwa-ios-guide');
+            const installBtnText = document.getElementById('pwa-install-btn-text');
+            if (!container) return;
+
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
+                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+            if (isIOS) {
+                if (iosGuide) iosGuide.style.display = 'flex';
+                if (installBtnText) {
+                    installBtnText.textContent = 'Cómo instalar';
+                    installBtnText.setAttribute('data-i18n-en', 'How to install');
+                }
+            }
+
+            // Mostrar suavemente tras una pequeña pausa para no interrumpir la carga inicial
+            setTimeout(() => {
+                if (isAppInstalledAsPWA() || !isUserOnMobileDevice()) return;
+                container.classList.add('is-visible');
+                container.setAttribute('aria-hidden', 'false');
+                try {
+                    if (window.UIIdioma?.translatePage) {
+                        window.UIIdioma.translatePage(container);
+                    }
+                } catch { }
+            }, 1600);
+        }
+
+        function initPWAInstallPrompt() {
+            pwaPromptInitialized = true;
+
+            const container = document.getElementById('pwa-install-banner');
+            const backdrop = document.getElementById('pwa-prompt-backdrop');
+            const btnClose = document.getElementById('pwa-btn-dismiss');
+            const btnLater = document.getElementById('pwa-btn-later');
+            const btnInstall = document.getElementById('pwa-btn-install');
+            const iosGuide = document.getElementById('pwa-ios-guide');
+
+            if (!container) return;
+
+            const closePopup = () => {
+                container.classList.remove('is-visible');
+                container.setAttribute('aria-hidden', 'true');
+                localStorage.setItem('trainer_pwa_dismissed_at', String(Date.now()));
+            };
+
+            if (btnClose) btnClose.addEventListener('click', closePopup);
+            if (btnLater) btnLater.addEventListener('click', closePopup);
+            if (backdrop) backdrop.addEventListener('click', closePopup);
+
+            if (btnInstall) {
+                btnInstall.addEventListener('click', async () => {
+                    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || 
+                                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+                    if (deferredPwaPrompt) {
+                        try {
+                            deferredPwaPrompt.prompt();
+                            const choice = await deferredPwaPrompt.userChoice;
+                            if (choice && choice.outcome === 'accepted') {
+                                localStorage.setItem('trainer_pwa_installed', 'true');
+                            }
+                        } catch (err) {
+                            console.warn('Error al instalar PWA:', err);
+                        }
+                        deferredPwaPrompt = null;
+                        closePopup();
+                    } else if (isIOS) {
+                        if (iosGuide) {
+                            iosGuide.style.display = 'flex';
+                            iosGuide.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    } else {
+                        // Navegador móvil que no disparó deferredPrompt
+                        if (window.Swal) {
+                            window.Swal.fire({
+                                title: "Instalar TrAIner",
+                                text: "Para instalar: toca el menú de tres puntos (⋮) de tu navegador y selecciona 'Instalar aplicación' o 'Agregar a la pantalla principal'.",
+                                icon: "info",
+                                background: "#181a1f",
+                                color: "#ffffff",
+                                confirmButtonColor: "#ffffff",
+                                confirmButtonText: "Entendido"
+                            });
+                        } else {
+                            alert("Para instalar: toca el menú de tu navegador (⋮) y selecciona 'Instalar aplicación' o 'Agregar a la pantalla de inicio'.");
+                        }
+                        closePopup();
+                    }
+                });
+            }
+
+            // Evaluar de inmediato
+            evaluateAndShowPWAPrompt();
         }
 
         if (document.readyState === "loading") {

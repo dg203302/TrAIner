@@ -492,6 +492,100 @@
         .nav-item.is-active svg {
             stroke: #ffffff;
         }
+
+        /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
+        .pt-ad-container {
+            width: 100%;
+            margin: 4px 0 10px 0;
+            display: flex;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pt-ad-card {
+            width: 100%;
+            background: rgba(24, 26, 31, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-card, 26px);
+            padding: 10px 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .pt-ad-card:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(28, 31, 38, 0.85);
+        }
+
+        .pt-ad-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pt-ad-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted, #585d68);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .pt-ad-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--text-muted, #585d68);
+            opacity: 0.7;
+        }
+
+        .pt-ad-provider {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .pt-ad-slot-wrapper {
+            width: 100%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: var(--radius-inner, 18px);
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
+        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -533,6 +627,23 @@
         <!-- CONTENIDO PRINCIPAL: Mensajes del Chat         -->
         <!-- ═══════════════════════════════════════════════ -->
         <main class="page-content" id="page-content">
+            <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
+            <div class="pt-ad-container" aria-label="Espacio publicitario">
+                <div class="pt-ad-card">
+                    <div class="pt-ad-header">
+                        <span class="pt-ad-tag">
+                            <span class="pt-ad-dot" aria-hidden="true"></span>
+                            <span data-i18n-en="Sponsored">Publicidad</span>
+                        </span>
+                        <span class="pt-ad-provider">Patrocinado</span>
+                    </div>
+                    <div class="pt-ad-slot-wrapper">
+                        <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
+                        <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                    </div>
+                </div>
+            </div>
+
             <div class="chat-messages" id="chatbot-messages">
                 <!-- Se poblará dinámicamente con historial o mensaje de bienvenida -->
             </div>

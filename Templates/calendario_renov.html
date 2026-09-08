@@ -743,38 +743,19 @@
             transform: translateY(0);
         }
 
-
-        .modal-sheet-header {
+        .ios-drum-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 4px;
+            width: 100%;
         }
 
-        .modal-sheet-title-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .modal-sheet-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.4px;
-            text-transform: capitalize;
-        }
-
-        .modal-sheet-sub {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .modal-close-btn {
-            width: 38px;
-            height: 38px;
+        .ios-drum-btn-circle {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: #1d2027;
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: #ffffff;
             display: flex;
@@ -784,8 +765,37 @@
             transition: all 0.18s ease;
         }
 
-        .modal-close-btn:active {
-            transform: scale(0.92);
+        .ios-drum-btn-circle:hover {
+            background: rgba(255, 255, 255, 0.16);
+            transform: scale(1.04);
+        }
+
+        .ios-drum-btn-circle:active {
+            transform: scale(0.94);
+        }
+
+        .ios-drum-headings {
+            margin-top: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .ios-drum-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.4px;
+            margin: 0;
+            line-height: 1.2;
+            text-transform: capitalize;
+        }
+
+        .ios-drum-subtitle {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 0;
         }
 
         /* Tarjeta de Registro de Entreno en Modal */
@@ -1260,6 +1270,99 @@
             letter-spacing: -0.1px;
             white-space: nowrap;
         }
+
+        /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
+        .pt-ad-container {
+            width: 100%;
+            margin: 12px 0 16px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pt-ad-card {
+            width: 100%;
+            background: rgba(24, 26, 31, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-card, 26px);
+            padding: 12px 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .pt-ad-card:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(28, 31, 38, 0.85);
+        }
+
+        .pt-ad-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pt-ad-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted, #585d68);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .pt-ad-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--text-muted, #585d68);
+            opacity: 0.7;
+        }
+
+        .pt-ad-provider {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .pt-ad-slot-wrapper {
+            width: 100%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: var(--radius-inner, 18px);
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
+        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -1530,25 +1633,41 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
+            <section class="pt-ad-container" aria-label="Espacio publicitario">
+                <div class="pt-ad-card">
+                    <div class="pt-ad-header">
+                        <span class="pt-ad-tag">
+                            <span class="pt-ad-dot" aria-hidden="true"></span>
+                            <span data-i18n-en="Sponsored">Publicidad</span>
+                        </span>
+                        <span class="pt-ad-provider">Patrocinado</span>
+                    </div>
+                    <div class="pt-ad-slot-wrapper">
+                        <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
+                        <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
     <!-- ── MODAL BOTTOM-SHEET: DETALLE DEL DÍA ── -->
     <div class="modal-sheet-backdrop" id="modal-day-detail-backdrop" aria-hidden="true">
         <div class="modal-sheet-panel" id="modal-day-detail-panel">
-            
-            <div class="modal-sheet-header">
-                <div class="modal-sheet-title-wrap">
-                    <h2 class="modal-sheet-title" id="modal-day-title">Detalle del Día</h2>
-                    <span class="modal-sheet-sub" id="modal-day-subtitle">YYYY-MM-DD</span>
-                </div>
-                <button class="modal-close-btn" id="btn-close-day-modal" aria-label="Cerrar detalle">
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="btn-close-day-modal" aria-label="Cerrar detalle">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
                 </button>
+            </div>
+
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title" id="modal-day-title">Detalle del Día</h2>
+                <p class="ios-drum-subtitle" id="modal-day-subtitle">YYYY-MM-DD</p>
             </div>
 
             <!-- Contenedor Dinámico del Contenido del Día -->

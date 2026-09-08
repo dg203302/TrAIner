@@ -691,7 +691,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 20px 22px 6px 22px;
+            padding: 16px 20px 8px;
+            width: 100%;
             flex-shrink: 0;
         }
 
@@ -729,8 +730,8 @@
             color: #0c0d10;
             font-family: inherit;
             font-weight: 800;
-            font-size: 14.5px;
-            padding: 9px 24px;
+            font-size: 14px;
+            padding: 8px 20px;
             border-radius: 999px;
             border: none;
             cursor: pointer;
@@ -751,7 +752,7 @@
         }
 
         .ios-drum-headings {
-            padding: 0 22px 10px 22px;
+            padding: 0 20px 10px;
             display: flex;
             flex-direction: column;
             gap: 3px;
@@ -759,19 +760,19 @@
         }
 
         .ios-drum-title {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: -0.7px;
             color: #ffffff;
-            line-height: 1.2;
+            letter-spacing: -0.4px;
             margin: 0;
+            line-height: 1.2;
         }
 
         .ios-drum-subtitle {
-            font-size: 13.5px;
-            color: var(--text-secondary);
-            font-weight: 500;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.55);
             margin: 0;
+            font-weight: 500;
         }
 
         .sheet-body {
@@ -1223,6 +1224,99 @@
             letter-spacing: -0.1px;
             white-space: nowrap;
         }
+
+        /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
+        .pt-ad-container {
+            width: 100%;
+            margin: 12px 0 16px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pt-ad-card {
+            width: 100%;
+            background: rgba(24, 26, 31, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-card, 26px);
+            padding: 12px 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .pt-ad-card:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(28, 31, 38, 0.85);
+        }
+
+        .pt-ad-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pt-ad-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted, #585d68);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .pt-ad-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--text-muted, #585d68);
+            opacity: 0.7;
+        }
+
+        .pt-ad-provider {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .pt-ad-slot-wrapper {
+            width: 100%;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: var(--radius-inner, 18px);
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: transparent;
+            border-radius: 12px;
+        }
+
+        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
+        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -1325,20 +1419,49 @@
                     <!-- Se llenan dinámicamente -->
                 </ul>
             </section>
+
+            <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
+            <section class="pt-ad-container" aria-label="Espacio publicitario">
+                <div class="pt-ad-card">
+                    <div class="pt-ad-header">
+                        <span class="pt-ad-tag">
+                            <span class="pt-ad-dot" aria-hidden="true"></span>
+                            <span data-i18n-en="Sponsored">Publicidad</span>
+                        </span>
+                        <span class="pt-ad-provider">Patrocinado</span>
+                    </div>
+                    <div class="pt-ad-slot-wrapper">
+                        <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
+                        <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
     <!-- ── MODAL 1: GENERADOR DE PLAN CON IA (BOTTOM-SHEET) ── -->
     <div class="custom-sheet-backdrop" id="modal-ai-generator-backdrop">
         <div class="custom-sheet-card">
-            <div class="sheet-header">
-                <h3 class="sheet-title">Generar Plan Nutricional</h3>
-                <button class="sheet-close-btn" id="btn-close-ai-modal" aria-label="Cerrar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="btn-close-ai-modal" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
                 </button>
+                <div class="ios-drum-header-right">
+                    <button type="button" class="ios-drum-btn-pill-save" id="btn-submit-generate-ai-top">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="margin-right: 4px; vertical-align: middle;">
+                            <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+                        </svg>
+                        <span>Generar</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title">Generar con IA</h2>
+                <p class="ios-drum-subtitle">Plan nutricional inteligente adaptado a tus metas</p>
             </div>
             <div class="sheet-body" id="ai-generator-body">
                 <!-- Biometría resumida -->
@@ -1437,14 +1560,18 @@
     <!-- ── MODAL 2: DETALLE DE COMIDA (BOTTOM-SHEET) ── -->
     <div class="custom-sheet-backdrop" id="modal-meal-detail-backdrop">
         <div class="custom-sheet-card">
-            <div class="sheet-header">
-                <h3 class="sheet-title" id="modal-meal-name">Detalle de Comida</h3>
-                <button class="sheet-close-btn" id="btn-close-meal-modal" aria-label="Cerrar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="btn-close-meal-modal" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
                 </button>
+            </div>
+
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title" id="modal-meal-name">Detalle de Comida</h2>
+                <p class="ios-drum-subtitle">Información nutricional y preparación</p>
             </div>
             <div class="sheet-body" id="modal-meal-body">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -1467,14 +1594,18 @@
     <!-- ── MODAL 3: RESUMEN Y TIPS DEL DÍA (BOTTOM-SHEET) ── -->
     <div class="custom-sheet-backdrop" id="modal-day-summary-backdrop">
         <div class="custom-sheet-card">
-            <div class="sheet-header">
-                <h3 class="sheet-title" id="modal-day-summary-title">Resumen del Día</h3>
-                <button class="sheet-close-btn" id="btn-close-day-summary-modal" aria-label="Cerrar">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
+            <div class="ios-drum-header">
+                <button type="button" class="ios-drum-btn-circle" id="btn-close-day-summary-modal" aria-label="Cerrar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
                 </button>
+            </div>
+
+            <div class="ios-drum-headings">
+                <h2 class="ios-drum-title" id="modal-day-summary-title">Resumen del Día</h2>
+                <p class="ios-drum-subtitle">Distribución calórica y de macronutrientes</p>
             </div>
             <div class="sheet-body" id="modal-day-summary-body">
                 <div class="bio-strip" style="grid-template-columns: repeat(3, 1fr);">
@@ -2277,9 +2408,14 @@
             isGeneratingDietPlan = true;
 
             const closeBtn = document.getElementById("btn-close-ai-modal");
+            const topSaveBtn = document.getElementById("btn-submit-generate-ai-top");
             if (closeBtn) {
                 closeBtn.style.opacity = "0.3";
                 closeBtn.style.pointerEvents = "none";
+            }
+            if (topSaveBtn) {
+                topSaveBtn.style.opacity = "0.3";
+                topSaveBtn.style.pointerEvents = "none";
             }
 
             const objetivo = document.querySelector('.option-select-card[data-opt-group="objetivo"].is-selected')?.getAttribute("data-value") || "grasa";
@@ -2372,6 +2508,10 @@
                     closeBtn.style.opacity = "";
                     closeBtn.style.pointerEvents = "";
                 }
+                if (topSaveBtn) {
+                    topSaveBtn.style.opacity = "";
+                    topSaveBtn.style.pointerEvents = "";
+                }
 
                 closeAiGeneratorModal();
 
@@ -2389,6 +2529,10 @@
                 if (closeBtn) {
                     closeBtn.style.opacity = "";
                     closeBtn.style.pointerEvents = "";
+                }
+                if (topSaveBtn) {
+                    topSaveBtn.style.opacity = "";
+                    topSaveBtn.style.pointerEvents = "";
                 }
 
                 await showGlassAlert({
@@ -2442,6 +2586,7 @@
             // Listeners de modales
             document.getElementById("btn-close-ai-modal")?.addEventListener("click", closeAiGeneratorModal);
             document.getElementById("btn-submit-generate-ai")?.addEventListener("click", submitGenerateDietPlan);
+            document.getElementById("btn-submit-generate-ai-top")?.addEventListener("click", submitGenerateDietPlan);
             document.getElementById("modal-ai-generator-backdrop")?.addEventListener("click", (e) => {
                 if (isGeneratingDietPlan) return;
                 if (e.target.id === "modal-ai-generator-backdrop") closeAiGeneratorModal();
