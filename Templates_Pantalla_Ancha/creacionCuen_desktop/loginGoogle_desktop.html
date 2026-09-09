@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Iniciar Sesión · TrAIner</title>
+
+    <!-- Fuentes y Recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="/Icons/2.png">
+
+    <!-- Scripts auxiliares -->
+    <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/spa_router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --bg-black: #0c0d10;
+            --bg-card: #181a1f;
+            --bg-card-elevated: #20232a;
+            --bg-card-subtle: #14161a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a909a;
+            --text-muted: #585d68;
+            --accent: #9df3ff;
+            --accent-glow: rgba(157, 243, 255, 0.15);
+            --accent-purple: #6b52ff;
+            --border-card: rgba(255, 255, 255, 0.07);
+            --border-card-hover: rgba(255, 255, 255, 0.16);
+            --radius-card: 26px;
+            --radius-inner: 18px;
+            --radius-pill: 999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 24px 16px 40px;
+            position: relative;
+        }
+
+        /* Efectos de fondo ambiental */
+        .ambient-glow-top {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(157, 243, 255, 0.08) 0%, rgba(107, 82, 255, 0.05) 50%, transparent 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Contenedor central responsivo */
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── CABECERA BRAND ── */
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .brand-logo-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 24px rgba(157, 243, 255, 0.15);
+        }
+
+        .brand-logo-img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .brand-title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .brand-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #ffffff;
+        }
+
+        .brand-title span {
+            color: var(--accent);
+        }
+
+        .brand-subtitle {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.2px;
+        }
+
+        /* ── CARD PRINCIPAL DE LOGIN ── */
+        .card-login {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 26px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-login::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(157, 243, 255, 0.35) 50%, transparent 100%);
+        }
+
+        .login-head {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .login-title {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        .login-desc {
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }
+
+        /* ── BULLETS DE BENEFICIOS ── */
+        .benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 14px 16px;
+            background: var(--bg-card-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-inner);
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.35;
+        }
+
+        .benefit-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            background: rgba(157, 243, 255, 0.12);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .benefit-icon svg {
+            width: 13px;
+            height: 13px;
+            stroke-width: 2.5;
+        }
+
+        /* ── BOTÓN GOOGLE OAUTH PREMIUM ── */
+        .btn-google {
+            width: 100%;
+            height: 54px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f1f1f;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(255, 255, 255, 0.12);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-google:active {
+            transform: scale(0.97);
+        }
+
+        .btn-google:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .google-svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .fine-notice {
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ── CARD INFORMATIVA INFERIOR ── */
+        .card-info {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .info-header svg {
+            width: 17px;
+            height: 17px;
+            color: var(--accent);
+        }
+
+        .info-text {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-security-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .info-security-pill svg {
+            width: 14px;
+            height: 14px;
+            color: #2ed573;
+            flex-shrink: 0;
+        }
+
+        /* ── BOTÓN FLOTANTE REGRESAR / INICIO ── */
+        .btn-back-home {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 4px auto 0;
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back-home:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .btn-back-home svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.2;
+        }
+
+        /* Spinner */
+        .spinner-google {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #1f1f1f;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-glow-top"></div>
+
+    <div class="app-container">
+        <!-- ── CABECERA BRAND ── -->
+        <header class="brand-header">
+            <div class="brand-logo-wrap">
+                <img src="/Icons/2.png" alt="TrAIner" class="brand-logo-img">
+            </div>
+            <div class="brand-title-wrap">
+                <h1 class="brand-title">Personal Tr<span>AI</span>ner</h1>
+                <p class="brand-subtitle" data-i18n-en="Simple, clear, mobile-first training">
+                    Entrenamiento simple, inteligente y móvil
+                </p>
+            </div>
+        </header>
+
+        <!-- ── CARD DE ACCIÓN DE LOGIN ── -->
+        <section class="card-login" aria-label="Inicio de sesión">
+            <div class="login-head">
+                <h2 class="login-title" data-i18n-en="Sign in with Google">Inicia sesión con Google</h2>
+                <p class="login-desc"
+                    data-i18n-en="Access your training routines, progress tracking, and personalized diet plan in seconds without passwords.">
+                    Accede a tus rutinas de entrenamiento, seguimiento de cargas y plan alimentario en segundos, sin
+                    contraseñas ni fricción.
+                </p>
+            </div>
+
+            <!-- Beneficios clave -->
+            <div class="benefits-list" aria-label="Beneficios de TrAIner">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span data-i18n-en="Build consistent and repeatable routines">Rutinas estructuradas y repetibles con
+                        IA</span>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span data-i18n-en="Track sets, reps, and weights easily">Registro rápido de series, reps y
+                        cargas</span>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span data-i18n-en="Gradual and sustainable progression">Progresión gradual adaptada a tu perfil</span>
+                </div>
+            </div>
+
+            <!-- Botón de Google OAuth -->
+            <button id="boton_google" class="btn-google" type="button" aria-label="Continuar con Google">
+                <svg class="google-svg" viewBox="0 0 48 48" focusable="false" aria-hidden="true">
+                    <path fill="#EA4335"
+                        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                    <path fill="#4285F4"
+                        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                    <path fill="#FBBC05"
+                        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                    <path fill="#34A853"
+                        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                </svg>
+                <span id="btn-google-text" data-i18n-en="Continue with Google">Continuar con Google</span>
+            </button>
+
+            <p class="fine-notice"
+                data-i18n-en="By continuing, you start Google OAuth. We never request or store your password.">
+                Al continuar, se iniciará la autenticación oficial de Google. No pedimos ni almacenamos tu contraseña.
+            </p>
+        </section>
+
+        <!-- ── CARD DE TRANSPARENCIA Y PRIVACIDAD ── -->
+        <section class="card-info">
+            <h3 class="info-header" data-i18n-en="Why Google sign-in?">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                ¿Por qué iniciar con Google?
+            </h3>
+            <p class="info-text"
+                data-i18n-en="Google authentication ensures that your routines, personal metrics, and progress logs are securely synchronized to your profile across all your devices.">
+                Garantiza que tus rutinas, métricas corporales y registros de entrenamiento se sincronicen de manera
+                segura y privada en todos tus dispositivos, sin riesgo de pérdida.
+            </p>
+            <div class="info-security-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span data-i18n-en="SSL encrypted & authenticated via Supabase OAuth">Cifrado SSL y autenticado con
+                    Supabase OAuth</span>
+            </div>
+        </section>
+
+        <!-- Regresar al inicio -->
+        <a class="btn-back-home" href="/index.html" data-i18n-en="← Back to Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+            Volver al inicio
+        </a>
+    </div>
+
+    <!-- ── LÓGICA DE AUTENTICACIÓN GOOGLE (ES MODULE CONEXIÓN SUPABASE) ── -->
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.94.1/+esm";
+
+        const supabaseUrl = "https://lhecmoeilmhzgxpcetto.supabase.co";
+        const supabaseKey = "sb_publishable_oLC8LcDLa3jR72Hpd_jJsA_eXjMlP3-";
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                storage: localStorage
+            }
+        });
+
+        const isEnglish = () => (window.UIIdioma?.getIdioma?.() || "es") === "en";
+        const tLang = (es, en) => (isEnglish() ? en : es);
+
+        // 1. Detectar errores de OAuth en la URL de retorno
+        function checkUrlAuthErrors() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+
+                const errorMsg = urlParams.get("error_description") || hashParams.get("error_description") || urlParams.get("error");
+                if (errorMsg) {
+                    Swal.fire({
+                        icon: "error",
+                        title: tLang("Error de autenticación", "Authentication error"),
+                        text: decodeURIComponent(errorMsg),
+                        background: "#181a1f",
+                        color: "#ffffff",
+                        confirmButtonColor: "#ffffff"
+                    });
+                }
+            } catch (e) {
+                console.warn("Aviso revisando parámetros de error:", e);
+            }
+        }
+
+        // 2. Comprobar si ya existe sesión activa y redirigir
+        async function checkExistingSession() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user) {
+                    // Verificar si ya completó sus datos fitness
+                    const { data: fitData } = await supabase
+                        .from("Datos Fitness")
+                        .select("ID_user")
+                        .eq("ID_user", session.user.id)
+                        .limit(1);
+
+                    if (!fitData || fitData.length === 0) {
+                        window.location.href = "/Templates/creacionCuen/datosUnuevo.html";
+                    } else {
+                        window.location.href = "/Templates/dashboard.html";
+                    }
+                }
+            } catch (err) {
+                console.warn("Aviso consultando sesión previa:", err);
+            }
+        }
+
+        // 3. Disparar el flujo de OAuth con Google
+        async function loginWithGoogle() {
+            const btn = document.getElementById("boton_google");
+            const btnText = document.getElementById("btn-google-text");
+
+            btn.disabled = true;
+            btnText.textContent = tLang("Conectando con Google...", "Connecting to Google...");
+
+            // Insertar spinner
+            const spinner = document.createElement("span");
+            spinner.className = "spinner-google";
+            btn.prepend(spinner);
+
+            try {
+                // Redirigir a index.html tras la autenticación de Google
+                const redirectTarget = window.location.origin + "/index.html";
+
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: "google",
+                    options: {
+                        redirectTo: redirectTarget
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (data?.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error("No se pudo generar la URL de autenticación.");
+                }
+            } catch (err) {
+                console.error("Error al iniciar sesión con Google:", err);
+                Swal.fire({
+                    icon: "error",
+                    title: tLang("Error al iniciar sesión", "Login Error"),
+                    text: err.message || tLang("Ocurrió un inconveniente al conectar con Google.", "Could not connect to Google."),
+                    background: "#181a1f",
+                    color: "#ffffff",
+                    confirmButtonColor: "#ffffff"
+                });
+
+                btn.disabled = false;
+                btnText.textContent = tLang("Continuar con Google", "Continue with Google");
+                spinner.remove();
+            }
+        }
+
+        // ── INICIALIZACIÓN ──
+        async function init() {
+            checkUrlAuthErrors();
+            await checkExistingSession();
+
+            document.getElementById("boton_google")?.addEventListener("click", loginWithGoogle);
+
+            try {
+                if (window.UIIdioma?.translatePage) {
+                    window.UIIdioma.translatePage(document);
+                }
+            } catch { }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", init, { once: true });
+        } else {
+            init();
+        }
+    </script>
+</body>
+
+</html>
