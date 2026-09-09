@@ -108,15 +108,19 @@ async function verificarUsuario() {
             // 3. Consultar Planes con .limit(1)
             const { data: planData } = await supabase
                 .from("Planes")
-                .select("Plan_entreno, Plan_alimenta")
+                .select("Plan_entreno, Plan_alimenta, Dias_entrenados")
                 .eq("ID_user", user.id)
                 .limit(1);
 
             if (planData && planData.length > 0) {
                 const pEntreno = planData[0]?.Plan_entreno ?? "Ninguno";
                 const pAlimenta = planData[0]?.Plan_alimenta ?? "Proximamente";
+                const pDias = planData[0]?.Dias_entrenados ?? [];
                 localStorage.setItem("plan_entreno_usuario", typeof pEntreno === "object" ? JSON.stringify(pEntreno) : pEntreno);
                 localStorage.setItem("plan_dieta_usuario", typeof pAlimenta === "object" ? JSON.stringify(pAlimenta) : pAlimenta);
+                if (pDias) {
+                    localStorage.setItem("Dias_cale", typeof pDias === "string" ? pDias : JSON.stringify(pDias));
+                }
             } else {
                 localStorage.setItem("plan_entreno_usuario", "Ninguno");
                 localStorage.setItem("plan_dieta_usuario", "Proximamente");

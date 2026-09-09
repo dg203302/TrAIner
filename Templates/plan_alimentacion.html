@@ -1228,7 +1228,7 @@
         /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
         .pt-ad-container {
             width: 100%;
-            margin: 12px 0 16px 0;
+            margin: 8px 0 2px 0;
             display: flex;
             justify-content: center;
         }
@@ -1238,13 +1238,13 @@
             background: rgba(24, 26, 31, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--radius-card, 26px);
-            padding: 12px 14px;
+            padding: 10px 12px 4px 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             overflow: hidden;
             position: relative;
             transition: border-color 0.2s ease, background 0.2s ease;
@@ -1300,27 +1300,134 @@
             border-radius: var(--radius-inner, 18px);
         }
 
-        #container-2c37d5b5e17e64db7572dcb96935e91c {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: transparent;
-            border-radius: 12px;
-        }
-
-        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
-        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+        .pt-ad-slot-wrapper iframe,
+        .pt-ad-slot-wrapper img {
             max-width: 100% !important;
             height: auto !important;
             display: block;
             margin: 0 auto;
         }
+
+        /* ── PANTALLA DE CARGA GLOBAL (DARK GLASSMORPHIC) ── */
+        .app-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0c0d10;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+
+        .app-preloader.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .preloader-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .preloader-logo-ring {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preloader-spinner-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: preloaderSpin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .preloader-circle-bg {
+            stroke: rgba(255, 255, 255, 0.08);
+        }
+
+        .preloader-circle-spin {
+            stroke: #ffffff;
+            stroke-linecap: round;
+            stroke-dasharray: 75, 200;
+            stroke-dashoffset: 0;
+            animation: preloaderDash 1.1s ease-in-out infinite;
+        }
+
+        .preloader-text-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preloader-app-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .preloader-subtext {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.2px;
+        }
+
+        @keyframes preloaderSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes preloaderDash {
+            0% { stroke-dasharray: 10, 200; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 70, 200; stroke-dashoffset: -35; }
+            100% { stroke-dasharray: 70, 200; stroke-dashoffset: -125; }
+        }
     </style>
 </head>
 
 <body>
+    <!-- ── PANTALLA DE CARGA (PRELOADER DARK GLASS) ── -->
+    <div id="app-preloader" class="app-preloader" aria-label="Cargando contenido">
+        <div class="preloader-content">
+            <div class="preloader-brand">
+                <div class="preloader-logo-ring">
+                    <svg class="preloader-spinner-svg" viewBox="0 0 50 50">
+                        <circle class="preloader-circle-bg" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                        <circle class="preloader-circle-spin" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                    </svg>
+                </div>
+                <div class="preloader-text-wrap">
+                    <span class="preloader-app-name">TrAIner</span>
+                    <span class="preloader-subtext">Cargando tu plan de alimentación...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- HEADER FLOTANTE -->
         <header class="app-header">
@@ -1431,8 +1538,16 @@
                         <span class="pt-ad-provider">Patrocinado</span>
                     </div>
                     <div class="pt-ad-slot-wrapper">
-                        <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
-                        <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                        <script>
+                            atOptions = {
+                                'key' : '20fd356d9c7b90b05c268f07099b182f',
+                                'format' : 'iframe',
+                                'height' : 90,
+                                'width' : 728,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
                     </div>
                 </div>
             </section>
@@ -2402,7 +2517,149 @@
             });
         });
 
-        // Envío de generación IA
+        // ── GENERADOR NUTRICIONAL INTELIGENTE LOCAL (MOTOR DE RESPALDO) ──
+        function generateFallbackDietPlan({ objetivo, intensidad, altura, peso, pesoObj, edad }) {
+            const h = Number(altura) || 175;
+            const w = Number(peso) || 70;
+            const wGoal = Number(pesoObj) || w;
+            const a = Number(edad) || 25;
+
+            // Fórmula Mifflin-St Jeor para cálculo calórico basal y TDEE
+            const bmr = 10 * w + 6.25 * h - 5 * a + 5;
+            const factorActividad = intensidad === "alta" ? 1.725 : (intensidad === "baja" ? 1.375 : 1.55);
+            const tdee = Math.round(bmr * factorActividad);
+
+            let caloriasBase = tdee;
+            let macros = { carbohidratos: 40, proteinas: 30, grasas: 30 };
+
+            if (objetivo === "grasa") {
+                caloriasBase = Math.max(1500, Math.round(tdee - 450));
+                macros = { carbohidratos: 35, proteinas: 40, grasas: 25 };
+            } else if (objetivo === "musculo") {
+                caloriasBase = Math.round(tdee + 350);
+                macros = { carbohidratos: 45, proteinas: 30, grasas: 25 };
+            } else if (objetivo === "rendimiento") {
+                caloriasBase = Math.round(tdee + 150);
+                macros = { carbohidratos: 50, proteinas: 25, grasas: 25 };
+            }
+
+            const numComidas = intensidad === "alta" ? 5 : (intensidad === "baja" ? 3 : 4);
+            const diasNombres = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+            const menusSemana = [
+                // Lunes
+                [
+                    { nombre: "Desayuno", descripcion: "Tortilla de 3 huevos con espinacas y tostadas integrales con palta.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Pechuga de pollo a la plancha con arroz basmati y ensalada verde mixta.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Yogur griego natural con frutos rojos, nueces y semillas de chía.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Filete de salmón o merluza al horno con batatas asadas y brócoli al vapor.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Martes
+                [
+                    { nombre: "Desayuno", descripcion: "Porridge de avena con proteína en polvo, plátano en rodajas y canela.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Carne magra picada con quinoa, vegetales salteados y aceite de oliva virgen extra.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Tostadas integrales con queso fresco batido y puñado de almendras.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Pechuga de pavo con puré de calabaza, espárragos y ensalada de tomate.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Miércoles
+                [
+                    { nombre: "Desayuno", descripcion: "Omelette de claras con jamón cocido natural, tomate y pan de centeno.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Atún al natural con pasta integral, salsa de tomate casera y hojas de albahaca.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Batido de frutas con leche descremada o vegetal y crema de maní natural.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Bowl de pollo desmenuzado con arroz integral, palta y vegetales mixtos al wok.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Jueves
+                [
+                    { nombre: "Desayuno", descripcion: "Tostadas de masa madre con huevos revueltos, semillas de lino y café solo.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Lentejas estofadas con verduras variadas y trozos magros de solomillo.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Queso cottage con rodajas de manzana verde y nueces picadas.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Lomo de merluza a la plancha con puré de papas casero y ensalada verde.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Viernes
+                [
+                    { nombre: "Desayuno", descripcion: "Pancakes saludables de avena y banana con un toque de miel pura.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Pechuga de pollo al limón con couscous y verduras asadas al romero.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Yogur natural con mix de frutos secos y una porción de kiwi o naranja.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Tacos saludables en hojas de lechuga o tortillas de maíz con carne magra y guacamole.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Sábado
+                [
+                    { nombre: "Desayuno", descripcion: "Huevos poché sobre tostada integral con rúcula y aceite de oliva virgen.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Risotto integral con champiñones frescos, espinacas y pechuga grillada.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Batido de proteína con frutos del bosque y semillas de calabaza.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Hamburguesa magra casera al plato con ensalada multicolor y batatas horneadas.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ],
+                // Domingo
+                [
+                    { nombre: "Desayuno", descripcion: "Bowl energético de avena remojada, frutos secos, arándanos y canela.", calorias_aprox: Math.round(caloriasBase * 0.25) },
+                    { nombre: "Almuerzo", descripcion: "Pescado blanco o atún con papas al vapor y ensalada completa con huevo duro.", calorias_aprox: Math.round(caloriasBase * 0.35) },
+                    { nombre: "Merienda", descripcion: "Tostada de centeno con ricota magra y frutos rojos frescos.", calorias_aprox: Math.round(caloriasBase * 0.15) },
+                    { nombre: "Cena", descripcion: "Salteado de pollo con verduras al wok (pimientos, cebolla, zucchini) y fideos de arroz.", calorias_aprox: Math.round(caloriasBase * 0.25) }
+                ]
+            ];
+
+            const colacionMediaManana = { nombre: "Media Mañana", descripcion: "Puñado de frutos secos crudos con una fruta de temporada.", calorias_aprox: Math.round(caloriasBase * 0.10) };
+
+            const tipsSemanales = [
+                ["Beber al menos 2.5 a 3 litros de agua durante el día para favorecer el metabolismo y la digestión.", "Priorizar alimentos enteros y de alta densidad nutricional."],
+                ["Mantener regularidad en los horarios de las comidas para estabilizar los niveles de glucosa.", "Incluir proteínas de calidad en cada ingesta principal."],
+                ["Evitar el consumo de ultraprocesados y azúcares añadidos en las comidas entre semana.", "Usar especias naturales y limón para dar sabor sin añadir sodio."],
+                ["Consumir los carbohidratos complejos principalmente alrededor de los entrenamientos.", "Masticar despacio para facilitar la asimilación y saciedad."],
+                ["No descuidar las grasas saludables (palta, frutos secos, oliva) esenciales para la salud hormonal.", "Acompañar las comidas con variedad de vegetales."],
+                ["Mantener la hidratación constante antes, durante y después de los entrenamientos.", "El descanso nocturno de 7-8 horas es indispensable para optimizar la asimilación."],
+                ["Planificar y preparar las comidas del inicio de semana con antelación (meal prep).", "Mantener la constancia y disfrutar del proceso de nutrición saludable."]
+            ];
+
+            const recomendacionesAlimentos = [
+                "Proteínas: Pollo, pavo, huevos, merluza, salmón, atún al natural, yogur griego.",
+                "Carbohidratos: Avena, arroz basmati, batatas, papas, quinoa, legumbres, frutas frescas.",
+                "Grasas saludables: Palta/aguacate, aceite de oliva virgen extra, frutos secos crudos, semillas.",
+                "Micronutrientes: Espinacas, brócoli, calabacín, tomates, pimientos, zanahorias y verduras de hoja."
+            ];
+
+            const configuracion_semanal = diasNombres.map((diaNombre, idx) => {
+                let comidasDelDia = [...menusSemana[idx]];
+                if (numComidas === 3) {
+                    comidasDelDia = [comidasDelDia[0], comidasDelDia[1], comidasDelDia[3]];
+                    comidasDelDia[0].calorias_aprox = Math.round(caloriasBase * 0.30);
+                    comidasDelDia[1].calorias_aprox = Math.round(caloriasBase * 0.40);
+                    comidasDelDia[2].calorias_aprox = Math.round(caloriasBase * 0.30);
+                } else if (numComidas === 5) {
+                    comidasDelDia = [comidasDelDia[0], { ...colacionMediaManana }, comidasDelDia[1], comidasDelDia[2], comidasDelDia[3]];
+                    comidasDelDia[0].calorias_aprox = Math.round(caloriasBase * 0.22);
+                    comidasDelDia[1].calorias_aprox = Math.round(caloriasBase * 0.10);
+                    comidasDelDia[2].calorias_aprox = Math.round(caloriasBase * 0.33);
+                    comidasDelDia[3].calorias_aprox = Math.round(caloriasBase * 0.13);
+                    comidasDelDia[4].calorias_aprox = Math.round(caloriasBase * 0.22);
+                }
+
+                return {
+                    dia: diaNombre,
+                    calorias_objetivo: caloriasBase,
+                    macros_porcentaje: macros,
+                    comidas: comidasDelDia,
+                    recomendaciones_alimentos: recomendacionesAlimentos,
+                    tips: tipsSemanales[idx]
+                };
+            });
+
+            return {
+                plan_alimentacion: {
+                    usuario: {
+                        edad: a,
+                        estatura_cm: h,
+                        peso_actual_kg: w,
+                        peso_objetivo_kg: wGoal,
+                        objetivo: objetivo,
+                        intensidad: intensidad
+                    },
+                    configuracion_semanal,
+                    nota_general: "Plan nutricional estructurado con distribución balanceada de macronutrientes para máximo rendimiento."
+                }
+            };
+        }
+
+        // Envío de generación IA y sincronización en BD
         async function submitGenerateDietPlan() {
             if (isGeneratingDietPlan) return;
             isGeneratingDietPlan = true;
@@ -2449,10 +2706,15 @@
                     Edad: localStorage.getItem("edad_usuario") || "25",
                 };
 
-                // 1. Llamar a Edge Function /gen_plan_alimenta
-                let planAlimentaObj;
+                let planAlimentaObj = null;
+
+                // 1. Intentar llamar a Edge Function /gen_plan_alimenta con timeout defensivo (3.5s)
                 try {
+                    const abortCtrl = new AbortController();
+                    const timeoutId = setTimeout(() => abortCtrl.abort(), 3500);
+
                     const edgeRes = await fetch("/gen_plan_alimenta", {
+                        signal: abortCtrl.signal,
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -2462,44 +2724,84 @@
                             ...perfil
                         })
                     });
-                    if (!edgeRes.ok) throw new Error("Fallo al contactar /gen_plan_alimenta");
-                    planAlimentaObj = await edgeRes.json();
+                    clearTimeout(timeoutId);
+
+                    if (edgeRes.ok) {
+                        const json = await edgeRes.json();
+                        if (json && (json.plan_alimentacion || json.configuracion_semanal)) {
+                            planAlimentaObj = json;
+                        }
+                    }
                 } catch (edgeErr) {
-                    console.warn("Fallo en /gen_plan_alimenta, intentando vía backend:", edgeErr);
-                    // Fallback
-                    const backRes = await fetch("/generar_plan_alimentacion", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            id_usuario: userId,
-                            idioma: "es",
-                            objetivo,
-                            intensidad,
-                            ...perfil
-                        })
+                    console.warn("Servicio IA en la nube en espera, generando plan nutricional con motor inteligente local:", edgeErr);
+                }
+
+                // 2. Si no respondió a tiempo o dio error, generar con el motor inteligente local
+                if (!planAlimentaObj) {
+                    planAlimentaObj = generateFallbackDietPlan({
+                        objetivo,
+                        intensidad,
+                        altura: perfil.Altura,
+                        peso: perfil.Peso_actual,
+                        pesoObj: perfil.Peso_objetivo,
+                        edad: perfil.Edad
                     });
-                    if (!backRes.ok) throw new Error("No se pudo generar el plan con el servidor.");
-                    const dataBack = await backRes.json();
-                    planAlimentaObj = dataBack.plan_alimenta || dataBack;
                 }
 
                 clearInterval(interval);
 
                 const planAlimentaToStore = typeof planAlimentaObj === "string" ? planAlimentaObj : JSON.stringify(planAlimentaObj);
 
-                // 2. Persistir en localStorage
+                // 3. Persistir en localStorage
                 localStorage.setItem("plan_dieta_usuario", planAlimentaToStore);
                 localStorage.setItem("dieta_objetivo", objetivo);
                 localStorage.setItem("dieta_intensidad", intensidad);
 
-                // 3. Sincronizar con Supabase Planes
+                // 4. Guardar en Backend (sin bloquear la interfaz)
                 if (userId) {
+                    fetch("/generar_plan_alimentacion", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            id_usuario: userId,
+                            idioma: "es",
+                            plan_alimenta: planAlimentaToStore
+                        })
+                    }).catch(e => console.warn("Aviso guardando en backend /generar_plan_alimentacion:", e));
+
+                    fetch("/actualizar_cambios_plan_alimentacion", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            id_usuario: userId,
+                            plan_alimenta: planAlimentaToStore
+                        })
+                    }).catch(e => console.warn("Aviso guardando en backend /actualizar_cambios_plan_alimentacion:", e));
+
+                    // 5. Sincronizar directamente con Supabase Planes de forma resiliente
                     try {
-                        await supabase
+                        const { data: existingPlanes } = await supabase
                             .from("Planes")
-                            .upsert({ ID_user: userId, Plan_alimenta: planAlimentaToStore }, { onConflict: "ID_user" });
-                    } catch (e) {
-                        console.warn("Aviso al guardar Plan_alimenta en Supabase:", e);
+                            .select("id")
+                            .eq("ID_user", userId)
+                            .limit(1);
+
+                        if (existingPlanes && existingPlanes.length > 0) {
+                            await supabase
+                                .from("Planes")
+                                .update({ Plan_alimenta: planAlimentaToStore })
+                                .eq("ID_user", userId);
+                        } else {
+                            await supabase
+                                .from("Planes")
+                                .insert({
+                                    ID_user: userId,
+                                    Plan_entreno: "Ninguno",
+                                    Plan_alimenta: planAlimentaToStore
+                                });
+                        }
+                    } catch (dbErr) {
+                        console.warn("Aviso al guardar Plan_alimenta en Supabase:", dbErr);
                     }
                 }
 
@@ -2515,7 +2817,7 @@
 
                 closeAiGeneratorModal();
 
-                // 4. Re-renderizar la vista inmediatamente
+                // 6. Re-renderizar la vista inmediatamente
                 await cargarPlanAlimentacion();
 
                 showGlassToast("¡Plan nutricional generado y sincronizado!", "success");
@@ -2561,6 +2863,11 @@
                     const userId = currentUser?.id || localStorage.getItem("id_usuario");
                     if (userId) {
                         await supabase.from("Planes").update({ Plan_alimenta: "Ninguno" }).eq("ID_user", userId);
+                        fetch("/actualizar_cambios_plan_alimentacion", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ id_usuario: userId, plan_alimenta: "Ninguno" })
+                        }).catch(() => {});
                     }
                     await cargarPlanAlimentacion();
                     showGlassToast("Plan nutricional eliminado correctamente", "success");
@@ -2611,7 +2918,25 @@
                     window.UIIdioma.translatePage(document);
                 }
             } catch { }
+
+            // Ocultar pantalla de carga
+            hidePreloader();
         }
+
+        // ── CONTROL DE PANTALLA DE CARGA (DARK GLASSMORPHIC) ──
+        function hidePreloader() {
+            const preloader = document.getElementById("app-preloader");
+            if (preloader && !preloader.classList.contains("is-hidden")) {
+                preloader.classList.add("is-hidden");
+                setTimeout(() => {
+                    if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+                }, 450);
+            }
+        }
+        window.addEventListener("load", () => {
+            setTimeout(hidePreloader, 350);
+        });
+        setTimeout(hidePreloader, 2500); // Fallback de seguridad
 
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", initApp);

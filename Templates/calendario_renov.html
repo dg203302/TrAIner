@@ -1274,7 +1274,7 @@
         /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
         .pt-ad-container {
             width: 100%;
-            margin: 12px 0 16px 0;
+            margin: 8px 0 2px 0;
             display: flex;
             justify-content: center;
         }
@@ -1284,13 +1284,13 @@
             background: rgba(24, 26, 31, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--radius-card, 26px);
-            padding: 12px 14px;
+            padding: 10px 12px 4px 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             overflow: hidden;
             position: relative;
             transition: border-color 0.2s ease, background 0.2s ease;
@@ -1346,27 +1346,134 @@
             border-radius: var(--radius-inner, 18px);
         }
 
-        #container-2c37d5b5e17e64db7572dcb96935e91c {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: transparent;
-            border-radius: 12px;
-        }
-
-        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
-        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+        .pt-ad-slot-wrapper iframe,
+        .pt-ad-slot-wrapper img {
             max-width: 100% !important;
             height: auto !important;
             display: block;
             margin: 0 auto;
         }
+
+        /* ── PANTALLA DE CARGA GLOBAL (DARK GLASSMORPHIC) ── */
+        .app-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0c0d10;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+
+        .app-preloader.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .preloader-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .preloader-logo-ring {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preloader-spinner-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: preloaderSpin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .preloader-circle-bg {
+            stroke: rgba(255, 255, 255, 0.08);
+        }
+
+        .preloader-circle-spin {
+            stroke: #ffffff;
+            stroke-linecap: round;
+            stroke-dasharray: 75, 200;
+            stroke-dashoffset: 0;
+            animation: preloaderDash 1.2s ease-in-out infinite;
+        }
+
+        .preloader-text-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preloader-app-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .preloader-subtext {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.2px;
+        }
+
+        @keyframes preloaderSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes preloaderDash {
+            0% { stroke-dasharray: 10, 200; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 70, 200; stroke-dashoffset: -35; }
+            100% { stroke-dasharray: 70, 200; stroke-dashoffset: -125; }
+        }
     </style>
 </head>
 
 <body>
+    <!-- ── PANTALLA DE CARGA (PRELOADER DARK GLASS) ── -->
+    <div id="app-preloader" class="app-preloader" aria-label="Cargando contenido">
+        <div class="preloader-content">
+            <div class="preloader-brand">
+                <div class="preloader-logo-ring">
+                    <svg class="preloader-spinner-svg" viewBox="0 0 50 50">
+                        <circle class="preloader-circle-bg" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                        <circle class="preloader-circle-spin" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                    </svg>
+                </div>
+                <div class="preloader-text-wrap">
+                    <span class="preloader-app-name">TrAIner</span>
+                    <span class="preloader-subtext">Cargando calendario y estadísticas...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- HEADER FLOTANTE -->
         <header class="app-header">
@@ -1645,8 +1752,16 @@
                         <span class="pt-ad-provider">Patrocinado</span>
                     </div>
                     <div class="pt-ad-slot-wrapper">
-                        <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
-                        <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                        <script>
+                            atOptions = {
+                                'key' : '20fd356d9c7b90b05c268f07099b182f',
+                                'format' : 'iframe',
+                                'height' : 90,
+                                'width' : 728,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
                     </div>
                 </div>
             </section>
@@ -2969,7 +3084,25 @@
             } catch (e) {
                 console.warn("ResizeObserver no disponible:", e);
             }
+
+            // Ocultar pantalla de carga
+            hidePreloader();
         }
+
+        // ── CONTROL DE PANTALLA DE CARGA (DARK GLASSMORPHIC) ──
+        function hidePreloader() {
+            const preloader = document.getElementById("app-preloader");
+            if (preloader && !preloader.classList.contains("is-hidden")) {
+                preloader.classList.add("is-hidden");
+                setTimeout(() => {
+                    if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+                }, 450);
+            }
+        }
+        window.addEventListener("load", () => {
+            setTimeout(hidePreloader, 350);
+        });
+        setTimeout(hidePreloader, 2500); // Fallback de seguridad
 
         // Ejecutar inmediatamente o tras carga del DOM de forma segura
         if (document.readyState === "loading") {

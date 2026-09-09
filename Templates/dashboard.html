@@ -1510,7 +1510,7 @@
         /* ── PUBLICIDAD / SPONSOR DARK GLASSMORPHIC ── */
         .pt-ad-container {
             width: 100%;
-            margin: 4px 0 8px 0;
+            margin: 4px 0 2px 0;
             display: flex;
             justify-content: center;
         }
@@ -1520,13 +1520,13 @@
             background: rgba(24, 26, 31, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: var(--radius-card, 26px);
-            padding: 12px 14px;
+            padding: 10px 12px 4px 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             overflow: hidden;
             position: relative;
             transition: border-color 0.2s ease, background 0.2s ease;
@@ -1582,27 +1582,134 @@
             border-radius: var(--radius-inner, 18px);
         }
 
-        #container-2c37d5b5e17e64db7572dcb96935e91c {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: transparent;
-            border-radius: 12px;
-        }
-
-        #container-2c37d5b5e17e64db7572dcb96935e91c iframe,
-        #container-2c37d5b5e17e64db7572dcb96935e91c img {
+        .pt-ad-slot-wrapper iframe,
+        .pt-ad-slot-wrapper img {
             max-width: 100% !important;
             height: auto !important;
             display: block;
             margin: 0 auto;
         }
+
+        /* ── PANTALLA DE CARGA GLOBAL (DARK GLASSMORPHIC) ── */
+        .app-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0c0d10;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+
+        .app-preloader.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .preloader-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .preloader-logo-ring {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preloader-spinner-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: preloaderSpin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        .preloader-circle-bg {
+            stroke: rgba(255, 255, 255, 0.08);
+        }
+
+        .preloader-circle-spin {
+            stroke: #ffffff;
+            stroke-linecap: round;
+            stroke-dasharray: 75, 200;
+            stroke-dashoffset: 0;
+            animation: preloaderDash 1.1s ease-in-out infinite;
+        }
+
+        .preloader-text-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preloader-app-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .preloader-subtext {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.2px;
+        }
+
+        @keyframes preloaderSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes preloaderDash {
+            0% { stroke-dasharray: 10, 200; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 70, 200; stroke-dashoffset: -35; }
+            100% { stroke-dasharray: 70, 200; stroke-dashoffset: -125; }
+        }
     </style>
 </head>
 
 <body>
+    <!-- ── PANTALLA DE CARGA (PRELOADER DARK GLASS) ── -->
+    <div id="app-preloader" class="app-preloader" aria-label="Cargando contenido">
+        <div class="preloader-content">
+            <div class="preloader-brand">
+                <div class="preloader-logo-ring">
+                    <svg class="preloader-spinner-svg" viewBox="0 0 50 50">
+                        <circle class="preloader-circle-bg" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                        <circle class="preloader-circle-spin" cx="25" cy="25" r="20" fill="none" stroke-width="3.5"></circle>
+                    </svg>
+                </div>
+                <div class="preloader-text-wrap">
+                    <span class="preloader-app-name">TrAIner</span>
+                    <span class="preloader-subtext">Cargando tu panel de inicio...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <!-- HEADER FLOTANTE -->
         <header class="app-header">
@@ -1685,7 +1792,7 @@
         <!-- SEGUNDA SECCIÓN: SLIDESHOW CON GIFS DE LOS EJERCICIOS DE HOY -->
         <section class="slideshow-card" id="today-slideshow-card">
             <div class="slideshow-header">
-                <span class="slideshow-header-title" data-i18n-en="Today's Exercises">Ejercicios de hoy</span>
+                <span class="slideshow-header-title" id="slideshow-header-title" data-i18n-en="Today's Exercises">Ejercicios de hoy</span>
                 <span class="slideshow-counter" id="slideshow-counter">1 / --</span>
             </div>
 
@@ -1829,8 +1936,16 @@
                     <span class="pt-ad-provider">Patrocinado</span>
                 </div>
                 <div class="pt-ad-slot-wrapper">
-                    <div id="container-2c37d5b5e17e64db7572dcb96935e91c"></div>
-                    <script async="async" data-cfasync="false" src="https://pl28560870.effectivegatecpm.com/2c37d5b5e17e64db7572dcb96935e91c/invoke.js"></script>
+                    <script>
+                        atOptions = {
+                            'key' : '20fd356d9c7b90b05c268f07099b182f',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    </script>
+                    <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
                 </div>
             </div>
         </section>
@@ -2072,6 +2187,160 @@
             return [];
         };
 
+        const DIAS_EN_ES_MAP = {
+            "monday": "lunes", "mon": "lunes", "l": "lunes",
+            "tuesday": "martes", "tue": "martes", "tues": "martes", "m": "martes",
+            "wednesday": "miercoles", "wed": "miercoles", "x": "miercoles",
+            "thursday": "jueves", "thu": "jueves", "thur": "jueves", "j": "jueves",
+            "friday": "viernes", "fri": "viernes", "v": "viernes",
+            "saturday": "sabado", "sat": "sabado", "s": "sabado",
+            "sunday": "domingo", "sun": "domingo", "d": "domingo"
+        };
+
+        function normalizarNombreDia(diaStr) {
+            const norm = normalizeStr(diaStr);
+            if (!norm) return "";
+            for (const [enKey, esVal] of Object.entries(DIAS_EN_ES_MAP)) {
+                if (norm === enKey || norm.startsWith(enKey)) return esVal;
+            }
+            if (norm.includes("lunes")) return "lunes";
+            if (norm.includes("martes")) return "martes";
+            if (norm.includes("miercol") || norm.includes("miércol")) return "miercoles";
+            if (norm.includes("jueves")) return "jueves";
+            if (norm.includes("viernes")) return "viernes";
+            if (norm.includes("sabad") || norm.includes("sábad")) return "sabado";
+            if (norm.includes("domingo")) return "domingo";
+            return norm;
+        }
+
+        function extractDaysFromPlan(rawPlan) {
+            if (!rawPlan || rawPlan === "Ninguno") return [];
+            const parsed = typeof rawPlan === "object" ? rawPlan : (safeJsonParse(extractLikelyJsonText(rawPlan)) ?? safeJsonParse(rawPlan));
+            if (!parsed || typeof parsed !== "object") return [];
+
+            let root = parsed;
+            if (root.plan_entrenamiento_hipertrofia) root = root.plan_entrenamiento_hipertrofia;
+            if (root.plan_entrenamiento) root = root.plan_entrenamiento;
+            if (root.plan) root = root.plan;
+
+            const diasOrden = ["lunes", "martes", "miercoles", "miércoles", "jueves", "viernes", "sabado", "sábado", "domingo"];
+
+            // Caso A: Array de días
+            const maybeArray = root?.configuracion_semanal ?? root?.configuracionSemanal ?? root?.dias ?? root?.semana ?? root?.plan_semanal;
+            if (Array.isArray(maybeArray)) {
+                return maybeArray.map((d, idx) => {
+                    const rawName = d?.dia ?? d?.nombre ?? d?.day ?? `Día ${idx + 1}`;
+                    const enfoque = d?.enfoque ?? d?.focus ?? d?.titulo ?? "Entrenamiento";
+                    const ejercicios = Array.isArray(d?.ejercicios) ? d.ejercicios : (d?.entrenamiento ?? d?.exercises ?? []);
+                    return {
+                        dia: rawName,
+                        diaNorm: normalizarNombreDia(rawName),
+                        enfoque,
+                        ejercicios: Array.isArray(ejercicios) ? ejercicios : [],
+                        originalIndex: idx
+                    };
+                });
+            }
+
+            // Caso B: Objeto con claves por día
+            const keys = Object.keys(root || {}).filter(k => diasOrden.includes(normalizarNombreDia(k)));
+            if (keys.length > 0) {
+                return keys.map((k, idx) => {
+                    const d = root[k] || {};
+                    const rawName = k.charAt(0).toUpperCase() + k.slice(1);
+                    const enfoque = d?.enfoque ?? d?.focus ?? "Entrenamiento";
+                    const ejercicios = Array.isArray(d?.ejercicios) ? d.ejercicios : (Array.isArray(d) ? d : (d?.entrenamiento ?? []));
+                    return {
+                        dia: rawName,
+                        diaNorm: normalizarNombreDia(k),
+                        enfoque,
+                        ejercicios: Array.isArray(ejercicios) ? ejercicios : [],
+                        originalIndex: idx
+                    };
+                });
+            }
+
+            // Caso C: Array plano de ejercicios
+            const flatEx = root?.ejercicios ?? (Array.isArray(root) ? root : []);
+            if (Array.isArray(flatEx) && flatEx.length > 0) {
+                return [{
+                    dia: "Rutina Semanal",
+                    diaNorm: "todos",
+                    enfoque: "Entrenamiento General",
+                    ejercicios: flatEx,
+                    originalIndex: 0
+                }];
+            }
+
+            return [];
+        }
+
+        function extractDietFromPlan(rawDiet) {
+            if (!rawDiet || rawDiet === "Ninguno" || rawDiet === "Proximamente") return null;
+            const parsed = typeof rawDiet === "object" ? rawDiet : (safeJsonParse(extractLikelyJsonText(rawDiet)) ?? safeJsonParse(rawDiet));
+            if (!parsed || typeof parsed !== "object") return null;
+
+            let root = parsed;
+            if (root.plan_alimentacion) root = root.plan_alimentacion;
+            if (root.plan) root = root.plan;
+
+            const diasOrden = ["lunes", "martes", "miercoles", "miércoles", "jueves", "viernes", "sabado", "sábado", "domingo"];
+
+            const normalizeMeals = (comidas) => {
+                if (!Array.isArray(comidas)) return [];
+                return comidas.map((c, i) => {
+                    if (typeof c === "string") return { nombre: `Comida ${i + 1}`, descripcion: c, calorias_aprox: null };
+                    return {
+                        nombre: c?.nombre || c?.titulo || `Comida ${i + 1}`,
+                        descripcion: c?.descripcion || c?.comida || "",
+                        calorias_aprox: c?.calorias_aprox ?? c?.calorias ?? null
+                    };
+                });
+            };
+
+            const normalizeMacros = (m) => {
+                if (!m || typeof m !== "object") return { carbohidratos: 40, proteinas: 30, grasas: 30 };
+                return {
+                    carbohidratos: Math.round(Number(m.carbohidratos || m.carbs || 40)),
+                    proteinas: Math.round(Number(m.proteinas || m.protein || 30)),
+                    grasas: Math.round(Number(m.grasas || m.fats || 30))
+                };
+            };
+
+            // Caso A: Array
+            const maybeArray = root?.configuracion_semanal ?? root?.configuracionSemanal ?? root?.dias ?? root?.semana;
+            if (Array.isArray(maybeArray)) {
+                return maybeArray.map((d, i) => {
+                    const rawName = d?.dia ?? d?.nombre ?? d?.day ?? `Día ${i + 1}`;
+                    return {
+                        dia: rawName,
+                        diaNorm: normalizarNombreDia(rawName),
+                        calorias_objetivo: Math.round(Number(d?.calorias_objetivo ?? d?.calorias ?? root?.calorias_objetivo ?? 2400)),
+                        macros: normalizeMacros(d?.macros_porcentaje ?? d?.macros ?? root?.macros_porcentaje),
+                        comidas: normalizeMeals(d?.comidas ?? d?.meals)
+                    };
+                });
+            }
+
+            // Caso B: Objeto con claves por día
+            const keys = Object.keys(root || {}).filter(k => diasOrden.includes(normalizarNombreDia(k)));
+            if (keys.length > 0) {
+                return keys.map((k, i) => {
+                    const d = root[k] || {};
+                    const rawName = k.charAt(0).toUpperCase() + k.slice(1);
+                    return {
+                        dia: rawName,
+                        diaNorm: normalizarNombreDia(k),
+                        calorias_objetivo: Math.round(Number(d?.calorias_objetivo ?? d?.calorias ?? root?.calorias_objetivo ?? 2400)),
+                        macros: normalizeMacros(d?.macros_porcentaje ?? d?.macros ?? root?.macros_porcentaje),
+                        comidas: normalizeMeals(d?.comidas ?? (Array.isArray(d) ? d : []))
+                    };
+                });
+            }
+
+            return null;
+        }
+
         // 1. Cargar base de datos local de ejercicios y GIFs
         async function loadExercisesDatabase() {
             try {
@@ -2191,13 +2460,13 @@
                     if (!planErr && planesRows && planesRows.length > 0) {
                         const planesData = planesRows[0];
                         userPlanesData = planesData;
-                        if (planesData.Plan_entreno) {
+                        if (planesData.Plan_entreno && planesData.Plan_entreno !== "Ninguno" && planesData.Plan_entreno !== "Proximamente") {
                             const strPlan = typeof planesData.Plan_entreno === "object"
                                 ? JSON.stringify(planesData.Plan_entreno)
                                 : planesData.Plan_entreno;
                             localStorage.setItem("plan_entreno_usuario", strPlan);
                         }
-                        if (planesData.Plan_alimenta) {
+                        if (planesData.Plan_alimenta && planesData.Plan_alimenta !== "Ninguno" && planesData.Plan_alimenta !== "Proximamente") {
                             const strAlim = typeof planesData.Plan_alimenta === "object"
                                 ? JSON.stringify(planesData.Plan_alimenta)
                                 : planesData.Plan_alimenta;
@@ -2210,12 +2479,35 @@
                             localStorage.setItem("Dias_cale", strDias);
                         }
                     }
+
+                    // Fallback con localStorage por si la BD aún no tiene campos o devolvió Ninguno
+                    if (!userPlanesData) userPlanesData = {};
+                    if (!userPlanesData.Plan_entreno || userPlanesData.Plan_entreno === "Ninguno") {
+                        const localP = localStorage.getItem("plan_entreno_usuario");
+                        if (localP && localP !== "Ninguno") userPlanesData.Plan_entreno = localP;
+                    }
+                    if (!userPlanesData.Plan_alimenta || userPlanesData.Plan_alimenta === "Ninguno") {
+                        const localA = localStorage.getItem("plan_dieta_usuario");
+                        if (localA && localA !== "Ninguno") userPlanesData.Plan_alimenta = localA;
+                    }
+                    if (!userPlanesData.Dias_entrenados) {
+                        const localD = localStorage.getItem("Dias_cale");
+                        if (localD) userPlanesData.Dias_entrenados = localD;
+                    }
                 } catch (planEx) {
                     console.warn("Aviso consultando Planes:", planEx);
                 }
             } catch (err) {
                 console.error("Error al recuperar datos de la base de datos:", err);
             }
+        }
+
+        // Función auxiliar para fechas locales en formato YYYY-MM-DD
+        function formatLocalIsoDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${y}-${m}-${day}`;
         }
 
         // 3. MOSTRAR INFORMACIÓN: Body Weight y BMI
@@ -2261,76 +2553,92 @@
             const titleEl = document.getElementById("workout-today-title");
             const subEl = document.getElementById("workout-today-subtitle");
 
-            if (!rawPlan || rawPlan === "Ninguno") {
+            if (!rawPlan || rawPlan === "Ninguno" || rawPlan === "Proximamente") {
                 titleEl.textContent = "Sin plan cargado";
                 subEl.textContent = "Genera tu rutina en Planes";
                 ringEl.style.strokeDashoffset = "160";
                 numEl.textContent = "-";
-                document.getElementById("today-slideshow-card").style.display = "none";
-                document.getElementById("cal-subitem-title").textContent = "Sin plan de entreno";
-                document.getElementById("cal-subitem-sub").textContent = "Ve a la sección Planes para crearlo";
+                const slideCard = document.getElementById("today-slideshow-card");
+                if (slideCard) slideCard.style.display = "none";
+                const subItemTitle = document.getElementById("cal-subitem-title");
+                if (subItemTitle) subItemTitle.textContent = "Sin plan de entreno";
+                const subItemSub = document.getElementById("cal-subitem-sub");
+                if (subItemSub) subItemSub.textContent = "Ve a la sección Planes para crearlo";
                 return;
             }
 
-            let parsedPlan = safeJsonParse(extractLikelyJsonText(rawPlan)) ?? safeJsonParse(rawPlan);
-            if (parsedPlan && typeof parsedPlan === "object") {
-                parsedPlan = parsedPlan.plan_entrenamiento_hipertrofia ?? parsedPlan.plan_entrenamiento ?? parsedPlan.plan ?? parsedPlan;
+            const days = extractDaysFromPlan(rawPlan);
+            if (!days || days.length === 0) {
+                titleEl.textContent = "Rutina General";
+                subEl.textContent = "Explora tus ejercicios en Planes";
+                ringEl.style.strokeDashoffset = "160";
+                numEl.textContent = "-";
+                const slideCard = document.getElementById("today-slideshow-card");
+                if (slideCard) slideCard.style.display = "none";
+                return;
             }
 
-            const weekly = parsedPlan?.configuracion_semanal || parsedPlan?.semana || parsedPlan?.dias || (Array.isArray(parsedPlan) ? parsedPlan : []);
-            let todayDayConfig = null;
+            // 1. Buscar si hay una configuración para el día de hoy
+            let todayDayConfig = days.find(d => d.diaNorm === todayNameNorm);
+
+            // 2. Buscar el siguiente día con ejercicios programados
             let nextDayConfig = null;
-
-            if (Array.isArray(weekly) && weekly.length > 0) {
-                todayDayConfig = weekly.find(d => normalizeStr(d?.dia || d?.nombre || d?.day).includes(todayNameNorm));
-
-                // Buscar siguiente entreno para el sub-ítem 2
-                const currentIndex = weekly.findIndex(d => normalizeStr(d?.dia || d?.nombre || d?.day).includes(todayNameNorm));
-                for (let i = 1; i <= 6; i++) {
-                    const candidate = weekly[(currentIndex + i) % weekly.length];
-                    const candEx = candidate?.ejercicios || candidate?.exercises || [];
-                    if (candidate && Array.isArray(candEx) && candEx.length > 0 && !normalizeStr(candidate.enfoque || candidate.focus).includes("descanso")) {
-                        nextDayConfig = candidate;
-                        break;
-                    }
+            const diasSemana = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+            for (let offset = 1; offset <= 7; offset++) {
+                const checkDayNorm = diasSemana[(todayIdx + offset) % 7];
+                const candidate = days.find(d => d.diaNorm === checkDayNorm && Array.isArray(d.ejercicios) && d.ejercicios.length > 0 && !normalizeStr(d.enfoque).includes("descanso"));
+                if (candidate) {
+                    nextDayConfig = candidate;
+                    break;
                 }
             }
+            if (!nextDayConfig) {
+                nextDayConfig = days.find(d => Array.isArray(d.ejercicios) && d.ejercicios.length > 0 && !normalizeStr(d.enfoque).includes("descanso"));
+            }
 
-            if (todayDayConfig) {
-                const isRest = !todayDayConfig.ejercicios || todayDayConfig.ejercicios.length === 0 || normalizeStr(todayDayConfig.enfoque).includes("descanso");
-                if (isRest) {
-                    titleEl.textContent = "Día de Descanso";
-                    subEl.textContent = `${DIAS_NAMES_ES[todayIdx]} · Recuperación`;
-                    ringEl.style.strokeDashoffset = "160";
-                    numEl.textContent = "R";
-                    document.getElementById("today-slideshow-card").style.display = "none";
+            const todayHasExercises = todayDayConfig && Array.isArray(todayDayConfig.ejercicios) && todayDayConfig.ejercicios.length > 0;
+            const isTodayRest = !todayDayConfig || !todayHasExercises || normalizeStr(todayDayConfig.enfoque).includes("descanso");
+
+            if (!isTodayRest && todayHasExercises) {
+                titleEl.textContent = todayDayConfig.enfoque || "Entrenamiento de hoy";
+                subEl.textContent = `${DIAS_NAMES_ES[todayIdx]} · ${todayDayConfig.ejercicios.length} ejercicios`;
+                ringEl.style.strokeDashoffset = "40";
+                numEl.textContent = "1";
+
+                currentDayExercises = todayDayConfig.ejercicios;
+                setupSlideshow("Ejercicios de hoy");
+            } else {
+                titleEl.textContent = "Día de Descanso";
+                subEl.textContent = `${DIAS_NAMES_ES[todayIdx]} · Recuperación activa`;
+                ringEl.style.strokeDashoffset = "160";
+                numEl.textContent = "R";
+
+                // Si hoy es descanso, mostrar en el slideshow la rutina de la próxima sesión
+                if (nextDayConfig && Array.isArray(nextDayConfig.ejercicios) && nextDayConfig.ejercicios.length > 0) {
+                    currentDayExercises = nextDayConfig.ejercicios;
+                    setupSlideshow(`Próxima: ${nextDayConfig.dia} · ${nextDayConfig.enfoque}`);
                 } else {
-                    titleEl.textContent = todayDayConfig.enfoque || "Entrenamiento de hoy";
-                    subEl.textContent = `${DIAS_NAMES_ES[todayIdx]}s · ${todayDayConfig.ejercicios.length} ejercicios`;
-                    ringEl.style.strokeDashoffset = "40";
-                    numEl.textContent = "1";
-
-                    currentDayExercises = todayDayConfig.ejercicios;
-                    setupSlideshow();
+                    const slideCard = document.getElementById("today-slideshow-card");
+                    if (slideCard) slideCard.style.display = "none";
                 }
-            } else {
-                titleEl.textContent = "Rutina Semanal";
-                subEl.textContent = `${DIAS_NAMES_ES[todayIdx]}`;
             }
 
-            // Subitem: Próxima sesión (2)
+            // Subitem: Próxima sesión en el recuadro del calendario
+            const calSubTitle = document.getElementById("cal-subitem-title");
+            const calSubSub = document.getElementById("cal-subitem-sub");
             if (nextDayConfig) {
-                document.getElementById("cal-subitem-title").textContent = nextDayConfig.enfoque || "Próxima sesión";
-                document.getElementById("cal-subitem-sub").textContent = nextDayConfig.dia || "Próximamente";
+                if (calSubTitle) calSubTitle.textContent = nextDayConfig.enfoque || "Próxima sesión";
+                if (calSubSub) calSubSub.textContent = nextDayConfig.dia || "Próximamente";
             } else {
-                document.getElementById("cal-subitem-title").textContent = "Plan semanal";
-                document.getElementById("cal-subitem-sub").textContent = "Al día con los entrenamientos";
+                if (calSubTitle) calSubTitle.textContent = "Plan semanal";
+                if (calSubSub) calSubSub.textContent = "Al día con los entrenamientos";
             }
         }
 
         // 5. SLIDESHOW DE EJERCICIOS Y GIFS
-        function setupSlideshow() {
+        function setupSlideshow(customTag) {
             const cardEl = document.getElementById("today-slideshow-card");
+            if (!cardEl) return;
             if (!currentDayExercises || currentDayExercises.length === 0) {
                 cardEl.style.display = "none";
                 return;
@@ -2339,23 +2647,38 @@
             cardEl.style.display = "flex";
             slideIndex = 0;
 
+            const titleEl = document.getElementById("slideshow-header-title");
+            if (titleEl && customTag) {
+                titleEl.textContent = customTag;
+            } else if (titleEl) {
+                titleEl.textContent = "Ejercicios de hoy";
+            }
+
             const dotsBar = document.getElementById("slideshow-dots-bar");
-            dotsBar.innerHTML = "";
-            currentDayExercises.forEach((_, idx) => {
-                const dot = document.createElement("div");
-                dot.className = `slideshow-dot ${idx === 0 ? "is-active" : ""}`;
-                dotsBar.appendChild(dot);
-            });
+            if (dotsBar) {
+                dotsBar.innerHTML = "";
+                currentDayExercises.forEach((_, idx) => {
+                    const dot = document.createElement("div");
+                    dot.className = `slideshow-dot ${idx === 0 ? "is-active" : ""}`;
+                    dotsBar.appendChild(dot);
+                });
+            }
 
             updateSlideContent();
 
-            document.getElementById("btn-slide-prev").onclick = () => {
-                changeSlide((slideIndex - 1 + currentDayExercises.length) % currentDayExercises.length);
-            };
+            const btnPrev = document.getElementById("btn-slide-prev");
+            if (btnPrev) {
+                btnPrev.onclick = () => {
+                    changeSlide((slideIndex - 1 + currentDayExercises.length) % currentDayExercises.length);
+                };
+            }
 
-            document.getElementById("btn-slide-next").onclick = () => {
-                changeSlide((slideIndex + 1) % currentDayExercises.length);
-            };
+            const btnNext = document.getElementById("btn-slide-next");
+            if (btnNext) {
+                btnNext.onclick = () => {
+                    changeSlide((slideIndex + 1) % currentDayExercises.length);
+                };
+            }
 
             if (slideInterval) clearInterval(slideInterval);
             slideInterval = setInterval(() => {
@@ -2376,9 +2699,9 @@
         }
 
         function updateSlideContent() {
-            if (!currentDayExercises[slideIndex]) return;
+            if (!currentDayExercises || !currentDayExercises[slideIndex]) return;
             const ex = currentDayExercises[slideIndex];
-            const normName = normalizeStr(ex.nombre);
+            const normName = normalizeStr(ex.nombre || "");
 
             let matched = exercisesFlatDb[normName];
             if (!matched) {
@@ -2394,20 +2717,29 @@
             const placeholderEl = document.getElementById("slideshow-placeholder");
 
             if (matched && matched.gifUrl) {
-                gifEl.src = matched.gifUrl;
-                gifEl.style.display = "block";
-                placeholderEl.style.display = "none";
+                if (gifEl) {
+                    gifEl.src = matched.gifUrl;
+                    gifEl.style.display = "block";
+                }
+                if (placeholderEl) placeholderEl.style.display = "none";
             } else {
-                gifEl.style.display = "none";
-                placeholderEl.style.display = "block";
-                placeholderEl.textContent = ex.nombre.slice(0, 10);
+                if (gifEl) gifEl.style.display = "none";
+                if (placeholderEl) {
+                    placeholderEl.style.display = "block";
+                    placeholderEl.textContent = (ex.nombre || "TrAIner").slice(0, 15);
+                }
             }
 
-            document.getElementById("slideshow-name").textContent = ex.nombre;
-            document.getElementById("slideshow-counter").textContent = `${slideIndex + 1} / ${currentDayExercises.length}`;
-            document.getElementById("slideshow-series").textContent = `${ex.series || 3} series`;
-            document.getElementById("slideshow-reps").textContent = `${ex.repeticiones || "8-12"} reps`;
-            document.getElementById("slideshow-rest").textContent = `${ex.descanso_segundos || 60}s desc`;
+            const nameEl = document.getElementById("slideshow-name");
+            if (nameEl) nameEl.textContent = ex.nombre || "Ejercicio";
+            const counterEl = document.getElementById("slideshow-counter");
+            if (counterEl) counterEl.textContent = `${slideIndex + 1} / ${currentDayExercises.length}`;
+            const seriesEl = document.getElementById("slideshow-series");
+            if (seriesEl) seriesEl.textContent = `${ex.series || 3} series`;
+            const repsEl = document.getElementById("slideshow-reps");
+            if (repsEl) repsEl.textContent = `${ex.repeticiones || "8-12"} reps`;
+            const restEl = document.getElementById("slideshow-rest");
+            if (restEl) restEl.textContent = `${ex.descanso_segundos || 60}s desc`;
 
             const dots = document.querySelectorAll(".slideshow-dot");
             dots.forEach((dot, idx) => {
@@ -2426,38 +2758,35 @@
             const kcalEl = document.getElementById("diet-today-kcal");
 
             if (!rawDiet || rawDiet === "Ninguno" || rawDiet === "Proximamente") {
-                titleEl.textContent = "Sin plan nutricional";
-                descEl.textContent = "Genera tu plan de comidas en Planes";
-                kcalEl.textContent = "--";
+                if (titleEl) titleEl.textContent = "Sin plan nutricional";
+                if (descEl) descEl.textContent = "Genera tu plan de comidas en Planes";
+                if (kcalEl) kcalEl.textContent = "--";
                 return;
             }
 
-            let parsed = safeJsonParse(extractLikelyJsonText(rawDiet)) ?? safeJsonParse(rawDiet);
-            if (parsed && typeof parsed === "object") {
-                parsed = parsed.plan_alimentacion ?? parsed.plan ?? parsed;
+            const dietDays = extractDietFromPlan(rawDiet);
+            if (!dietDays || dietDays.length === 0) {
+                if (titleEl) titleEl.textContent = "Plan Nutricional";
+                if (descEl) descEl.textContent = "Distribución de macronutrientes diaria";
+                if (kcalEl) kcalEl.textContent = "2.400";
+                return;
             }
 
-            const weekly = parsed?.configuracion_semanal || parsed?.dias || parsed?.semana || [];
-            let todayDay = null;
-
-            if (Array.isArray(weekly)) {
-                todayDay = weekly.find(d => normalizeStr(d?.dia || d?.day || d?.nombre).includes(todayNameNorm));
+            let todayDay = dietDays.find(d => d.diaNorm === todayNameNorm);
+            if (!todayDay) {
+                todayDay = dietDays[todayIdx % dietDays.length] || dietDays[0];
             }
 
             if (todayDay) {
-                titleEl.textContent = `${todayDay.dia || "Hoy"}`;
+                if (titleEl) titleEl.textContent = `${todayDay.dia || "Hoy"}`;
                 const mealsCount = todayDay.comidas?.length || 4;
-                const macros = todayDay.macros_porcentaje || {};
+                const macros = todayDay.macros || {};
                 const macroStr = (macros.carbohidratos && macros.proteinas)
                     ? `${macros.carbohidratos}%C · ${macros.proteinas}%P · ${macros.grasas || 25}%G`
                     : `${mealsCount} comidas planificadas`;
 
-                descEl.textContent = macroStr;
-                kcalEl.textContent = todayDay.calorias_objetivo ? Math.round(todayDay.calorias_objetivo).toLocaleString() : "2.400";
-            } else {
-                titleEl.textContent = "Plan Nutricional";
-                descEl.textContent = "Distribución de macronutrientes diaria";
-                kcalEl.textContent = "2.400";
+                if (descEl) descEl.textContent = macroStr;
+                if (kcalEl) kcalEl.textContent = todayDay.calorias_objetivo ? Math.round(todayDay.calorias_objetivo).toLocaleString() : "2.400";
             }
         }
 
@@ -2473,6 +2802,7 @@
             });
 
             const monthsContainer = document.getElementById("months-dot-grid");
+            if (!monthsContainer) return;
             monthsContainer.innerHTML = "";
 
             const now = new Date();
@@ -2485,7 +2815,7 @@
                 new Date(currentYear, currentMonth, 1)
             ];
 
-            const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const MONTH_NAMES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
             monthsToDisplay.forEach((mDate) => {
                 const year = mDate.getFullYear();
@@ -2537,7 +2867,9 @@
             const registros = normalizarDiasEntrenados(rawDias);
 
             const now = new Date();
-            const currentMonthPrefix = now.toISOString().slice(0, 7);
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+            const currentMonthPrefix = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}`;
 
             let sessionsMonth = 0;
             let totalMinutes = 0;
@@ -2559,26 +2891,31 @@
                 if (d) allTrainedDates.add(d.slice(0, 10));
             });
 
-            document.getElementById("metric-sessions-num").textContent = sessionsMonth;
-            document.getElementById("metric-total-time").textContent = `${totalMinutes}m`;
-            document.getElementById("metric-total-calories").textContent = totalCalories.toLocaleString();
+            const elSessions = document.getElementById("metric-sessions-num");
+            if (elSessions) elSessions.textContent = sessionsMonth;
+            const elTime = document.getElementById("metric-total-time");
+            if (elTime) elTime.textContent = `${totalMinutes}m`;
+            const elCal = document.getElementById("metric-total-calories");
+            if (elCal) elCal.textContent = totalCalories.toLocaleString();
 
             const monthNamesFull = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-            document.getElementById("metric-month-name").textContent = `${monthNamesFull[now.getMonth()]} ${now.getFullYear()}`;
+            const elMonth = document.getElementById("metric-month-name");
+            if (elMonth) elMonth.textContent = `${monthNamesFull[currentMonth]} ${currentYear}`;
 
-            // Cálculo de racha consecutiva
+            // Cálculo de racha consecutiva usando fechas locales
             let streak = 0;
-            let checkDate = new Date();
             for (let i = 0; i < 30; i++) {
-                const iso = checkDate.toISOString().slice(0, 10);
+                const checkDate = new Date();
+                checkDate.setDate(checkDate.getDate() - i);
+                const iso = formatLocalIsoDate(checkDate);
                 if (allTrainedDates.has(iso)) {
                     streak++;
                 } else if (i > 0) {
                     break;
                 }
-                checkDate.setDate(checkDate.getDate() - 1);
             }
-            document.getElementById("metric-streak-count").textContent = `${streak}d`;
+            const elStreak = document.getElementById("metric-streak-count");
+            if (elStreak) elStreak.textContent = `${streak}d`;
         }
 
         // 9. EVENTOS Y REDIRECCIONES
@@ -2969,7 +3306,25 @@
                     window.UIIdioma.translatePage(document);
                 }
             } catch { }
+
+            // Ocultar pantalla de carga una vez renderizados todos los elementos
+            hidePreloader();
         }
+
+        // ── CONTROL DE PANTALLA DE CARGA (DARK GLASSMORPHIC) ──
+        function hidePreloader() {
+            const preloader = document.getElementById("app-preloader");
+            if (preloader && !preloader.classList.contains("is-hidden")) {
+                preloader.classList.add("is-hidden");
+                setTimeout(() => {
+                    if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+                }, 450);
+            }
+        }
+        window.addEventListener("load", () => {
+            setTimeout(hidePreloader, 350);
+        });
+        setTimeout(hidePreloader, 2500); // Fallback de seguridad si la red demora
 
         // ── CONTROL DE POPUP INSTALACIÓN PWA (VERIFICACIÓN MÓVIL Y NO INSTALADA) ──
         let deferredPwaPrompt = null;
