@@ -59,25 +59,209 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
             width: 100%;
             max-width: 100%;
             overflow-x: clip;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Contenedor responsivo centrado */
-        .app-container {
-            width: 100%;
-            max-width: 440px;
-            padding: 16px 18px calc(var(--nav-height, 78px) + 36px + env(safe-area-inset-bottom, 20px)) 18px;
+        /* ── SIDEBAR DESKTOP FLOTANTE ── */
+        .desktop-sidebar {
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 120;
+            background: rgba(14, 16, 21, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: space-between;
+            padding: 24px 18px;
             box-sizing: border-box;
         }
 
-        /* ── HEADER FLOTANTE / STICKY ── */
+        .desktop-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-sidebar-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 4px 16px rgba(157, 243, 255, 0.16);
+        }
+
+        .desktop-sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .desktop-sidebar-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .desktop-sidebar-tag {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(157, 243, 255, 0.12);
+            color: #9df3ff;
+            margin-left: auto;
+        }
+
+        .desktop-nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 20px;
+            flex: 1;
+        }
+
+        .desktop-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .desktop-nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .desktop-nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .desktop-nav-link.is-active {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .desktop-sidebar-footer {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .desktop-user-profile:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .desktop-user-avatar-wrap {
+            position: relative;
+        }
+
+        .desktop-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .desktop-user-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ed573;
+            border: 2px solid #0c0d10;
+        }
+
+        .desktop-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .desktop-user-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .desktop-user-sub {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── ÁREA PRINCIPAL DESKTOP (WIDESCREEN) ── */
+        .desktop-main-wrap {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1080px;
+            padding: 24px 36px 60px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            box-sizing: border-box;
+        }
+
         .app-header {
             position: sticky;
             top: 0;
@@ -85,9 +269,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: -16px -18px 0 -18px;
-            padding: calc(14px + env(safe-area-inset-top, 6px)) 18px 14px 18px;
-            background: rgba(12, 13, 16, 0.82);
+            margin: -24px -36px 0 -36px;
+            padding: 18px 36px;
+            background: rgba(12, 13, 16, 0.85);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -307,8 +491,8 @@
 
         .metrics-grid-2x2 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
         }
 
         .card-metric-editable {
@@ -426,10 +610,10 @@
             background: var(--bg-card);
             border: 1px solid var(--border-card);
             border-radius: var(--radius-card);
-            padding: 16px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding: 18px 22px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
         .btn-action-full {
@@ -500,93 +684,23 @@
             color: #ffffff;
         }
 
-        /* ── BARRA INFERIOR DE NAVEGACIÓN (DOCK FLOTANTE) ── */
+        /* ── BARRA INFERIOR DE NAVEGACIÓN (OCULTA EN DESKTOP) ── */
         .bottom-nav {
-            position: fixed;
-            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 36px);
-            max-width: 380px;
-            height: 64px;
-            padding: 0 8px;
-            background: rgba(22, 25, 31, 0.84);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-pill);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
-            z-index: 1000;
+            display: none !important;
         }
 
-        .bottom-nav-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0;
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: #535866;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            position: relative;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            stroke-width: 2.1;
-            stroke: currentColor;
-            fill: none;
-            transition: stroke 0.2s ease, transform 0.2s ease;
-        }
-
-        .nav-item:hover {
-            color: #ffffff;
-        }
-
-        .nav-item:hover svg {
-            stroke: #ffffff;
-        }
-
-        .nav-item:active {
-            transform: scale(0.88);
-        }
-
-        .nav-item.is-active {
-            color: #ffffff;
-        }
-
-        .nav-item.is-active svg {
-            stroke: #ffffff;
-        }
-
-        /* ── IOS STYLE DRUM / WHEEL PICKER MODAL (SOLO SLIDERS) ── */
+        /* ── IOS STYLE DRUM / WHEEL PICKER MODAL (WIDESCREEN DIALOG) ── */
         .ios-drum-modal-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.78);
+            background: rgba(0, 0, 0, 0.76);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             z-index: 2200;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
+            padding: 24px;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
@@ -599,22 +713,20 @@
 
         .ios-drum-sheet {
             width: 100%;
-            max-width: 440px;
+            max-width: 540px;
             background: #0c0d10;
-            border-top-left-radius: 32px;
-            border-top-right-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-bottom: none;
-            padding: 20px 22px calc(24px + env(safe-area-inset-bottom, 20px)) 22px;
-            box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.95);
-            transform: translateY(100%);
-            transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 24px 26px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95);
+            transform: scale(0.96);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
         }
 
         .ios-drum-modal-backdrop.is-open .ios-drum-sheet {
-            transform: translateY(0);
+            transform: scale(1);
         }
 
         /* Top Bar de la modal */
@@ -1316,7 +1428,92 @@
         </div>
     </div>
 
-    <div class="app-container">
+    <!-- ── BARRA LATERAL DESKTOP (WIDESCREEN SIDEBAR) ── -->
+    <aside class="desktop-sidebar">
+        <!-- Logo & Marca -->
+        <div>
+            <div class="desktop-sidebar-brand">
+                <img src="/Icons/2.png" alt="TrAIner Logo" class="desktop-sidebar-logo">
+                <div>
+                    <div class="desktop-sidebar-title">TrAIner</div>
+                    <div class="desktop-sidebar-sub">Fitness & Nutrition AI</div>
+                </div>
+                <span class="desktop-sidebar-tag">PRO</span>
+            </div>
+
+            <!-- Menú de Navegación Principal Desktop -->
+            <nav class="desktop-nav-menu">
+                <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="desktop-nav-link" aria-label="Dashboard Principal">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="desktop-nav-link" aria-label="Calendario de Entrenamientos">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Calendario</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="desktop-nav-link" aria-label="Plan de Entrenamiento">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6.5 6.5 11 11"></path>
+                        <path d="m21 21-1-1"></path>
+                        <path d="m3 3 1 1"></path>
+                        <path d="m18 22 4-4"></path>
+                        <path d="m2 6 4-4"></path>
+                        <path d="m3 10 7-7"></path>
+                        <path d="m14 21 7-7"></path>
+                    </svg>
+                    <span>Plan de Entreno</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="desktop-nav-link" aria-label="Plan de Alimentación">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
+                    <span>Alimentación</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="desktop-nav-link" aria-label="Chatbot IA">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Chat Asistente IA</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Pie del Sidebar: Perfil de Usuario (Activo) -->
+        <div class="desktop-sidebar-footer">
+            <a href="/Templates_Pantalla_Ancha/config_desktop.html" class="desktop-user-profile is-active" title="Ajustes y Perfil">
+                <div class="desktop-user-avatar-wrap">
+                    <img id="sidebar-user-avatar"
+                        src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+                        alt="Foto de perfil" class="desktop-user-avatar">
+                    <span class="desktop-user-dot"></span>
+                </div>
+                <div class="desktop-user-info">
+                    <span class="desktop-user-name" id="sidebar-username-text">Atleta</span>
+                    <span class="desktop-user-sub">Perfil Activo</span>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── CONTENEDOR PRINCIPAL DESKTOP (WIDESCREEN) ── -->
+    <div class="desktop-main-wrap">
+        <div class="app-container">
         <!-- HEADER FLOTANTE -->
         <header class="app-header">
             <div class="header-title-wrap">
@@ -1514,12 +1711,13 @@
             </div>
         </main>
     </div>
+</div>
 
     <!-- ── BARRA INFERIOR DE NAVEGACIÓN (DOCK FLOTANTE) ── -->
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Grid / Dashboard -->
-            <a href="/Templates/dashboard.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="nav-item"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
@@ -1530,7 +1728,7 @@
             </a>
 
             <!-- 2. Calendario -->
-            <a href="/Templates/calendario_renov.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="nav-item"
                 aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
@@ -1541,7 +1739,7 @@
             </a>
 
             <!-- 3. Entreno -->
-            <a href="/Templates/plan_entreno.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="nav-item"
                 aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -1556,7 +1754,7 @@
             </a>
 
             <!-- 4. Alimentación -->
-            <a href="/Templates/plan_alimentacion.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="nav-item"
                 aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
@@ -1566,7 +1764,7 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
+            <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="nav-item" id="btn-nav-chat"
                 aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -1810,7 +2008,7 @@
 
                 // Renderizar identidad
                 const username = localStorage.getItem("username_usuario") || currentUser?.email?.split("@")[0] || "Atleta";
-                document.getElementById("header-username-text").textContent = username;
+                document.querySelectorAll("#header-username-text, #sidebar-username-text").forEach(el => el.textContent = username);
                 document.getElementById("profile-hero-name").textContent = username;
 
                 const email = currentUser?.email || localStorage.getItem("email_usuario") || "usuario@trainer.ai";
@@ -1821,7 +2019,7 @@
                     currentUser?.user_metadata?.picture ||
                     "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
-                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar").forEach((img) => {
+                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar, #sidebar-user-avatar").forEach((img) => {
                     img.src = avatarUrl;
                     img.onerror = () => {
                         img.src = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
@@ -2349,12 +2547,12 @@
             // Caché inicial
             const cachedName = localStorage.getItem("username_usuario");
             if (cachedName) {
-                document.getElementById("header-username-text").textContent = cachedName;
+                document.querySelectorAll("#header-username-text, #sidebar-username-text").forEach(el => el.textContent = cachedName);
                 document.getElementById("profile-hero-name").textContent = cachedName;
             }
             const cachedAvatar = localStorage.getItem("avatar_usuario");
             if (cachedAvatar) {
-                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar").forEach(el => el.src = cachedAvatar);
+                document.querySelectorAll("#header-user-avatar, #profile-hero-avatar, #sidebar-user-avatar").forEach(el => el.src = cachedAvatar);
             }
 
             renderMetricDisplays();

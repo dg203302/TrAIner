@@ -19,6 +19,15 @@
     <script src="/Scripts/ui_transparencia_apply.js"></script>
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/spa_router.js"></script>
+    <script>
+        // Detección temprana e inmediata de pantalla (Desktop vs Móvil)
+        (function () {
+            try {
+                const isDesktop = (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) || window.innerWidth >= 1024;
+                localStorage.setItem("trainer_screen_mode", isDesktop ? "desktop" : "mobile");
+            } catch (e) { }
+        })();
+    </script>
 
     <!-- Estilos de Verificación Renovados -->
     <link rel="stylesheet" href="/Styles/styles_verifi_usu_n.css">

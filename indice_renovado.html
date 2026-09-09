@@ -1040,7 +1040,9 @@
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session && session.user) {
-                    window.location.href = "/Templates/dashboard.html";
+                    const isDesktop = (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) || window.innerWidth >= 1024;
+                    localStorage.setItem("trainer_screen_mode", isDesktop ? "desktop" : "mobile");
+                    window.location.href = isDesktop ? "/Templates_Pantalla_Ancha/dashboard_desktop.html" : "/Templates/dashboard.html";
                 }
             } catch (err) {
                 console.warn("Aviso comprobando sesión previa:", err);

@@ -1,22 +1,48 @@
 /**
- * TrAIner - Modern Native SPA Router & Page Transition Engine
- * Integrado con Cross-Document View Transitions, Prefetching inteligente
- * y pantalla de carga Dark Glassmorphism Premium.
+ * TrAIner - SPA Router & Responsive View Manager
+ * Gestión canónica de rutas, detección dinámica de cambios de dimensiones (Desktop <-> Móvil),
+ * prefetching inteligente y delegación completa a las animaciones nativas de cada plantilla.
  */
 
 (function () {
     'use strict';
 
-    // ── 1. MAPA DE RUTAS CANÓNICAS ──
+    // ── 1. MAPA DE RUTAS RESPONSIVAS Y CANÓNICAS ──
+    function isDesktopScreen() {
+        return (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) || window.innerWidth >= 1024;
+    }
+
+    const DESKTOP_MAP = {
+        "/Templates/dashboard.html": "/Templates_Pantalla_Ancha/dashboard_desktop.html",
+        "/Templates/calendario_renov.html": "/Templates_Pantalla_Ancha/calendario_renov_desktop.html",
+        "/Templates/plan_entreno.html": "/Templates_Pantalla_Ancha/plan_entreno_desktop.html",
+        "/Templates/plan_alimentacion.html": "/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html",
+        "/Templates/chatbot.html": "/Templates_Pantalla_Ancha/chatbot_desktop.html",
+        "/Templates/config.html": "/Templates_Pantalla_Ancha/config_desktop.html",
+        "/Templates/creacionCuen/loginGoogle.html": "/Templates_Pantalla_Ancha/creacionCuen_desktop/loginGoogle_desktop.html",
+        "/Templates/creacionCuen/datosUnuevo.html": "/Templates_Pantalla_Ancha/creacionCuen_desktop/datosUnuevo_desktop.html"
+    };
+
+    const MOBILE_MAP = {
+        "/Templates_Pantalla_Ancha/dashboard_desktop.html": "/Templates/dashboard.html",
+        "/Templates_Pantalla_Ancha/calendario_renov_desktop.html": "/Templates/calendario_renov.html",
+        "/Templates_Pantalla_Ancha/plan_entreno_desktop.html": "/Templates/plan_entreno.html",
+        "/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html": "/Templates/plan_alimentacion.html",
+        "/Templates_Pantalla_Ancha/chatbot_desktop.html": "/Templates/chatbot.html",
+        "/Templates_Pantalla_Ancha/config_desktop.html": "/Templates/config.html",
+        "/Templates_Pantalla_Ancha/creacionCuen_desktop/loginGoogle_desktop.html": "/Templates/creacionCuen/loginGoogle.html",
+        "/Templates_Pantalla_Ancha/creacionCuen_desktop/datosUnuevo_desktop.html": "/Templates/creacionCuen/datosUnuevo.html"
+    };
+
     const CANONICAL_ROUTES = {
-        "dashboard": "/Templates/dashboard.html",
-        "calendario": "/Templates/calendario_renov.html",
-        "plan_entreno": "/Templates/plan_entreno.html",
-        "plan_alimentacion": "/Templates/plan_alimentacion.html",
-        "chatbot": "/Templates/chatbot.html",
-        "config": "/Templates/config.html",
-        "login": "/Templates/creacionCuen/loginGoogle.html",
-        "registro": "/Templates/creacionCuen/datosUnuevo.html",
+        get "dashboard"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/dashboard_desktop.html" : "/Templates/dashboard.html"; },
+        get "calendario"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/calendario_renov_desktop.html" : "/Templates/calendario_renov.html"; },
+        get "plan_entreno"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/plan_entreno_desktop.html" : "/Templates/plan_entreno.html"; },
+        get "plan_alimentacion"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" : "/Templates/plan_alimentacion.html"; },
+        get "chatbot"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/chatbot_desktop.html" : "/Templates/chatbot.html"; },
+        get "config"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/config_desktop.html" : "/Templates/config.html"; },
+        get "login"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/creacionCuen_desktop/loginGoogle_desktop.html" : "/Templates/creacionCuen/loginGoogle.html"; },
+        get "registro"() { return isDesktopScreen() ? "/Templates_Pantalla_Ancha/creacionCuen_desktop/datosUnuevo_desktop.html" : "/Templates/creacionCuen/datosUnuevo.html"; },
         "inicio": "/indice_renovado.html",
         "gateway": "/index.html"
     };
@@ -38,269 +64,46 @@
         "/Templates/Creacion_cuenta/Edad.html": "/Templates/creacionCuen/datosUnuevo.html"
     };
 
+    function findMapMatch(map, path) {
+        if (!path) return null;
+        if (map[path]) return map[path];
+        const lower = path.toLowerCase();
+        for (const key in map) {
+            if (key.toLowerCase() === lower) return map[key];
+        }
+        return null;
+    }
+
     function normalizeUrl(urlStr) {
         try {
             const url = new URL(urlStr, window.location.origin);
-            const pathname = url.pathname;
-            if (LEGACY_MAP[pathname]) {
-                url.pathname = LEGACY_MAP[pathname];
-                return url.toString();
+            let pathname = url.pathname;
+
+            // 1. Resolver alias legacy
+            const legacyTarget = findMapMatch(LEGACY_MAP, pathname);
+            if (legacyTarget) {
+                pathname = legacyTarget;
             }
+
+            // 2. Normalización responsiva si no se fuerza la vista con ?view=
+            if (!url.searchParams.has('view')) {
+                if (isDesktopScreen()) {
+                    const dTarget = findMapMatch(DESKTOP_MAP, pathname);
+                    if (dTarget) pathname = dTarget;
+                } else {
+                    const mTarget = findMapMatch(MOBILE_MAP, pathname);
+                    if (mTarget) pathname = mTarget;
+                }
+            }
+
+            url.pathname = pathname;
             return url.toString();
         } catch {
             return urlStr;
         }
     }
 
-    // ── 2. ESTILOS DE TRANSICIÓN Y PANTALLA DE CARGA ──
-    function injectStyles() {
-        if (document.getElementById('spa-router-styles')) return;
-
-        const style = document.createElement('style');
-        style.id = 'spa-router-styles';
-        style.textContent = `
-            /* View Transitions Nativas del Navegador (Chrome / Edge / Safari Tech Preview) */
-            @view-transition { navigation: auto; }
-            
-            ::view-transition-old(root) {
-                animation: 180ms cubic-bezier(0.16, 1, 0.3, 1) both spaFadeOut;
-            }
-            ::view-transition-new(root) {
-                animation: 240ms cubic-bezier(0.16, 1, 0.3, 1) both spaFadeIn;
-            }
-
-            @keyframes spaFadeOut {
-                from { opacity: 1; transform: scale(1); }
-                to { opacity: 0; transform: scale(0.99); }
-            }
-            @keyframes spaFadeIn {
-                from { opacity: 0; transform: scale(1.01); }
-                to { opacity: 1; transform: scale(1); }
-            }
-
-            /* Barra de Progreso Superior Neón (Estilo YouTube / Next.js) */
-            #spa-top-progress {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 3px;
-                width: 0%;
-                background: linear-gradient(90deg, #9df3ff 0%, #8b5cf6 50%, #7cffb8 100%);
-                box-shadow: 0 0 14px rgba(157, 243, 255, 0.8), 0 0 28px rgba(139, 92, 246, 0.4);
-                z-index: 1000000;
-                pointer-events: none;
-                opacity: 0;
-                transition: width 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
-            }
-
-            /* Pantalla de Carga Glassmorphic */
-            #spa-router-loader {
-                position: fixed;
-                inset: 0;
-                z-index: 999999;
-                background: rgba(6, 8, 12, 0.72);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-                transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease;
-            }
-
-            #spa-router-loader.is-active {
-                opacity: 1;
-                visibility: visible;
-                pointer-events: auto;
-            }
-
-            .spa-loader-card {
-                background: rgba(14, 18, 27, 0.85);
-                backdrop-filter: blur(28px);
-                -webkit-backdrop-filter: blur(28px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 26px;
-                padding: 26px 36px;
-                box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(157, 243, 255, 0.08);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                animation: spaCardPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-                max-width: 300px;
-                width: 85%;
-            }
-
-            .spa-loader-spinner {
-                position: relative;
-                width: 58px;
-                height: 58px;
-                margin-bottom: 16px;
-            }
-
-            .spa-spinner-ring-out {
-                position: absolute;
-                inset: 0;
-                border-radius: 50%;
-                border: 2.5px solid rgba(255, 255, 255, 0.08);
-                border-top-color: #9df3ff;
-                border-right-color: rgba(157, 243, 255, 0.4);
-                animation: spaSpin 1s linear infinite;
-                box-shadow: 0 0 16px rgba(157, 243, 255, 0.25);
-            }
-
-            .spa-spinner-ring-in {
-                position: absolute;
-                inset: 8px;
-                border-radius: 50%;
-                border: 2px solid transparent;
-                border-bottom-color: #b6a8ff;
-                border-left-color: rgba(182, 168, 255, 0.35);
-                animation: spaSpinRev 1.4s linear infinite;
-            }
-
-            .spa-spinner-core {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 8px;
-                height: 8px;
-                margin-top: -4px;
-                margin-left: -4px;
-                border-radius: 50%;
-                background: #9df3ff;
-                box-shadow: 0 0 12px #9df3ff, 0 0 24px rgba(157, 243, 255, 0.8);
-                animation: spaPulse 1.4s ease-in-out infinite alternate;
-            }
-
-            .spa-brand-title {
-                font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-                font-size: 19px;
-                font-weight: 800;
-                color: #ffffff;
-                letter-spacing: -0.3px;
-                margin-bottom: 4px;
-            }
-
-            .spa-brand-title span {
-                color: #9df3ff;
-                text-shadow: 0 0 18px rgba(157, 243, 255, 0.5);
-            }
-
-            .spa-loader-text {
-                font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-                font-size: 13px;
-                font-weight: 600;
-                color: #8a99ad;
-                letter-spacing: 0.1px;
-            }
-
-            @keyframes spaSpin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            @keyframes spaSpinRev {
-                0% { transform: rotate(360deg); }
-                100% { transform: rotate(0deg); }
-            }
-            @keyframes spaPulse {
-                0% { transform: scale(0.8); opacity: 0.6; }
-                100% { transform: scale(1.2); opacity: 1; }
-            }
-            @keyframes spaCardPop {
-                0% { opacity: 0; transform: scale(0.92) translateY(8px); }
-                100% { opacity: 1; transform: scale(1) translateY(0); }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    // ── 3. DOM DE LA PANTALLA DE CARGA ──
-    let progressBarEl = null;
-    let loaderOverlayEl = null;
-    let loaderTextEl = null;
-    let pendingNavTimeout = null;
-    let safetyTimeout = null;
-
-    function buildLoaderDOM() {
-        if (progressBarEl && loaderOverlayEl) return;
-
-        // Barra superior
-        progressBarEl = document.createElement('div');
-        progressBarEl.id = 'spa-top-progress';
-        document.body.appendChild(progressBarEl);
-
-        // Overlay modal
-        loaderOverlayEl = document.createElement('div');
-        loaderOverlayEl.id = 'spa-router-loader';
-        loaderOverlayEl.setAttribute('aria-hidden', 'true');
-        loaderOverlayEl.innerHTML = `
-            <div class="spa-loader-card" role="status" aria-live="polite">
-                <div class="spa-loader-spinner" aria-hidden="true">
-                    <div class="spa-spinner-ring-out"></div>
-                    <div class="spa-spinner-ring-in"></div>
-                    <div class="spa-spinner-core"></div>
-                </div>
-                <div class="spa-brand-title">Tr<span>AI</span>ner</div>
-                <div class="spa-loader-text" id="spa-loader-msg">Cargando espacio...</div>
-            </div>
-        `;
-        document.body.appendChild(loaderOverlayEl);
-        loaderTextEl = document.getElementById('spa-loader-msg');
-    }
-
-    function showLoader(customMsg) {
-        buildLoaderDOM();
-
-        // 1. Activar barra superior de inmediato (< 10ms)
-        if (progressBarEl) {
-            progressBarEl.style.opacity = '1';
-            progressBarEl.style.width = '35%';
-            setTimeout(() => {
-                if (progressBarEl) progressBarEl.style.width = '75%';
-            }, 100);
-        }
-
-        // 2. Si la navegación tarda más de 120ms, desplegar el overlay glassmorphism
-        clearTimeout(pendingNavTimeout);
-        pendingNavTimeout = setTimeout(() => {
-            if (loaderOverlayEl) {
-                if (customMsg && loaderTextEl) {
-                    loaderTextEl.textContent = customMsg;
-                }
-                loaderOverlayEl.classList.add('is-active');
-            }
-        }, 120);
-
-        // 3. Timeout de seguridad (si la navegación se cancela o aborta)
-        clearTimeout(safetyTimeout);
-        safetyTimeout = setTimeout(() => {
-            hideLoader();
-        }, 4500);
-    }
-
-    function hideLoader() {
-        clearTimeout(pendingNavTimeout);
-        clearTimeout(safetyTimeout);
-
-        if (progressBarEl) {
-            progressBarEl.style.width = '100%';
-            setTimeout(() => {
-                if (progressBarEl) {
-                    progressBarEl.style.opacity = '0';
-                    progressBarEl.style.width = '0%';
-                }
-            }, 180);
-        }
-
-        if (loaderOverlayEl) {
-            loaderOverlayEl.classList.remove('is-active');
-        }
-    }
-
-    // ── 4. PREFETCH & PRERENDER INTELIGENTE ──
+    // ── 2. PREFETCH & PRERENDER INTELIGENTE ──
     const prefetchCache = new Set();
 
     function prefetchUrl(url) {
@@ -331,9 +134,9 @@
     }
 
     function setupAutoPrefetch() {
-        // Seleccionar todos los enlaces de barras de navegación y accesos clave
         const selector = [
             '.bottom-nav a',
+            '.desktop-sidebar a',
             '.nav-item',
             'a.footer-btn',
             '.navbar-actions a',
@@ -348,26 +151,22 @@
             const href = link.getAttribute('href');
             if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
 
-            // Prefetch suave al estar inactivo
             prefetchUrl(link.href);
 
-            // Prerender instantáneo al pasar el puntero o tocar
             link.addEventListener('pointerenter', () => prerenderUrl(link.href), { passive: true, once: true });
             link.addEventListener('touchstart', () => prerenderUrl(link.href), { passive: true, once: true });
         });
     }
 
-    // ── 5. INTERCEPTOR DE NAVEGACIÓN Y CORRECCIÓN DE RUTAS ──
+    // ── 3. INTERCEPTOR DE NAVEGACIÓN Y CORRECCIÓN DE RUTAS ──
     function setupNavigationInterceptor() {
         document.addEventListener('click', (e) => {
-            // Buscar si el click fue en un <a> o dentro de un <a>
             const anchor = e.target.closest('a');
             if (!anchor) return;
 
             const href = anchor.getAttribute('href');
             if (!href) return;
 
-            // Ignorar enlaces externos, anclas locales, descargas o nuevas pestañas
             if (
                 anchor.target === '_blank' ||
                 anchor.hasAttribute('download') ||
@@ -379,7 +178,6 @@
                 return;
             }
 
-            // Validar si pertenece al mismo origen
             let targetUrl;
             try {
                 targetUrl = new URL(anchor.href, window.location.origin);
@@ -388,11 +186,10 @@
                 return;
             }
 
-            // Normalizar si apunta a una plantilla antigua
+            // Normalizar si apunta a una plantilla del ecosistema opuesto o legacy
             const normalized = normalizeUrl(anchor.href);
             if (normalized !== anchor.href) {
                 e.preventDefault();
-                showLoader();
                 window.location.href = normalized;
                 return;
             }
@@ -401,39 +198,101 @@
             if (targetUrl.pathname === window.location.pathname && targetUrl.search === window.location.search) {
                 return;
             }
-
-            // Activar loader suave
-            showLoader();
         }, { capture: true });
     }
 
-    // ── 6. NAVEGACIÓN PROGRAMÁTICA ──
-    function navigate(destination, customMsg) {
+    // ── 4. NAVEGACIÓN PROGRAMÁTICA ──
+    function navigate(destination) {
         let finalUrl = destination;
         if (CANONICAL_ROUTES[destination]) {
             finalUrl = CANONICAL_ROUTES[destination];
         } else {
             finalUrl = normalizeUrl(destination);
         }
-
-        showLoader(customMsg);
         window.location.href = finalUrl;
     }
 
-    // ── 7. INICIALIZACIÓN ──
+    // Stubs seguros para compatibilidad sin animaciones del router
+    function showLoader() {}
+    function hideLoader() {}
+
+    // ── 5. DETECCIÓN DINÁMICA DE CAMBIO DE DIMENSIONES (DESKTOP <-> MÓVIL) ──
+    let lastKnownIsDesktop = isDesktopScreen();
+    let resizeDebounceTimer = null;
+
+    function checkResponsiveRedirect() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            // Respetar forzado explícito de vista ?view=desktop o ?view=mobile
+            if (params.has('view')) return;
+
+            const isDesk = isDesktopScreen();
+            const currentPath = window.location.pathname;
+
+            if (isDesk) {
+                const targetPath = findMapMatch(DESKTOP_MAP, currentPath);
+                if (targetPath && targetPath !== currentPath) {
+                    const target = targetPath + window.location.search + window.location.hash;
+                    window.location.replace(target);
+                }
+            } else {
+                const targetPath = findMapMatch(MOBILE_MAP, currentPath);
+                if (targetPath && targetPath !== currentPath) {
+                    const target = targetPath + window.location.search + window.location.hash;
+                    window.location.replace(target);
+                }
+            }
+        } catch (e) { }
+    }
+
+    function handleResponsiveDimensionChange() {
+        const currentIsDesktop = isDesktopScreen();
+        // Solo redirigir cuando efectivamente se cruza el umbral (breakpoint de 1024px)
+        if (currentIsDesktop !== lastKnownIsDesktop) {
+            lastKnownIsDesktop = currentIsDesktop;
+            try {
+                localStorage.setItem("trainer_screen_mode", currentIsDesktop ? "desktop" : "mobile");
+            } catch (e) { }
+            checkResponsiveRedirect();
+        }
+    }
+
+    function setupResponsiveDimensionListener() {
+        // A. Escuchador de Media Query instantáneo al cruzar 1024px
+        try {
+            if (window.matchMedia) {
+                const mql = window.matchMedia("(min-width: 1024px)");
+                const mqlHandler = () => {
+                    handleResponsiveDimensionChange();
+                };
+                if (mql.addEventListener) {
+                    mql.addEventListener("change", mqlHandler);
+                } else if (mql.addListener) {
+                    mql.addListener(mqlHandler);
+                }
+            }
+        } catch (e) { }
+
+        // B. Escuchador de Resize con debounce (cubre cambios interactivos de ventana)
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeDebounceTimer);
+            resizeDebounceTimer = setTimeout(() => {
+                handleResponsiveDimensionChange();
+            }, 120);
+        }, { passive: true });
+
+        // C. Escuchador de Orientación para tablets y móviles
+        window.addEventListener("orientationchange", () => {
+            setTimeout(handleResponsiveDimensionChange, 150);
+        }, { passive: true });
+    }
+
+    // ── 6. INICIALIZACIÓN ──
     function init() {
-        injectStyles();
-        buildLoaderDOM();
+        checkResponsiveRedirect();
+        setupResponsiveDimensionListener();
         setupAutoPrefetch();
         setupNavigationInterceptor();
-
-        // Ocultar loader al volver por BFCache (botón atrás/adelante del navegador)
-        window.addEventListener('pageshow', (e) => {
-            hideLoader();
-        });
-        window.addEventListener('popstate', () => {
-            hideLoader();
-        });
     }
 
     if (document.readyState === 'loading') {
@@ -449,7 +308,9 @@
         hideLoader,
         prefetch: prefetchUrl,
         prerender: prerenderUrl,
-        ROUTES: CANONICAL_ROUTES
+        ROUTES: CANONICAL_ROUTES,
+        isDesktop: isDesktopScreen,
+        checkRedirect: checkResponsiveRedirect
     };
 
 })();

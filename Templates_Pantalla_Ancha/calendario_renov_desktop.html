@@ -60,25 +60,208 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
             width: 100%;
             max-width: 100%;
             overflow-x: clip;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Contenedor responsivo centrado */
-        .app-container {
-            width: 100%;
-            max-width: 440px;
-            padding: 16px 18px calc(var(--nav-height, 78px) + 36px + env(safe-area-inset-bottom, 20px)) 18px;
+        /* ── SIDEBAR DESKTOP FLOTANTE ── */
+        .desktop-sidebar {
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 120;
+            background: rgba(14, 16, 21, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: space-between;
+            padding: 24px 18px;
             box-sizing: border-box;
         }
 
-        /* ── HEADER FLOTANTE / STICKY ── */
+        .desktop-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-sidebar-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 4px 16px rgba(157, 243, 255, 0.16);
+        }
+
+        .desktop-sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .desktop-sidebar-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .desktop-sidebar-tag {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(157, 243, 255, 0.12);
+            color: #9df3ff;
+            margin-left: auto;
+        }
+
+        .desktop-nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 20px;
+            flex: 1;
+        }
+
+        .desktop-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .desktop-nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .desktop-nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .desktop-nav-link.is-active {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .desktop-sidebar-footer {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .desktop-user-profile:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .desktop-user-avatar-wrap {
+            position: relative;
+        }
+
+        .desktop-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .desktop-user-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ed573;
+            border: 2px solid #0c0d10;
+        }
+
+        .desktop-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .desktop-user-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .desktop-user-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* ── ÁREA PRINCIPAL DESKTOP (WIDESCREEN) ── */
+        .desktop-main-wrap {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1360px;
+            padding: 24px 36px 60px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            box-sizing: border-box;
+        }
+
         .app-header {
             position: sticky;
             top: 0;
@@ -86,9 +269,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: -16px -18px 0 -18px;
-            padding: calc(14px + env(safe-area-inset-top, 6px)) 18px 14px 18px;
-            background: rgba(12, 13, 16, 0.82);
+            margin: -24px -36px 0 -36px;
+            padding: 18px 36px;
+            background: rgba(12, 13, 16, 0.85);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -247,16 +430,41 @@
             }
         }
 
-        /* ── CONTENEDOR PRINCIPAL DEL CALENDARIO ── */
+        /* ── WORKSPACE DESKTOP DEL CALENDARIO (2 COLUMNAS) ── */
+        .calendar-desktop-workspace {
+            display: grid;
+            grid-template-columns: 520px 1fr;
+            gap: 28px;
+            align-items: start;
+            width: 100%;
+        }
+
+        .calendar-col-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .calendar-col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* ── CONTENEDOR PRINCIPAL DEL CALENDARIO COMPACTO ── */
         .cal-card {
             background: var(--bg-card);
             border: 1px solid var(--border-card);
-            border-radius: var(--radius-card);
-            padding: 20px 16px;
+            border-radius: 24px;
+            padding: 22px 20px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .cal-header {
@@ -448,23 +656,31 @@
             box-shadow: 0 0 6px rgba(182, 168, 255, 0.8);
         }
 
-        /* ── STRIP DE RESUMEN DEL MES RÁPIDO ── */
+        /* ── STRIP DE RESUMEN DEL MES RÁPIDO (2x2 EN DESKTOP) ── */
         .cal-month-quick-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 16px;
+            width: 100%;
         }
 
         .cal-quick-stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-card);
-            border-radius: var(--radius-inner);
-            padding: 12px 12px;
+            border-radius: 20px;
+            padding: 16px 18px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
             min-width: 0;
+        }
+
+        .cal-quick-stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: var(--bg-card-elevated);
+            transform: translateY(-2px);
         }
 
         .cal-quick-stat-card:active {
@@ -472,9 +688,9 @@
         }
 
         .cal-quick-stat-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             background: #20232a;
             display: flex;
             align-items: center;
@@ -484,8 +700,8 @@
         }
 
         .cal-quick-stat-icon svg {
-            width: 19px;
-            height: 19px;
+            width: 20px;
+            height: 20px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.2;
@@ -515,18 +731,18 @@
         }
 
         .cal-quick-stat-val {
-            font-size: 17px;
+            font-size: 19px;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.2;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.4px;
         }
 
         .cal-quick-stat-lbl {
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-top: 1px;
+            margin-top: 2px;
             line-height: 1.25;
             word-break: break-word;
             display: -webkit-box;
@@ -535,23 +751,123 @@
             overflow: hidden;
         }
 
-        /* ── VISTA DE ESTADÍSTICAS Y GRÁFICOS ── */
+        /* ── TARJETA DE ACTIVIDAD / LEYENDA DEL CALENDARIO DESKTOP ── */
+        .cal-activity-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 22px;
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .cal-activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cal-activity-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--accent);
+        }
+
+        .cal-activity-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--accent-green);
+            background: rgba(46, 213, 115, 0.12);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(46, 213, 115, 0.22);
+        }
+
+        .cal-activity-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin: 4px 0 0 0;
+        }
+
+        .cal-activity-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .cal-activity-legend {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .cal-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cal-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .cal-legend-dot.has-workout {
+            background: var(--accent);
+            box-shadow: 0 0 8px rgba(157, 243, 255, 0.7);
+        }
+
+        .cal-legend-dot.is-today {
+            background: transparent;
+            border: 2px solid var(--accent);
+        }
+
+        .cal-legend-dot.is-rest {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ── VISTA DE ESTADÍSTICAS Y GRÁFICOS (DESKTOP WORKSPACE) ── */
         .stats-kpi-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .stats-kpi-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: var(--radius-card);
-            padding: 16px;
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px 18px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .stats-kpi-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(157, 243, 255, 0.22);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(157, 243, 255, 0.06);
         }
 
         .stats-kpi-top {
@@ -561,7 +877,7 @@
         }
 
         .stats-kpi-title {
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
@@ -569,48 +885,100 @@
         }
 
         .stats-kpi-badge {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            background: #20232b;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--accent);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .stats-kpi-badge.is-cal {
+            background: rgba(255, 107, 0, 0.12);
+            border-color: rgba(255, 107, 0, 0.25);
+            color: #ff8c38;
+        }
+
+        .stats-kpi-badge.is-time {
+            background: rgba(157, 243, 255, 0.12);
+            border-color: rgba(157, 243, 255, 0.25);
+            color: #9df3ff;
+        }
+
+        .stats-kpi-badge.is-days {
+            background: rgba(56, 225, 166, 0.12);
+            border-color: rgba(56, 225, 166, 0.25);
+            color: #38e1a6;
+        }
+
+        .stats-kpi-badge.is-streak {
+            background: rgba(255, 68, 102, 0.12);
+            border-color: rgba(255, 68, 102, 0.25);
+            color: #ff5277;
         }
 
         .stats-kpi-badge svg {
-            width: 15px;
-            height: 15px;
+            width: 17px;
+            height: 17px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.2;
         }
 
         .stats-kpi-val {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
             color: #ffffff;
-            letter-spacing: -0.6px;
+            letter-spacing: -0.8px;
             line-height: 1.1;
         }
 
         .stats-kpi-sub {
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
         }
 
-        /* Tarjeta de Gráfico */
-        .chart-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: var(--radius-card);
-            padding: 18px 16px 14px;
+        /* ── WORKSPACE DE ESTADÍSTICAS EN DESKTOP ── */
+        .stats-desktop-workspace {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .stats-col-main {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+            gap: 20px;
+        }
+
+        .stats-col-side {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Tarjeta de Gráficos Widescreen */
+        .chart-card {
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.25s ease;
+        }
+
+        .chart-card:hover {
+            border-color: rgba(157, 243, 255, 0.2);
         }
 
         .chart-card-header {
@@ -620,27 +988,36 @@
         }
 
         .chart-card-title {
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: -0.3px;
+        }
+
+        .chart-card-desc {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 2px;
         }
 
         .chart-card-tag {
             font-size: 11.5px;
             font-weight: 700;
             color: var(--accent);
-            background: rgba(157, 243, 255, 0.1);
-            border: 1px solid rgba(157, 243, 255, 0.2);
-            padding: 3px 9px;
+            background: rgba(157, 243, 255, 0.08);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            padding: 4px 10px;
             border-radius: var(--radius-pill);
         }
 
         .chart-canvas-wrap {
             position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9;
-            min-height: 180px;
+        }
+
+        .chart-canvas-wrap--bar {
+            height: 270px;
+            min-height: 250px;
         }
 
         .chart-canvas-wrap canvas {
@@ -650,36 +1027,165 @@
         }
 
         .chart-canvas-wrap--donut {
-            aspect-ratio: 1 / 1;
-            max-width: 220px;
+            height: 210px;
+            max-width: 210px;
             margin: 0 auto;
+        }
+
+        .donut-legend-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 4px;
+        }
+
+        .donut-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .donut-legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .donut-legend-dot.is-active {
+            background: var(--accent);
+            box-shadow: 0 0 8px rgba(157, 243, 255, 0.6);
+        }
+
+        .donut-legend-dot.is-rest {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Tarjeta de Logros y Consistencia */
+        .stats-insights-card {
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .stats-insights-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .stats-insights-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(157, 243, 255, 0.08);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .stats-insights-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .stats-insights-desc {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .stats-insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .stats-insight-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stats-insight-pill-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .stats-insight-pill-val {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #ffffff;
         }
 
         /* Tarjeta de Métricas en Lista */
         .metrics-list-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: var(--radius-card);
-            padding: 18px 16px;
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 22px 24px;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .metrics-header-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
         }
 
         .metrics-section-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin-bottom: 2px;
+        }
+
+        .metrics-badge-pro {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            background: rgba(157, 243, 255, 0.1);
+            border: 1px solid rgba(157, 243, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.4px;
         }
 
         .metric-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 11px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -713,17 +1219,18 @@
             color: var(--accent-green);
         }
 
-        /* ── MODAL BOTTOM-SHEET DETALLE DE DÍA ── */
+        /* ── MODAL FLOTANTE WIDESCREEN DETALLE DE DÍA ── */
         .modal-sheet-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.72);
+            background: rgba(0, 0, 0, 0.76);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             z-index: 2000;
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
+            padding: 24px;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s ease;
@@ -736,24 +1243,23 @@
 
         .modal-sheet-panel {
             width: 100%;
-            max-width: 440px;
+            max-width: 780px;
             background: #0f1115;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: none;
-            border-radius: 32px 32px 0 0;
-            padding: 12px 20px calc(24px + env(safe-area-inset-bottom, 20px)) 20px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 28px;
+            padding: 28px 32px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.7);
-            transform: translateY(100%);
+            gap: 18px;
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.96), 0 0 35px rgba(157, 243, 255, 0.05);
+            transform: scale(0.96);
             transition: transform 0.34s cubic-bezier(0.2, 0.9, 0.2, 1);
-            max-height: 85vh;
+            max-height: 86vh;
             overflow-y: auto;
         }
 
         .modal-sheet-backdrop.is-open .modal-sheet-panel {
-            transform: translateY(0);
+            transform: scale(1);
         }
 
         .ios-drum-header {
@@ -973,80 +1479,9 @@
             line-height: 1.4;
         }
 
-        /* ── BARRA DE NAVEGACIÓN INFERIOR FLOTANTE ── */
+        /* ── BARRA DE NAVEGACIÓN INFERIOR (OCULTA EN DESKTOP) ── */
         .bottom-nav {
-            position: fixed;
-            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 36px);
-            max-width: 380px;
-            height: 64px;
-            padding: 0 8px;
-            background: rgba(22, 25, 31, 0.84);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-pill);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
-            z-index: 1000;
-        }
-
-        .bottom-nav-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0;
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: #535866;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            position: relative;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            stroke-width: 2.1;
-            stroke: currentColor;
-            fill: none;
-            transition: stroke 0.2s ease, transform 0.2s ease;
-        }
-
-        .nav-item:hover {
-            color: #ffffff;
-        }
-
-        .nav-item:hover svg {
-            stroke: #ffffff;
-        }
-
-        .nav-item:active {
-            transform: scale(0.88);
-        }
-
-        .nav-item.is-active {
-            color: #ffffff;
-        }
-
-        .nav-item.is-active svg {
-            stroke: #ffffff;
+            display: none !important;
         }
 
         .page-content {
@@ -1466,6 +1901,22 @@
             100% { stroke-dasharray: 70, 200; stroke-dashoffset: -125; }
         }
 
+        /* ── RESPONSIVIDAD PARA PANTALLAS COMPACTAS Y TABLETS ── */
+        @media (max-width: 1080px) {
+            .calendar-desktop-workspace {
+                grid-template-columns: 1fr;
+            }
+            .stats-desktop-workspace {
+                grid-template-columns: 1fr;
+            }
+            .stats-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stats-insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ── RESPONSIVIDAD PARA PANTALLAS MÓVILES COMPACTAS ── */
         @media (max-width: 480px) {
             .app-container {
@@ -1550,6 +2001,7 @@
             }
 
             .stats-kpi-grid {
+                grid-template-columns: 1fr;
                 gap: 8px;
             }
 
@@ -1583,26 +2035,104 @@
         </div>
     </div>
 
-    <div class="app-container">
-        <!-- HEADER FLOTANTE -->
-        <header class="app-header">
-            <div class="header-title-wrap">
-                <h1 class="header-title" data-i18n-en="Calendar">Calendario</h1>
-                <div class="header-user-status" id="header-user-status">
-                    <span class="header-user-dot"></span>
-                    <span id="header-username-text">Sincronizando...</span>
+    <!-- ── SIDEBAR DESKTOP FLOTANTE ── -->
+    <aside class="desktop-sidebar">
+        <!-- Logo & Marca -->
+        <div>
+            <div class="desktop-sidebar-brand">
+                <img src="/Icons/2.png" alt="TrAIner Logo" class="desktop-sidebar-logo">
+                <div>
+                    <div class="desktop-sidebar-title">TrAIner</div>
+                    <div class="desktop-sidebar-sub">Fitness & Nutrition AI</div>
                 </div>
+                <span class="desktop-sidebar-tag">PRO</span>
             </div>
 
-            <div class="header-actions">
-                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
-                    id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
+            <!-- Menú de Navegación Principal Desktop -->
+            <nav class="desktop-nav-menu">
+                <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="desktop-nav-link" aria-label="Dashboard Principal">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="desktop-nav-link is-active" aria-label="Calendario de Entrenamientos">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Calendario</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="desktop-nav-link" aria-label="Plan de Entrenamiento">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6.5 6.5 11 11"></path>
+                        <path d="m21 21-1-1"></path>
+                        <path d="m3 3 1 1"></path>
+                        <path d="m18 22 4-4"></path>
+                        <path d="m2 6 4-4"></path>
+                        <path d="m3 10 7-7"></path>
+                        <path d="m14 21 7-7"></path>
+                    </svg>
+                    <span>Plan de Entreno</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="desktop-nav-link" aria-label="Plan de Alimentación">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
+                    <span>Alimentación</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="desktop-nav-link" aria-label="Chatbot IA">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Chat Asistente IA</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Pie del Sidebar: Perfil de Usuario -->
+        <div class="desktop-sidebar-footer">
+            <a href="/Templates_Pantalla_Ancha/config_desktop.html" class="desktop-user-profile" title="Ajustes y Perfil">
+                <div class="desktop-user-avatar-wrap">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                        alt="Foto de perfil" class="header-avatar-img">
-                </a>
-            </div>
-        </header>
+                        alt="Foto de perfil" class="desktop-user-avatar">
+                    <span class="desktop-user-dot"></span>
+                </div>
+                <div class="desktop-user-info">
+                    <span class="desktop-user-name" id="header-username-text">Atleta</span>
+                    <span class="desktop-user-sub">Registro Mensual</span>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── CONTENEDOR PRINCIPAL DESKTOP (WIDESCREEN) ── -->
+    <div class="desktop-main-wrap">
+        <div class="app-container">
+            <!-- HEADER FLOTANTE / STICKY -->
+            <header class="app-header">
+                <div class="header-title-wrap">
+                    <h1 class="header-title" data-i18n-en="Calendar">Calendario</h1>
+                    <div class="header-user-status" id="header-user-status">
+                        <span class="header-user-dot"></span>
+                        <span>Historial de sesiones y consistencia</span>
+                    </div>
+                </div>
+
+                <div class="header-actions"></div>
+            </header>
 
         <!-- ═══════════════════════════════════════════════ -->
         <!-- CONTENIDO PRINCIPAL: Calendario Renovado        -->
@@ -1633,116 +2163,151 @@
 
             <!-- 2. VISTA CALENDARIO -->
             <section class="tab-view" id="view-calendar">
-                <!-- Tarjeta del Calendario Mensual -->
-                <div class="cal-card">
-                    <!-- Cabecera del Mes -->
-                    <div class="cal-header">
-                        <div class="cal-month-title-wrap">
-                            <span class="cal-month-title" id="cal-month-name">Septiembre</span>
-                            <span class="cal-month-year" id="cal-year-num">2026</span>
-                        </div>
-                        <div class="cal-nav-actions">
-                            <button class="cal-today-pill" id="btn-cal-today" title="Ir al mes actual">Hoy</button>
-                            <button class="cal-nav-btn" id="btn-cal-prev" aria-label="Mes anterior">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="m15 18-6-6 6-6"></path>
-                                </svg>
-                            </button>
-                            <button class="cal-nav-btn" id="btn-cal-next" aria-label="Mes siguiente">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="m9 18 6-6-6-6"></path>
-                                </svg>
-                            </button>
+                <div class="calendar-desktop-workspace">
+                    <!-- Columna Izquierda: Calendario Mensual Compacto Proporcional -->
+                    <div class="calendar-col-left">
+                        <div class="cal-card">
+                            <!-- Cabecera del Mes -->
+                            <div class="cal-header">
+                                <div class="cal-month-title-wrap">
+                                    <span class="cal-month-title" id="cal-month-name">Septiembre</span>
+                                    <span class="cal-month-year" id="cal-year-num">2026</span>
+                                </div>
+                                <div class="cal-nav-actions">
+                                    <button class="cal-today-pill" id="btn-cal-today" title="Ir al mes actual">Hoy</button>
+                                    <button class="cal-nav-btn" id="btn-cal-prev" aria-label="Mes anterior">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="m15 18-6-6 6-6"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="cal-nav-btn" id="btn-cal-next" aria-label="Mes siguiente">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="m9 18 6-6-6-6"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Fila de nombres de días -->
+                            <div class="cal-weekdays-row" id="cal-weekdays-row">
+                                <span class="cal-weekday-label">L</span>
+                                <span class="cal-weekday-label">M</span>
+                                <span class="cal-weekday-label">X</span>
+                                <span class="cal-weekday-label">J</span>
+                                <span class="cal-weekday-label">V</span>
+                                <span class="cal-weekday-label">S</span>
+                                <span class="cal-weekday-label">D</span>
+                            </div>
+
+                            <!-- Cuadrícula de días -->
+                            <div class="cal-grid" id="cal-days-grid">
+                                <!-- Generado dinámicamente por JavaScript -->
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Fila de nombres de días -->
-                    <div class="cal-weekdays-row" id="cal-weekdays-row">
-                        <span class="cal-weekday-label">L</span>
-                        <span class="cal-weekday-label">M</span>
-                        <span class="cal-weekday-label">X</span>
-                        <span class="cal-weekday-label">J</span>
-                        <span class="cal-weekday-label">V</span>
-                        <span class="cal-weekday-label">S</span>
-                        <span class="cal-weekday-label">D</span>
-                    </div>
+                    <!-- Columna Derecha: Estadísticas del Mes + Inspector de Actividad -->
+                    <div class="calendar-col-right">
+                        <!-- Resumen Rápido Mensual (Grid 2x2 Desktop) -->
+                        <div class="cal-month-quick-stats">
+                            <div class="cal-quick-stat-card">
+                                <div class="cal-quick-stat-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="cal-quick-stat-info">
+                                    <span class="cal-quick-stat-val" id="quick-stat-days">0 días</span>
+                                    <span class="cal-quick-stat-lbl">Entrenados este mes</span>
+                                </div>
+                            </div>
 
-                    <!-- Cuadrícula de días -->
-                    <div class="cal-grid" id="cal-days-grid">
-                        <!-- Generado dinámicamente por JavaScript -->
-                    </div>
-                </div>
+                            <div class="cal-quick-stat-card">
+                                <div class="cal-quick-stat-icon is-streak">
+                                    <svg viewBox="0 0 24 24">
+                                        <path
+                                            d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <div class="cal-quick-stat-info">
+                                    <span class="cal-quick-stat-val" id="quick-stat-streak">0 días</span>
+                                    <span class="cal-quick-stat-lbl">Racha actual</span>
+                                </div>
+                            </div>
 
-                <!-- Resumen Rápido Mensual -->
-                <div class="cal-month-quick-stats">
-                    <div class="cal-quick-stat-card">
-                        <div class="cal-quick-stat-icon">
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                        </div>
-                        <div class="cal-quick-stat-info">
-                            <span class="cal-quick-stat-val" id="quick-stat-days">0 días</span>
-                            <span class="cal-quick-stat-lbl">Entrenados este mes</span>
-                        </div>
-                    </div>
+                            <div class="cal-quick-stat-card">
+                                <div class="cal-quick-stat-icon is-cal">
+                                    <svg viewBox="0 0 24 24">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                    </svg>
+                                </div>
+                                <div class="cal-quick-stat-info">
+                                    <span class="cal-quick-stat-val" id="quick-stat-calories">0 kcal</span>
+                                    <span class="cal-quick-stat-lbl">Calorías quemadas</span>
+                                </div>
+                            </div>
 
-                    <div class="cal-quick-stat-card">
-                        <div class="cal-quick-stat-icon is-streak">
-                            <svg viewBox="0 0 24 24">
-                                <path
-                                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
-                                </path>
-                            </svg>
+                            <div class="cal-quick-stat-card">
+                                <div class="cal-quick-stat-icon is-time">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2v4"></path>
+                                        <path d="M12 18v4"></path>
+                                        <path d="M4.93 4.93l2.83 2.83"></path>
+                                        <path d="M16.24 16.24l2.83 2.83"></path>
+                                        <path d="M2 12h4"></path>
+                                        <path d="M18 12h4"></path>
+                                        <path d="M4.93 19.07l2.83-2.83"></path>
+                                        <path d="M16.24 7.76l2.83-2.83"></path>
+                                    </svg>
+                                </div>
+                                <div class="cal-quick-stat-info">
+                                    <span class="cal-quick-stat-val" id="quick-stat-minutes">0 min</span>
+                                    <span class="cal-quick-stat-lbl">Tiempo acumulado</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="cal-quick-stat-info">
-                            <span class="cal-quick-stat-val" id="quick-stat-streak">0 días</span>
-                            <span class="cal-quick-stat-lbl">Racha actual</span>
-                        </div>
-                    </div>
 
-                    <div class="cal-quick-stat-card">
-                        <div class="cal-quick-stat-icon is-cal">
-                            <svg viewBox="0 0 24 24">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                            </svg>
-                        </div>
-                        <div class="cal-quick-stat-info">
-                            <span class="cal-quick-stat-val" id="quick-stat-calories">0 kcal</span>
-                            <span class="cal-quick-stat-lbl">Calorías quemadas</span>
-                        </div>
-                    </div>
-
-                    <div class="cal-quick-stat-card">
-                        <div class="cal-quick-stat-icon is-time">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2v4"></path>
-                                <path d="M12 18v4"></path>
-                                <path d="M4.93 4.93l2.83 2.83"></path>
-                                <path d="M16.24 16.24l2.83 2.83"></path>
-                                <path d="M2 12h4"></path>
-                                <path d="M18 12h4"></path>
-                                <path d="M4.93 19.07l2.83-2.83"></path>
-                                <path d="M16.24 7.76l2.83-2.83"></path>
-                            </svg>
-                        </div>
-                        <div class="cal-quick-stat-info">
-                            <span class="cal-quick-stat-val" id="quick-stat-minutes">0 min</span>
-                            <span class="cal-quick-stat-lbl">Tiempo acumulado</span>
+                        <!-- Tarjeta de Consistencia y Leyenda Desktop -->
+                        <div class="cal-activity-card">
+                            <div class="cal-activity-header">
+                                <div>
+                                    <span class="cal-activity-tag">REGISTRO DE CONSISTENCIA</span>
+                                    <h3 class="cal-activity-title">Seguimiento de Entrenamientos</h3>
+                                </div>
+                                <span class="cal-activity-badge">● Sincronizado</span>
+                            </div>
+                            <p class="cal-activity-desc">
+                                Selecciona cualquier día del calendario para revisar en detalle el volumen ejecutado, series, repeticiones completadas y calorías estimadas.
+                            </p>
+                            <div class="cal-activity-legend">
+                                <div class="cal-legend-item">
+                                    <span class="cal-legend-dot has-workout"></span>
+                                    <span>Sesión completada</span>
+                                </div>
+                                <div class="cal-legend-item">
+                                    <span class="cal-legend-dot is-today"></span>
+                                    <span>Día de hoy</span>
+                                </div>
+                                <div class="cal-legend-item">
+                                    <span class="cal-legend-dot is-rest"></span>
+                                    <span>Día de descanso</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. VISTA ESTADÍSTICAS Y GRÁFICOS -->
+            <!-- 3. VISTA ESTADÍSTICAS Y GRÁFICOS (DESKTOP WORKSPACE) -->
             <section class="tab-view is-hidden" id="view-stats">
-                <!-- Grid de 4 KPIs -->
+                <!-- Grid de 4 KPIs con estilo Glassmorphic Elevado -->
                 <div class="stats-kpi-grid">
-                    <div class="stats-kpi-card">
+                    <div class="stats-kpi-card stats-kpi-card--cal">
                         <div class="stats-kpi-top">
                             <span class="stats-kpi-title">Calorías Totales</span>
-                            <div class="stats-kpi-badge">
+                            <div class="stats-kpi-badge is-cal">
                                 <svg viewBox="0 0 24 24">
                                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                                 </svg>
@@ -1752,10 +2317,10 @@
                         <span class="stats-kpi-sub" id="kpi-avg-calories">Promedio: 0 kcal/día</span>
                     </div>
 
-                    <div class="stats-kpi-card">
+                    <div class="stats-kpi-card stats-kpi-card--time">
                         <div class="stats-kpi-top">
                             <span class="stats-kpi-title">Minutos Activos</span>
-                            <div class="stats-kpi-badge">
+                            <div class="stats-kpi-badge is-time">
                                 <svg viewBox="0 0 24 24">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <polyline points="12 6 12 12 16 14"></polyline>
@@ -1766,10 +2331,10 @@
                         <span class="stats-kpi-sub" id="kpi-avg-minutes">Promedio: 0 min/día</span>
                     </div>
 
-                    <div class="stats-kpi-card">
+                    <div class="stats-kpi-card stats-kpi-card--days">
                         <div class="stats-kpi-top">
                             <span class="stats-kpi-title">Días Activos</span>
-                            <div class="stats-kpi-badge">
+                            <div class="stats-kpi-badge is-days">
                                 <svg viewBox="0 0 24 24">
                                     <rect x="3" y="4" width="18" height="18" rx="2"></rect>
                                     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -1781,10 +2346,10 @@
                         <span class="stats-kpi-sub" id="kpi-pct-active">0% del mes</span>
                     </div>
 
-                    <div class="stats-kpi-card">
+                    <div class="stats-kpi-card stats-kpi-card--streak">
                         <div class="stats-kpi-top">
                             <span class="stats-kpi-title">Racha Máxima</span>
-                            <div class="stats-kpi-badge">
+                            <div class="stats-kpi-badge is-streak">
                                 <svg viewBox="0 0 24 24">
                                     <path
                                         d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z">
@@ -1797,55 +2362,117 @@
                     </div>
                 </div>
 
-                <!-- Gráfico de Actividad Diaria -->
-                <div class="chart-card">
-                    <div class="chart-card-header">
-                        <h3 class="chart-card-title">Actividad Diaria</h3>
-                        <span class="chart-card-tag" id="chart-tag-month">Minutos / Día</span>
-                    </div>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="chart-canvas-bar"></canvas>
-                    </div>
-                </div>
+                <!-- WORKSPACE DE 2 COLUMNAS PARA ESTADÍSTICAS EN DESKTOP -->
+                <div class="stats-desktop-workspace">
+                    <!-- COLUMNA IZQUIERDA (MAIN): Gráfico de barras diario + Tarjeta de consistencia -->
+                    <div class="stats-col-main">
+                        <!-- Gráfico de Actividad Diaria -->
+                        <div class="chart-card chart-card--bar">
+                            <div class="chart-card-header">
+                                <div>
+                                    <h3 class="chart-card-title">Actividad Diaria</h3>
+                                    <p class="chart-card-desc">Minutos dedicados a cada sesión del mes</p>
+                                </div>
+                                <span class="chart-card-tag" id="chart-tag-month">Minutos / Día</span>
+                            </div>
+                            <div class="chart-canvas-wrap chart-canvas-wrap--bar">
+                                <canvas id="chart-canvas-bar"></canvas>
+                            </div>
+                        </div>
 
-                <!-- Gráfico Donut Días Activos vs Descanso -->
-                <div class="chart-card">
-                    <div class="chart-card-header">
-                        <h3 class="chart-card-title">Días Activos vs Descanso</h3>
-                        <span class="chart-card-tag">Mes en Curso</span>
+                        <!-- Tarjeta de Consistencia y Rendimiento Atlético -->
+                        <div class="stats-insights-card">
+                            <div class="stats-insights-header">
+                                <div class="stats-insights-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                                        <path d="M4 22h16"></path>
+                                        <path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34"></path>
+                                        <path d="M14 14.66V17c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-2.34"></path>
+                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="stats-insights-title">Constancia y Rendimiento Atlético</h4>
+                                    <p class="stats-insights-desc">Análisis inteligente de tu volumen de entrenamiento acumulado</p>
+                                </div>
+                            </div>
+                            <div class="stats-insights-grid">
+                                <div class="stats-insight-pill">
+                                    <span class="stats-insight-pill-label">Frecuencia Semanal</span>
+                                    <strong class="stats-insight-pill-val">4 - 5 sesiones</strong>
+                                </div>
+                                <div class="stats-insight-pill">
+                                    <span class="stats-insight-pill-label">Objetivo de Recuperación</span>
+                                    <strong class="stats-insight-pill-val">Óptimo (48h entre grupos)</strong>
+                                </div>
+                                <div class="stats-insight-pill">
+                                    <span class="stats-insight-pill-label">Sobrecarga Progresiva</span>
+                                    <strong class="stats-insight-pill-val">+2.5% a +5% de carga</strong>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chart-canvas-wrap chart-canvas-wrap--donut">
-                        <canvas id="chart-canvas-donut"></canvas>
-                    </div>
-                </div>
 
-                <!-- Métricas Detalladas de Rendimiento y Consistencia -->
-                <div class="metrics-list-card">
-                    <span class="metrics-section-title">Rendimiento & Proyección</span>
-                    
-                    <div class="metric-row">
-                        <span class="metric-lbl">Mejor Día del Mes</span>
-                        <span class="metric-val is-accent" id="detail-best-day">N/A</span>
-                    </div>
+                    <!-- COLUMNA DERECHA (SIDE): Donut Chart + Rendimiento & Proyección -->
+                    <div class="stats-col-side">
+                        <!-- Gráfico Donut Días Activos vs Descanso -->
+                        <div class="chart-card chart-card--donut">
+                            <div class="chart-card-header">
+                                <div>
+                                    <h3 class="chart-card-title">Días Activos vs Descanso</h3>
+                                    <p class="chart-card-desc">Equilibrio mensual de trabajo y reposo</p>
+                                </div>
+                                <span class="chart-card-tag">Mes en Curso</span>
+                            </div>
+                            <div class="chart-canvas-wrap chart-canvas-wrap--donut">
+                                <canvas id="chart-canvas-donut"></canvas>
+                            </div>
+                            <div class="donut-legend-row">
+                                <div class="donut-legend-item">
+                                    <span class="donut-legend-dot is-active"></span>
+                                    <span>Entrenados</span>
+                                </div>
+                                <div class="donut-legend-item">
+                                    <span class="donut-legend-dot is-rest"></span>
+                                    <span>Descanso</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="metric-row">
-                        <span class="metric-lbl">Eficiencia Calórica</span>
-                        <span class="metric-val is-purple" id="detail-efficiency">0 kcal/min</span>
-                    </div>
+                        <!-- Métricas Detalladas de Rendimiento y Consistencia -->
+                        <div class="metrics-list-card">
+                            <div class="metrics-header-wrap">
+                                <span class="metrics-section-title">Rendimiento & Proyección</span>
+                                <span class="metrics-badge-pro">Métricas Clave</span>
+                            </div>
+                            
+                            <div class="metric-row">
+                                <span class="metric-lbl">Mejor Día del Mes</span>
+                                <span class="metric-val is-accent" id="detail-best-day">N/A</span>
+                            </div>
 
-                    <div class="metric-row">
-                        <span class="metric-lbl">Tendencia Semanal</span>
-                        <span class="metric-val is-green" id="detail-weekly-trend">Sin datos</span>
-                    </div>
+                            <div class="metric-row">
+                                <span class="metric-lbl">Eficiencia Calórica</span>
+                                <span class="metric-val is-purple" id="detail-efficiency">0 kcal/min</span>
+                            </div>
 
-                    <div class="metric-row">
-                        <span class="metric-lbl">Variación vs Mes Previo</span>
-                        <span class="metric-val" id="detail-monthly-variation">N/A</span>
-                    </div>
+                            <div class="metric-row">
+                                <span class="metric-lbl">Tendencia Semanal</span>
+                                <span class="metric-val is-green" id="detail-weekly-trend">Sin datos</span>
+                            </div>
 
-                    <div class="metric-row">
-                        <span class="metric-lbl">Ritmo Proyectado (Cierre)</span>
-                        <span class="metric-val is-accent" id="detail-projected-calories">0 kcal</span>
+                            <div class="metric-row">
+                                <span class="metric-lbl">Variación vs Mes Previo</span>
+                                <span class="metric-val" id="detail-monthly-variation">N/A</span>
+                            </div>
+
+                            <div class="metric-row">
+                                <span class="metric-lbl">Ritmo Proyectado (Cierre)</span>
+                                <span class="metric-val is-accent" id="detail-projected-calories">0 kcal</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1876,6 +2503,7 @@
             </section>
         </main>
     </div>
+    </div>
 
     <!-- ── MODAL BOTTOM-SHEET: DETALLE DEL DÍA ── -->
     <div class="modal-sheet-backdrop" id="modal-day-detail-backdrop" aria-hidden="true">
@@ -1905,7 +2533,7 @@
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Grid / Dashboard -->
-            <a href="/Templates/dashboard.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="nav-item"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
@@ -1916,7 +2544,7 @@
             </a>
 
             <!-- 2. Calendario (Activo en esta página) -->
-            <a href="/Templates/calendario_renov.html" class="nav-item is-active"
+            <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="nav-item is-active"
                 aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
@@ -1927,7 +2555,7 @@
             </a>
 
             <!-- 3. Planes -->
-            <a href="/Templates/plan_entreno.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="nav-item"
                 aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -1942,7 +2570,7 @@
             </a>
 
             <!-- 4. Alimentación -->
-            <a href="/Templates/plan_alimentacion.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="nav-item"
                 aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
@@ -1952,7 +2580,7 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
+            <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="nav-item" id="btn-nav-chat"
                 aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>

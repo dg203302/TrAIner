@@ -73,18 +73,214 @@
             overflow-x: clip;
         }
 
-        /* Contenedor responsivo centrado */
-        .app-container {
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
             width: 100%;
-            max-width: 440px;
-            padding: 16px 18px calc(var(--nav-height, 78px) + 36px + env(safe-area-inset-bottom, 20px)) 18px;
+            max-width: 100%;
+            overflow-x: clip;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ── SIDEBAR DESKTOP FLOTANTE ── */
+        .desktop-sidebar {
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 120;
+            background: rgba(14, 16, 21, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            justify-content: space-between;
+            padding: 24px 18px;
             box-sizing: border-box;
         }
 
-        /* ── HEADER FLOTANTE / STICKY ── */
+        .desktop-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-sidebar-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 4px 16px rgba(157, 243, 255, 0.16);
+        }
+
+        .desktop-sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .desktop-sidebar-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .desktop-sidebar-tag {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(157, 243, 255, 0.12);
+            color: #9df3ff;
+            margin-left: auto;
+        }
+
+        .desktop-nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 20px;
+            flex: 1;
+        }
+
+        .desktop-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .desktop-nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .desktop-nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .desktop-nav-link.is-active {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .desktop-sidebar-footer {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .desktop-user-profile:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .desktop-user-avatar-wrap {
+            position: relative;
+        }
+
+        .desktop-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .desktop-user-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ed573;
+            border: 2px solid #0c0d10;
+        }
+
+        .desktop-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .desktop-user-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .desktop-user-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* ── ÁREA PRINCIPAL DESKTOP (WIDESCREEN) ── */
+        .desktop-main-wrap {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1360px;
+            padding: 24px 36px 60px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            box-sizing: border-box;
+        }
+
         .app-header {
             position: sticky;
             top: 0;
@@ -92,14 +288,39 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: -16px -18px 0 -18px;
-            padding: calc(14px + env(safe-area-inset-top, 6px)) 18px 14px 18px;
-            background: rgba(12, 13, 16, 0.82);
+            margin: -24px -36px 0 -36px;
+            padding: 18px 36px;
+            background: rgba(12, 13, 16, 0.85);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
             transition: all 0.25s ease;
+        }
+
+        /* ── BENTO GRID DESKTOP EN 2 COLUMNAS (60% / 40%) ── */
+        .desktop-bento-grid {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 24px;
+            width: 100%;
+            align-items: start;
+        }
+
+        .desktop-col-main {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .desktop-col-side {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .bottom-nav {
+            display: none !important;
         }
 
         .header-title-wrap {
@@ -1775,306 +1996,329 @@
         </div>
     </div>
 
-    <div class="app-container">
-        <!-- HEADER FLOTANTE -->
-        <header class="app-header">
-            <div class="header-title-wrap">
-                <h1 class="header-title" data-i18n-en="Home">Inicio</h1>
-                <div class="header-user-status" id="header-user-status">
-                    <span class="header-user-dot"></span>
-                    <span id="header-username-text">Sincronizando...</span>
+    <!-- ── BARRA LATERAL DE NAVEGACIÓN DESKTOP (FIJA) ── -->
+    <aside class="desktop-sidebar">
+        <!-- Logo & Marca -->
+        <div>
+            <div class="desktop-sidebar-brand">
+                <img src="/Icons/2.png" alt="TrAIner Logo" class="desktop-sidebar-logo">
+                <div>
+                    <div class="desktop-sidebar-title">TrAIner</div>
+                    <div class="desktop-sidebar-sub">Fitness & Nutrition AI</div>
                 </div>
+                <span class="desktop-sidebar-tag">PRO</span>
             </div>
 
-            <div class="header-actions">
-                <!-- Botón de perfil del usuario que redirige a Perfil de Usuario -->
-                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
-                    id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
+            <!-- Menú de Navegación Principal Desktop -->
+            <nav class="desktop-nav-menu">
+                <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="desktop-nav-link is-active" aria-label="Dashboard Principal">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="desktop-nav-link" aria-label="Calendario de Entrenamientos">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Calendario</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="desktop-nav-link" aria-label="Plan de Entrenamiento">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6.5 6.5 11 11"></path>
+                        <path d="m21 21-1-1"></path>
+                        <path d="m3 3 1 1"></path>
+                        <path d="m18 22 4-4"></path>
+                        <path d="m2 6 4-4"></path>
+                        <path d="m3 10 7-7"></path>
+                        <path d="m14 21 7-7"></path>
+                    </svg>
+                    <span>Plan de Entreno</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="desktop-nav-link" aria-label="Plan de Alimentación">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
+                    <span>Alimentación</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="desktop-nav-link" id="btn-nav-chat" aria-label="Chatbot IA">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Chat Asistente IA</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Pie del Sidebar: Perfil de Usuario -->
+        <div class="desktop-sidebar-footer">
+            <a href="/Templates_Pantalla_Ancha/config_desktop.html" class="desktop-user-profile" title="Ajustes y Perfil">
+                <div class="desktop-user-avatar-wrap">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                        alt="Foto de perfil" class="header-avatar-img">
-                </a>
-            </div>
-        </header>
-
-        <!-- PRIMERA FILA (2 COLUMNAS): WORKOUT HOY + BODY WEIGHT -->
-        <section class="hero-grid">
-            <!-- Tarjeta: Workout de Hoy -->
-            <div class="card card-workout-summary" id="card-workout-today">
-                <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="4" y1="21" x2="4" y2="14"></line>
-                    <line x1="4" y1="10" x2="4" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12" y2="3"></line>
-                    <line x1="20" y1="21" x2="20" y2="16"></line>
-                    <line x1="20" y1="12" x2="20" y2="3"></line>
-                    <line x1="1" y1="14" x2="7" y2="14"></line>
-                    <line x1="9" y1="8" x2="15" y2="8"></line>
-                    <line x1="17" y1="16" x2="23" y2="16"></line>
-                </svg>
-
-                <div class="workout-indicator-wrap">
-                    <svg class="workout-indicator-svg" viewBox="0 0 58 58">
-                        <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
-                        <circle class="workout-indicator-progress" id="workout-ring-progress" cx="29" cy="29" r="25">
-                        </circle>
-                    </svg>
-                    <span class="workout-indicator-num" id="workout-num-display"></span>
+                        alt="Foto de perfil" class="desktop-user-avatar">
+                    <span class="desktop-user-dot"></span>
                 </div>
-
-                <div>
-                    <h2 class="workout-title" id="workout-today-title">Cargando...</h2>
-                    <p class="workout-subtitle" id="workout-today-subtitle">Consultando BD...</p>
+                <div class="desktop-user-info">
+                    <span class="desktop-user-name" id="header-username-text">Atleta</span>
+                    <span class="desktop-user-sub">Configuración & Perfil</span>
                 </div>
-            </div>
-
-            <!-- Tarjeta: Body Weight (Datos Fitness -> Peso y Peso_Obj) -->
-            <div class="card card-weight" id="card-weight">
-                <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="4" y1="21" x2="4" y2="14"></line>
-                    <line x1="4" y1="10" x2="4" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12" y2="3"></line>
-                    <line x1="20" y1="21" x2="20" y2="16"></line>
-                    <line x1="20" y1="12" x2="20" y2="3"></line>
-                    <line x1="1" y1="14" x2="7" y2="14"></line>
-                    <line x1="9" y1="8" x2="15" y2="8"></line>
-                    <line x1="17" y1="16" x2="23" y2="16"></line>
-                </svg>
-
-                <div class="weight-value-wrap">
-                    <span class="weight-number" id="weight-display-val">--</span>
-                    <span class="weight-unit">kg</span>
-                </div>
-
-                <div>
-                    <h2 class="weight-label" data-i18n-en="Body weight">Peso corporal</h2>
-                    <p class="weight-sub" id="weight-sub-display">BMI: --</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEGUNDA SECCIÓN: SLIDESHOW CON GIFS DE LOS EJERCICIOS DE HOY -->
-        <section class="slideshow-card" id="today-slideshow-card">
-            <div class="slideshow-header">
-                <span class="slideshow-header-title" id="slideshow-header-title" data-i18n-en="Today's Exercises">Ejercicios de hoy</span>
-                <span class="slideshow-counter" id="slideshow-counter">1 / --</span>
-            </div>
-
-            <div class="slideshow-body" id="slideshow-body">
-                <div class="slideshow-media" id="slideshow-media">
-                    <img id="slideshow-gif" src="" alt="Demostración ejercicio" style="display: none;">
-                    <div id="slideshow-placeholder" style="color: #666; font-size: 11px;">TrAIner</div>
-                </div>
-
-                <div class="slideshow-info">
-                    <div class="slideshow-ex-name" id="slideshow-name">Cargando ejercicios...</div>
-                    <div class="slideshow-ex-meta">
-                        <span class="slideshow-badge" id="slideshow-series">-- series</span>
-                        <span class="slideshow-badge" id="slideshow-reps">-- reps</span>
-                        <span class="slideshow-badge" id="slideshow-rest">--s</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="slideshow-nav-controls">
-                <div class="slideshow-dots-bar" id="slideshow-dots-bar"></div>
-                <div class="slideshow-arrows">
-                    <button class="slideshow-arrow-btn" id="btn-slide-prev" aria-label="Anterior">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
-                    <button class="slideshow-arrow-btn" id="btn-slide-next" aria-label="Siguiente">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- TERCERA SECCIÓN: PLAN DE ALIMENTACIÓN DE HOY (Planes -> Plan_alimenta) -->
-        <section class="card-diet" id="card-diet" role="button" tabindex="0">
-            <div class="diet-info">
-                <span class="diet-tag" data-i18n-en="Nutrition for today">Plan Nutricional de hoy</span>
-                <h3 class="diet-title" id="diet-today-title">Cargando plan...</h3>
-                <p class="diet-desc" id="diet-today-desc">Comidas y macronutrientes asignados</p>
-            </div>
-            <div class="diet-kcal-badge">
-                <div class="diet-kcal-val" id="diet-today-kcal">--</div>
-                <div class="diet-kcal-lbl">kcal</div>
-            </div>
-        </section>
-
-        <!-- CUARTA SECCIÓN: CALENDARIO DE PUNTOS (Planes -> Dias_entrenados) + WORKOUT 2 -->
-        <section class="card-calendar-dots">
-            <!-- 3 Columnas de Meses con Dots -->
-            <div class="months-dot-grid" id="months-dot-grid">
-                <!-- Se llenan con los datos reales de Dias_entrenados de la BD -->
-            </div>
-
-            <!-- Subitem de segundo entreno / próximo entreno -->
-            <div class="card-cal-subitem" id="cal-subitem-next">
-                <div class="workout-indicator-wrap" style="width: 46px; height: 46px; margin-bottom: 0;">
-                    <svg class="workout-indicator-svg" viewBox="0 0 58 58">
-                        <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
-                        <circle class="workout-indicator-progress" id="cal-subitem-ring" cx="29" cy="29" r="25"
-                            style="stroke-dashoffset: 160;"></circle>
-                    </svg>
-                    <span class="workout-indicator-num" id="cal-subitem-num" style="font-size: 16px;"></span>
-                </div>
-
-                <div class="cal-subitem-info">
-                    <div class="cal-subitem-title" id="cal-subitem-title">Próxima sesión</div>
-                    <div class="cal-subitem-sub" id="cal-subitem-sub">--</div>
-                </div>
-
-                <svg style="width: 18px; height: 18px; color: var(--text-muted); opacity: 0.6;" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor">
-                    <line x1="4" y1="21" x2="4" y2="14"></line>
-                    <line x1="4" y1="10" x2="4" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12" y2="3"></line>
-                    <line x1="20" y1="21" x2="20" y2="16"></line>
-                    <line x1="20" y1="12" x2="20" y2="3"></line>
-                    <line x1="1" y1="14" x2="7" y2="14"></line>
-                    <line x1="9" y1="8" x2="15" y2="8"></line>
-                    <line x1="17" y1="16" x2="23" y2="16"></line>
-                </svg>
-            </div>
-        </section>
-
-        <!-- QUINTA SECCIÓN: VOLUMEN / ENTRENOS DEL MES (Calculado de Dias_entrenados) -->
-        <section class="card-metric-row">
-            <div class="metric-left">
-                <div class="metric-label" data-i18n-en="Monthly sessions">Entrenos del mes</div>
-                <div class="metric-sub" id="metric-month-name">Mes actual</div>
-            </div>
-            <div class="metric-right">
-                <span class="metric-big-num" id="metric-sessions-num">0</span>
-                <span class="metric-unit" data-i18n-en="ses">ses</span>
-            </div>
-
-            <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="4" y1="21" x2="4" y2="14"></line>
-                <line x1="4" y1="10" x2="4" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12" y2="3"></line>
-                <line x1="20" y1="21" x2="20" y2="16"></line>
-                <line x1="20" y1="12" x2="20" y2="3"></line>
-                <line x1="1" y1="14" x2="7" y2="14"></line>
-                <line x1="9" y1="8" x2="15" y2="8"></line>
-                <line x1="17" y1="16" x2="23" y2="16"></line>
-            </svg>
-        </section>
-
-        <!-- RESUMEN EN TRIPLETE (TIEMPO, CALORÍAS Y RACHA) -->
-        <section class="metrics-triplet">
-            <div class="metric-mini-card">
-                <span class="mini-metric-title" data-i18n-en="Time">Tiempo</span>
-                <span class="mini-metric-num" id="metric-total-time">0m</span>
-                <span class="mini-metric-sub" data-i18n-en="This month">este mes</span>
-            </div>
-
-            <div class="metric-mini-card">
-                <span class="mini-metric-title" data-i18n-en="Calories">Calorías</span>
-                <span class="mini-metric-num" id="metric-total-calories">0</span>
-                <span class="mini-metric-sub">kcal totales</span>
-            </div>
-
-            <div class="metric-mini-card">
-                <span class="mini-metric-title" data-i18n-en="Streak">Racha</span>
-                <span class="mini-metric-num" id="metric-streak-count">0d</span>
-                <span class="mini-metric-sub">consecutivos</span>
-            </div>
-        </section>
-
-        <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
-        <section class="pt-ad-container" aria-label="Espacio publicitario">
-            <div class="pt-ad-card">
-                <div class="pt-ad-header">
-                    <span class="pt-ad-tag">
-                        <span class="pt-ad-dot" aria-hidden="true"></span>
-                        <span data-i18n-en="Sponsored">Publicidad</span>
-                    </span>
-                    <span class="pt-ad-provider">Patrocinado</span>
-                </div>
-                <div class="pt-ad-slot-wrapper">
-                    <script>
-                        atOptions = {
-                            'key' : '20fd356d9c7b90b05c268f07099b182f',
-                            'format' : 'iframe',
-                            'height' : 90,
-                            'width' : 728,
-                            'params' : {}
-                        };
-                    </script>
-                    <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ── BARRA INFERIOR DE NAVEGACIÓN (IDÉNTICA A LA CAPTURA) ── -->
-    <nav class="bottom-nav">
-        <div class="bottom-nav-inner">
-            <!-- 1. Grid / Workouts (Activo) -->
-            <a href="/Templates/dashboard.html" class="nav-item is-active"
-                aria-label="Panel de Entrenamientos">
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="3" width="7" height="7" rx="2"></rect>
-                    <rect x="14" y="3" width="7" height="7" rx="2"></rect>
-                    <rect x="14" y="14" width="7" height="7" rx="2"></rect>
-                    <rect x="3" y="14" width="7" height="7" rx="2"></rect>
-                </svg>
-            </a>
-
-            <!-- 2. Calendario -->
-            <a href="/Templates/calendario_renov.html" class="nav-item"
-                aria-label="Calendario de Entreno">
-                <svg viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-            </a>
-
-            <!-- 3. Gráficas / Analytics / Planes -->
-            <a href="/Templates/plan_entreno.html" class="nav-item"
-                aria-label="Plan de Entrenamiento">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="m6.5 6.5 11 11"></path>
-                    <path d="m21 21-1-1"></path>
-                    <path d="m3 3 1 1"></path>
-                    <path d="m18 22 4-4"></path>
-                    <path d="m2 6 4-4"></path>
-                    <path d="m3 10 7-7"></path>
-                    <path d="m14 21 7-7"></path>
-                </svg>
-            </a>
-
-            <!-- 4. Alimentación -->
-            <a href="/Templates/plan_alimentacion.html" class="nav-item"
-                aria-label="Plan de Alimentación">
-                <svg viewBox="0 0 24 24">
-                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                    <path d="M7 2v20"></path>
-                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                </svg>
-            </a>
-
-            <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
-                aria-label="Asistente Inteligente TrAIner">
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
             </a>
         </div>
-    </nav>
+    </aside>
+
+    <!-- ── CONTENEDOR PRINCIPAL DESKTOP (WIDESCREEN) ── -->
+    <div class="desktop-main-wrap">
+        <div class="app-container">
+            <!-- HEADER DESKTOP STICKY -->
+            <header class="app-header">
+                <div class="header-title-wrap">
+                    <h1 class="header-title" data-i18n-en="Home">Inicio</h1>
+                    <div class="header-user-status" id="header-user-status">
+                        <span class="header-user-dot"></span>
+                        <span>Panel de rendimiento y métricas</span>
+                    </div>
+                </div>
+
+                <div class="header-actions"></div>
+            </header>
+
+            <!-- ── BENTO GRID EN 2 COLUMNAS (60% / 40%) ── -->
+            <div class="desktop-bento-grid">
+                <!-- COLUMNA IZQUIERDA: Entrenamientos, Ejercicios y Métricas -->
+                <div class="desktop-col-main">
+                    <!-- Fila 1: Entreno de Hoy + Peso Corporal / BMI -->
+                    <section class="hero-grid">
+                        <!-- Tarjeta: Workout de Hoy -->
+                        <div class="card card-workout-summary" id="card-workout-today">
+                            <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+
+                            <div class="workout-indicator-wrap">
+                                <svg class="workout-indicator-svg" viewBox="0 0 58 58">
+                                    <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
+                                    <circle class="workout-indicator-progress" id="workout-ring-progress" cx="29" cy="29" r="25"></circle>
+                                </svg>
+                                <span class="workout-indicator-num" id="workout-num-display"></span>
+                            </div>
+
+                            <div>
+                                <h2 class="workout-title" id="workout-today-title">Cargando...</h2>
+                                <p class="workout-subtitle" id="workout-today-subtitle">Consultando BD...</p>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta: Body Weight (Peso y BMI) -->
+                        <div class="card card-weight" id="card-weight">
+                            <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+
+                            <div class="weight-value-wrap">
+                                <span class="weight-number" id="weight-display-val">--</span>
+                                <span class="weight-unit">kg</span>
+                            </div>
+
+                            <div>
+                                <h2 class="weight-label" data-i18n-en="Body weight">Peso corporal</h2>
+                                <p class="weight-sub" id="weight-sub-display">BMI: --</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Fila 2: Slideshow Panorámico con GIFs de Ejercicios -->
+                    <section class="slideshow-card" id="today-slideshow-card">
+                        <div class="slideshow-header">
+                            <span class="slideshow-header-title" id="slideshow-header-title" data-i18n-en="Today's Exercises">Ejercicios de hoy</span>
+                            <span class="slideshow-counter" id="slideshow-counter">1 / --</span>
+                        </div>
+
+                        <div class="slideshow-body" id="slideshow-body">
+                            <div class="slideshow-media" id="slideshow-media">
+                                <img id="slideshow-gif" src="" alt="Demostración ejercicio" style="display: none;">
+                                <div id="slideshow-placeholder" style="color: #666; font-size: 11px;">TrAIner</div>
+                            </div>
+
+                            <div class="slideshow-info">
+                                <div class="slideshow-ex-name" id="slideshow-name">Cargando ejercicios...</div>
+                                <div class="slideshow-ex-meta">
+                                    <span class="slideshow-badge" id="slideshow-series">-- series</span>
+                                    <span class="slideshow-badge" id="slideshow-reps">-- reps</span>
+                                    <span class="slideshow-badge" id="slideshow-rest">--s</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slideshow-nav-controls">
+                            <div class="slideshow-dots-bar" id="slideshow-dots-bar"></div>
+                            <div class="slideshow-arrows">
+                                <button class="slideshow-arrow-btn" id="btn-slide-prev" aria-label="Anterior">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="slideshow-arrow-btn" id="btn-slide-next" aria-label="Siguiente">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Fila 3: Volumen / Entrenos del Mes -->
+                    <section class="card-metric-row">
+                        <div class="metric-left">
+                            <div class="metric-label" data-i18n-en="Monthly sessions">Entrenos del mes</div>
+                            <div class="metric-sub" id="metric-month-name">Mes actual</div>
+                        </div>
+                        <div class="metric-right">
+                            <span class="metric-big-num" id="metric-sessions-num">0</span>
+                            <span class="metric-unit" data-i18n-en="ses">ses</span>
+                        </div>
+
+                        <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </section>
+
+                    <!-- Triplete de Métricas (Tiempo, Calorías y Racha) -->
+                    <section class="metrics-triplet">
+                        <div class="metric-mini-card">
+                            <span class="mini-metric-title" data-i18n-en="Time">Tiempo</span>
+                            <span class="mini-metric-num" id="metric-total-time">0m</span>
+                            <span class="mini-metric-sub" data-i18n-en="This month">este mes</span>
+                        </div>
+
+                        <div class="metric-mini-card">
+                            <span class="mini-metric-title" data-i18n-en="Calories">Calorías</span>
+                            <span class="mini-metric-num" id="metric-total-calories">0</span>
+                            <span class="mini-metric-sub">kcal totales</span>
+                        </div>
+
+                        <div class="metric-mini-card">
+                            <span class="mini-metric-title" data-i18n-en="Streak">Racha</span>
+                            <span class="mini-metric-num" id="metric-streak-count">0d</span>
+                            <span class="mini-metric-sub">consecutivos</span>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- COLUMNA DERECHA: Nutrición, Calendario y Anuncios -->
+                <div class="desktop-col-side">
+                    <!-- Plan de Alimentación de Hoy -->
+                    <section class="card-diet" id="card-diet" role="button" tabindex="0">
+                        <div class="diet-info">
+                            <span class="diet-tag" data-i18n-en="Nutrition for today">Plan Nutricional de hoy</span>
+                            <h3 class="diet-title" id="diet-today-title">Cargando plan...</h3>
+                            <p class="diet-desc" id="diet-today-desc">Comidas y macronutrientes asignados</p>
+                        </div>
+                        <div class="diet-kcal-badge">
+                            <div class="diet-kcal-val" id="diet-today-kcal">--</div>
+                            <div class="diet-kcal-lbl">kcal</div>
+                        </div>
+                    </section>
+
+                    <!-- Calendario de Puntos y Subítem -->
+                    <section class="card-calendar-dots">
+                        <div class="months-dot-grid" id="months-dot-grid">
+                            <!-- Datos reales de Dias_entrenados -->
+                        </div>
+
+                        <!-- Subitem de segundo entreno / próximo entreno -->
+                        <div class="card-cal-subitem" id="cal-subitem-next">
+                            <div class="workout-indicator-wrap" style="width: 46px; height: 46px; margin-bottom: 0;">
+                                <svg class="workout-indicator-svg" viewBox="0 0 58 58">
+                                    <circle class="workout-indicator-bg" cx="29" cy="29" r="25"></circle>
+                                    <circle class="workout-indicator-progress" id="cal-subitem-ring" cx="29" cy="29" r="25" style="stroke-dashoffset: 160;"></circle>
+                                </svg>
+                                <span class="workout-indicator-num" id="cal-subitem-num" style="font-size: 16px;"></span>
+                            </div>
+
+                            <div class="cal-subitem-info">
+                                <div class="cal-subitem-title" id="cal-subitem-title">Próxima sesión</div>
+                                <div class="cal-subitem-sub" id="cal-subitem-sub">--</div>
+                            </div>
+
+                            <svg style="width: 18px; height: 18px; color: var(--text-muted); opacity: 0.6;" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="1" y1="14" x2="7" y2="14"></line>
+                                <line x1="9" y1="8" x2="15" y2="8"></line>
+                                <line x1="17" y1="16" x2="23" y2="16"></line>
+                            </svg>
+                        </div>
+                    </section>
+
+                    <!-- Publicidad -->
+                    <section class="pt-ad-container" aria-label="Espacio publicitario">
+                        <div class="pt-ad-card">
+                            <div class="pt-ad-header">
+                                <span class="pt-ad-tag">
+                                    <span class="pt-ad-dot" aria-hidden="true"></span>
+                                    <span data-i18n-en="Sponsored">Publicidad</span>
+                                </span>
+                                <span class="pt-ad-provider">Patrocinado</span>
+                            </div>
+                            <div class="pt-ad-slot-wrapper">
+                                <script>
+                                    atOptions = {
+                                        'key' : '20fd356d9c7b90b05c268f07099b182f',
+                                        'format' : 'iframe',
+                                        'height' : 90,
+                                        'width' : 728,
+                                        'params' : {}
+                                    };
+                                </script>
+                                <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ── POPUP / MODAL INSTALACIÓN PWA (SOLO MÓVIL Y NO INSTALADA) ── -->
     <div id="pwa-install-banner" class="pwa-prompt-container" aria-hidden="true">
@@ -3020,12 +3264,12 @@
 
         // 9. EVENTOS Y REDIRECCIONES
         function setupEventListeners() {
-            // ── REDIRECCIONES A PLAN DE ENTRENAMIENTO (plan_entreno.html) ──
+            // ── REDIRECCIONES A PLAN DE ENTRENAMIENTO (plan_entreno_desktop.html) ──
             // 1. Tarjeta Workout de hoy
             const cardWorkout = document.getElementById("card-workout-today");
             if (cardWorkout) {
                 cardWorkout.addEventListener("click", () => {
-                    window.location.href = "/Templates/plan_entreno.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/plan_entreno_desktop.html";
                 });
             }
 
@@ -3033,7 +3277,7 @@
             const cardSlideshow = document.getElementById("today-slideshow-card");
             if (cardSlideshow) {
                 cardSlideshow.addEventListener("click", () => {
-                    window.location.href = "/Templates/plan_entreno.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/plan_entreno_desktop.html";
                 });
             }
 
@@ -3045,7 +3289,7 @@
             const cardDiet = document.getElementById("card-diet");
             if (cardDiet) {
                 cardDiet.addEventListener("click", () => {
-                    window.location.href = "/Templates/plan_alimentacion.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html";
                 });
             }
 
@@ -3054,7 +3298,7 @@
             if (subitemNext) {
                 subitemNext.addEventListener("click", (e) => {
                     e.stopPropagation();
-                    window.location.href = "/Templates/plan_entreno.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/plan_entreno_desktop.html";
                 });
             }
 
@@ -3062,17 +3306,17 @@
             const cardWeight = document.getElementById("card-weight");
             if (cardWeight) {
                 cardWeight.addEventListener("click", () => {
-                    window.location.href = "/Templates/config.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/config_desktop.html";
                 });
             }
 
-            // ── REDIRECCIONES A CALENDARIO (calendario_renov.html) ──
+            // ── REDIRECCIONES A CALENDARIO (calendario_renov_desktop.html) ──
             // 1. Tarjeta de calendario de puntos (Heatmap de meses)
             const cardCalendar = document.querySelector(".card-calendar-dots");
             if (cardCalendar) {
                 cardCalendar.addEventListener("click", (e) => {
                     if (!e.target.closest("#cal-subitem-next")) {
-                        window.location.href = "/Templates/calendario_renov.html";
+                        window.location.href = "/Templates_Pantalla_Ancha/calendario_renov_desktop.html";
                     }
                 });
             }
@@ -3081,14 +3325,14 @@
             const cardMetricRow = document.querySelector(".card-metric-row");
             if (cardMetricRow) {
                 cardMetricRow.addEventListener("click", () => {
-                    window.location.href = "/Templates/calendario_renov.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/calendario_renov_desktop.html";
                 });
             }
 
             // 3. Triplete de métricas (Tiempo, Calorías y Racha)
             document.querySelectorAll(".metric-mini-card").forEach((card) => {
                 card.addEventListener("click", () => {
-                    window.location.href = "/Templates/calendario_renov.html";
+                    window.location.href = "/Templates_Pantalla_Ancha/calendario_renov_desktop.html";
                 });
             });
 

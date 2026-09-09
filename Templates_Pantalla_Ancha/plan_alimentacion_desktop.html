@@ -59,24 +59,208 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
             width: 100%;
             max-width: 100%;
             overflow-x: clip;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ── SIDEBAR DESKTOP FLOTANTE ── */
+        .desktop-sidebar {
+            width: 260px;
+            min-width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 120;
+            background: rgba(14, 16, 21, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 18px;
+            box-sizing: border-box;
+        }
+
+        .desktop-sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-sidebar-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 4px 16px rgba(157, 243, 255, 0.16);
+        }
+
+        .desktop-sidebar-title {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+
+        .desktop-sidebar-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .desktop-sidebar-tag {
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            background: rgba(157, 243, 255, 0.12);
+            color: #9df3ff;
+            margin-left: auto;
+        }
+
+        .desktop-nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 20px;
+            flex: 1;
+        }
+
+        .desktop-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+
+        .desktop-nav-link svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .desktop-nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transform: translateX(3px);
+        }
+
+        .desktop-nav-link.is-active {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .desktop-sidebar-footer {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .desktop-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .desktop-user-profile:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .desktop-user-avatar-wrap {
+            position: relative;
+        }
+
+        .desktop-user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .desktop-user-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2ed573;
+            border: 2px solid #0c0d10;
+        }
+
+        .desktop-user-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .desktop-user-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .desktop-user-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* ── ÁREA PRINCIPAL DESKTOP (WIDESCREEN) ── */
+        .desktop-main-wrap {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
         }
 
         .app-container {
             width: 100%;
-            max-width: 440px;
-            padding: 16px 18px calc(var(--nav-height, 78px) + 36px + env(safe-area-inset-bottom, 20px)) 18px;
+            max-width: 1360px;
+            padding: 24px 36px 60px 36px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 22px;
             box-sizing: border-box;
         }
 
-        /* ── HEADER FLOTANTE / STICKY ── */
         .app-header {
             position: sticky;
             top: 0;
@@ -84,9 +268,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: -16px -18px 0 -18px;
-            padding: calc(14px + env(safe-area-inset-top, 6px)) 18px 14px 18px;
-            background: rgba(12, 13, 16, 0.82);
+            margin: -24px -36px 0 -36px;
+            padding: 18px 36px;
+            background: rgba(12, 13, 16, 0.85);
             backdrop-filter: blur(28px);
             -webkit-backdrop-filter: blur(28px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -178,6 +362,32 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            width: 100%;
+        }
+
+        /* ── WORKSPACE DESKTOP WIDESCREEN (2 COLUMNAS) ── */
+        .nutrition-desktop-workspace {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 32px;
+            align-items: start;
+            width: 100%;
+        }
+
+        .nutrition-desktop-aside {
+            position: sticky;
+            top: 88px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .nutrition-desktop-main {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 0;
+            width: 100%;
         }
 
         /* ── HERO CARD DEL PLAN DE ALIMENTACIÓN ── */
@@ -360,63 +570,99 @@
             transform: scale(0.97);
         }
 
-        /* ── SELECTOR DE DÍAS (SCROLL HORIZONTAL) ── */
+        /* ── SELECTOR DE DÍAS (LISTA VERTICAL DESKTOP) ── */
         .days-nav-wrapper {
             position: relative;
-            margin: -4px 0 2px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .days-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+
+        .days-nav-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
 
         .days-nav-container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 10px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .days-nav-container::-webkit-scrollbar {
-            display: none;
+            padding: 0;
+            width: 100%;
         }
 
         .day-pill-btn {
-            padding: 9px 18px;
-            border-radius: var(--radius-pill);
-            background: var(--bg-card);
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: var(--bg-card-subtle);
             border: 1px solid var(--border-card);
             color: var(--text-secondary);
-            font-size: 13.5px;
+            font-size: 14px;
             font-weight: 700;
             white-space: nowrap;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
+            box-sizing: border-box;
         }
 
         .day-pill-btn:hover {
             color: #ffffff;
             background: var(--bg-card-elevated);
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.16);
         }
 
         .day-pill-btn.is-active {
-            background: #ffffff;
-            color: #0c0d10;
-            border-color: #ffffff;
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.18);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 16px rgba(157, 243, 255, 0.15);
         }
 
-        /* ── CABECERA Y RESUMEN DEL DÍA SELECCIONADO ── */
+        .day-pill-btn.is-active::after {
+            content: "●";
+            color: var(--accent);
+            font-size: 11px;
+        }
+
+        /* ── CABECERA Y RESUMEN DEL DÍA SELECCIONADO (BANNER WIDESCREEN) ── */
         .day-focus-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: var(--radius-card);
-            padding: 18px 20px;
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px 24px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            margin-bottom: 22px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .day-focus-card:hover {
+            border-color: rgba(157, 243, 255, 0.22);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(157, 243, 255, 0.05);
         }
 
         .day-focus-top {
@@ -426,47 +672,57 @@
         }
 
         .day-focus-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: #fff;
-            letter-spacing: -0.4px;
+            letter-spacing: -0.5px;
         }
 
         .day-cal-badge {
-            background: var(--bg-card-elevated);
-            border: 1px solid var(--border-card);
-            padding: 6px 12px;
+            background: rgba(157, 243, 255, 0.08);
+            border: 1px solid rgba(157, 243, 255, 0.22);
+            padding: 7px 16px;
             border-radius: var(--radius-pill);
-            font-size: 13.5px;
+            font-size: 14.5px;
             font-weight: 800;
             color: var(--accent);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            box-shadow: 0 4px 14px rgba(157, 243, 255, 0.1);
+        }
+
+        .day-focus-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .day-macros-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .macro-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 11px;
+            gap: 6px;
+            padding: 6px 14px;
             border-radius: var(--radius-pill);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             color: var(--text-secondary);
         }
 
         .macro-pill strong {
             color: #ffffff;
+            font-weight: 800;
         }
 
         .macro-pill.carb-pill strong {
@@ -482,21 +738,24 @@
         }
 
         .day-btn-summary {
-            background: transparent;
-            border: none;
+            background: rgba(157, 243, 255, 0.06);
+            border: 1px solid rgba(157, 243, 255, 0.18);
             color: var(--accent);
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 2px 0;
-            transition: opacity 0.2s ease;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: var(--radius-pill);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .day-btn-summary:hover {
-            opacity: 0.8;
+            background: rgba(157, 243, 255, 0.14);
+            border-color: rgba(157, 243, 255, 0.35);
+            transform: translateX(2px);
         }
 
         /* ── TARJETAS DE COMIDAS (NUEVOS CONTENEDORES COHESIVOS) ── */
@@ -516,28 +775,31 @@
         }
 
         .meals-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            width: 100%;
         }
 
         .meal-card {
             background: var(--bg-card);
             border: 1px solid var(--border-card);
-            border-radius: var(--radius-inner);
-            padding: 16px 18px;
+            border-radius: 20px;
+            padding: 20px 22px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
         }
 
         .meal-card:hover {
-            border-color: rgba(255, 255, 255, 0.16);
-            background: #1b1e24;
-            transform: translateY(-2px);
+            border-color: rgba(157, 243, 255, 0.3);
+            background: #1c1f26;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(157, 243, 255, 0.06);
         }
 
         .meal-card:active {
@@ -653,17 +915,18 @@
             margin-top: 1px;
         }
 
-        /* ── MODALES BOTTOM-SHEET ── */
+        /* ── MODALES FLOTANTES WIDESCREEN ESTILO DIALOG GLASS ── */
         .custom-sheet-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.72);
+            background: rgba(0, 0, 0, 0.76);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             z-index: 2000;
             display: none;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
+            padding: 24px;
             opacity: 0;
             transition: opacity 0.28s ease;
         }
@@ -675,23 +938,181 @@
 
         .custom-sheet-card {
             width: 100%;
-            max-width: 440px;
-            max-height: 88vh;
+            max-width: 880px;
+            max-height: 90vh;
             background: #0f1015;
-            border-top-left-radius: 32px;
-            border-top-right-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-bottom: none;
-            box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.7);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.96), 0 0 40px rgba(157, 243, 255, 0.05);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            transform: translateY(100%);
-            transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
+            transform: scale(0.96);
+            transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
         }
 
         .custom-sheet-backdrop.is-open .custom-sheet-card {
-            transform: translateY(0);
+            transform: scale(1);
+        }
+
+        /* ── GRIDS INTERNAS DE MODALES DESKTOP ── */
+        .ai-modal-desktop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .meal-modal-desktop-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            width: 100%;
+        }
+
+        .meal-modal-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .meal-modal-right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .meal-modal-hero-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 12px 16px;
+        }
+
+        .meal-modal-card-highlight {
+            background: linear-gradient(135deg, rgba(157, 243, 255, 0.08), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(157, 243, 255, 0.2);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-modal-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(157, 243, 255, 0.12);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .meal-modal-highlight-label {
+            font-size: 15px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .meal-modal-highlight-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .meal-modal-tip-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .meal-modal-tip-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meal-modal-tip-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .meal-modal-desc-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 14.5px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .meal-modal-prep-box {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meal-prep-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .meal-prep-item strong {
+            color: #fff;
+        }
+
+        .prep-bullet {
+            color: var(--accent);
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .summary-modal-desktop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        @media (max-width: 1100px) {
+            .nutrition-desktop-workspace {
+                grid-template-columns: 1fr;
+            }
+            .nutrition-desktop-aside {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ai-modal-desktop-grid,
+            .meal-modal-desktop-grid,
+            .summary-modal-desktop-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .ios-drum-header {
@@ -927,80 +1348,9 @@
             line-height: 1.4;
         }
 
-        /* ── BARRA DE NAVEGACIÓN INFERIOR FLOTANTE ── */
+        /* ── BARRA DE NAVEGACIÓN INFERIOR (OCULTA EN DESKTOP) ── */
         .bottom-nav {
-            position: fixed;
-            bottom: calc(16px + env(safe-area-inset-bottom, 12px));
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 36px);
-            max-width: 380px;
-            height: 64px;
-            padding: 0 8px;
-            background: rgba(22, 25, 31, 0.84);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--radius-pill);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
-            z-index: 1000;
-        }
-
-        .bottom-nav-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0;
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: #535866;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            position: relative;
-        }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            stroke-width: 2.1;
-            stroke: currentColor;
-            fill: none;
-            transition: stroke 0.2s ease, transform 0.2s ease;
-        }
-
-        .nav-item:hover {
-            color: #ffffff;
-        }
-
-        .nav-item:hover svg {
-            stroke: #ffffff;
-        }
-
-        .nav-item:active {
-            transform: scale(0.88);
-        }
-
-        .nav-item.is-active {
-            color: #ffffff;
-        }
-
-        .nav-item.is-active svg {
-            stroke: #ffffff;
+            display: none !important;
         }
 
         /* ── MODALES Y TOASTS DARK GLASSMORPHIC ── */
@@ -1478,130 +1828,222 @@
         </div>
     </div>
 
-    <div class="app-container">
-        <!-- HEADER FLOTANTE -->
-        <header class="app-header">
-            <div class="header-title-wrap">
-                <h1 class="header-title" data-i18n-en="Nutrition">Alimentación</h1>
-                <div class="header-user-status" id="header-user-status">
-                    <span class="header-user-dot"></span>
-                    <span id="header-username-text">Sincronizando...</span>
+    <!-- ── SIDEBAR DESKTOP FLOTANTE ── -->
+    <aside class="desktop-sidebar">
+        <!-- Logo & Marca -->
+        <div>
+            <div class="desktop-sidebar-brand">
+                <img src="/Icons/2.png" alt="TrAIner Logo" class="desktop-sidebar-logo">
+                <div>
+                    <div class="desktop-sidebar-title">TrAIner</div>
+                    <div class="desktop-sidebar-sub">Fitness & Nutrition AI</div>
                 </div>
+                <span class="desktop-sidebar-tag">PRO</span>
             </div>
 
-            <div class="header-actions">
-                <a href="/Templates/config.html" class="header-btn header-avatar-btn"
-                    id="btn-header-settings" aria-label="Perfil de Usuario y Configuración" title="Perfil de Usuario">
+            <!-- Menú de Navegación Principal Desktop -->
+            <nav class="desktop-nav-menu">
+                <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="desktop-nav-link" aria-label="Dashboard Principal">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="desktop-nav-link" aria-label="Calendario de Entrenamientos">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Calendario</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="desktop-nav-link" aria-label="Plan de Entrenamiento">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6.5 6.5 11 11"></path>
+                        <path d="m21 21-1-1"></path>
+                        <path d="m3 3 1 1"></path>
+                        <path d="m18 22 4-4"></path>
+                        <path d="m2 6 4-4"></path>
+                        <path d="m3 10 7-7"></path>
+                        <path d="m14 21 7-7"></path>
+                    </svg>
+                    <span>Plan de Entreno</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="desktop-nav-link is-active" aria-label="Plan de Alimentación">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
+                    <span>Alimentación</span>
+                </a>
+
+                <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="desktop-nav-link" aria-label="Chatbot IA">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Chat Asistente IA</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Pie del Sidebar: Perfil de Usuario -->
+        <div class="desktop-sidebar-footer">
+            <a href="/Templates_Pantalla_Ancha/config_desktop.html" class="desktop-user-profile" title="Ajustes y Perfil">
+                <div class="desktop-user-avatar-wrap">
                     <img id="header-user-avatar"
                         src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                        alt="Foto de perfil" class="header-avatar-img">
-                </a>
-            </div>
-        </header>
+                        alt="Foto de perfil" class="desktop-user-avatar">
+                    <span class="desktop-user-dot"></span>
+                </div>
+                <div class="desktop-user-info">
+                    <span class="desktop-user-name" id="header-username-text">Atleta</span>
+                    <span class="desktop-user-sub">Nutrición Activa</span>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ── CONTENEDOR PRINCIPAL DESKTOP (WIDESCREEN) ── -->
+    <div class="desktop-main-wrap">
+        <div class="app-container">
+            <!-- HEADER FLOTANTE / STICKY -->
+            <header class="app-header">
+                <div class="header-title-wrap">
+                    <h1 class="header-title" data-i18n-en="Nutrition">Alimentación</h1>
+                    <div class="header-user-status" id="header-user-status">
+                        <span class="header-user-dot"></span>
+                        <span>Planes de macros y comidas saludables</span>
+                    </div>
+                </div>
+
+                <div class="header-actions"></div>
+            </header>
 
         <!-- CONTENIDO PRINCIPAL: Plan de Alimentación -->
         <main class="page-content" id="page-content">
+            <div class="nutrition-desktop-workspace">
+                <!-- COLUMNA IZQUIERDA (ASIDE): Controles, Días y Resumen -->
+                <aside class="nutrition-desktop-aside">
+                    <!-- 1. HERO CONTAINER (Activo o Vacío) -->
+                    <section id="diet-hero-container">
+                        <!-- Se inyecta dinámicamente con renderHeroCard() -->
+                        <div class="plan-empty-card">
+                            <div class="plan-empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                                    <path d="M7 2v20"></path>
+                                    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                                </svg>
+                            </div>
+                            <h2 class="plan-empty-title">Cargando Plan...</h2>
+                            <p class="plan-empty-desc">Conectando con tu base de datos...</p>
+                        </div>
+                    </section>
 
-            <!-- 1. HERO CONTAINER (Activo o Vacío) -->
-            <section id="diet-hero-container">
-                <!-- Se inyecta dinámicamente con renderHeroCard() -->
-                <div class="plan-empty-card">
-                    <div class="plan-empty-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                            <path d="M7 2v20"></path>
-                            <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                        </svg>
-                    </div>
-                    <h2 class="plan-empty-title">Cargando Plan...</h2>
-                    <p class="plan-empty-desc">Conectando con tu base de datos...</p>
-                </div>
-            </section>
+                    <!-- 2. SELECTOR DE DÍAS (Vertical en Desktop) -->
+                    <section class="days-nav-wrapper" id="days-nav-wrapper" style="display: none;">
+                        <div class="days-nav-header">
+                            <span class="days-nav-title">Días de Alimentación</span>
+                        </div>
+                        <div class="days-nav-container" id="days-nav-container">
+                            <!-- Se llena con las píldoras de los días -->
+                        </div>
+                    </section>
 
-            <!-- 2. SELECTOR DE DÍAS (Horizontal) -->
-            <section class="days-nav-wrapper" id="days-nav-wrapper" style="display: none;">
-                <div class="days-nav-container" id="days-nav-container">
-                    <!-- Se llena con las píldoras de los días -->
-                </div>
-            </section>
+                    <!-- 5. TIPS PRÁCTICOS DEL DÍA -->
+                    <section class="diet-tips-card" id="diet-tips-card" style="display: none;">
+                        <div class="diet-tips-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Consejos de Nutrición de Hoy</span>
+                        </div>
+                        <ul class="diet-tips-list" id="diet-tips-list">
+                            <!-- Se llenan dinámicamente -->
+                        </ul>
+                    </section>
 
-            <!-- 3. CABECERA DEL DÍA SELECCIONADO (Metas y Macros) -->
-            <section class="day-focus-card" id="day-focus-card" style="display: none;">
-                <div class="day-focus-top">
-                    <h2 class="day-focus-title" id="day-focus-title">Día</h2>
-                    <div class="day-cal-badge" id="day-cal-badge">
-                        <span id="day-cal-val">--</span>
-                        <span>kcal</span>
-                    </div>
-                </div>
+                    <!-- PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) -->
+                    <section class="pt-ad-container" aria-label="Espacio publicitario">
+                        <div class="pt-ad-card">
+                            <div class="pt-ad-header">
+                                <span class="pt-ad-tag">
+                                    <span class="pt-ad-dot" aria-hidden="true"></span>
+                                    <span data-i18n-en="Sponsored">Publicidad</span>
+                                </span>
+                                <span class="pt-ad-provider">Patrocinado</span>
+                            </div>
+                            <div class="pt-ad-slot-wrapper">
+                                <script>
+                                    atOptions = {
+                                        'key' : '20fd356d9c7b90b05c268f07099b182f',
+                                        'format' : 'iframe',
+                                        'height' : 90,
+                                        'width' : 728,
+                                        'params' : {}
+                                    };
+                                </script>
+                                <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
 
-                <div class="day-macros-row" id="day-macros-row">
-                    <span class="macro-pill carb-pill">Carbos: <strong id="macro-c-val">--%</strong></span>
-                    <span class="macro-pill prot-pill">Proteína: <strong id="macro-p-val">--%</strong></span>
-                    <span class="macro-pill fat-pill">Grasas: <strong id="macro-f-val">--%</strong></span>
-                </div>
+                <!-- COLUMNA DERECHA (MAIN): Menú y Tarjetas de Comidas -->
+                <section class="nutrition-desktop-main">
+                    <!-- CABECERA DEL DÍA SELECCIONADO (Metas y Macros en Desktop) -->
+                    <section class="day-focus-card" id="day-focus-card" style="display: none;">
+                        <div class="day-focus-top">
+                            <h2 class="day-focus-title" id="day-focus-title">Día</h2>
+                            <div class="day-cal-badge" id="day-cal-badge">
+                                <span id="day-cal-val">--</span>
+                                <span>kcal</span>
+                            </div>
+                        </div>
 
-                <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
-                    <button class="day-btn-summary" id="btn-open-day-summary">
-                        <span>Ver tips y recomendaciones</span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
-                </div>
-            </section>
+                        <div class="day-focus-bottom-row">
+                            <div class="day-macros-row" id="day-macros-row">
+                                <span class="macro-pill carb-pill">Carbos: <strong id="macro-c-val">--%</strong></span>
+                                <span class="macro-pill prot-pill">Proteína: <strong id="macro-p-val">--%</strong></span>
+                                <span class="macro-pill fat-pill">Grasas: <strong id="macro-f-val">--%</strong></span>
+                            </div>
 
-            <!-- 4. LISTA DE COMIDAS DEL DÍA (Nuevos contenedores cohesivos) -->
-            <section class="meals-container" id="meals-container" style="display: none;">
-                <div class="meals-section-header" style="margin-bottom: 10px;">
-                    <span class="meals-section-title">Comidas Planificadas</span>
-                    <span id="meals-count-badge" style="font-size: 12px; font-weight: 700; color: var(--text-muted);">-- comidas</span>
-                </div>
-                <div class="meals-list" id="meals-list">
-                    <!-- Se inyectan las tarjetas de comidas -->
-                </div>
-            </section>
+                            <button class="day-btn-summary" id="btn-open-day-summary">
+                                <span>Ver tips y recomendaciones</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
 
-            <!-- 5. TIPS PRÁCTICOS DEL DÍA -->
-            <section class="diet-tips-card" id="diet-tips-card" style="display: none;">
-                <div class="diet-tips-title">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>Consejos de Nutrición de Hoy</span>
-                </div>
-                <ul class="diet-tips-list" id="diet-tips-list">
-                    <!-- Se llenan dinámicamente -->
-                </ul>
-            </section>
-
-            <!-- ── PUBLICIDAD ADSTERRA (DARK GLASSMORPHIC) ── -->
-            <section class="pt-ad-container" aria-label="Espacio publicitario">
-                <div class="pt-ad-card">
-                    <div class="pt-ad-header">
-                        <span class="pt-ad-tag">
-                            <span class="pt-ad-dot" aria-hidden="true"></span>
-                            <span data-i18n-en="Sponsored">Publicidad</span>
-                        </span>
-                        <span class="pt-ad-provider">Patrocinado</span>
-                    </div>
-                    <div class="pt-ad-slot-wrapper">
-                        <script>
-                            atOptions = {
-                                'key' : '20fd356d9c7b90b05c268f07099b182f',
-                                'format' : 'iframe',
-                                'height' : 90,
-                                'width' : 728,
-                                'params' : {}
-                            };
-                        </script>
-                        <script src="https://www.highrevenueformat.com/20fd356d9c7b90b05c268f07099b182f/invoke.js"></script>
-                    </div>
-                </div>
-            </section>
+                    <!-- 4. LISTA DE COMIDAS DEL DÍA (Contenedor Multicolumna en Desktop) -->
+                    <section class="meals-container" id="meals-container" style="display: none;">
+                        <div class="meals-section-header" style="margin-bottom: 14px;">
+                            <div>
+                                <h2 class="meals-section-title" style="font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.3px; text-transform: none;">Menú Planificado</h2>
+                                <p style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">Distribución y porciones por ingesta</p>
+                            </div>
+                            <span id="meals-count-badge" style="font-size: 12.5px; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: 5px 14px; border-radius: var(--radius-pill); border: 1px solid rgba(157, 243, 255, 0.2);">-- comidas</span>
+                        </div>
+                        <div class="meals-list" id="meals-list">
+                            <!-- Se inyectan las tarjetas de comidas -->
+                        </div>
+                    </section>
+                </section>
+            </div>
         </main>
+    </div>
     </div>
 
     <!-- ── MODAL 1: GENERADOR DE PLAN CON IA (BOTTOM-SHEET) ── -->
@@ -1649,58 +2091,61 @@
                     </div>
                 </div>
 
-                <!-- 1. Objetivo Nutricional -->
-                <div class="option-group">
-                    <span class="option-label">1. Objetivo Principal</span>
-                    <div class="option-cards-grid">
-                        <div class="option-select-card is-selected" data-opt-group="objetivo" data-value="grasa">
-                            <div>
-                                <div class="option-select-title">Perder Grasa</div>
-                                <div class="option-select-sub">Déficit calórico estratégico con alta proteína</div>
+                <!-- Opciones en Grid Desktop (2 columnas) -->
+                <div class="ai-modal-desktop-grid">
+                    <!-- 1. Objetivo Nutricional -->
+                    <div class="option-group">
+                        <span class="option-label">1. Objetivo Principal</span>
+                        <div class="option-cards-grid">
+                            <div class="option-select-card is-selected" data-opt-group="objetivo" data-value="grasa">
+                                <div>
+                                    <div class="option-select-title">Perder Grasa</div>
+                                    <div class="option-select-sub">Déficit calórico estratégico con alta proteína</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
-                        </div>
-                        <div class="option-select-card" data-opt-group="objetivo" data-value="musculo">
-                            <div>
-                                <div class="option-select-title">Ganar Masa Muscular</div>
-                                <div class="option-select-sub">Superávit limpio enfocado en hipertrofia y rendimiento</div>
+                            <div class="option-select-card" data-opt-group="objetivo" data-value="musculo">
+                                <div>
+                                    <div class="option-select-title">Ganar Masa Muscular</div>
+                                    <div class="option-select-sub">Superávit limpio enfocado en hipertrofia y rendimiento</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
-                        </div>
-                        <div class="option-select-card" data-opt-group="objetivo" data-value="mantener">
-                            <div>
-                                <div class="option-select-title">Mantener Peso</div>
-                                <div class="option-select-sub">Aporte normocalórico balanceado y salud óptima</div>
+                            <div class="option-select-card" data-opt-group="objetivo" data-value="mantener">
+                                <div>
+                                    <div class="option-select-title">Mantener Peso</div>
+                                    <div class="option-select-sub">Aporte normocalórico balanceado y salud óptima</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 2. Intensidad y Comidas Diarias -->
-                <div class="option-group">
-                    <span class="option-label">2. Frecuencia de Comidas</span>
-                    <div class="option-cards-grid">
-                        <div class="option-select-card" data-opt-group="intensidad" data-value="baja">
-                            <div>
-                                <div class="option-select-title">Intensidad Baja (3 comidas)</div>
-                                <div class="option-select-sub">Desayuno, Almuerzo y Cena</div>
+                    <!-- 2. Intensidad y Comidas Diarias -->
+                    <div class="option-group">
+                        <span class="option-label">2. Frecuencia de Comidas</span>
+                        <div class="option-cards-grid">
+                            <div class="option-select-card" data-opt-group="intensidad" data-value="baja">
+                                <div>
+                                    <div class="option-select-title">Intensidad Baja (3 comidas)</div>
+                                    <div class="option-select-sub">Desayuno, Almuerzo y Cena</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
-                        </div>
-                        <div class="option-select-card is-selected" data-opt-group="intensidad" data-value="media">
-                            <div>
-                                <div class="option-select-title">Intensidad Media (4 comidas)</div>
-                                <div class="option-select-sub">Desayuno, Almuerzo, Merienda y Cena (Recomendado)</div>
+                            <div class="option-select-card is-selected" data-opt-group="intensidad" data-value="media">
+                                <div>
+                                    <div class="option-select-title">Intensidad Media (4 comidas)</div>
+                                    <div class="option-select-sub">Desayuno, Almuerzo, Merienda y Cena (Recomendado)</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
-                        </div>
-                        <div class="option-select-card" data-opt-group="intensidad" data-value="alta">
-                            <div>
-                                <div class="option-select-title">Intensidad Alta (5 comidas)</div>
-                                <div class="option-select-sub">Distribución fraccionada con colación / snack</div>
+                            <div class="option-select-card" data-opt-group="intensidad" data-value="alta">
+                                <div>
+                                    <div class="option-select-title">Intensidad Alta (5 comidas)</div>
+                                    <div class="option-select-sub">Distribución fraccionada con colación / snack</div>
+                                </div>
+                                <div class="option-check-circle">✓</div>
                             </div>
-                            <div class="option-check-circle">✓</div>
                         </div>
                     </div>
                 </div>
@@ -1722,7 +2167,7 @@
         </div>
     </div>
 
-    <!-- ── MODAL 2: DETALLE DE COMIDA (BOTTOM-SHEET) ── -->
+    <!-- ── MODAL 2: DETALLE DE COMIDA (DESKTOP MODAL) ── -->
     <div class="custom-sheet-backdrop" id="modal-meal-detail-backdrop">
         <div class="custom-sheet-card">
             <div class="ios-drum-header">
@@ -1736,27 +2181,72 @@
 
             <div class="ios-drum-headings">
                 <h2 class="ios-drum-title" id="modal-meal-name">Detalle de Comida</h2>
-                <p class="ios-drum-subtitle">Información nutricional y preparación</p>
+                <p class="ios-drum-subtitle">Información nutricional, porciones y elaboración sugerida</p>
             </div>
             <div class="sheet-body" id="modal-meal-body">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <span class="meal-badge" id="modal-meal-badge">Desayuno</span>
-                    <span class="meal-kcal-chip" id="modal-meal-kcal">-- kcal</span>
-                </div>
-                <div style="font-size: 14.5px; color: var(--text-secondary); line-height: 1.5;" id="modal-meal-desc">
-                    --
-                </div>
-                <div class="option-group" style="margin-top: 10px;">
-                    <span class="option-label">Recomendaciones de Preparación</span>
-                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
-                        Priorizá alimentos enteros y frescos. Mantené una hidratación adecuada con al menos 500 ml de agua alrededor de esta comida.
-                    </p>
+                <div class="meal-modal-desktop-grid">
+                    <!-- Columna Izquierda: Badge, Aporte y Tip de Hidratación -->
+                    <div class="meal-modal-left-col">
+                        <div class="meal-modal-hero-badge">
+                            <span class="meal-badge" id="modal-meal-badge">Desayuno</span>
+                            <span class="meal-kcal-chip" id="modal-meal-kcal">-- kcal</span>
+                        </div>
+                        <div class="meal-modal-card-highlight">
+                            <div class="meal-modal-icon-wrap">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                                    <line x1="6" y1="1" x2="6" y2="4"></line>
+                                    <line x1="10" y1="1" x2="10" y2="4"></line>
+                                    <line x1="14" y1="1" x2="14" y2="4"></line>
+                                </svg>
+                            </div>
+                            <div class="meal-modal-highlight-label">Aporte Calórico</div>
+                            <div class="meal-modal-highlight-sub">Alineado con tus requerimientos diarios y balance de macronutrientes</div>
+                        </div>
+                        <div class="meal-modal-tip-box">
+                            <div class="meal-modal-tip-title">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                <span>Hidratación Recomendada</span>
+                            </div>
+                            <p class="meal-modal-tip-text">Acompañá con al menos 400-500 ml de agua para facilitar la digestión y absorción óptima de micronutrientes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Menú y pautas de preparación -->
+                    <div class="meal-modal-right-col">
+                        <div class="option-group">
+                            <span class="option-label">Menú e Ingredientes Sugeridos</span>
+                            <div class="meal-modal-desc-box" id="modal-meal-desc">
+                                --
+                            </div>
+                        </div>
+                        <div class="option-group">
+                            <span class="option-label">Recomendaciones de Preparación</span>
+                            <div class="meal-modal-prep-box">
+                                <div class="meal-prep-item">
+                                    <span class="prep-bullet">✦</span>
+                                    <div>
+                                        <strong>Cocción Saludable:</strong>
+                                        <span>Priorizá métodos a la plancha, vapor o al horno con mínimo aceite agregado para preservar el perfil de ácidos grasos.</span>
+                                    </div>
+                                </div>
+                                <div class="meal-prep-item">
+                                    <span class="prep-bullet">✦</span>
+                                    <div>
+                                        <strong>Pesaje en Crudo:</strong>
+                                        <span>Para mayor exactitud en el cumplimiento calórico, pesá las fuentes de carbohidratos secos (arroz, avena) antes de cocinarlos.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ── MODAL 3: RESUMEN Y TIPS DEL DÍA (BOTTOM-SHEET) ── -->
+    <!-- ── MODAL 3: RESUMEN Y TIPS DEL DÍA (DESKTOP MODAL) ── -->
     <div class="custom-sheet-backdrop" id="modal-day-summary-backdrop">
         <div class="custom-sheet-card">
             <div class="ios-drum-header">
@@ -1770,7 +2260,7 @@
 
             <div class="ios-drum-headings">
                 <h2 class="ios-drum-title" id="modal-day-summary-title">Resumen del Día</h2>
-                <p class="ios-drum-subtitle">Distribución calórica y de macronutrientes</p>
+                <p class="ios-drum-subtitle">Distribución calórica y de macronutrientes asignados</p>
             </div>
             <div class="sheet-body" id="modal-day-summary-body">
                 <div class="bio-strip" style="grid-template-columns: repeat(3, 1fr);">
@@ -1788,18 +2278,20 @@
                     </div>
                 </div>
 
-                <div class="option-group">
-                    <span class="option-label">Pautas y Recomendaciones</span>
-                    <ul class="diet-tips-list" id="modal-recoms-list">
-                        <!-- Llenado dinámico -->
-                    </ul>
-                </div>
+                <div class="summary-modal-desktop-grid">
+                    <div class="option-group">
+                        <span class="option-label">Pautas y Recomendaciones</span>
+                        <ul class="diet-tips-list" id="modal-recoms-list">
+                            <!-- Llenado dinámico -->
+                        </ul>
+                    </div>
 
-                <div class="option-group">
-                    <span class="option-label">Tips del Día</span>
-                    <ul class="diet-tips-list" id="modal-tips-list">
-                        <!-- Llenado dinámico -->
-                    </ul>
+                    <div class="option-group">
+                        <span class="option-label">Tips del Día</span>
+                        <ul class="diet-tips-list" id="modal-tips-list">
+                            <!-- Llenado dinámico -->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1809,7 +2301,7 @@
     <nav class="bottom-nav">
         <div class="bottom-nav-inner">
             <!-- 1. Dashboard -->
-            <a href="/Templates/dashboard.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/dashboard_desktop.html" class="nav-item"
                 aria-label="Panel de Entrenamientos">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="3" width="7" height="7" rx="2"></rect>
@@ -1820,7 +2312,7 @@
             </a>
 
             <!-- 2. Calendario -->
-            <a href="/Templates/calendario_renov.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/calendario_renov_desktop.html" class="nav-item"
                 aria-label="Calendario de Entreno">
                 <svg viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
@@ -1831,7 +2323,7 @@
             </a>
 
             <!-- 3. Planes -->
-            <a href="/Templates/plan_entreno.html" class="nav-item"
+            <a href="/Templates_Pantalla_Ancha/plan_entreno_desktop.html" class="nav-item"
                 aria-label="Plan de Entrenamiento">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -1846,7 +2338,7 @@
             </a>
 
             <!-- 4. Alimentación (Activo en esta página) -->
-            <a href="/Templates/plan_alimentacion.html" class="nav-item is-active"
+            <a href="/Templates_Pantalla_Ancha/plan_alimentacion_desktop.html" class="nav-item is-active"
                 aria-label="Plan de Alimentación">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
@@ -1856,7 +2348,7 @@
             </a>
 
             <!-- 5. Chat Asistente IA -->
-            <a href="/Templates/chatbot.html" class="nav-item" id="btn-nav-chat"
+            <a href="/Templates_Pantalla_Ancha/chatbot_desktop.html" class="nav-item" id="btn-nav-chat"
                 aria-label="Asistente Inteligente TrAIner">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>

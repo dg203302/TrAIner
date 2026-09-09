@@ -10,6 +10,10 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
     }
 });
 
+function isDesktopScreen() {
+    return (window.matchMedia && window.matchMedia("(min-width: 1024px)").matches) || window.innerWidth >= 1024;
+}
+
 function tLang(es, en) {
     const isEn = window.UIIdioma && typeof window.UIIdioma.getIdioma === "function" && window.UIIdioma.getIdioma() === "en";
     return isEn ? en : es;
@@ -73,6 +77,9 @@ async function verificarUsuario() {
                 console.warn("Aviso al consultar Datos Fitness:", fitErr.message);
             }
 
+            const desktopMode = isDesktopScreen();
+            localStorage.setItem("trainer_screen_mode", desktopMode ? "desktop" : "mobile");
+
             // Si es un usuario nuevo sin datos fitness registrados -> a la nueva pantalla de registro
             if (datos.length === 0) {
                 clearTimeout(slowTimeout);
@@ -86,7 +93,11 @@ async function verificarUsuario() {
                     tLang("Comencemos configurando tu perfil...", "Let's configure your profile...")
                 );
 
-                window.location.href = "/Templates/creacionCuen/datosUnuevo.html";
+                if (desktopMode) {
+                    window.location.href = "/Templates_Pantalla_Ancha/creacionCuen_desktop/datosUnuevo_desktop.html";
+                } else {
+                    window.location.href = "/Templates/creacionCuen/datosUnuevo.html";
+                }
                 return;
             }
 
@@ -132,8 +143,12 @@ async function verificarUsuario() {
                 tLang("Ingresando a tu panel de entrenamiento...", "Entering your workout dashboard...")
             );
 
-            // Redirigir al nuevo Dashboard renovado
-            window.location.href = "/Templates/dashboard.html";
+            // Redirigir al Dashboard según el formato de pantalla detectado
+            if (desktopMode) {
+                window.location.href = "/Templates_Pantalla_Ancha/dashboard_desktop.html";
+            } else {
+                window.location.href = "/Templates/dashboard.html";
+            }
             return;
 
         } else {
