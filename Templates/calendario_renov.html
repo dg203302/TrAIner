@@ -1227,6 +1227,45 @@
             box-shadow: 0 6px 24px rgba(255, 71, 87, 0.55);
         }
 
+        .glass-modal-card.is-locked {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .btn-modal-confirm:disabled,
+        .btn-modal-confirm.is-loading {
+            opacity: 0.85;
+            cursor: not-allowed;
+            pointer-events: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-modal-cancel:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-spinner-modal {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: preloaderSpin 0.75s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        .btn-modal-confirm:not(.is-danger) .btn-spinner-modal {
+            border-color: rgba(6, 8, 12, 0.25);
+            border-top-color: #06080c;
+        }
+
         /* Toast Flotante Glassmorphic */
         .glass-toast-wrap {
             position: fixed;
@@ -2031,24 +2070,42 @@
             });
         }
 
-        function showGlassConfirm({ title, desc, iconType = "warning", confirmText = "Confirmar", cancelText = "Cancelar", isDanger = false, singleButton = false }) {
+        function showGlassConfirm({ 
+            title, 
+            desc, 
+            iconType = "warning", 
+            confirmText = "Confirmar", 
+            cancelText = "Cancelar", 
+            isDanger = false, 
+            singleButton = false,
+            loadingText = "Eliminando...",
+            onConfirmAction = null
+        }) {
             return new Promise((resolve) => {
                 const backdrop = document.getElementById("glass-modal-backdrop");
+                const card = document.getElementById("glass-modal-card");
                 const titleEl = document.getElementById("glass-modal-title");
                 const descEl = document.getElementById("glass-modal-desc");
                 const iconWrap = document.getElementById("glass-modal-icon");
                 const btnCancel = document.getElementById("btn-modal-cancel");
                 const btnConfirm = document.getElementById("btn-modal-confirm");
 
-                if (!backdrop) {
+                if (!backdrop || !btnConfirm) {
                     resolve(false);
                     return;
                 }
+
+                let isProcessing = false;
 
                 titleEl.textContent = title;
                 descEl.textContent = desc;
                 btnConfirm.textContent = confirmText;
                 btnCancel.textContent = cancelText;
+
+                btnConfirm.disabled = false;
+                btnConfirm.classList.remove("is-loading");
+                if (btnCancel) btnCancel.disabled = false;
+                if (card) card.classList.remove("is-locked");
 
                 if (singleButton) {
                     btnCancel.style.display = "none";
@@ -2100,22 +2157,61 @@
 
                 const cleanup = () => {
                     backdrop.classList.remove("is-open");
+                    backdrop.setAttribute("aria-hidden", "true");
                     btnCancel.removeEventListener("click", onCancel);
                     btnConfirm.removeEventListener("click", onConfirm);
                     backdrop.removeEventListener("click", onBackdrop);
+                    btnConfirm.disabled = false;
+                    btnConfirm.classList.remove("is-loading");
+                    if (btnCancel) btnCancel.disabled = false;
+                    if (card) card.classList.remove("is-locked");
                 };
 
                 const onCancel = () => {
+                    if (isProcessing) return;
                     cleanup();
                     resolve(false);
                 };
 
-                const onConfirm = () => {
-                    cleanup();
-                    resolve(true);
+                const onConfirm = async () => {
+                    if (isProcessing) return;
+
+                    if (typeof onConfirmAction === "function") {
+                        isProcessing = true;
+                        if (card) card.classList.add("is-locked");
+                        if (btnCancel) btnCancel.disabled = true;
+                        btnConfirm.disabled = true;
+                        btnConfirm.classList.add("is-loading");
+                        btnConfirm.innerHTML = `
+                            <span class="btn-spinner-modal"></span>
+                            <span>${loadingText}</span>
+                        `;
+
+                        try {
+                            await onConfirmAction();
+                            cleanup();
+                            resolve(true);
+                        } catch (err) {
+                            console.error("Error en onConfirmAction:", err);
+                            isProcessing = false;
+                            if (card) card.classList.remove("is-locked");
+                            if (btnCancel) btnCancel.disabled = false;
+                            btnConfirm.disabled = false;
+                            btnConfirm.classList.remove("is-loading");
+                            btnConfirm.textContent = confirmText;
+                            if (typeof showGlassToast === "function") {
+                                showGlassToast("Ocurrió un error al procesar la acción.");
+                            }
+                            resolve(false);
+                        }
+                    } else {
+                        cleanup();
+                        resolve(true);
+                    }
                 };
 
                 const onBackdrop = (e) => {
+                    if (isProcessing) return;
                     if (e.target === backdrop) {
                         cleanup();
                         resolve(false);
@@ -2127,6 +2223,7 @@
                 backdrop.addEventListener("click", onBackdrop);
 
                 backdrop.classList.add("is-open");
+                backdrop.setAttribute("aria-hidden", "false");
             });
         }
 
@@ -3075,22 +3172,24 @@
                 iconType: "danger",
                 confirmText: "Sí, eliminar",
                 cancelText: "Cancelar",
-                isDanger: true
+                isDanger: true,
+                loadingText: "Eliminando...",
+                onConfirmAction: async () => {
+                    // Filtrar registro
+                    const prev = Array.isArray(registros) ? registros.slice() : [];
+                    const next = prev.filter((r, idx) => getRegistroId(r, idx) !== regId);
+
+                    registros = next;
+                    await guardarRegistrosEntreno(registros);
+                    rebuildCalendarData();
+                    renderCalendar();
+
+                    // Actualizar vista del modal
+                    openDayDetailModal(dateIso);
+                }
             });
 
             if (!confirmed) return;
-
-            // Filtrar registro
-            const prev = Array.isArray(registros) ? registros.slice() : [];
-            const next = prev.filter((r, idx) => getRegistroId(r, idx) !== regId);
-
-            registros = next;
-            await guardarRegistrosEntreno(registros);
-            rebuildCalendarData();
-            renderCalendar();
-
-            // Actualizar vista del modal
-            openDayDetailModal(dateIso);
 
             showGlassToast("Registro eliminado correctamente");
         };
