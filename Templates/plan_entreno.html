@@ -1601,9 +1601,18 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-height: 280px;
+            max-height: 420px;
             overflow-y: auto;
-            scrollbar-width: none;
+            scrollbar-width: thin;
+        }
+
+        .catalog-picker-box::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .catalog-picker-box::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.12);
+            border-radius: 3px;
         }
 
         .catalog-filter-row {
@@ -1612,6 +1621,11 @@
             overflow-x: auto;
             scrollbar-width: none;
             padding-bottom: 2px;
+            flex-wrap: wrap;
+        }
+
+        .catalog-filter-row::-webkit-scrollbar {
+            display: none;
         }
 
         .catalog-filter-btn {
@@ -1624,6 +1638,8 @@
             color: var(--text-secondary);
             cursor: pointer;
             white-space: nowrap;
+            font-family: inherit;
+            transition: all 0.15s ease;
         }
 
         .catalog-filter-btn.is-active {
@@ -1635,17 +1651,17 @@
         .catalog-items-grid {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .catalog-item-btn {
             background: #14161c;
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 8px 12px;
+            border-radius: 14px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
             cursor: pointer;
             transition: all 0.15s ease;
             text-align: left;
@@ -1656,16 +1672,59 @@
             border-color: rgba(255, 255, 255, 0.18);
         }
 
+        .catalog-item-gif-thumb {
+            width: 52px;
+            height: 40px;
+            border-radius: 8px;
+            background: #090a0d;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .catalog-item-gif-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .catalog-item-gif-thumb .catalog-gif-fallback {
+            color: var(--accent);
+            opacity: 0.5;
+        }
+
+        .catalog-item-text {
+            flex: 1;
+            min-width: 0;
+        }
+
         .catalog-item-name {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
             color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        .catalog-item-group-tag {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 1px;
+            display: block;
         }
 
         .catalog-item-add-icon {
             color: var(--accent);
             font-weight: 800;
-            font-size: 16px;
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
         /* ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS / SELECT ── */
@@ -2463,13 +2522,7 @@
                 <div class="catalog-picker-box" id="catalog-picker-box" style="display: none;">
                     <input type="text" id="catalog-search-input" placeholder="Buscar ejercicio por nombre..." class="catalog-search-field">
                     <div class="catalog-filter-row" id="catalog-filter-row">
-                        <button type="button" class="catalog-filter-btn is-active" data-group="Pecho">Pecho</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Espalda">Espalda</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Piernas">Piernas</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Hombros">Hombros</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Brazos">Brazos</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Abdomen">Abdomen</button>
-                        <button type="button" class="catalog-filter-btn" data-group="Cardio">Cardio</button>
+                        <!-- Inyectado dinámicamente desde la BD de ejercicios -->
                     </div>
                     <div class="catalog-items-grid" id="catalog-items-grid">
                         <!-- Inyectado con JS -->
@@ -3644,6 +3697,7 @@
             const backdrop = document.getElementById("modal-manual-edit-backdrop");
             renderManualEditorTabs();
             renderManualEditorContent();
+            renderCatalogFilterBtns();
             renderCatalogItems();
 
             backdrop.classList.add("is-open");
@@ -3790,11 +3844,37 @@
             });
         }
 
+        function renderCatalogFilterBtns() {
+            const filterRow = document.getElementById("catalog-filter-row");
+            if (!filterRow) return;
+            const groups = Object.keys(ENTRENAMIENTOS_DB);
+            if (groups.length === 0) return;
+
+            // Set first group as active if current activeCatalogGroup not in DB
+            if (!ENTRENAMIENTOS_DB[activeCatalogGroup]) {
+                activeCatalogGroup = groups[0];
+            }
+
+            filterRow.innerHTML = groups.map(g => `
+                <button type="button" class="catalog-filter-btn ${g === activeCatalogGroup ? 'is-active' : ''}" data-group="${g}">${g}</button>
+            `).join("");
+
+            filterRow.querySelectorAll(".catalog-filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    activeCatalogGroup = btn.getAttribute("data-group");
+                    filterRow.querySelectorAll(".catalog-filter-btn").forEach(b => b.classList.remove("is-active"));
+                    btn.classList.add("is-active");
+                    const searchInput = document.getElementById("catalog-search-input");
+                    renderCatalogItems(searchInput?.value || "");
+                });
+            });
+        }
+
         function renderCatalogItems(filterSearch = "") {
             const container = document.getElementById("catalog-items-grid");
             if (!container) return;
 
-            let list = ENTRENAMIENTOS_DB[activeCatalogGroup] || [];
+            let list;
 
             if (filterSearch && filterSearch.trim() !== "") {
                 const q = normalizeKey(filterSearch);
@@ -3802,10 +3882,12 @@
                 for (const [grp, exs] of Object.entries(ENTRENAMIENTOS_DB)) {
                     exs.forEach(item => {
                         if (normalizeKey(item.nombre).includes(q)) {
-                            list.push(item);
+                            list.push({ ...item, _grupo: grp });
                         }
                     });
                 }
+            } else {
+                list = (ENTRENAMIENTOS_DB[activeCatalogGroup] || []).map(item => ({ ...item, _grupo: activeCatalogGroup }));
             }
 
             if (list.length === 0) {
@@ -3813,12 +3895,25 @@
                 return;
             }
 
-            container.innerHTML = list.map(item => `
+            container.innerHTML = list.map(item => {
+                const gifThumb = item.gifUrl
+                    ? `<img src="${item.gifUrl}" alt="${item.nombre}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <span class="catalog-gif-fallback" style="display:none;">
+                           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                       </span>`
+                    : `<span class="catalog-gif-fallback">
+                           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                       </span>`;
+                return `
                 <div class="catalog-item-btn" data-ex-name="${item.nombre}">
-                    <span class="catalog-item-name">${item.nombre}</span>
+                    <div class="catalog-item-gif-thumb">${gifThumb}</div>
+                    <div class="catalog-item-text">
+                        <span class="catalog-item-name">${item.nombre}</span>
+                        <span class="catalog-item-group-tag">${item._grupo}</span>
+                    </div>
                     <span class="catalog-item-add-icon">+</span>
-                </div>
-            `).join("");
+                </div>`;
+            }).join("");
 
             container.querySelectorAll(".catalog-item-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
