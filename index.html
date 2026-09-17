@@ -10,7 +10,8 @@
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- PWA y Scripts de Sistema -->
     <link rel="icon" type="image/png" href="/Icons/2.png">
@@ -33,44 +34,23 @@
     <link rel="stylesheet" href="/Styles/styles_verifi_usu_n.css">
 
     <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7232324434042202"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <!-- Luces Ambientales -->
-    <div class="ambient-glow-top" aria-hidden="true"></div>
-    <div class="ambient-glow-bottom" aria-hidden="true"></div>
-
     <!-- Contenedor Principal de Verificación -->
     <main class="auth-verification-wrapper">
         <section class="verification-card" id="pt-global-loader" aria-live="polite">
-            <!-- Isotipo de la Marca -->
+            <!-- Isotipo de la Marca (animado) -->
             <div class="brand-icon-wrap">
                 <img src="/Icons/2.png" alt="TrAIner Logo" class="brand-logo">
             </div>
 
-            <!-- Etiqueta de Categoría -->
-            <span class="brand-pill-tag">
-                <span class="brand-pill-dot" aria-hidden="true"></span>
-                <span data-i18n-en="Intelligent Training">Entrenamiento Inteligente</span>
-            </span>
-
-            <!-- Título de la Aplicación -->
-            <h1 class="brand-title">
-                Tr<span>AI</span>ner
-            </h1>
-
-            <!-- Spinner Orbital Moderno -->
-            <div class="loader-orbital-wrap" aria-hidden="true">
-                <div class="orbital-ring-outer"></div>
-                <div class="orbital-ring-inner"></div>
-                <div class="orbital-core-dot"></div>
-            </div>
-
             <!-- Textos Dinámicos de Estado -->
-            <h2 class="status-title" id="status-title" data-i18n-en="Verifying session...">
+            <h1 class="status-title" id="status-title" data-i18n-en="Verifying session...">
                 Verificando sesión...
-            </h2>
+            </h1>
             <p class="status-desc" id="status-desc" data-i18n-en="Syncing your fitness space...">
                 Sincronizando tu espacio fitness...
             </p>
@@ -80,13 +60,10 @@
             <!-- Acciones de Contingencia en caso de conexión lenta o error -->
             <div class="fallback-action-wrap" id="fallback-action-wrap">
                 <a href="/indice_renovado.html" class="btn-fallback-primary" data-i18n-en="Go to Home">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
                     Ir al Inicio
                 </a>
-                <button type="button" class="btn-fallback-secondary" onclick="window.location.reload();" data-i18n-en="Retry connection">
+                <button type="button" class="btn-fallback-secondary" onclick="window.location.reload();"
+                    data-i18n-en="Retry connection">
                     Reintentar conexión
                 </button>
             </div>
