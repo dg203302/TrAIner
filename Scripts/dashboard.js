@@ -2618,10 +2618,10 @@ function initDetallePorDiaPlan() {
                 const minutosEl = sheet.querySelector("#pt-tiempo-minutos");
 
                 if (caloriasEl instanceof HTMLInputElement && registroPrevio) {
-                    caloriasEl.value = String(registroPrevio.calorias_quemadas ?? registroPrevio.caloriasQuemadas ?? "");
+                    caloriasEl.value = String(registroPrevio.calorias_quemadas ?? registroPrevio.caloriasQuemadas ?? registroPrevio.calorias ?? "");
                 }
 
-                const totalMinInicial = Number.parseFloat(String(registroPrevio?.tiempo_total_min ?? registroPrevio?.tiempoTotalMin ?? tiempoPrevio ?? "0").trim());
+                const totalMinInicial = Number.parseFloat(String(registroPrevio?.tiempo_total_min ?? registroPrevio?.tiempoTotalMin ?? registroPrevio?.duracion_minutos ?? tiempoPrevio ?? "0").trim());
                 if (Number.isFinite(totalMinInicial) && totalMinInicial > 0) {
                     if (horasEl) horasEl.value = String(Math.floor(totalMinInicial / 60));
                     if (minutosEl) minutosEl.value = String(Math.round(totalMinInicial % 60));

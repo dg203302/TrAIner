@@ -2982,8 +2982,8 @@
 
                 if (d.startsWith(currentMonthPrefix)) {
                     sessionsMonth++;
-                    const min = Number(props.tiempo_total_min ?? reg?.tiempo_total_min ?? 45);
-                    const cal = Number(props.calories_burnt ?? reg?.calorias_quemadas ?? 300);
+                    const min = Number(props.tiempo_total_min ?? props.duracion_minutos ?? reg?.tiempo_total_min ?? reg?.duracion_minutos ?? 45);
+                    const cal = Number(props.calories_burnt ?? props.calorias ?? reg?.calorias_quemadas ?? reg?.calorias ?? 300);
                     totalMinutes += (Number.isFinite(min) ? min : 45);
                     totalCalories += (Number.isFinite(cal) ? cal : 300);
                 }
@@ -2994,7 +2994,13 @@
             const elSessions = document.getElementById("metric-sessions-num");
             if (elSessions) elSessions.textContent = sessionsMonth;
             const elTime = document.getElementById("metric-total-time");
-            if (elTime) elTime.textContent = `${totalMinutes}m`;
+            if (elTime) {
+                // Formato compacto para la ficha: "45m", "2h", "21h 30m"
+                const mins = Math.round(totalMinutes);
+                const h = Math.floor(mins / 60);
+                const m = mins % 60;
+                elTime.textContent = h === 0 ? `${m}m` : (m === 0 ? `${h}h` : `${h}h ${m}m`);
+            }
             const elCal = document.getElementById("metric-total-calories");
             if (elCal) elCal.textContent = totalCalories.toLocaleString();
 

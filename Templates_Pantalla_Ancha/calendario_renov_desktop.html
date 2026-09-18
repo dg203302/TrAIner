@@ -2884,6 +2884,17 @@
             return Number.isFinite(n) ? n : 0;
         };
 
+        // Minutos -> "45 min" / "1 h 30 min" / "2 h"
+        const formatDuracionMin = (mins) => {
+            const total = Math.round(Number(mins));
+            if (!Number.isFinite(total) || total <= 0) return "0 min";
+            const h = Math.floor(total / 60);
+            const m = total % 60;
+            if (h === 0) return `${m} min`;
+            if (m === 0) return `${h} h`;
+            return `${h} h ${m} min`;
+        };
+
         const escapeHtml = (value) => {
             const text = String(value ?? "");
             return text
@@ -3163,9 +3174,12 @@
                 null;
 
             const tiempo_total_min = extendedProps.tiempo_total_min ??
+                extendedProps.duracion_minutos ??
                 extendedProps.tiempo ??
                 registro?.tiempo_total_min ??
                 registro?.tiempoTotalMin ??
+                registro?.duracion_minutos ??
+                registro?.duracion ??
                 registro?.tiempo ??
                 registro?.minutos ??
                 null;
@@ -3174,7 +3188,9 @@
 
             const hora_confirmacion = extendedProps.hora_confirmacion ??
                 registro?.hora_confirmacion ??
+                registro?.hora ??
                 (registro?.confirmado_en ? String(registro.confirmado_en).slice(11, 16) : null) ??
+                (registro?.timestamp ? String(registro.timestamp).slice(11, 16) : null) ??
                 "-";
 
             const descripcion = extendedProps.descripcion ??
@@ -3456,7 +3472,7 @@
             if (daysEl) daysEl.textContent = `${stats.daysTrained} ${tLang("días", "days")}`;
             if (streakEl) streakEl.textContent = `${stats.streakCurrent} ${tLang("días", "days")}`;
             if (calEl) calEl.textContent = `${stats.totalCalories.toLocaleString()} kcal`;
-            if (minEl) minEl.textContent = `${stats.totalMinutes.toLocaleString()} min`;
+            if (minEl) minEl.textContent = formatDuracionMin(stats.totalMinutes);
         };
 
         // ── ACTUALIZACIÓN DE LA VISTA DE ESTADÍSTICAS ──
@@ -3475,8 +3491,8 @@
 
             if (totalCalEl) totalCalEl.textContent = `${stats.totalCalories.toLocaleString()} kcal`;
             if (avgCalEl) avgCalEl.textContent = `Promedio: ${stats.avgDailyCalories} kcal/día`;
-            if (totalMinEl) totalMinEl.textContent = `${stats.totalMinutes.toLocaleString()} min`;
-            if (avgMinEl) avgMinEl.textContent = `Promedio: ${stats.avgDailyMinutes} min/día`;
+            if (totalMinEl) totalMinEl.textContent = formatDuracionMin(stats.totalMinutes);
+            if (avgMinEl) avgMinEl.textContent = `Promedio: ${formatDuracionMin(stats.avgDailyMinutes)}/día`;
             if (daysEl) daysEl.textContent = `${stats.daysTrained}`;
             if (pctActiveEl) pctActiveEl.textContent = `${stats.pctActive}% del mes`;
             if (longestEl) longestEl.textContent = `${stats.longestStreak} ${tLang("días", "days")}`;
@@ -3728,7 +3744,7 @@
                     const props = ev.extendedProps || {};
                     const titulo = escapeHtml(ev.title || `Sesión de Entreno #${index + 1}`);
                     const calorias = props.calories_burnt != null ? `${props.calories_burnt} kcal` : "-";
-                    const tiempo = props.tiempo_total_min != null ? `${props.tiempo_total_min} min` : "-";
+                    const tiempo = props.tiempo_total_min != null ? formatDuracionMin(props.tiempo_total_min) : "-";
                     const hora = props.hora_confirmacion || (props.confirmado_en ? String(props.confirmado_en).slice(11, 16) : null) || "-";
                     const status = props.status || "completado";
                     const descripcion = props.descripcion

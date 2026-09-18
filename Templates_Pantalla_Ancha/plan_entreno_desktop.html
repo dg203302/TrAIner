@@ -1756,28 +1756,111 @@
             background: #14161c;
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            padding: 10px 14px;
+            padding: 8px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
+        }
+
+        .manual-ex-item-row.is-dragging {
+            border-color: var(--accent);
+            background: #1b1f27;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 5;
+        }
+
+        .manual-ex-list.is-sorting {
+            scroll-behavior: auto;
+        }
+
+        .manual-ex-list.is-sorting .manual-ex-item-row:not(.is-dragging) {
+            transition: transform 0.14s ease;
+        }
+
+        /* Asa de arrastre: touch-action none para que el dedo no haga scroll */
+        .manual-ex-drag-handle {
+            width: 20px;
+            height: 34px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: grab;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .manual-ex-drag-handle:active {
+            cursor: grabbing;
+            color: #ffffff;
+        }
+
+        .manual-ex-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .manual-ex-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .manual-ex-thumb-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            opacity: 0.5;
         }
 
         .manual-ex-item-left {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 2px;
             min-width: 0;
             flex: 1;
         }
 
         .manual-ex-item-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
+            line-height: 1.25;
             color: #ffffff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .manual-ex-item-sub {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         .manual-ex-inputs-row {
@@ -1787,7 +1870,7 @@
         }
 
         .manual-small-input {
-            width: 48px;
+            width: 42px;
             height: 32px;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1800,8 +1883,8 @@
         }
 
         .btn-remove-manual-ex {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: rgba(255, 82, 82, 0.1);
             border: 1px solid rgba(255, 82, 82, 0.2);
@@ -1856,6 +1939,26 @@
             background: rgba(157, 243, 255, 0.22);
             color: #ffffff;
             transform: scale(1.02);
+        }
+
+        .btn-change-day-action {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(157, 243, 255, 0.1);
+            border: 1px solid rgba(157, 243, 255, 0.25);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+        }
+
+        .btn-change-day-action:hover {
+            background: rgba(157, 243, 255, 0.22);
+            color: #ffffff;
         }
 
         .btn-delete-day-action {
@@ -2921,6 +3024,14 @@
                 <!-- Input de enfoque del día y botón para eliminar día -->
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="text" class="manual-focus-input" id="manual-focus-input" placeholder="Enfoque del día (ej. Pecho y Tríceps)">
+                    <button type="button" class="btn-change-day-action" id="btn-change-current-day" title="Mover este día a otro día de la semana" aria-label="Cambiar día">
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="17 1 21 5 17 9"></polyline>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                            <polyline points="7 23 3 19 7 15"></polyline>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                    </button>
                     <button type="button" class="btn-delete-day-action" id="btn-delete-current-day" title="Eliminar este día de la rutina" aria-label="Eliminar día">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
                             <polyline points="3 6 5 6 21 6"></polyline>
@@ -3503,6 +3614,32 @@
 
         const normalizeKey = (s) => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
 
+        // ── ORDEN CANONICO DE LOS DIAS DE LA SEMANA ──
+        const DIAS_SEMANA_NOMBRES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+        const DIAS_SEMANA_ORDEN = { lunes: 0, martes: 1, miercoles: 2, jueves: 3, viernes: 4, sabado: 5, domingo: 6 };
+
+        // Indice 0-6 (Lunes a Domingo); 99 para nombres no reconocidos
+        function getDiaOrdenIdx(nombreDia) {
+            const key = normalizeKey(nombreDia);
+            if (DIAS_SEMANA_ORDEN[key] !== undefined) return DIAS_SEMANA_ORDEN[key];
+            for (const [dia, idx] of Object.entries(DIAS_SEMANA_ORDEN)) {
+                if (key.includes(dia)) return idx;
+            }
+            return 99;
+        }
+
+        // Ordena los dias de Lunes a Domingo; los no reconocidos quedan al final conservando su orden
+        function ordenarDiasPlan(dias) {
+            if (!Array.isArray(dias)) return dias;
+            return dias
+                .map((d, i) => ({ d, i }))
+                .sort((a, b) => {
+                    const diff = getDiaOrdenIdx(a.d?.dia) - getDiaOrdenIdx(b.d?.dia);
+                    return diff !== 0 ? diff : a.i - b.i;
+                })
+                .map((entry) => entry.d);
+        }
+
         async function loadEntrenamientosDb() {
             try {
                 const res = await fetch("/Datos/entrenamientos.json");
@@ -3736,7 +3873,7 @@
                 }
             }
 
-            planParsedDias = parsePlanDias(planRaw);
+            planParsedDias = ordenarDiasPlan(parsePlanDias(planRaw));
             renderUI();
         }
 
@@ -4105,7 +4242,7 @@
         }
 
         // ── 10. MODAL: EDITOR MANUAL DEL PLAN DE ENTRENAMIENTO ──
-        const DIAS_SEMANA_NOMBRES = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+        // (DIAS_SEMANA_NOMBRES y ordenarDiasPlan se definen junto a normalizeKey)
 
         async function openManualEditorModal(dayIdx = 0) {
             // Asegurar que la base de ejercicios esté cargada
@@ -4122,6 +4259,7 @@
                 ];
                 manualEditDayIndex = 0;
             } else {
+                planParsedDias = ordenarDiasPlan(planParsedDias);
                 manualEditDayIndex = dayIdx >= 0 && dayIdx < planParsedDias.length ? dayIdx : 0;
             }
 
@@ -4183,6 +4321,35 @@
                 };
             }
 
+            // Botón para mover el día en edición a otro día libre, conservando enfoque y ejercicios
+            const btnChangeDay = document.getElementById("btn-change-current-day");
+            if (btnChangeDay) {
+                const diasUsados = new Set(planParsedDias.map(d => normalizeKey(d.dia)));
+                const diasLibres = DIAS_SEMANA_NOMBRES.filter(d => !diasUsados.has(normalizeKey(d)));
+                btnChangeDay.style.display = diasLibres.length > 0 ? "flex" : "none";
+                btnChangeDay.onclick = async () => {
+                    const diaActual = planParsedDias[manualEditDayIndex];
+                    if (!diaActual) return;
+
+                    const nuevoNombre = await showGlassSelect({
+                        title: `Mover ${diaActual.dia} a otro día`,
+                        desc: "Elige el nuevo día de la semana. Se conservan el enfoque y los ejercicios ya guardados.",
+                        options: diasLibres,
+                        confirmText: "Mover día",
+                        cancelText: "Cancelar"
+                    });
+                    if (!nuevoNombre) return;
+
+                    const nombrePrevio = diaActual.dia;
+                    diaActual.dia = nuevoNombre;
+                    planParsedDias = ordenarDiasPlan(planParsedDias);
+                    manualEditDayIndex = Math.max(0, planParsedDias.indexOf(diaActual));
+                    renderManualEditorTabs();
+                    renderManualEditorContent();
+                    showGlassToast(`${nombrePrevio} movido a ${nuevoNombre}`, "success");
+                };
+            }
+
             // Botón para eliminar el día en edición (permitido si hay más de 1 día)
             const btnDeleteDay = document.getElementById("btn-delete-current-day");
             if (btnDeleteDay) {
@@ -4211,21 +4378,41 @@
                 return;
             }
 
-            exList.innerHTML = ejercicios.map((ex, idx) => `
+            const thumbFallbackSvg = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`;
+
+            exList.innerHTML = ejercicios.map((ex, idx) => {
+                const exData = findExerciseData(ex.nombre);
+                const gifUrl = ex.gifUrl || exData?.gifUrl || "";
+                const thumbHtml = gifUrl
+                    ? `<img src="${gifUrl}" alt="" class="manual-ex-thumb-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <span class="manual-ex-thumb-fallback" style="display:none;">${thumbFallbackSvg}</span>`
+                    : `<span class="manual-ex-thumb-fallback">${thumbFallbackSvg}</span>`;
+                const subLabel = exData?.grupo || dayInfo.enfoque || "Ejercicio";
+
+                return `
                 <div class="manual-ex-item-row" data-ex-idx="${idx}">
+                    <span class="manual-ex-drag-handle" title="Arrastra para reordenar" aria-label="Reordenar ejercicio">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            <circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle>
+                            <circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle>
+                            <circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle>
+                        </svg>
+                    </span>
+                    <div class="manual-ex-thumb">${thumbHtml}</div>
                     <div class="manual-ex-item-left">
-                        <span class="manual-ex-item-title">${ex.nombre}</span>
+                        <span class="manual-ex-item-title" title="${ex.nombre}">${ex.nombre}</span>
+                        <span class="manual-ex-item-sub">${subLabel}</span>
                     </div>
                     <div class="manual-ex-inputs-row">
                         <input type="number" class="manual-small-input input-sets" value="${ex.series || 4}" min="1" max="10" title="Series">
                         <span style="font-size: 11px; color: var(--text-muted);">×</span>
-                        <input type="text" class="manual-small-input input-reps" value="${ex.repeticiones || '8-12'}" style="width: 54px;" title="Reps">
+                        <input type="text" class="manual-small-input input-reps" value="${ex.repeticiones || '8-12'}" style="width: 48px;" title="Reps">
                         <button type="button" class="btn-remove-manual-ex" title="Quitar Ejercicio">
                             <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </button>
                     </div>
-                </div>
-            `).join("");
+                </div>`;
+            }).join("");
 
             exList.querySelectorAll(".manual-ex-item-row").forEach(row => {
                 const exIdx = parseInt(row.getAttribute("data-ex-idx"), 10);
@@ -4240,6 +4427,104 @@
                 row.querySelector(".btn-remove-manual-ex")?.addEventListener("click", () => {
                     dayInfo.ejercicios.splice(exIdx, 1);
                     renderManualEditorContent();
+                });
+            });
+
+            enableManualExDragSort(exList, (fromIdx, toIdx) => {
+                const [movido] = dayInfo.ejercicios.splice(fromIdx, 1);
+                dayInfo.ejercicios.splice(toIdx, 0, movido);
+                renderManualEditorContent();
+            });
+        }
+
+        // Reordenamiento de ejercicios arrastrando el asa (puntero: raton, tactil y lapiz)
+        function enableManualExDragSort(listEl, onCommit) {
+            if (!listEl) return;
+
+            const rows = () => Array.from(listEl.querySelectorAll(".manual-ex-item-row"));
+
+            let dragRow = null;
+            let dragPointerId = null;
+            let grabOffsetY = 0;
+            let fromIdx = -1;
+
+            const followPointer = (clientY) => {
+                dragRow.style.transform = "";
+                const flowRect = dragRow.getBoundingClientRect();
+                dragRow.style.transform = `translateY(${(clientY - grabOffsetY) - flowRect.top}px)`;
+            };
+
+            const onPointerMove = (e) => {
+                if (!dragRow || e.pointerId !== dragPointerId) return;
+                e.preventDefault();
+
+                // Auto-scroll al acercarse a los bordes de la lista
+                const listRect = listEl.getBoundingClientRect();
+                const EDGE = 26;
+                if (e.clientY < listRect.top + EDGE) listEl.scrollTop -= 10;
+                else if (e.clientY > listRect.bottom - EDGE) listEl.scrollTop += 10;
+
+                // Reubicar la fila arrastrada segun el punto medio de las demas
+                let target = null;
+                for (const r of rows()) {
+                    if (r === dragRow) continue;
+                    const rr = r.getBoundingClientRect();
+                    if (e.clientY < rr.top + rr.height / 2) { target = r; break; }
+                }
+                if (target) {
+                    if (target !== dragRow.nextElementSibling) listEl.insertBefore(dragRow, target);
+                } else if (listEl.lastElementChild !== dragRow) {
+                    listEl.appendChild(dragRow);
+                }
+
+                followPointer(e.clientY);
+            };
+
+            const endDrag = (e) => {
+                if (!dragRow) return;
+                if (e && e.pointerId !== undefined && e.pointerId !== dragPointerId) return;
+
+                const toIdx = rows().indexOf(dragRow);
+
+                dragRow.style.transform = "";
+                dragRow.classList.remove("is-dragging");
+                listEl.classList.remove("is-sorting");
+                document.body.style.userSelect = "";
+
+                window.removeEventListener("pointermove", onPointerMove, true);
+                window.removeEventListener("pointerup", endDrag, true);
+                window.removeEventListener("pointercancel", endDrag, true);
+
+                const desde = fromIdx;
+                dragRow = null;
+                dragPointerId = null;
+                fromIdx = -1;
+
+                if (toIdx >= 0 && desde >= 0 && toIdx !== desde) onCommit(desde, toIdx);
+                else renderManualEditorContent();
+            };
+
+            listEl.querySelectorAll(".manual-ex-drag-handle").forEach(handle => {
+                handle.addEventListener("pointerdown", (e) => {
+                    if (dragRow || e.button > 0) return;
+                    const row = handle.closest(".manual-ex-item-row");
+                    if (!row) return;
+
+                    e.preventDefault();
+                    dragRow = row;
+                    dragPointerId = e.pointerId;
+                    fromIdx = rows().indexOf(row);
+                    grabOffsetY = e.clientY - row.getBoundingClientRect().top;
+
+                    row.classList.add("is-dragging");
+                    listEl.classList.add("is-sorting");
+                    document.body.style.userSelect = "none";
+
+                    // Las escuchas van en window: reubicar la fila en el DOM libera la captura
+                    // del puntero, asi que el asa dejaria de recibir pointermove/pointerup.
+                    window.addEventListener("pointermove", onPointerMove, true);
+                    window.addEventListener("pointerup", endDrag, true);
+                    window.addEventListener("pointercancel", endDrag, true);
                 });
             });
         }
@@ -4264,12 +4549,14 @@
                 });
 
                 if (selectedDay) {
-                    planParsedDias.push({
+                    const nuevoDia = {
                         dia: selectedDay,
                         enfoque: "Entrenamiento general",
                         ejercicios: []
-                    });
-                    manualEditDayIndex = planParsedDias.length - 1;
+                    };
+                    planParsedDias.push(nuevoDia);
+                    planParsedDias = ordenarDiasPlan(planParsedDias);
+                    manualEditDayIndex = Math.max(0, planParsedDias.indexOf(nuevoDia));
                     renderManualEditorTabs();
                     renderManualEditorContent();
                 }
@@ -4402,6 +4689,8 @@
                         <span>Guardando cambios...</span>
                     `;
                 }
+
+                planParsedDias = ordenarDiasPlan(planParsedDias);
 
                 const planObj = {
                     plan_entrenamiento: {
@@ -4751,33 +5040,67 @@
                 if (typeof item === "string") {
                     return {
                         id: item,
+                        id_registro: item,
                         dia: item,
+                        title: item,
+                        start: fechaStr,
                         enfoque: "Sesión Registrada",
                         fecha: fechaStr,
                         hora: horaStr,
+                        hora_confirmacion: horaStr,
                         duracion_minutos: tiempoTotalMin,
+                        tiempo_total_min: tiempoTotalMin,
                         calorias: caloriasQuemadas,
-                        ejercicios: []
+                        calorias_quemadas: caloriasQuemadas,
+                        ejercicios: [],
+                        extendedProps: {
+                            status: "completado",
+                            calories_burnt: caloriasQuemadas,
+                            tiempo_total_min: tiempoTotalMin,
+                            hora_confirmacion: horaStr
+                        }
                     };
                 }
                 return item;
             });
 
             // Reemplazar o insertar registro para este día
+            const ejerciciosRegistro = (dayInfo.ejercicios || []).map(e => ({
+                nombre: e.nombre,
+                series: e.series,
+                repeticiones: e.repeticiones
+            }));
+
+            // Se guardan los alias canonicos (tiempo_total_min, calories_burnt, hora_confirmacion,
+            // extendedProps) para que el calendario y el dashboard lean el registro sin ambiguedad.
             const newEntry = {
                 id: idRegistro,
+                id_registro: idRegistro,
                 dia: dayInfo.dia,
+                title: dayInfo.dia,
+                start: fechaStr,
                 enfoque: dayInfo.enfoque || "Entrenamiento",
+                descripcion: dayInfo.enfoque || "Entrenamiento",
                 fecha: fechaStr,
                 hora: horaStr,
+                hora_confirmacion: horaStr,
                 timestamp: isoStr,
+                confirmado_en: isoStr,
+                status: "completado",
                 duracion_minutos: tiempoTotalMin,
+                tiempo_total_min: tiempoTotalMin,
                 calorias: caloriasQuemadas,
-                ejercicios: (dayInfo.ejercicios || []).map(e => ({
-                    nombre: e.nombre,
-                    series: e.series,
-                    repeticiones: e.repeticiones
-                }))
+                calorias_quemadas: caloriasQuemadas,
+                ejercicios: ejerciciosRegistro,
+                extendedProps: {
+                    status: "completado",
+                    calories_burnt: caloriasQuemadas,
+                    tiempo_total_min: tiempoTotalMin,
+                    hora_confirmacion: horaStr,
+                    confirmado_en: isoStr,
+                    descripcion: dayInfo.enfoque || "Entrenamiento",
+                    ejercicios: ejerciciosRegistro
+                }
             };
 
             const existingIdx = diasArray.findIndex(d => (d.fecha === fechaStr && d.dia === dayInfo.dia));
