@@ -3,6 +3,7 @@
 // Sale con código 1 si hay errores (los avisos no fallan).
 const fs = require("fs");
 const path = require("path");
+const { NIVELES } = require("./nivel");
 const FILE = path.join(__dirname, "..", "Datos", "entrenamientos.json");
 const OFFLINE = process.argv.includes("--offline");
 const CAMPOS = ["nombre", "gifUrl", "descripcion", "descripcion_detallada", "descripcion_guia"];
@@ -20,6 +21,8 @@ for (const [grupo, lista] of Object.entries(data)) {
 		const id = `${grupo} / ${ex?.nombre ?? "(sin nombre)"}`;
 		for (const c of CAMPOS) if (typeof ex?.[c] !== "string" || !ex[c].trim()) errores.push(`${id}: falta o está vacío "${c}"`);
 		if (!Array.isArray(ex?.entorno) || !ex.entorno.length || ex.entorno.some((e) => !["casa", "gimnasio"].includes(e))) errores.push(`${id}: "entorno" debe ser un array no vacío con "casa" y/o "gimnasio"`);
+		if (typeof ex?.nombre_en !== "string" || !ex.nombre_en.trim()) errores.push(`${id}: falta "nombre_en"`);
+		if (!NIVELES.includes(ex?.nivel)) errores.push(`${id}: "nivel" debe ser uno de ${NIVELES.join("/")}`);
 		if (!ex?.nombre) continue;
 		const k = norm(ex.nombre);
 		if (porNombre.has(k)) errores.push(`${id}: nombre duplicado (también en ${porNombre.get(k)})`);

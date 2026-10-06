@@ -15,6 +15,7 @@
 
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/catalogo_ui.js?v=1"></script>
     <script src="/Scripts/spa_router.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -525,6 +526,134 @@
             flex-shrink: 0;
         }
 
+        /* Biblioteca: buscador, opciones, miniaturas, badges y detalle */
+        .exercise-search {
+            width: 100%;
+            height: 42px;
+            background: var(--bg-card-subtle);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0 14px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .exercise-search:focus { border-color: var(--accent); }
+
+        .muscle-opt-sep {
+            width: 1px;
+            align-self: stretch;
+            background: rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+        }
+
+        .exercises-grid { grid-template-columns: minmax(0, 1fr); overflow-x: hidden; }
+        .exercise-item-card { cursor: pointer; justify-content: flex-start; min-width: 0; }
+        .exercise-item-desc { word-break: break-word; }
+        .exercise-item-card:focus-visible { border-color: var(--accent); }
+
+        .exercise-thumb {
+            width: 64px;
+            height: 48px;
+            border-radius: 10px;
+            background: #090a0d;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .exercise-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .exercise-thumb .exercise-thumb-fb { opacity: 0.5; display: flex; }
+
+        .exercise-item-left { flex: 1; min-width: 0; }
+        .exercise-item-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .exercise-item-tags { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+
+        .exercise-chevron { color: var(--text-muted); font-size: 18px; flex-shrink: 0; }
+
+        .ex-badge {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            padding: 1px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .ex-badge-env.is-home { color: #7ee2a8; border-color: rgba(126, 226, 168, 0.35); }
+        .ex-badge-env.is-gym { color: #9db4ff; border-color: rgba(157, 180, 255, 0.35); }
+        .ex-badge-lvl.lvl-principiante { color: #9df3ff; border-color: rgba(157, 243, 255, 0.35); }
+        .ex-badge-lvl.lvl-intermedio { color: #ffd479; border-color: rgba(255, 212, 121, 0.35); }
+        .ex-badge-lvl.lvl-avanzado { color: #ff8f8f; border-color: rgba(255, 143, 143, 0.35); }
+
+        .exercises-more-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: var(--accent);
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .exercise-detail-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(6, 8, 12, 0.78);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .exercise-detail-backdrop.is-open { display: flex; }
+
+        .exercise-detail-sheet {
+            width: 100%;
+            max-width: 520px;
+            max-height: 88vh;
+            overflow-y: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 24px 24px 0 0;
+            padding: 18px 18px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        @media (min-width: 700px) {
+            .exercise-detail-backdrop { align-items: center; }
+            .exercise-detail-sheet { border-radius: 24px; }
+        }
+
+        .exercise-detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .exercise-detail-title { font-size: 17px; font-weight: 800; color: #ffffff; line-height: 1.25; }
+        .exercise-detail-close {
+            width: 32px; height: 32px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
+            background: transparent; color: #ffffff; font-size: 16px; cursor: pointer; flex-shrink: 0;
+        }
+        .exercise-detail-gif {
+            width: 100%; border-radius: 14px; background: #090a0d; display: block; max-height: 260px; object-fit: contain;
+        }
+        .exercise-detail-section { display: flex; flex-direction: column; gap: 3px; }
+        .exercise-detail-label { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+        .exercise-detail-text { font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+
         /* Callout / Card informativa */
         .card-callout {
             background: var(--bg-card-subtle);
@@ -797,18 +926,13 @@
                     <span class="browser-count-pill" id="exercises-count-pill">Cargando...</span>
                 </div>
 
-                <!-- Chips selectores de grupo muscular -->
-                <div class="muscle-filter-chips" id="muscle-filter-chips">
-                    <button type="button" class="muscle-chip is-active" data-group="all"
-                        data-i18n-en="All">Todos</button>
-                    <button type="button" class="muscle-chip" data-group="Pecho" data-i18n-en="Chest">Pecho</button>
-                    <button type="button" class="muscle-chip" data-group="Espalda" data-i18n-en="Back">Espalda</button>
-                    <button type="button" class="muscle-chip" data-group="Piernas" data-i18n-en="Legs">Piernas</button>
-                    <button type="button" class="muscle-chip" data-group="Hombros"
-                        data-i18n-en="Shoulders">Hombros</button>
-                    <button type="button" class="muscle-chip" data-group="Brazos" data-i18n-en="Arms">Brazos</button>
-                    <button type="button" class="muscle-chip" data-group="Abdomen" data-i18n-en="Abs">Abdomen</button>
-                </div>
+                <input type="search" id="exercise-search" class="exercise-search" placeholder="Buscar por nombre, músculo o nivel..." autocomplete="off" enterkeyhint="search">
+
+                <!-- Chips de grupo muscular (se generan desde el catálogo) -->
+                <div class="muscle-filter-chips" id="muscle-filter-chips"></div>
+
+                <!-- Entorno (casa / gimnasio) y nivel -->
+                <div class="muscle-filter-chips" id="muscle-options-chips"></div>
 
                 <!-- Lista de ejercicios cargada dinámicamente -->
                 <div class="exercises-grid" id="exercises-grid-container">
@@ -1085,6 +1209,7 @@
         // 3. Cargar Ejercicios Dinámicamente desde /Datos/entrenamientos.json
         let exercisesDatabase = {};
         let activeMuscleGroup = "all";
+        const C = () => window.PTCatalog;
 
         async function loadExercises() {
             const container = document.getElementById("exercises-grid-container");
@@ -1094,9 +1219,11 @@
                 const res = await fetch("/Datos/entrenamientos.json");
                 if (!res.ok) throw new Error("Status " + res.status);
                 exercisesDatabase = await res.json();
+                C().buildIndex(exercisesDatabase);
 
+                renderFilterChips();
                 renderExercises();
-                setupFilterChips();
+                setupExerciseControls();
             } catch (err) {
                 console.warn("Error cargando /Datos/entrenamientos.json:", err);
                 if (container) {
@@ -1106,54 +1233,162 @@
             }
         }
 
+        function renderFilterChips() {
+            const c = C();
+            const groupRow = document.getElementById("muscle-filter-chips");
+            const optRow = document.getElementById("muscle-options-chips");
+            const search = document.getElementById("exercise-search");
+            if (search) search.placeholder = c.T("Buscar por nombre, músculo o nivel...", "Search by name, muscle or level...");
+
+            if (groupRow) {
+                groupRow.innerHTML =
+                    `<button type="button" class="muscle-chip ${activeMuscleGroup === "all" ? "is-active" : ""}" data-group="all">${c.T("Todos", "All")}</button>` +
+                    Object.keys(exercisesDatabase).map(g =>
+                        `<button type="button" class="muscle-chip ${activeMuscleGroup === g ? "is-active" : ""}" data-group="${c.esc(g)}">${c.esc(c.groupLabel(g))}</button>`).join("");
+            }
+            if (optRow) {
+                const envs = [["all", c.T("Cualquier lugar", "Anywhere")], ["casa", c.T("Casa", "Home")], ["gimnasio", c.T("Gimnasio", "Gym")]];
+                const lvls = ["principiante", "intermedio", "avanzado"];
+                optRow.innerHTML =
+                    envs.map(([v, l]) => `<button type="button" class="muscle-chip ${c.state.env === v ? "is-active" : ""}" data-env="${v}">${l}</button>`).join("") +
+                    `<span class="muscle-opt-sep"></span>` +
+                    lvls.map(v => `<button type="button" class="muscle-chip ${c.state.nivel === v ? "is-active" : ""}" data-nivel="${v}">${c.esc(c.nivelLabel(v))}</button>`).join("");
+            }
+        }
+
+        function currentExerciseList() {
+            const c = C();
+            const q = document.getElementById("exercise-search")?.value || "";
+            c.state.special = null;
+            const all = activeMuscleGroup === "all";
+            let list = c.filter(exercisesDatabase, { group: all ? null : activeMuscleGroup, q, all });
+            if (q.trim() && !all) list = list.filter(ex => ex._grupo === activeMuscleGroup);
+            return list;
+        }
+
+        let visibleLimit = 40;
+
         function renderExercises() {
             const container = document.getElementById("exercises-grid-container");
             const countPill = document.getElementById("exercises-count-pill");
             if (!container) return;
+            const c = C();
 
-            let totalCount = 0;
-            let html = "";
+            const list = currentExerciseList();
+            const shown = list.slice(0, visibleLimit);
 
-            for (const [groupName, exercises] of Object.entries(exercisesDatabase)) {
-                if (activeMuscleGroup !== "all" && activeMuscleGroup !== groupName) {
-                    continue;
-                }
-
-                exercises.forEach(ex => {
-                    totalCount++;
-                    const desc = ex.descripcion_guia || ex.descripcion || "Ejercicio funcional para el plan.";
-                    html += `
-                        <div class="exercise-item-card">
-                            <div class="exercise-item-left">
-                                <span class="exercise-item-name">${ex.nombre}</span>
-                                <span class="exercise-item-desc">${desc}</span>
-                            </div>
-                            <span class="exercise-item-badge">${groupName}</span>
+            let html = shown.map(ex => {
+                const desc = ex.descripcion_guia || ex.descripcion || c.T("Ejercicio funcional para el plan.", "Functional exercise for your plan.");
+                const thumb = ex.gifUrl
+                    ? `<img src="${c.esc(ex.gifUrl)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><span class="exercise-thumb-fb" style="display:none;">${c.fallbackSvg}</span>`
+                    : `<span class="exercise-thumb-fb">${c.fallbackSvg}</span>`;
+                return `
+                    <div class="exercise-item-card" role="button" tabindex="0" data-ex="${c.esc(ex.nombre)}">
+                        <span class="exercise-thumb">${thumb}</span>
+                        <div class="exercise-item-left">
+                            <span class="exercise-item-name">${c.esc(c.displayName(ex))}</span>
+                            <span class="exercise-item-tags">
+                                <span class="exercise-item-badge">${c.esc(c.groupLabel(ex._grupo))}</span>
+                                ${c.badgesHtml(ex)}
+                            </span>
+                            <span class="exercise-item-desc">${c.esc(desc)}</span>
                         </div>
-                    `;
-                });
-            }
+                        <span class="exercise-chevron" aria-hidden="true">›</span>
+                    </div>`;
+            }).join("");
 
+            if (list.length > shown.length) {
+                html += `<button type="button" class="exercises-more-btn" id="exercises-more-btn">${c.T("Mostrar más", "Show more")} (${list.length - shown.length})</button>`;
+            }
             if (html === "") {
-                html = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">No hay ejercicios disponibles en este grupo.</p>`;
+                html = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">${c.T("No hay ejercicios con estos filtros.", "No exercises match these filters.")}</p>`;
             }
 
             container.innerHTML = html;
-            if (countPill) {
-                countPill.textContent = `${totalCount} ejercicios`;
-            }
+            if (countPill) countPill.textContent = c.T(`${list.length} ejercicios`, `${list.length} exercises`);
         }
 
-        function setupFilterChips() {
-            const chips = document.querySelectorAll(".muscle-chip");
-            chips.forEach(chip => {
-                chip.addEventListener("click", () => {
-                    chips.forEach(c => c.classList.remove("is-active"));
-                    chip.classList.add("is-active");
-                    activeMuscleGroup = chip.getAttribute("data-group") || "all";
-                    renderExercises();
-                });
+        function openExerciseDetail(name) {
+            const c = C();
+            const ex = c.lookup(exercisesDatabase, name);
+            if (!ex) return;
+            const lines = {};
+            String(ex.descripcion_detallada || "").split("\n").forEach(l => {
+                const m = l.match(/^(Técnica|Sobrecarga|Respiración):\s*(.*)$/);
+                if (m) lines[m[1]] = m[2];
             });
+            const sections = [["Técnica", c.T("Técnica", "Technique")], ["Sobrecarga", c.T("Sobrecarga", "Progression")], ["Respiración", c.T("Respiración", "Breathing")]]
+                .filter(([k]) => lines[k])
+                .map(([k, label]) => `<div class="exercise-detail-section"><span class="exercise-detail-label">${c.esc(label)}</span><span class="exercise-detail-text">${c.esc(lines[k])}</span></div>`).join("")
+                || `<div class="exercise-detail-text">${c.esc(ex.descripcion_guia || ex.descripcion || "")}</div>`;
+
+            let backdrop = document.getElementById("exercise-detail-backdrop");
+            if (!backdrop) {
+                backdrop = document.createElement("div");
+                backdrop.id = "exercise-detail-backdrop";
+                backdrop.className = "exercise-detail-backdrop";
+                backdrop.addEventListener("click", (e) => {
+                    if (e.target === backdrop || e.target.closest(".exercise-detail-close")) closeExerciseDetail();
+                });
+                document.body.appendChild(backdrop);
+            }
+            backdrop.innerHTML = `
+                <div class="exercise-detail-sheet" role="dialog" aria-modal="true" aria-label="${c.esc(c.displayName(ex))}">
+                    <div class="exercise-detail-head">
+                        <div>
+                            <div class="exercise-detail-title">${c.esc(c.displayName(ex))}</div>
+                            <div class="exercise-item-tags"><span class="exercise-item-badge">${c.esc(c.groupLabel(ex.grupo))}</span>${c.badgesHtml(ex)}</div>
+                        </div>
+                        <button type="button" class="exercise-detail-close" aria-label="${c.esc(c.T("Cerrar", "Close"))}">✕</button>
+                    </div>
+                    ${ex.gifUrl ? `<img class="exercise-detail-gif" src="${c.esc(ex.gifUrl)}" alt="" onerror="this.style.display='none'">` : ""}
+                    ${sections}
+                </div>`;
+            backdrop.classList.add("is-open");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeExerciseDetail() {
+            document.getElementById("exercise-detail-backdrop")?.classList.remove("is-open");
+            document.body.style.overflow = "";
+        }
+
+        function setupExerciseControls() {
+            const c = C();
+            const refresh = () => { visibleLimit = 40; renderFilterChips(); renderExercises(); };
+
+            document.getElementById("exercise-search")?.addEventListener("input", () => { visibleLimit = 40; renderExercises(); });
+
+            document.getElementById("muscle-filter-chips")?.addEventListener("click", (e) => {
+                const chip = e.target.closest(".muscle-chip");
+                if (!chip) return;
+                activeMuscleGroup = chip.getAttribute("data-group") || "all";
+                refresh();
+            });
+
+            document.getElementById("muscle-options-chips")?.addEventListener("click", (e) => {
+                const chip = e.target.closest(".muscle-chip");
+                if (!chip) return;
+                if (chip.dataset.env) c.setEnv(chip.dataset.env);
+                else if (chip.dataset.nivel) c.setNivel(c.state.nivel === chip.dataset.nivel ? "all" : chip.dataset.nivel);
+                refresh();
+            });
+
+            const grid = document.getElementById("exercises-grid-container");
+            grid?.addEventListener("click", (e) => {
+                if (e.target.closest("#exercises-more-btn")) { visibleLimit += c.PAGE_SIZE; renderExercises(); return; }
+                const card = e.target.closest(".exercise-item-card");
+                if (card) openExerciseDetail(card.getAttribute("data-ex"));
+            });
+            grid?.addEventListener("keydown", (e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                const card = e.target.closest(".exercise-item-card");
+                if (card) { e.preventDefault(); openExerciseDetail(card.getAttribute("data-ex")); }
+            });
+            document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeExerciseDetail(); });
+
+            // Al cambiar de idioma se vuelven a pintar nombres, chips y textos
+            document.getElementById("toggle_idioma")?.addEventListener("change", () => { renderFilterChips(); renderExercises(); });
         }
 
         // ── INICIALIZACIÓN ──

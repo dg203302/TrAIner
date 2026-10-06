@@ -5,6 +5,7 @@
 // Uso: node scripts_datos/agregar_ejercicios.js [--dry]
 const fs = require("fs");
 const path = require("path");
+const nivelDe = require("./nivel");
 const ROOT = path.join(__dirname, "..");
 const FILE = path.join(ROOT, "Datos", "entrenamientos.json");
 const DRY = process.argv.includes("--dry");
@@ -51,6 +52,14 @@ const data = JSON.parse(fs.readFileSync(FILE, "utf8"));
 
 for (const lista of Object.values(data)) for (const ex of lista) if (!ex.entorno) ex.entorno = ORIGINALES_CASA.has(ex.nombre) ? ["casa", "gimnasio"] : ["gimnasio"];
 
+const NOMBRES_EN_MANUAL = { "Remo en T": "T-Bar Row" };
+// Backfill: nombre_en (nombre original del catálogo, por GIF) y nivel (heurística) para todo ejercicio que no lo tenga.
+const porGif = new Map(catalogo.map((c) => [c.gif, c]));
+for (const lista of Object.values(data)) for (const ex of lista) {
+	if (!ex.nombre_en) ex.nombre_en = porGif.get(ex.gifUrl)?.nombre || NOMBRES_EN_MANUAL[ex.nombre] || "";
+	if (!ex.nivel) ex.nivel = nivelDe(ex.nombre, ex.nombre_en);
+}
+
 const nombres = new Set(), gifs = new Set();
 for (const lista of Object.values(data)) for (const ex of lista) { nombres.add(norm(ex.nombre)); gifs.add(ex.gifUrl); }
 
@@ -73,6 +82,8 @@ for (const [idx, nombre, grupo, tecnica, codigo] of entradas) {
 		descripcion_detallada: `Técnica: ${tecnica}\nSobrecarga: ${SOBRECARGA[codigo[0]]}\nRespiración: ${RESPIRACION[codigo[1]]}`,
 		descripcion_guia: tecnica,
 		entorno: entornoDesde(src.equipo),
+		nombre_en: src.nombre,
+		nivel: nivelDe(nombre, src.nombre),
 	});
 	nombres.add(norm(nombre)); gifs.add(src.gif); agregados++;
 }

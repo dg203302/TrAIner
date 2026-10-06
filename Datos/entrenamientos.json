@@ -8,7 +8,9 @@
             "descripcion_guia": "Retrae las escápulas y mantén los pies firmes en el suelo. Baja la barra hasta rozar el pecho (línea del esternón), codos a ~75° del tronco. Rango completo sin rebotar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca inclinado con barra",
@@ -18,7 +20,9 @@
             "descripcion_guia": "Banco inclinado a 30-45°. Agarre ligeramente más ancho que los hombros. Baja la barra de forma controlada hasta la parte alta del pecho (clavícula). Empuja la barra hacia arriba en un movimiento vertical.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Barbell Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca inclinado con mancuernas",
@@ -28,18 +32,22 @@
             "descripcion_guia": "Banco a 30-45°. Empuja las mancuernas hacia arriba y ligeramente hacia adentro. Controla la bajada 2-3 seg; no dejes que los codos caigan por debajo del plano del banco.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Dumbbell Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones de brazos (peso corporal)",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Clap-Push-Up.gif",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif",
             "descripcion": "Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta ca...",
             "descripcion_detallada": "Técnica: Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta casi tocar el suelo; codos a ~45° del torso.\nSobrecarga: Aumenta las reps hasta llegar a 20; luego añade dificultad (pies elevados, chaleco con peso o pausa de 2 seg abajo).\nRespiración: Inhala al bajar; exhala al empujar.",
             "descripcion_guia": "Manos a la anchura de los hombros, cuerpo en línea recta de talones a cabeza. Baja el pecho hasta casi tocar el suelo; codos a ~45° del torso.",
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Push-Up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Aperturas con mancuernas",
@@ -49,7 +57,9 @@
             "descripcion_guia": "Banco plano o inclinado. Baja las mancuernas en arco con codos ligeramente flexionados hasta sentir estiramiento en el pecho. No exageres el rango para proteger los hombros.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Fly",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Fondos en paralelas (pecho bajo/tríceps)",
@@ -59,7 +69,9 @@
             "descripcion_guia": "Para priorizar pecho: inclínate ligeramente hacia adelante, codos hacia afuera. Baja hasta que los hombros queden por debajo de los codos. Sube sin bloquear los codos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Parallel Bar Dips",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Cruce de poleas",
@@ -69,7 +81,9 @@
             "descripcion_guia": "Poleas a la altura de los hombros o por encima. Lleva las manos hacia el centro y cruza ligeramente, apretando el pecho al final del movimiento. Movimiento controlado en todo momento.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "High Cable Crossover",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de banca plano con mancuernas",
@@ -79,7 +93,9 @@
             "descripcion_guia": "Acostado en banco plano, baja las mancuernas a la altura del pecho con los codos a ~60-75° del tronco y empuja hacia arriba juntándolas sin chocar. Escápulas retraídas y pies firmes en el suelo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca declinado con mancuernas",
@@ -89,7 +105,9 @@
             "descripcion_guia": "En banco declinado, baja las mancuernas hacia la parte baja del pecho de forma controlada y empuja en línea vertical. Mantén las muñecas rectas y los codos a ~60° del tronco.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Decline Dumbbell Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Aperturas inclinadas con mancuernas",
@@ -100,7 +118,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Dumbbell Fly",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Aperturas en polea baja (cruce ascendente)",
@@ -110,7 +130,9 @@
             "descripcion_guia": "Poleas a la altura de los tobillos y torso ligeramente inclinado. Sube los brazos en arco hasta juntar las manos a la altura del pecho, apretando el pectoral superior.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Low Cable Crossover",
+            "nivel": "principiante"
         },
         {
             "nombre": "Contractora de pecho (pec deck)",
@@ -120,7 +142,9 @@
             "descripcion_guia": "Siéntate con la espalda pegada al respaldo y los codos a la altura del pecho. Junta los brazos al frente apretando el pecho y vuelve controlando el estiramiento sin despegar la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Pec Deck Fly",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de pecho en máquina",
@@ -130,7 +154,9 @@
             "descripcion_guia": "Ajusta el asiento para que los agarres queden a la altura del pecho medio. Empuja sin bloquear los codos y vuelve controlando 2-3 segundos, con la espalda apoyada.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Chest Press Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de pecho inclinado en máquina",
@@ -140,7 +166,9 @@
             "descripcion_guia": "Con el respaldo fijo y los agarres a la altura de la parte alta del pecho, empuja hacia arriba y adelante sin encoger los hombros. Controla el retorno.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Incline Chest Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de banca agarre ancho con barra",
@@ -150,7 +178,9 @@
             "descripcion_guia": "Agarra la barra más ancha que los hombros y baja hasta rozar el pecho con los codos más abiertos. Pone mayor énfasis en el pectoral exterior; no rebotes la barra.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Wide Grip Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca declinado con barra",
@@ -160,7 +190,9 @@
             "descripcion_guia": "En banco declinado, baja la barra a la parte baja del pecho y empuja en línea recta. Usa soportes o un compañero para sacar y devolver la barra de forma segura.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Decline Barbell Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones inclinadas (manos elevadas)",
@@ -171,7 +203,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Push-up",
+            "nivel": "principiante"
         },
         {
             "nombre": "Flexiones de rodillas",
@@ -182,7 +216,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kneeling Push-up",
+            "nivel": "principiante"
         },
         {
             "nombre": "Flexiones declinadas (pies elevados)",
@@ -193,7 +229,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Decline Push-up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones arquero",
@@ -204,7 +242,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Archer Push-Up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Flexiones con toque de hombro",
@@ -215,7 +255,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Shoulder Tap Push-up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press martillo con mancuernas (agarre neutro)",
@@ -225,7 +267,9 @@
             "descripcion_guia": "Acostado en banco, con las palmas enfrentadas, empuja las mancuernas hacia arriba manteniendo los codos pegados al cuerpo. Reduce la tensión en los hombros.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hammer Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de pecho sentado en polea",
@@ -235,7 +279,9 @@
             "descripcion_guia": "Sentado con la espalda apoyada, empuja los agarres de polea al frente hasta casi extender los codos y vuelve controlando. La tensión constante de la polea mantiene el pecho activo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Cable Chest Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de pecho unilateral en polea",
@@ -245,7 +291,9 @@
             "descripcion_guia": "De pie y de lado a la polea, empuja un solo agarre al frente sin rotar el torso. Trabaja el pecho y el core antirrotación; repite en ambos lados.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "One-Arm Cable Chest Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Aperturas inclinadas en polea",
@@ -255,7 +303,9 @@
             "descripcion_guia": "Banco inclinado entre dos poleas bajas. Abre los brazos en arco con los codos semiflexionados y júntalos sobre la parte alta del pecho apretando.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "İncline Cable Fly",
+            "nivel": "principiante"
         },
         {
             "nombre": "Aperturas con banda elástica",
@@ -266,7 +316,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Resistance Band Alternating Chest Fly",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones hindúes",
@@ -277,7 +329,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Modified Hindu Push-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Press de suelo con barra",
@@ -287,7 +341,9 @@
             "descripcion_guia": "Tumbado en el suelo, baja la barra hasta que los codos toquen el suelo y empuja hacia arriba. Limita el recorrido y protege los hombros.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Floor Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de pecho en el suelo con kettlebell",
@@ -298,7 +354,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kettlebell Chest Press on the Floor",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de pecho de pie con banda",
@@ -309,7 +367,22 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing incline chest press With Resistance Band",
+            "nivel": "intermedio"
+        },
+        {
+            "nombre": "Flexiones con palmada",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/Clap-Push-Up.gif",
+            "descripcion": "Baja el pecho al suelo y empuja con tanta fuerza que las manos se despeguen para dar una palmada. At...",
+            "descripcion_detallada": "Técnica: Baja el pecho al suelo y empuja con tanta fuerza que las manos se despeguen para dar una palmada. Aterriza con los codos ligeramente flexionados. Ejercicio explosivo para nivel avanzado.\nSobrecarga: Añade repeticiones o ralentiza la bajada (3 seg); cuando superes 15 reps limpias, pasa a una variante más difícil o añade lastre.\nRespiración: Inhala al bajar; exhala al empujar.",
+            "descripcion_guia": "Baja el pecho al suelo y empuja con tanta fuerza que las manos se despeguen para dar una palmada. Aterriza con los codos ligeramente flexionados. Ejercicio explosivo para nivel avanzado.",
+            "entorno": [
+                "casa",
+                "gimnasio"
+            ],
+            "nombre_en": "Clap Push-Up",
+            "nivel": "avanzado"
         }
     ],
     "Espalda": [
@@ -321,7 +394,9 @@
             "descripcion_guia": "Agarre prono, manos a la anchura de los hombros. Inicia el movimiento retrayendo las escápulas. Sube hasta que la barbilla supere la barra; baja de forma controlada.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Pull-Up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Jalón al pecho en polea",
@@ -331,7 +406,9 @@
             "descripcion_guia": "Agarre prono a la anchura de los hombros. Inclínate ligeramente hacia atrás (10-15°) y lleva la barra hasta la clavícula, apretando los dorsales. Controla la subida.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lat Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo con barra",
@@ -341,7 +418,9 @@
             "descripcion_guia": "Espalda plana, bisagra de cadera hasta ~45°. Tira la barra hacia el ombligo, codos cerca del cuerpo. Retrae y deprime las escápulas al final. No redondees la zona lumbar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Bent Over Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo unilateral con mancuerna",
@@ -352,7 +431,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo sentado en polea",
@@ -362,7 +443,9 @@
             "descripcion_guia": "Siéntate erguido, agarra el cable con codos cerca del cuerpo. Tira hasta que el mango toque el abdomen, apretando las escápulas. No uses la inercia del torso.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Cable Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pull-over con mancuerna",
@@ -373,7 +456,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Pullover",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo en T",
@@ -383,17 +468,21 @@
             "descripcion_guia": "Coloca un extremo de la barra en una esquina. Agarra el otro extremo con un maneral. Espalda recta y torso inclinado a ~45°. Tira de la barra hacia tu pecho, manteniendo los codos cerca y apretando la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "T-Bar Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Hiperextensiones lumbares",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/06/seated-back-extension.gif",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/hyperextension.gif",
             "descripcion": "Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en l...",
             "descripcion_detallada": "Técnica: Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en línea recta (no hiperextiendas). Glúteos activos al subir.\nSobrecarga: Cuando domines 15 reps con peso corporal, añade una mancuerna o disco al pecho.\nRespiración: Inhala al bajar; exhala al subir y contraer los glúteos.",
             "descripcion_guia": "Caderas apoyadas en el banco romano. Baja el tronco hasta ~90° y sube hasta que el cuerpo quede en línea recta (no hiperextiendas). Glúteos activos al subir.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hyperextension",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Dominadas supinas (chin-up)",
@@ -403,7 +492,9 @@
             "descripcion_guia": "Agarre supino a la anchura de los hombros. Sube hasta pasar la barbilla de la barra llevando los codos hacia las caderas y baja sin balancearte. Mayor participación del bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Chin-Up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Dominadas con agarre neutro",
@@ -413,7 +504,9 @@
             "descripcion_guia": "Con los agarres paralelos, sube hasta pasar la barbilla y baja completamente. Es una posición cómoda para hombros y codos, con gran trabajo del dorsal.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Neutral Grip Pull-up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Dominadas asistidas en máquina",
@@ -423,7 +516,9 @@
             "descripcion_guia": "Elige un contrapeso que te permita completar las repeticiones con buena técnica. Sube llevando el pecho a la barra y baja controlado; reduce la asistencia progresivamente.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Assisted Pull-up",
+            "nivel": "principiante"
         },
         {
             "nombre": "Dominadas asistidas con banda",
@@ -434,7 +529,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Assisted Pull-up",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón con agarre en V (triángulo)",
@@ -444,7 +541,9 @@
             "descripcion_guia": "Siéntate con el torso ligeramente inclinado hacia atrás y tira del agarre en V hacia el pecho, juntando las escápulas. Vuelve estirando por completo sin soltar la tensión.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "V-bar Lat Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón con agarre estrecho",
@@ -454,7 +553,9 @@
             "descripcion_guia": "Agarre cerrado y neutro, tira hacia la parte alta del pecho llevando los codos pegados al cuerpo. Enfatiza la zona baja del dorsal.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Close Grip Lat-Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón con brazos rectos en polea",
@@ -464,7 +565,9 @@
             "descripcion_guia": "De pie frente a la polea alta, con brazos casi rectos baja la barra hasta los muslos contrayendo el dorsal. Sin flexionar los codos ni usar el impulso del torso.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Straight Arm Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón unilateral en polea",
@@ -474,7 +577,9 @@
             "descripcion_guia": "Con una mano en el agarre, tira hacia el hombro llevando el codo hacia la cadera. Permite mayor rango de movimiento y corregir desequilibrios entre lados.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable One Arm Lat Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón frontal en máquina",
@@ -484,7 +589,9 @@
             "descripcion_guia": "Ajusta el rodillo de los muslos y tira de los agarres hasta la parte alta del pecho con el pecho erguido. Vuelve controlando hasta estirar los brazos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Front Pulldown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo en máquina sentado",
@@ -494,7 +601,9 @@
             "descripcion_guia": "Con el pecho apoyado, tira de los agarres hacia el abdomen juntando las escápulas y vuelve estirando sin despegar el torso del soporte.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Row Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo en polea con agarre cerrado",
@@ -504,7 +613,9 @@
             "descripcion_guia": "Sentado con la espalda recta, tira del agarre en V hacia el abdomen bajo, junta las escápulas y vuelve estirando sin redondear la zona lumbar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Close Grip Cable Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo en polea con cuerda",
@@ -514,7 +625,9 @@
             "descripcion_guia": "Tira de la cuerda hacia el pecho abriendo ligeramente las manos al final del movimiento. Mantén el pecho alto y los codos cerca del cuerpo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Cable Rope Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo unilateral en polea",
@@ -524,7 +637,9 @@
             "descripcion_guia": "De pie o sentado, tira de un solo agarre hacia la cadera sin rotar el torso. Permite un buen recorrido y corregir desequilibrios entre lados.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "One Arm Cable Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo supino con barra (agarre invertido)",
@@ -534,7 +649,9 @@
             "descripcion_guia": "Con el torso inclinado ~45° y la espalda recta, tira de la barra con agarre supino hacia el abdomen. Mayor trabajo del dorsal inferior y del bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Grip Barbell Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo Pendlay (barra desde el suelo)",
@@ -544,7 +661,9 @@
             "descripcion_guia": "Torso paralelo al suelo. Tira de la barra desde el suelo explosivamente hacia el abdomen y devuélvela al suelo en cada repetición, con la espalda neutra.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Pendlay Row",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Remo apoyado en banco inclinado con barra",
@@ -554,7 +673,9 @@
             "descripcion_guia": "Con el pecho apoyado en un banco inclinado, tira de la barra hacia el abdomen sin impulso. Elimina el balanceo y protege la zona lumbar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Barbell Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo a dos manos con mancuernas (inclinado)",
@@ -565,7 +686,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bent Over Dumbbell Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo supino con mancuernas en banco inclinado",
@@ -574,9 +697,10 @@
             "descripcion_detallada": "Técnica: Tumbado boca abajo en un banco inclinado, tira de las mancuernas con agarre supino hacia las costillas. Sin impulso desde las piernas.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al estirar los brazos; exhala al tirar.",
             "descripcion_guia": "Tumbado boca abajo en un banco inclinado, tira de las mancuernas con agarre supino hacia las costillas. Sin impulso desde las piernas.",
             "entorno": [
-                "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Reverse Grip Dumbbell Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo tumbado en banco con mancuernas",
@@ -585,9 +709,10 @@
             "descripcion_detallada": "Técnica: Acostado boca abajo en un banco alto, tira de las mancuernas hacia las costillas y baja controlado. Aísla la espalda sin carga en la zona lumbar.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al estirar los brazos; exhala al tirar.",
             "descripcion_guia": "Acostado boca abajo en un banco alto, tira de las mancuernas hacia las costillas y baja controlado. Aísla la espalda sin carga en la zona lumbar.",
             "entorno": [
-                "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Seal Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo con kettlebell",
@@ -598,7 +723,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kettlebell Bent Over Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo invertido en mesa",
@@ -609,7 +736,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Table Inverted Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo invertido en barra baja",
@@ -620,7 +749,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Inverted Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo sentado con banda",
@@ -631,7 +762,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Seated Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo de pie con banda",
@@ -642,7 +775,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Banded Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto convencional",
@@ -652,7 +787,9 @@
             "descripcion_guia": "Barra sobre el medio del pie, agarre a la anchura de los hombros, espalda neutra y pecho alto. Empuja el suelo con las piernas y extiende la cadera sin redondear la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Rack pull (peso muerto desde soportes)",
@@ -662,7 +799,9 @@
             "descripcion_guia": "Barra en soportes a la altura de la rodilla. Extiende cadera y rodillas manteniendo la espalda recta y aprieta glúteos y dorsales arriba. Permite cargar más en la parte alta de la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Rack Pull",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Dominadas escapulares",
@@ -672,7 +811,9 @@
             "descripcion_guia": "Colgado de la barra con los brazos rectos, eleva el cuerpo solo moviendo las escápulas hacia abajo y atrás, sin doblar los codos. Mejora el control del hombro y el dorsal.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Scapula Pull-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Superman",
@@ -683,7 +824,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Superman",
+            "nivel": "principiante"
         },
         {
             "nombre": "Bird dog (perro-pájaro)",
@@ -694,7 +837,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bird Dog",
+            "nivel": "principiante"
         },
         {
             "nombre": "Hiperextensión inversa en máquina",
@@ -704,7 +849,9 @@
             "descripcion_guia": "Apoyado en la máquina boca abajo, eleva las piernas hasta alinearlas con el torso apretando glúteos y lumbares. Sin balancear con impulso.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Hyperextension Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Buenos días con barra",
@@ -714,7 +861,9 @@
             "descripcion_guia": "Barra en la parte alta de la espalda, rodillas ligeramente flexionadas. Inclina el torso hacia delante llevando la cadera atrás con la espalda recta y vuelve apretando glúteos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Good Morning",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Buenos días con mancuerna",
@@ -725,7 +874,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Good Morning",
+            "nivel": "intermedio"
         }
     ],
     "Piernas": [
@@ -737,7 +888,9 @@
             "descripcion_guia": "Pies a la anchura de los hombros, puntas ligeramente abiertas. Baja manteniendo el torso erguido y las rodillas alineadas con los pies. Profundidad mínima: muslos paralelos al suelo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Prensa de piernas",
@@ -747,7 +900,9 @@
             "descripcion_guia": "Espalda y glúteos pegados al respaldo. Pies en la plataforma a la anchura de los hombros. Baja hasta que las rodillas formen ~90° sin despegar el glúteo del asiento.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Leg Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Zancadas / estocadas",
@@ -758,7 +913,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto rumano",
@@ -768,7 +925,9 @@
             "descripcion_guia": "Rodillas ligeramente flexionadas, bisagra de cadera: baja la barra deslizándola por las piernas hasta sentir el estiramiento en isquiotibiales. Espalda neutra en todo momento.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Romanian Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Hip thrust (empuje de cadera)",
@@ -779,7 +938,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Hip Thrusts",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de cuádriceps en máquina",
@@ -789,7 +950,9 @@
             "descripcion_guia": "Ajusta el asiento para que la articulación de la rodilla quede alineada con el pivote de la máquina. Extiende completamente y mantén 1 seg; baja de forma controlada (2-3 seg).",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Leg Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl femoral tumbado o sentado",
@@ -799,7 +962,9 @@
             "descripcion_guia": "Caderas pegadas al banco. Flexiona hasta ~120-130° (máxima contracción del femoral); extiende lentamente sin bloquear la rodilla al final.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Leg Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de talones",
@@ -810,7 +975,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Calf Raise With Dumbbell",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadilla búlgara",
@@ -821,7 +988,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Bulgarian Split Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto sumo con barra",
@@ -831,7 +1000,9 @@
             "descripcion_guia": "Pies mucho más anchos que los hombros, puntas hacia afuera. Agarre por dentro de las piernas. Mantén el torso erguido y baja caderas. Empuja el suelo con las piernas manteniendo la barra pegada a las espinillas.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Sumo Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Step-ups con mancuernas",
@@ -842,7 +1013,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Step-Up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla frontal con barra",
@@ -852,7 +1025,9 @@
             "descripcion_guia": "Barra apoyada en la parte delantera de los hombros con los codos altos. Baja con el torso erguido hasta la paralela o más y empuja el suelo para subir. Mayor énfasis en cuádriceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Front Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla hack en máquina",
@@ -862,7 +1037,9 @@
             "descripcion_guia": "Espalda apoyada en el respaldo y pies al ancho de hombros. Baja hasta que los muslos queden paralelos o más y empuja sin bloquear las rodillas arriba.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hack Squats Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Hip thrust en máquina",
@@ -872,7 +1049,9 @@
             "descripcion_guia": "Espalda alta apoyada y pies firmes en la plataforma. Empuja la cadera hacia arriba apretando los glúteos y baja controlado sin perder la tensión.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hip Thrust Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Patada de glúteo en máquina",
@@ -882,7 +1061,9 @@
             "descripcion_guia": "Apoya el pecho y empuja la plataforma hacia atrás con el talón, extendiendo la cadera y apretando el glúteo. Vuelve controlando sin arquear la zona lumbar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Glute Kickback Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Abducción de cadera en máquina",
@@ -892,7 +1073,9 @@
             "descripcion_guia": "Sentado con la espalda apoyada, abre las piernas contra las almohadillas y vuelve despacio. Trabaja el glúteo medio y la parte externa de la cadera.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hip Abduction Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Aducción de cadera en máquina",
@@ -902,7 +1085,9 @@
             "descripcion_guia": "Sentado, junta las piernas contra las almohadillas apretando la parte interna del muslo y vuelve controlando el recorrido.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hip Adduction Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Peso muerto con barra hexagonal (trap bar)",
@@ -912,7 +1097,9 @@
             "descripcion_guia": "Dentro de la barra hexagonal, espalda neutra y pecho alto. Empuja el suelo con las piernas hasta quedar erguido y baja con control. Postura más amigable para la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Trap Bar Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Rumano con mancuernas",
@@ -923,7 +1110,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Romanian Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto con piernas rígidas",
@@ -933,7 +1122,9 @@
             "descripcion_guia": "Con las rodillas casi extendidas, baja la barra pegada a las piernas inclinando el torso con la espalda recta. Gran estiramiento de isquiotibiales; sube extendiendo la cadera.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Stiff Leg Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto a una pierna con mancuerna",
@@ -944,7 +1135,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Single Leg Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Peso muerto a una pierna con peso corporal",
@@ -955,7 +1148,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Single Leg Deadlift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla goblet con mancuerna",
@@ -966,7 +1161,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Goblet Squat",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadilla con peso corporal",
@@ -977,7 +1174,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Squat",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadilla sumo con peso corporal",
@@ -988,7 +1187,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Sumo Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla sumo con mancuerna",
@@ -999,7 +1200,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Sumo Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla cosaca con mancuerna",
@@ -1010,7 +1213,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Cossack Squat",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Zancada con peso corporal",
@@ -1021,7 +1226,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Lunge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Zancada hacia atrás",
@@ -1032,7 +1239,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Estocada inversa con mancuernas",
@@ -1043,7 +1252,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Reverse Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Zancada con mancuernas",
@@ -1054,7 +1265,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Zancadas caminando con mancuernas",
@@ -1065,7 +1278,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Walking Lunge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Zancadas caminando con peso corporal",
@@ -1076,7 +1291,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Walking Lunge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Zancada lateral",
@@ -1087,7 +1304,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Side Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Zancada cruzada (curtsy)",
@@ -1098,7 +1317,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Curtsy Lunge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Hip thrust con peso corporal",
@@ -1109,7 +1330,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Hip Thrust",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Puente de glúteos",
@@ -1120,7 +1343,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Glute Bridge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de cadera con mancuerna",
@@ -1131,7 +1356,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Glute Bridge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de cadera a una pierna",
@@ -1142,7 +1369,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Single Leg Bridge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de cadera con banda",
@@ -1153,7 +1382,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Glute Bridge",
+            "nivel": "principiante"
         },
         {
             "nombre": "Caminata lateral con banda elástica",
@@ -1164,7 +1395,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Walk",
+            "nivel": "principiante"
         },
         {
             "nombre": "Patada de glúteo con banda",
@@ -1175,7 +1408,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Glute Kickbacks",
+            "nivel": "principiante"
         },
         {
             "nombre": "Fire hydrant con banda",
@@ -1186,7 +1421,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Fire Hydrant",
+            "nivel": "principiante"
         },
         {
             "nombre": "Fire hydrant (apertura de cadera en cuadrupedia)",
@@ -1197,7 +1434,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Fire Hydrant",
+            "nivel": "principiante"
         },
         {
             "nombre": "Patada de burro (donkey kick)",
@@ -1208,7 +1447,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Donkey Kicks",
+            "nivel": "principiante"
         },
         {
             "nombre": "Almeja (clamshell) en el suelo",
@@ -1219,7 +1460,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Side Lying Clam",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadilla pistola",
@@ -1230,7 +1473,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Pistol Squat",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Gemelos a una pierna",
@@ -1241,7 +1486,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Single Leg Calf Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Gemelos en máquina de prensa",
@@ -1251,7 +1498,9 @@
             "descripcion_guia": "Sentado en la prensa con las piernas casi extendidas, empuja la plataforma solo con las puntas de los pies y vuelve estirando el gemelo. Sin bloquear rodillas.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Leg Press Calf Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Gemelos sentado en máquina",
@@ -1261,7 +1510,9 @@
             "descripcion_guia": "Con las rodillas flexionadas bajo el soporte, sube los talones lo máximo posible y baja hasta estirar. Trabaja principalmente el sóleo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Seated Calf Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Gemelos de pie con barra",
@@ -1271,7 +1522,9 @@
             "descripcion_guia": "Barra sobre la parte alta de la espalda, sube de puntillas en una plataforma y baja hasta estirar por debajo del escalón. Mantén el torso erguido.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Barbell Calf Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl femoral con toalla (deslizamiento)",
@@ -1282,7 +1535,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Towel Leg Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl femoral con banda",
@@ -1293,7 +1548,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Leg Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadilla sissy",
@@ -1303,7 +1560,9 @@
             "descripcion_guia": "Inclina el torso hacia atrás mientras las rodillas avanzan y los talones se elevan. Gran aislamiento del cuádriceps. Agárrate a un apoyo para el equilibrio.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Sissy Squat",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Elevación glúteo-isquio (glute ham raise)",
@@ -1314,7 +1573,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Glute Ham Raise",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Patada de glúteo en polea",
@@ -1324,7 +1585,9 @@
             "descripcion_guia": "Con la tobillera en polea baja, extiende la pierna hacia atrás apretando el glúteo sin arquear la zona lumbar y vuelve controlando.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Donkey Kickback",
+            "nivel": "principiante"
         },
         {
             "nombre": "Hip thrust con banda",
@@ -1335,7 +1598,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Resistance Band Hip Thrust",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla patinador",
@@ -1346,7 +1611,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Skater Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Pistol asistida (con apoyo)",
@@ -1357,7 +1624,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Supported Pistol Squat",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Sentadilla dividida con banda",
@@ -1368,7 +1637,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Split Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Sentadilla en banco con mancuernas",
@@ -1379,7 +1650,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Bench Squat",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de cadera en banco",
@@ -1390,7 +1663,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hip Extension On Bench",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Patada de glúteo con rodilla flexionada",
@@ -1401,7 +1676,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kicks Leg Bent",
+            "nivel": "principiante"
         }
     ],
     "Hombros": [
@@ -1413,7 +1690,9 @@
             "descripcion_guia": "De pie o sentado. Empuja la barra/mancuernas verticalmente por encima de la cabeza hasta que los brazos queden casi extendidos. No arquees la zona lumbar al bloquear.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Military Press (Overhead press)",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevaciones laterales con mancuernas",
@@ -1424,7 +1703,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Lateral Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pájaros / vuelos posteriores",
@@ -1435,7 +1716,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Dumbbell Reverse Fly",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevaciones frontales",
@@ -1446,7 +1729,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Two Arm Dumbbell Front Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Face pull (salud del hombro)",
@@ -1456,7 +1741,9 @@
             "descripcion_guia": "Polea alta con cuerda. Tira hacia la cara separando la cuerda y rotando externamente los hombros. Codos por encima del agarre. Foco en deltoides posterior y manguito rotador.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Face Pull",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press Arnold",
@@ -1467,7 +1754,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Arnold Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Encogimientos de hombros con barra reversa",
@@ -1477,7 +1766,9 @@
             "descripcion_guia": "Sostén la barra por detrás de tu espalda. Mantén brazos rectos y eleva los hombros hacia tus orejas encogiendo trapecios. Mantén la contracción 1-2 seg arriba y baja controladamente.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Behind The Back Barbell Shrug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de hombros sentado con barra",
@@ -1487,7 +1778,9 @@
             "descripcion_guia": "Sentado con la espalda apoyada, baja la barra a la altura de la barbilla y empuja hacia arriba hasta casi extender los codos. Abdomen firme; sin arquear la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Barbell Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de hombros en máquina",
@@ -1497,7 +1790,9 @@
             "descripcion_guia": "Ajusta el asiento para que los agarres queden a la altura de los hombros. Empuja hacia arriba sin bloquear los codos y baja controlando.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Shoulder Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevaciones laterales en polea",
@@ -1507,7 +1802,9 @@
             "descripcion_guia": "De lado a la polea baja, eleva el brazo lateralmente hasta la altura del hombro con el codo ligeramente flexionado. Mantén la tensión constante al bajar.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Lateral Raise",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevaciones laterales en máquina",
@@ -1517,7 +1814,9 @@
             "descripcion_guia": "Con los codos contra las almohadillas, abre los brazos hasta la altura del hombro y baja controlado. Aísla el deltoides lateral.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lateral Raise Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pájaros en máquina (deltoides posterior)",
@@ -1527,7 +1826,9 @@
             "descripcion_guia": "Sentado de cara al respaldo, abre los brazos hacia atrás juntando las escápulas sin encoger los hombros. Vuelve controlando.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Rear Delt Fly Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pájaros en polea",
@@ -1537,7 +1838,9 @@
             "descripcion_guia": "Con dos poleas cruzadas, abre los brazos hacia atrás y afuera con los codos ligeramente flexionados, apretando el deltoides posterior.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Rear Delt Fly",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo al mentón en polea",
@@ -1547,7 +1850,9 @@
             "descripcion_guia": "Sube la barra o cuerda pegada al cuerpo hasta la altura del pecho con los codos por encima de las muñecas. No subas más allá si molesta el hombro.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Upright Row",
+            "nivel": "principiante"
         },
         {
             "nombre": "Remo al mentón con mancuernas",
@@ -1558,7 +1863,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Upright Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Remo al mentón con barra",
@@ -1568,7 +1875,9 @@
             "descripcion_guia": "Agarre a la anchura de los hombros, sube la barra pegada al torso hasta el pecho con los codos altos. Evita el balanceo y la elevación excesiva.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Upright Row",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press Z con mancuernas",
@@ -1579,7 +1888,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Z Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de hombros a una mano con mancuerna",
@@ -1590,7 +1901,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell One Arm Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de hombros alterno con mancuernas",
@@ -1601,7 +1914,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Alternating Dumbbell Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press militar con kettlebell a una mano",
@@ -1612,7 +1927,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kettlebell One-Arm Military Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de hombros con kettlebell",
@@ -1623,7 +1940,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kettlebell Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de hombros con banda",
@@ -1634,7 +1953,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Resistance Band Seated Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Apertura de banda (band pull-apart)",
@@ -1645,7 +1966,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Pull-Apart",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pájaros con banda",
@@ -1656,7 +1979,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Resistance Band Bent Over Rear Delt Fly",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevación en plano escapular (scaption)",
@@ -1667,7 +1992,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Scaption",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press cubano con mancuernas",
@@ -1678,7 +2005,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Cuban Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Rotación externa de hombro con banda",
@@ -1689,7 +2018,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Banded Shoulder External Rotation",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación en Y en banco inclinado",
@@ -1698,9 +2029,10 @@
             "descripcion_detallada": "Técnica: Boca abajo en un banco inclinado, eleva los brazos formando una Y con los pulgares hacia arriba. Trabaja el deltoides posterior y el trapecio inferior.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar; exhala al subir.",
             "descripcion_guia": "Boca abajo en un banco inclinado, eleva los brazos formando una Y con los pulgares hacia arriba. Trabaja el deltoides posterior y el trapecio inferior.",
             "entorno": [
-                "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Dumbbell Y-Raise",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones pike (hombros)",
@@ -1711,7 +2043,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Pike Push-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Push press con mancuernas",
@@ -1722,7 +2056,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Push Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Push press con barra",
@@ -1732,7 +2068,9 @@
             "descripcion_guia": "Barra en los hombros, flexiona rodillas y extiende con fuerza para impulsar la barra sobre la cabeza. Bloquea arriba con el core firme.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Push Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevaciones de 4 vías con mancuernas",
@@ -1743,7 +2081,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell 4 Way Lateral Raise",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Encogimientos con mancuernas",
@@ -1754,7 +2094,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Shrug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Encogimientos con barra",
@@ -1764,7 +2106,9 @@
             "descripcion_guia": "Con la barra frente a los muslos, eleva los hombros verticalmente lo más alto posible y baja despacio. Sin flexionar los codos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Shrug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Encogimientos en polea",
@@ -1774,7 +2118,9 @@
             "descripcion_guia": "Frente a la polea baja, encoge los hombros hacia las orejas con la tensión constante del cable y baja controlado.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Shrug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Encogimientos en máquina",
@@ -1784,7 +2130,9 @@
             "descripcion_guia": "Sentado o de pie en la máquina, eleva los hombros verticalmente y baja controlado. Útil para sobrecargar el trapecio con seguridad.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Shrug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press de hombros de pie con mancuernas",
@@ -1795,7 +2143,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Dumbbell Shoulder Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevación lateral a una mano con mancuerna",
@@ -1806,7 +2156,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Single Arm Lateral Raise",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Pájaros con el pecho apoyado en banco",
@@ -1815,9 +2167,10 @@
             "descripcion_detallada": "Técnica: Con la frente o el pecho apoyados en un banco, abre los brazos con mancuernas hacia los lados con los codos semiflexionados. Aísla el deltoides posterior.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar; exhala al subir.",
             "descripcion_guia": "Con la frente o el pecho apoyados en un banco, abre los brazos con mancuernas hacia los lados con los codos semiflexionados. Aísla el deltoides posterior.",
             "entorno": [
-                "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bent-Over Dumbbell Rear Delt Raise With Head On Bench",
+            "nivel": "intermedio"
         }
     ],
     "Brazos": [
@@ -1829,7 +2182,9 @@
             "descripcion_guia": "Codos pegados a los costados. Sube la barra en arco controlado hasta la contracción máxima; baja despacio (2-3 seg). No uses la inercia del torso.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl martillo con mancuernas",
@@ -1840,17 +2195,21 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hammer Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl predicador",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Concentration-Curl.gif",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Z-Bar-Preacher-Curl.gif",
             "descripcion": "Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mante...",
             "descripcion_detallada": "Técnica: Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mantener tensión. Foco en la parte baja del bíceps.\nSobrecarga: Sube el peso cuando domines el rango completo sin balanceo durante 2 sesiones consecutivas.\nRespiración: Exhala al subir; inhala al bajar de forma controlada.",
             "descripcion_guia": "Brazos apoyados en el soporte inclinado. Evita el balanceo y el bloqueo completo al bajar para mantener tensión. Foco en la parte baja del bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "EZ Bar Preacher Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de bíceps con mancuernas",
@@ -1861,7 +2220,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl inclinado con mancuernas",
@@ -1872,7 +2233,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Incline Dumbbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl Zottman",
@@ -1883,17 +2246,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
-        },
-        {
-            "nombre": "Curl Scott con barra EZ",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Z-Bar-Preacher-Curl.gif",
-            "descripcion": "Con los brazos apoyados en el banco Scott, baja la barra hasta casi extender los codos y sube sin de...",
-            "descripcion_detallada": "Técnica: Con los brazos apoyados en el banco Scott, baja la barra hasta casi extender los codos y sube sin despegar los brazos del soporte. Evita el impulso.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar; exhala al subir.",
-            "descripcion_guia": "Con los brazos apoyados en el banco Scott, baja la barra hasta casi extender los codos y sube sin despegar los brazos del soporte. Evita el impulso.",
-            "entorno": [
-                "gimnasio"
-            ]
+            ],
+            "nombre_en": "Zottman Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl en máquina Scott",
@@ -1903,7 +2258,9 @@
             "descripcion_guia": "Ajusta el asiento para que los brazos reposen en el soporte y flexiona los codos contra la resistencia. Controla el descenso completo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lever Preacher Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl Scott con mancuerna",
@@ -1914,7 +2271,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Preacher Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl con barra Z",
@@ -1924,7 +2283,9 @@
             "descripcion_guia": "Agarra la barra Z por las curvas, codos pegados al torso, y flexiona hasta la altura del pecho. Reduce la tensión en las muñecas respecto a la barra recta.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Z-Bar Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de bíceps en polea baja",
@@ -1934,7 +2295,9 @@
             "descripcion_guia": "Frente a la polea baja con barra o agarre recto, flexiona los codos hasta contraer el bíceps y baja controlado. La polea mantiene tensión constante.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl martillo con cuerda en polea",
@@ -1944,7 +2307,9 @@
             "descripcion_guia": "Con la cuerda en polea baja y las palmas enfrentadas, flexiona los codos manteniéndolos pegados al cuerpo y baja controlado. Trabaja braquial y antebrazo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Rope Hammer Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl unilateral en polea",
@@ -1954,7 +2319,9 @@
             "descripcion_guia": "Con un solo agarre en polea baja, flexiona el codo sin mover el hombro y baja lento. Permite igualar fuerza entre ambos brazos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "One Arm Cable Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl tumbado en polea",
@@ -1964,7 +2331,9 @@
             "descripcion_guia": "Tumbado en el suelo con los pies hacia la polea baja, flexiona los codos llevando la barra hacia la frente manteniendo los brazos quietos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lying Cable Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl en polea alta (doble bíceps)",
@@ -1974,7 +2343,9 @@
             "descripcion_guia": "De pie entre dos poleas altas, flexiona los codos llevando las manos hacia las orejas como en una pose de bíceps. Aprieta arriba y vuelve controlado.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Overhead Cable Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl inclinado en polea",
@@ -1984,7 +2355,9 @@
             "descripcion_guia": "Sentado en banco inclinado de espaldas a la polea baja, flexiona los codos manteniendo los brazos atrás. Gran estiramiento de la cabeza larga del bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Incline Biceps Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de bíceps con banda elástica",
@@ -1995,7 +2368,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Biceps Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl martillo con banda",
@@ -2006,7 +2381,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hammer Curl with Resistance Band",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl sentado alterno con mancuernas",
@@ -2017,7 +2394,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Alternating Dumbbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl inverso con mancuernas",
@@ -2028,7 +2407,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Reverse Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl con agarre inverso y barra EZ",
@@ -2038,7 +2419,9 @@
             "descripcion_guia": "Agarre prono sobre la barra EZ, flexiona los codos con las muñecas firmes y baja lento. Trabaja el braquial y la parte externa del antebrazo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Grip EZ-Bar Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl drag con barra",
@@ -2048,7 +2431,9 @@
             "descripcion_guia": "Sube la barra deslizándola pegada al cuerpo mientras los codos van hacia atrás. Reduce el impulso de los hombros y enfatiza el bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Drag Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl con barra agarre cerrado",
@@ -2058,7 +2443,9 @@
             "descripcion_guia": "Con las manos más juntas que los hombros, flexiona los codos pegados al torso hasta contraer el bíceps y baja controlado.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Close Grip Barbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl en banco inclinado boca abajo con barra",
@@ -2068,7 +2455,9 @@
             "descripcion_guia": "Boca abajo en un banco inclinado, deja caer los brazos y flexiona los codos sin balancear. Máximo aislamiento del bíceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Prone Incline Barbell Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl martillo con botellas de agua",
@@ -2079,7 +2468,22 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Water Bottle Hammer Curl",
+            "nivel": "principiante"
+        },
+        {
+            "nombre": "Curl concentrado con mancuerna",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/Concentration-Curl.gif",
+            "descripcion": "Sentado con el codo apoyado en la cara interna del muslo, flexiona el codo llevando la mancuerna hac...",
+            "descripcion_detallada": "Técnica: Sentado con el codo apoyado en la cara interna del muslo, flexiona el codo llevando la mancuerna hacia el hombro y baja lento. Máximo aislamiento del bíceps.\nSobrecarga: Sube la carga cuando completes todas las series y reps con buena técnica durante 2 sesiones consecutivas.\nRespiración: Inhala al bajar; exhala al subir.",
+            "descripcion_guia": "Sentado con el codo apoyado en la cara interna del muslo, flexiona el codo llevando la mancuerna hacia el hombro y baja lento. Máximo aislamiento del bíceps.",
+            "entorno": [
+                "casa",
+                "gimnasio"
+            ],
+            "nombre_en": "Concentration Curl",
+            "nivel": "principiante"
         }
     ],
     "Tríceps": [
@@ -2091,7 +2495,9 @@
             "descripcion_guia": "Barra EZ tumbado. Codos apuntando al techo, fijos. Baja la barra hasta la frente o detrás de la cabeza (mayor estiramiento). Extiende sin bloquear completamente.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lying Barbell Triceps Extension",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de triceps en polea alta",
@@ -2101,7 +2507,9 @@
             "descripcion_guia": "Cuerda o barra en polea alta. Codos fijos a los lados del cuerpo. Extiende hasta la máxima contracción del tríceps; sube de forma controlada.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "One Arm Triceps Pushdown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Fondos entre bancos",
@@ -2112,7 +2520,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Chair Dips",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de tríceps con mancuerna sobre la cabeza",
@@ -2123,7 +2533,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Dumbbell Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Patada de tríceps con mancuerna",
@@ -2134,7 +2546,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Kickback",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón de tríceps con barra en polea",
@@ -2144,7 +2558,9 @@
             "descripcion_guia": "De pie frente a la polea alta, con los codos pegados al torso extiende los brazos hasta bloquear abajo y vuelve controlado sin mover los hombros.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Push-down",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón de tríceps con cuerda",
@@ -2154,7 +2570,9 @@
             "descripcion_guia": "Con la cuerda en polea alta, extiende los codos y abre las manos al final del movimiento para contraer más el tríceps. Controla la subida.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Rope Pushdown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón de tríceps con agarre en V",
@@ -2164,7 +2582,9 @@
             "descripcion_guia": "Agarre en V en polea alta, codos pegados al cuerpo; extiende hasta abajo apretando el tríceps y sube despacio.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "V-bar Pushdown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Jalón de tríceps con agarre inverso",
@@ -2174,7 +2594,9 @@
             "descripcion_guia": "Con agarre supino en polea alta, extiende los codos manteniéndolos pegados al torso. Enfatiza la cabeza medial del tríceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Grip Pushdown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Extensión de tríceps sobre la cabeza con cuerda",
@@ -2184,7 +2606,9 @@
             "descripcion_guia": "De espaldas a la polea y con la cuerda tras la nuca, extiende los codos sobre la cabeza manteniéndolos fijos. Gran estiramiento de la cabeza larga.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Rope Overhead Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Rompecráneos con mancuernas (skull crusher)",
@@ -2195,7 +2619,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Skull Crusher",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de tríceps sentado a una mano",
@@ -2206,7 +2632,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated One-Arm Dumbbell Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Extensión de tríceps sobre la cabeza con barra EZ",
@@ -2216,7 +2644,9 @@
             "descripcion_guia": "Sentado o de pie, baja la barra EZ tras la nuca flexionando los codos y extiende hacia arriba. Mantén el core firme y los codos cerrados.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated EZ-Bar Overhead Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Extensión de tríceps de pie con barra",
@@ -2226,7 +2656,9 @@
             "descripcion_guia": "De pie con la barra sobre la cabeza, baja flexionando los codos hasta detrás de la nuca y extiende controlando. Sin arquear la espalda.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Barbell Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Patada de tríceps en polea",
@@ -2236,7 +2668,9 @@
             "descripcion_guia": "Con el torso inclinado y el codo pegado al costado, extiende el brazo hacia atrás contra la polea hasta bloquear y vuelve controlado.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Tricep Kickback",
+            "nivel": "principiante"
         },
         {
             "nombre": "Fondos de tríceps en el suelo",
@@ -2247,7 +2681,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Triceps Dips on Floor",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Flexiones diamante",
@@ -2258,7 +2694,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Diamond Push-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Press JM con barra",
@@ -2268,7 +2706,9 @@
             "descripcion_guia": "Híbrido entre press cerrado y extensión: baja la barra hacia la parte alta del pecho/mentón con los codos adelantados y empuja. Cargas moderadas y control.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell JM Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca agarre cerrado con barra",
@@ -2278,7 +2718,9 @@
             "descripcion_guia": "Agarre a la anchura de los hombros, codos pegados al torso. Baja la barra al pecho bajo y empuja sin abrir los codos. Gran ejercicio de fuerza para el tríceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Close Grip Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de tríceps en máquina",
@@ -2288,7 +2730,9 @@
             "descripcion_guia": "Con los codos apoyados en el soporte, extiende los brazos hasta bloquear y vuelve controlando. Aislamiento seguro del tríceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Triceps Extension Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Fondos de tríceps en máquina",
@@ -2298,7 +2742,9 @@
             "descripcion_guia": "Sentado en la máquina, empuja los agarres hacia abajo extendiendo los codos pegados al cuerpo y vuelve con control.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Triceps Dip Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Extensión de tríceps con banda elástica",
@@ -2309,7 +2755,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Pushdown",
+            "nivel": "principiante"
         },
         {
             "nombre": "Rompecráneos con banda",
@@ -2320,7 +2768,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Band Skull Crusher",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press Tate con mancuernas",
@@ -2331,7 +2781,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Tate Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de tríceps con dos mancuernas",
@@ -2342,7 +2794,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Extensión de tríceps declinada con mancuernas",
@@ -2353,7 +2807,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Decline Dumbbell Triceps Extension",
+            "nivel": "principiante"
         },
         {
             "nombre": "Rompecráneos con peso corporal",
@@ -2364,7 +2820,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bodyweight Skull Crushers",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Press de banca agarre inverso",
@@ -2374,7 +2832,9 @@
             "descripcion_guia": "Con agarre supino, baja la barra hacia la parte baja del pecho con los codos cerca del cuerpo y empuja. Aumenta el trabajo del pecho superior y del tríceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Close-Grip Reverse Bench Press",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Extensión de tríceps tumbado tras la cabeza con barra EZ",
@@ -2384,19 +2844,23 @@
             "descripcion_guia": "Tumbado con la barra EZ de agarre cerrado, baja la barra por detrás de la cabeza flexionando los codos y extiende. Gran estiramiento del tríceps.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "EZ Bar Lying Close Grip Triceps Extension Behind Head",
+            "nivel": "principiante"
         }
     ],
     "Antebrazos": [
         {
             "nombre": "Curl de muñeca con barra",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2025/07/seated-barbell-finger-curl.gif",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2021/02/barbell-Wrist-Curl.gif",
             "descripcion": "Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. P...",
             "descripcion_detallada": "Técnica: Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. Peso ligero, altas repeticiones.\nSobrecarga: Sube el peso poco a poco (1-2 kg) cuando domines 20 reps por sesión durante 2 semanas.\nRespiración: Exhala al flexionar; inhala al bajar.",
             "descripcion_guia": "Antebrazos apoyados en el banco o muslos. Flexiona la muñeca con rango completo; baja con control. Peso ligero, altas repeticiones.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Wrist Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de muñeca con mancuerna",
@@ -2407,7 +2871,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Wrist Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl invertido con barra",
@@ -2417,7 +2883,9 @@
             "descripcion_guia": "Agarre prono (dorso de la mano arriba). Codos fijos a los lados. Trabaja extensores del antebrazo y braquiorradial. Mantén la muñeca neutra al subir.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Reverse Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Farmer's walk (caminata del granjero)",
@@ -2428,7 +2896,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Farmer's Walk",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de muñeca inverso (agarre prono)",
@@ -2438,7 +2908,9 @@
             "descripcion_guia": "Antebrazos apoyados con las palmas hacia abajo, extiende las muñecas hacia arriba y baja controlado. Trabaja los extensores del antebrazo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Wrist Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de dedos con mancuerna",
@@ -2449,7 +2921,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Finger Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de dedos con barra",
@@ -2459,7 +2933,9 @@
             "descripcion_guia": "Deja que la barra ruede hasta las yemas de los dedos y vuelve a cerrarla en la palma con la muñeca flexionada. Aumenta la fuerza de agarre.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Finger Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de muñeca con agarre neutro",
@@ -2470,7 +2946,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Seated Neutral Wrist Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Curl de muñeca detrás de la espalda con barra",
@@ -2480,7 +2958,9 @@
             "descripcion_guia": "Con la barra detrás de la espalda y agarre prono, flexiona las muñecas hacia arriba y baja controlado. Recorrido corto y tensión constante.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Behind The Back Barbell Wrist Curl",
+            "nivel": "principiante"
         },
         {
             "nombre": "Pinza de mano (hand gripper)",
@@ -2490,7 +2970,9 @@
             "descripcion_guia": "Aprieta el gripper al máximo con una sola mano y suéltalo despacio. Trabaja la fuerza de agarre y el antebrazo. Práctico para casa o gimnasio.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hand Gripper",
+            "nivel": "principiante"
         }
     ],
     "Abdomen / core": [
@@ -2503,18 +2985,22 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "High Plank",
+            "nivel": "principiante"
         },
         {
             "nombre": "Crunch abdominal clásico",
-            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/07/Cross-Crunch.gif",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2015/11/Crunch.gif",
             "descripcion": "Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). ...",
             "descripcion_detallada": "Técnica: Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). Aprieta el abdomen en la cima; baja de forma controlada.\nSobrecarga: Añade resistencia (disco en el pecho) cuando superes 20 reps limpias durante 2 sesiones.\nRespiración: Exhala al subir y apretar; inhala al bajar.",
             "descripcion_guia": "Tumbado, rodillas flexionadas. Eleva solo los hombros del suelo curvando la columna (no la cadera). Aprieta el abdomen en la cima; baja de forma controlada.",
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Crunches",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de piernas colgado o en suelo",
@@ -2525,7 +3011,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hanging Leg Raises",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Giros rusos",
@@ -2536,7 +3024,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Russian Twist",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Rueda abdominal",
@@ -2546,7 +3036,9 @@
             "descripcion_guia": "Rodillas en el suelo. Rueda hacia adelante extendiendo la cadera y columna casi hasta el suelo; regresa activando el core sin impulso. Es un ejercicio muy exigente.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Ab Wheel Rollout",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Dragon flag",
@@ -2556,7 +3048,9 @@
             "descripcion_guia": "Tumbado, sujeta un banco fijo detrás de tu cabeza. Mantén el cuerpo recto y tenso. Levanta piernas y torso juntos hasta apoyarte solo en hombros. Baja controladamente sin doblarte.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dragon Flag",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Crunch bicicleta",
@@ -2567,7 +3061,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bicycle Crunch",
+            "nivel": "principiante"
         },
         {
             "nombre": "Escaladores (mountain climbers)",
@@ -2578,7 +3074,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Mountain Climber",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Bicho muerto (dead bug)",
@@ -2589,7 +3087,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dead Bug",
+            "nivel": "principiante"
         },
         {
             "nombre": "Abdominales en V (V-up)",
@@ -2600,7 +3100,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Jackknife Sit-ups (V-Up)",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Patada aleteo (flutter kicks)",
@@ -2611,7 +3113,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Flutter Kick",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Tijeras tumbado",
@@ -2622,7 +3126,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lying Scissor Kick",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Crunch inverso",
@@ -2633,7 +3139,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Crunch",
+            "nivel": "principiante"
         },
         {
             "nombre": "Abdominales completos (sit-ups)",
@@ -2644,7 +3152,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Sit-ups",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Abdominales en banco declinado",
@@ -2654,7 +3164,9 @@
             "descripcion_guia": "Con los pies anclados en un banco declinado, sube el tronco con el abdomen contraído y baja controlado. Mayor dificultad que en el suelo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Decline Sit-up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Crunch en polea de pie",
@@ -2664,7 +3176,9 @@
             "descripcion_guia": "De pie frente a la polea alta con la cuerda en la nuca, flexiona el tronco hacia abajo contrayendo el abdomen sin mover la cadera y sube controlado.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Cable Crunch",
+            "nivel": "principiante"
         },
         {
             "nombre": "Crunch en polea de rodillas",
@@ -2674,7 +3188,9 @@
             "descripcion_guia": "De rodillas frente a la polea alta, flexiona la columna llevando los codos hacia las rodillas y vuelve despacio. Mantén la cadera quieta.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kneeling Cable Crunch",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elevación de rodillas colgado",
@@ -2684,7 +3200,9 @@
             "descripcion_guia": "Colgado de una barra, sube las rodillas hacia el pecho enrollando la pelvis y baja controlado sin balancearte.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hanging Knee Raises",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Dedos a la barra (toes to bar)",
@@ -2695,7 +3213,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Toes to Bar",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Limpiaparabrisas colgado",
@@ -2706,7 +3226,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Hanging Windshield Wiper",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Plancha lateral",
@@ -2717,7 +3239,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Side Bridge",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Plancha con elevación de brazo y pierna",
@@ -2728,7 +3252,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Plank With Arm And Leg Lift",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Plancha con rodilla al codo",
@@ -2739,7 +3265,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Plank Knee to Elbow",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Elevación de piernas en silla romana",
@@ -2749,7 +3277,9 @@
             "descripcion_guia": "Apoyado en los antebrazos en la silla romana, sube las piernas rectas o flexionadas hasta la horizontal sin balancear y baja con control.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Captains Chair Leg Raise",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Inclinación lateral con mancuerna",
@@ -2760,7 +3290,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Side Bend",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Inclinación lateral en polea",
@@ -2770,7 +3302,9 @@
             "descripcion_guia": "De pie junto a la polea baja, inclina el torso en dirección contraria a la polea y vuelve controlado. Mantén la cadera quieta.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Side Bend",
+            "nivel": "principiante"
         },
         {
             "nombre": "Press Pallof en polea",
@@ -2780,7 +3314,9 @@
             "descripcion_guia": "De lado a la polea, empuja el agarre al frente y aguanta 1-2 segundos resistiendo la rotación. Trabaja el core antirrotación.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Cable Half Kneeling Pallof Press",
+            "nivel": "principiante"
         },
         {
             "nombre": "Crunch en máquina",
@@ -2790,7 +3326,9 @@
             "descripcion_guia": "Sentado en la máquina, flexiona el tronco contrayendo el abdomen y vuelve controlado. Ajusta el peso para mantener la técnica.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Full Crunch Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Leñador en polea (alto a bajo)",
@@ -2800,7 +3338,9 @@
             "descripcion_guia": "De pie junto a la polea alta, tira diagonalmente hacia la cadera contraria rotando el torso y controla el retorno. Trabaja oblicuos.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Cable High-To-Low Twist",
+            "nivel": "principiante"
         },
         {
             "nombre": "Leñador en polea (bajo a alto)",
@@ -2810,7 +3350,9 @@
             "descripcion_guia": "De pie junto a la polea baja, tira en diagonal hacia arriba por encima del hombro contrario rotando el tronco y vuelve despacio.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Cable Low-To-High Twist",
+            "nivel": "principiante"
         },
         {
             "nombre": "L-sit (sostén en L)",
@@ -2821,7 +3363,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "L-Sit",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Gateo de oso (bear crawl)",
@@ -2832,7 +3376,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Bear Crawl",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Crunch oblicuo en el suelo",
@@ -2843,7 +3389,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Oblique Floor Crunches",
+            "nivel": "principiante"
         },
         {
             "nombre": "Vacío abdominal de pie",
@@ -2854,7 +3402,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Standing Stomach Vacuum",
+            "nivel": "principiante"
         },
         {
             "nombre": "Plancha inversa",
@@ -2865,7 +3415,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Reverse Plank",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Plancha sierra (body saw)",
@@ -2876,7 +3428,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Body Saw Plank",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Toques de talón (heel touch)",
@@ -2887,7 +3441,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Heel Touch",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Abdominales en V con mancuerna",
@@ -2898,7 +3454,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell V-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Molino con mancuerna (windmill)",
@@ -2909,7 +3467,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Windmill",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Giro sentado con banda",
@@ -2920,7 +3480,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Seated Twist With Resistance Band",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Side plank con rotación",
@@ -2931,7 +3493,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Side Plank Rotation",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Side plank con elevación de pierna",
@@ -2942,7 +3506,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Side Plank Leg Raises",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Plancha frontal a side plank",
@@ -2953,7 +3519,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Front to Side Plank",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Crunch doble",
@@ -2964,7 +3532,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Double Crunches",
+            "nivel": "principiante"
         },
         {
             "nombre": "Limpiaparabrisas en el suelo (medios)",
@@ -2975,7 +3545,22 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Half Wipers",
+            "nivel": "avanzado"
+        },
+        {
+            "nombre": "Crunch cruzado",
+            "gifUrl": "https://fitnessprogramer.com/wp-content/uploads/2022/07/Cross-Crunch.gif",
+            "descripcion": "Tumbado con las manos en la nuca, lleva un codo hacia la rodilla contraria con rotación de tronco co...",
+            "descripcion_detallada": "Técnica: Tumbado con las manos en la nuca, lleva un codo hacia la rodilla contraria con rotación de tronco controlada y alterna lados.\nSobrecarga: Añade repeticiones o ralentiza la bajada (3 seg); cuando superes 15 reps limpias, pasa a una variante más difícil o añade lastre.\nRespiración: Exhala al contraer el abdomen; inhala al volver.",
+            "descripcion_guia": "Tumbado con las manos en la nuca, lleva un codo hacia la rodilla contraria con rotación de tronco controlada y alterna lados.",
+            "entorno": [
+                "casa",
+                "gimnasio"
+            ],
+            "nombre_en": "Cross Crunch",
+            "nivel": "principiante"
         }
     ],
     "Cardio / acondicionamiento": [
@@ -2988,7 +3573,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Burpee With Push-Up",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Saltos de tijera",
@@ -2999,7 +3586,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Jumping jack",
+            "nivel": "principiante"
         },
         {
             "nombre": "Salto a la cuerda",
@@ -3010,7 +3599,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Jump Rope",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Correr (carrera continua)",
@@ -3021,7 +3612,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Running",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Cinta de correr",
@@ -3031,7 +3624,9 @@
             "descripcion_guia": "Camina o corre a velocidad controlada manteniendo la postura erguida y sin agarrarte a las barras. Ajusta velocidad e inclinación según tu objetivo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Treadmill",
+            "nivel": "principiante"
         },
         {
             "nombre": "Caminata en cinta inclinada",
@@ -3041,7 +3636,9 @@
             "descripcion_guia": "Camina a paso firme en cinta con 8-12% de inclinación sin apoyarte en las barras. Alta quema calórica con bajo impacto.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Incline Treadmill",
+            "nivel": "principiante"
         },
         {
             "nombre": "Bicicleta estática",
@@ -3051,7 +3648,9 @@
             "descripcion_guia": "Ajusta el sillín para que la rodilla quede casi extendida abajo y pedalea con cadencia constante. Ideal para cardio de bajo impacto.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Stationary Bike",
+            "nivel": "principiante"
         },
         {
             "nombre": "Ergómetro de remo (cardio)",
@@ -3061,7 +3660,9 @@
             "descripcion_guia": "Empuja con las piernas, inclina el torso y tira del agarre hacia el abdomen; vuelve en orden inverso. Cardio completo que involucra todo el cuerpo.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Rowing Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Elíptica",
@@ -3071,7 +3672,9 @@
             "descripcion_guia": "Mantén el torso erguido y empuja los pedales con movimiento fluido, usando también los agarres móviles. Cardio de muy bajo impacto articular.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Elliptical Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Escaladora (stair climber)",
@@ -3081,7 +3684,9 @@
             "descripcion_guia": "Sube los escalones con el torso erguido y sin apoyar todo el peso en las barras. Gran trabajo de piernas y glúteos con cardio intenso.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Stair Climber Machine",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sprints",
@@ -3092,7 +3697,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Sprint",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Carrera en el sitio",
@@ -3103,7 +3710,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Run in Place",
+            "nivel": "principiante"
         },
         {
             "nombre": "Sentadillas con salto",
@@ -3114,7 +3723,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Jump Squats",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Salto de rodillas al pecho (tuck jump)",
@@ -3125,7 +3736,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Tuck Jump",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Talones al glúteo (butt kicks)",
@@ -3136,7 +3749,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Butt Kicks",
+            "nivel": "principiante"
         },
         {
             "nombre": "Rodillas altas (high knees)",
@@ -3147,7 +3762,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "High Knee Run",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Patinador (skater)",
@@ -3158,7 +3775,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Skater",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Boxeo de sombra",
@@ -3169,7 +3788,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Shadow Boxing",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Swing con kettlebell",
@@ -3180,7 +3801,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Kettlebell Swings",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Burpee con mancuernas",
@@ -3191,7 +3814,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Burpees",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Levantamiento turco (Turkish get-up)",
@@ -3202,7 +3827,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Turkish Get-up",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Bicicleta de aire (assault bike)",
@@ -3212,7 +3839,9 @@
             "descripcion_guia": "Pedalea y empuja y tira de las palancas a la vez; cuanto más fuerte, más resistencia. Perfecta para intervalos de alta intensidad.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Assault AirBike",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Saltos de apertura pliométricos",
@@ -3223,7 +3852,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Plyo Jacks",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Salto al cajón (box jump)",
@@ -3234,7 +3865,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "The Box Jump",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Caminata ligera",
@@ -3245,7 +3878,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Walking",
+            "nivel": "principiante"
         },
         {
             "nombre": "Salto de boxeador (boxer shuffle)",
@@ -3256,7 +3891,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Boxer Shuffle Cardio",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Pasos laterales rápidos",
@@ -3267,7 +3904,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Lateral Speed Step",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Salto de longitud",
@@ -3278,7 +3917,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Long Jump",
+            "nivel": "intermedio"
         },
         {
             "nombre": "Thruster con barra",
@@ -3288,7 +3929,9 @@
             "descripcion_guia": "Con la barra en los hombros, baja en sentadilla frontal y al subir empuja la barra sobre la cabeza en un solo movimiento fluido. Exigente a nivel metabólico.",
             "entorno": [
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Barbell Thruster",
+            "nivel": "avanzado"
         },
         {
             "nombre": "Devil press con mancuernas",
@@ -3299,7 +3942,9 @@
             "entorno": [
                 "casa",
                 "gimnasio"
-            ]
+            ],
+            "nombre_en": "Dumbbell Devil Press",
+            "nivel": "avanzado"
         }
     ]
 }

@@ -15,6 +15,8 @@
 
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
+    <script src="/Scripts/ui_novedades.js?v=1"></script>
+    <script src="/Scripts/catalogo_ui.js?v=1"></script>
     <script src="/Scripts/spa_router.js"></script>
 
     <style>
@@ -2149,6 +2151,97 @@
             flex-shrink: 0;
         }
 
+        /* ── CATÁLOGO: opciones, favoritos, badges, paginación ── */
+        .catalog-count {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 0 2px;
+            flex-shrink: 0;
+        }
+
+        .catalog-opt-sep {
+            width: 1px;
+            align-self: stretch;
+            background: rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+            margin: 2px 2px;
+        }
+
+        .catalog-filter-btn.catalog-special.is-active {
+            background: #ffc542;
+            border-color: #ffc542;
+            color: #0c0d10;
+        }
+
+        .catalog-item-tags {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .catalog-item-tags .catalog-item-group-tag {
+            margin-top: 0;
+            display: inline;
+        }
+
+        .ex-badge {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            padding: 1px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-muted);
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .ex-badge-env.is-home { color: #7ee2a8; border-color: rgba(126, 226, 168, 0.35); }
+        .ex-badge-env.is-gym { color: #9db4ff; border-color: rgba(157, 180, 255, 0.35); }
+        .ex-badge-lvl.lvl-principiante { color: #9df3ff; border-color: rgba(157, 243, 255, 0.35); }
+        .ex-badge-lvl.lvl-intermedio { color: #ffd479; border-color: rgba(255, 212, 121, 0.35); }
+        .ex-badge-lvl.lvl-avanzado { color: #ff8f8f; border-color: rgba(255, 143, 143, 0.35); }
+
+        .catalog-fav-btn {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.28);
+            font-size: 17px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s ease, transform 0.15s ease;
+        }
+
+        .catalog-fav-btn:hover { color: rgba(255, 197, 66, 0.7); }
+        .catalog-fav-btn.is-on { color: #ffc542; }
+        .catalog-fav-btn:active { transform: scale(0.88); }
+
+        .catalog-more-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: var(--accent);
+            font-size: 12.5px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .catalog-more-btn:hover { background: rgba(255, 255, 255, 0.05); }
+
         /* ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS / SELECT ── */
         .glass-modal-backdrop {
             position: fixed;
@@ -3056,10 +3149,14 @@
 
                 <!-- Caja emergente del catálogo de ejercicios -->
                 <div class="catalog-picker-box" id="catalog-picker-box" style="display: none;">
-                    <input type="text" id="catalog-search-input" placeholder="Buscar ejercicio por nombre..." class="catalog-search-field">
+                    <input type="search" id="catalog-search-input" placeholder="Buscar por nombre, músculo o nivel..." class="catalog-search-field" autocomplete="off" enterkeyhint="search">
                     <div class="catalog-filter-row" id="catalog-filter-row">
                         <!-- Inyectado dinámicamente desde la BD de ejercicios -->
                     </div>
+                    <div class="catalog-filter-row" id="catalog-options-row">
+                        <!-- Entorno (casa / gimnasio) y nivel -->
+                    </div>
+                    <div class="catalog-count" id="catalog-count" aria-live="polite"></div>
                     <div class="catalog-items-grid" id="catalog-items-grid">
                         <!-- Inyectado con JS -->
                     </div>
@@ -3660,6 +3757,7 @@
 
         function findExerciseData(name) {
             if (!name) return null;
+            if (window.PTCatalog) return window.PTCatalog.lookup(ENTRENAMIENTOS_DB, name);
             const norm = normalizeKey(name);
             if (ENTRENAMIENTOS_MAP[norm]) return ENTRENAMIENTOS_MAP[norm];
             for (const [key, val] of Object.entries(ENTRENAMIENTOS_MAP)) {
@@ -4566,6 +4664,7 @@
         function renderCatalogFilterBtns() {
             const filterRow = document.getElementById("catalog-filter-row");
             if (!filterRow) return;
+            const C = window.PTCatalog;
             const groups = Object.keys(ENTRENAMIENTOS_DB);
             if (groups.length === 0) return;
 
@@ -4574,80 +4673,95 @@
                 activeCatalogGroup = groups[0];
             }
 
-            filterRow.innerHTML = groups.map(g => `
-                <button type="button" class="catalog-filter-btn ${g === activeCatalogGroup ? 'is-active' : ''}" data-group="${g}">${g}</button>
-            `).join("");
+            const sp = C.state.special;
+            filterRow.innerHTML =
+                `<button type="button" class="catalog-filter-btn catalog-special ${sp === "fav" ? "is-active" : ""}" data-special="fav">★ ${C.T("Favoritos", "Favorites")}</button>` +
+                `<button type="button" class="catalog-filter-btn catalog-special ${sp === "recent" ? "is-active" : ""}" data-special="recent">${C.T("Recientes", "Recent")}</button>` +
+                groups.map(g => `<button type="button" class="catalog-filter-btn ${!sp && g === activeCatalogGroup ? "is-active" : ""}" data-group="${C.esc(g)}">${C.esc(C.groupLabel(g))}</button>`).join("");
+
+            const optRow = document.getElementById("catalog-options-row");
+            if (optRow) {
+                const envs = [["all", C.T("Todos", "All")], ["casa", C.T("Casa", "Home")], ["gimnasio", C.T("Gimnasio", "Gym")]];
+                const lvls = ["principiante", "intermedio", "avanzado"];
+                optRow.innerHTML =
+                    envs.map(([v, l]) => `<button type="button" class="catalog-filter-btn catalog-opt ${C.state.env === v ? "is-active" : ""}" data-env="${v}">${l}</button>`).join("") +
+                    `<span class="catalog-opt-sep"></span>` +
+                    lvls.map(v => `<button type="button" class="catalog-filter-btn catalog-opt ${C.state.nivel === v ? "is-active" : ""}" data-nivel="${v}">${C.esc(C.nivelLabel(v))}</button>`).join("");
+            }
         }
 
-        function renderCatalogItems(filterSearch = "") {
+        function renderCatalogItems(filterSearch) {
             const container = document.getElementById("catalog-items-grid");
             if (!container) return;
+            const C = window.PTCatalog;
 
-            let list;
+            const q = filterSearch ?? (document.getElementById("catalog-search-input")?.value || "");
+            const list = C.filter(ENTRENAMIENTOS_DB, { group: activeCatalogGroup, q });
 
-            if (filterSearch && filterSearch.trim() !== "") {
-                const q = normalizeKey(filterSearch);
-                list = [];
-                for (const [grp, exs] of Object.entries(ENTRENAMIENTOS_DB)) {
-                    exs.forEach(item => {
-                        if (normalizeKey(item.nombre).includes(q)) {
-                            list.push({ ...item, _grupo: grp });
-                        }
-                    });
-                }
-            } else {
-                list = (ENTRENAMIENTOS_DB[activeCatalogGroup] || []).map(item => ({ ...item, _grupo: activeCatalogGroup }));
-            }
+            const countEl = document.getElementById("catalog-count");
+            if (countEl) countEl.textContent = C.T(`${list.length} ejercicios`, `${list.length} exercises`);
 
             if (list.length === 0) {
-                container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">No se encontraron ejercicios en esta categoría.</p>`;
+                const sp = C.state.special;
+                const msg = sp === "fav"
+                    ? C.T("Aún no tienes favoritos. Toca la estrella de un ejercicio para guardarlo.", "No favorites yet. Tap the star on an exercise to save it.")
+                    : sp === "recent"
+                        ? C.T("Aún no has añadido ejercicios.", "You haven't added any exercises yet.")
+                        : C.T("No se encontraron ejercicios con estos filtros.", "No exercises match these filters.");
+                container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">${msg}</p>`;
                 return;
             }
 
-            container.innerHTML = list.map(item => {
+            const favSet = new Set(C.favs());
+            const shown = list.slice(0, C.state.limit);
+            container.innerHTML = shown.map(item => {
+                const fallback = `<span class="catalog-gif-fallback"${item.gifUrl ? ' style="display:none;"' : ""}>${C.fallbackSvg}</span>`;
                 const gifThumb = item.gifUrl
-                    ? `<img src="${item.gifUrl}" alt="${item.nombre}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                       <span class="catalog-gif-fallback" style="display:none;">
-                           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                       </span>`
-                    : `<span class="catalog-gif-fallback">
-                           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                       </span>`;
+                    ? `<img src="${C.esc(item.gifUrl)}" alt="${C.esc(C.displayName(item))}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">${fallback}`
+                    : fallback;
+                const isFav = favSet.has(item.nombre);
                 return `
-                <div class="catalog-item-btn" data-ex-name="${item.nombre}">
+                <div class="catalog-item-btn" data-ex-name="${C.esc(item.nombre)}">
                     <div class="catalog-item-gif-thumb">${gifThumb}</div>
                     <div class="catalog-item-text">
-                        <span class="catalog-item-name">${item.nombre}</span>
-                        <span class="catalog-item-group-tag">${item._grupo}</span>
+                        <span class="catalog-item-name">${C.esc(C.displayName(item))}</span>
+                        <span class="catalog-item-tags">
+                            <span class="catalog-item-group-tag">${C.esc(C.groupLabel(item._grupo))}</span>
+                            ${C.badgesHtml(item)}
+                        </span>
                     </div>
+                    <button type="button" class="catalog-fav-btn ${isFav ? "is-on" : ""}" data-fav-name="${C.esc(item.nombre)}" aria-pressed="${isFav}" aria-label="${C.esc(C.T("Favorito", "Favorite"))}">★</button>
                     <span class="catalog-item-add-icon">+</span>
                 </div>`;
-            }).join("");
+            }).join("") + (list.length > shown.length
+                ? `<button type="button" class="catalog-more-btn">${C.T("Mostrar más", "Show more")} (${list.length - shown.length})</button>`
+                : "");
+        }
 
-            container.querySelectorAll(".catalog-item-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const exName = btn.getAttribute("data-ex-name");
-                    const dayInfo = planParsedDias[manualEditDayIndex];
-                    if (exName && dayInfo) {
-                        const exData = findExerciseData(exName);
-                        dayInfo.ejercicios.push({
-                            nombre: exName,
-                            series: 4,
-                            repeticiones: "8-12",
-                            descanso_segundos: "90",
-                            descripcion: exData?.descripcion || "",
-                            tecnica: exData?.descripcion_detallada || "",
-                            sobrecarga: "Incrementar 2.5 kg al completar el rango objetivo.",
-                            respiracion: "Inhalar en excéntrica; exhalar con fuerza en concéntrica.",
-                            gifUrl: exData?.gifUrl || ""
-                        });
-                        renderManualEditorContent();
+        // Extrae "Sobrecarga:" / "Respiración:" del texto detallado del catálogo.
+        function extractCatalogLine(detalle, etiqueta) {
+            const m = String(detalle || "").match(new RegExp(etiqueta + ":\\s*([^\\n]+)"));
+            return m ? m[1].trim() : "";
+        }
 
-                        btn.style.borderColor = "var(--accent)";
-                        setTimeout(() => { btn.style.borderColor = ""; }, 300);
-                    }
-                });
+        function addCatalogExerciseToDay(exName) {
+            const dayInfo = planParsedDias[manualEditDayIndex];
+            if (!exName || !dayInfo) return false;
+            const exData = findExerciseData(exName);
+            dayInfo.ejercicios.push({
+                nombre: exName,
+                series: 4,
+                repeticiones: "8-12",
+                descanso_segundos: "90",
+                descripcion: exData?.descripcion || "",
+                tecnica: exData?.descripcion_detallada || "",
+                sobrecarga: extractCatalogLine(exData?.descripcion_detallada, "Sobrecarga") || "Incrementar 2.5 kg al completar el rango objetivo.",
+                respiracion: extractCatalogLine(exData?.descripcion_detallada, "Respiración") || "Inhalar en excéntrica; exhalar con fuerza en concéntrica.",
+                gifUrl: exData?.gifUrl || ""
             });
+            window.PTCatalog?.pushRecent(exName);
+            renderManualEditorContent();
+            return true;
         }
 
         async function guardarPlanManual() {
@@ -5617,18 +5731,61 @@
 
             // Buscador de ejercicios en vivo
             document.getElementById("catalog-search-input")?.addEventListener("input", (e) => {
+                window.PTCatalog.state.limit = window.PTCatalog.PAGE_SIZE;
                 renderCatalogItems(e.target.value);
             });
 
-            // Filtros de categoría en el catálogo
+            // Filtros de categoría (grupos, favoritos, recientes)
             document.getElementById("catalog-filter-row")?.addEventListener("click", (e) => {
                 const btn = e.target.closest(".catalog-filter-btn");
-                if (btn) {
-                    document.querySelectorAll(".catalog-filter-btn").forEach(b => b.classList.remove("is-active"));
-                    btn.classList.add("is-active");
+                if (!btn) return;
+                const C = window.PTCatalog;
+                if (btn.dataset.special) {
+                    C.state.special = C.state.special === btn.dataset.special ? null : btn.dataset.special;
+                } else {
+                    C.state.special = null;
                     activeCatalogGroup = btn.getAttribute("data-group") || "Pecho";
-                    const searchVal = document.getElementById("catalog-search-input")?.value || "";
-                    renderCatalogItems(searchVal);
+                }
+                C.state.limit = C.PAGE_SIZE;
+                renderCatalogFilterBtns();
+                renderCatalogItems();
+            });
+
+            // Entorno (casa/gimnasio) y nivel
+            document.getElementById("catalog-options-row")?.addEventListener("click", (e) => {
+                const btn = e.target.closest(".catalog-opt");
+                if (!btn) return;
+                const C = window.PTCatalog;
+                if (btn.dataset.env) C.setEnv(btn.dataset.env);
+                else if (btn.dataset.nivel) C.setNivel(C.state.nivel === btn.dataset.nivel ? "all" : btn.dataset.nivel);
+                renderCatalogFilterBtns();
+                renderCatalogItems();
+            });
+
+            // Lista de ejercicios: añadir, favorito y "mostrar más" (un único listener delegado)
+            document.getElementById("catalog-items-grid")?.addEventListener("click", (e) => {
+                const C = window.PTCatalog;
+                if (e.target.closest(".catalog-more-btn")) {
+                    C.state.limit += C.PAGE_SIZE;
+                    renderCatalogItems();
+                    return;
+                }
+                const favBtn = e.target.closest(".catalog-fav-btn");
+                if (favBtn) {
+                    e.stopPropagation();
+                    const on = C.toggleFav(favBtn.getAttribute("data-fav-name"));
+                    if (C.state.special === "fav") {
+                        renderCatalogItems();
+                    } else {
+                        favBtn.classList.toggle("is-on", on);
+                        favBtn.setAttribute("aria-pressed", String(on));
+                    }
+                    return;
+                }
+                const btn = e.target.closest(".catalog-item-btn");
+                if (btn && addCatalogExerciseToDay(btn.getAttribute("data-ex-name"))) {
+                    btn.style.borderColor = "var(--accent)";
+                    setTimeout(() => { btn.style.borderColor = ""; }, 300);
                 }
             });
 

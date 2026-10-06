@@ -1,0 +1,108 @@
+[
+    {
+        "id": "2026-10-06-biblioteca-313",
+        "fecha": "2026-10-06",
+        "icono": "dumbbell",
+        "etiqueta": { "es": "Ejercicios", "en": "Exercises" },
+        "titulo": {
+            "es": "Biblioteca ampliada: 313 ejercicios",
+            "en": "Expanded library: 313 exercises"
+        },
+        "resumen": {
+            "es": "Sumamos 259 ejercicios nuevos con GIF y explicación, y mejoramos el buscador, los filtros y la elección de ejercicios.",
+            "en": "We added 259 new exercises with GIFs and explanations, and improved search, filters and exercise picking."
+        },
+        "intro": {
+            "es": "La biblioteca de ejercicios pasó de 54 a 313. Pensamos esta ampliación para dos escenarios: entrenar en el gimnasio y entrenar en casa. Acá va todo lo que cambió.",
+            "en": "The exercise library grew from 54 to 313. This expansion is built for two scenarios: training at the gym and training at home. Here is everything that changed."
+        },
+        "secciones": [
+            {
+                "titulo": { "es": "259 ejercicios nuevos", "en": "259 new exercises" },
+                "items": [
+                    { "es": "Cubren los 9 grupos: Pecho, Espalda, Piernas (incluye glúteos y gemelos), Hombros (incluye trapecio), Brazos, Tríceps, Antebrazos, Abdomen / core y Cardio.", "en": "They cover all 9 groups: Chest, Back, Legs (including glutes and calves), Shoulders (including traps), Arms, Triceps, Forearms, Abs / core and Cardio." },
+                    { "es": "Cada uno trae un GIF demostrativo, cómo ejecutarlo (técnica), cómo progresar (sobrecarga) y cómo respirar.", "en": "Each one comes with a demo GIF, how to perform it (technique), how to progress (overload) and how to breathe." },
+                    { "es": "174 ejercicios se pueden hacer en casa con peso corporal, mancuernas, kettlebell o banda elástica; los otros 139 usan máquinas, poleas, barra o banco.", "en": "174 exercises can be done at home with bodyweight, dumbbells, a kettlebell or a resistance band; the other 139 use machines, cables, a barbell or a bench." }
+                ]
+            },
+            {
+                "titulo": { "es": "Buscar y filtrar", "en": "Search and filter" },
+                "items": [
+                    { "es": "Nuevo buscador: escribí varias palabras (por ejemplo \"press mancuernas\") o buscá por músculo, por nivel o por \"casa\".", "en": "New search: type several words (for example \"press dumbbells\") or search by muscle, level or \"home\"." },
+                    { "es": "Filtros por lugar de entrenamiento (Casa o Gimnasio) y por nivel (Principiante, Intermedio o Avanzado). Se recuerdan la próxima vez que entres.", "en": "Filters by training place (Home or Gym) and by level (Beginner, Intermediate or Advanced). They are remembered the next time you visit." },
+                    { "es": "Las listas largas se muestran de a 40 ejercicios, con el botón \"Mostrar más\", para que la pantalla se mantenga rápida.", "en": "Long lists show 40 exercises at a time, with a \"Show more\" button, to keep the screen fast." },
+                    { "es": "Cada ejercicio muestra etiquetas de lugar y de nivel para que sepas de un vistazo si es para vos.", "en": "Each exercise shows place and level tags so you can tell at a glance if it fits you." }
+                ]
+            },
+            {
+                "titulo": { "es": "Armar tu rutina más rápido", "en": "Build your routine faster" },
+                "items": [
+                    { "es": "Favoritos: tocá la estrella de un ejercicio para guardarlo y encontrarlo al instante en la pestaña \"Favoritos\".", "en": "Favorites: tap the star on an exercise to save it and find it instantly in the \"Favorites\" tab." },
+                    { "es": "Recientes: los últimos ejercicios que agregaste quedan a mano en la pestaña \"Recientes\".", "en": "Recent: the last exercises you added are kept handy in the \"Recent\" tab." },
+                    { "es": "Al sumar un ejercicio a tu día, ahora se carga con su propia guía de sobrecarga y respiración, en lugar de un texto genérico.", "en": "When you add an exercise to your day, it now loads with its own overload and breathing guide instead of generic text." }
+                ]
+            },
+            {
+                "titulo": { "es": "Biblioteca de la pantalla de inicio", "en": "Library on the home screen" },
+                "items": [
+                    { "es": "Buscador propio, filtros por grupo, lugar y nivel, y todos los grupos disponibles (antes faltaban Tríceps, Antebrazos y Cardio).", "en": "Its own search, filters by group, place and level, and every group available (Triceps, Forearms and Cardio were missing before)." },
+                    { "es": "Cada tarjeta muestra una miniatura del GIF y, al tocarla, se abre el detalle con el GIF grande y la explicación completa.", "en": "Each card shows a GIF thumbnail and, when tapped, opens the detail with the large GIF and the full explanation." },
+                    { "es": "Si la app está en inglés, los ejercicios aparecen con su nombre en inglés.", "en": "If the app is in English, exercises appear with their English names." }
+                ]
+            },
+            {
+                "titulo": { "es": "Planes generados con IA", "en": "AI-generated plans" },
+                "items": [
+                    { "es": "El generador ahora elige entre todo el catálogo y respeta tu entorno: si entrenás en casa, no te propone ejercicios que necesitan poleas o máquinas.", "en": "The generator now picks from the whole catalog and respects your environment: if you train at home, it won't suggest exercises that need cables or machines." }
+                ]
+            },
+            {
+                "titulo": { "es": "Correcciones", "en": "Fixes" },
+                "items": [
+                    { "es": "Corregimos GIFs que no coincidían con el ejercicio: Flexiones de brazos, Curl predicador, Curl de muñeca con barra, Crunch abdominal e Hiperextensiones lumbares.", "en": "We fixed GIFs that did not match their exercise: Push-ups, Preacher curl, Barbell wrist curl, Crunch and Back extensions." },
+                    { "es": "Eliminamos un ejercicio repetido (Fondos entre bancos aparecía dos veces).", "en": "We removed a duplicated exercise (Bench dips appeared twice)." },
+                    { "es": "El filtro \"Abdomen\" de la biblioteca de inicio no mostraba resultados; ahora funciona.", "en": "The \"Abs\" filter on the home library showed no results; it now works." }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "2026-10-05-google-play",
+        "fecha": "2026-10-05",
+        "icono": "store",
+        "etiqueta": { "es": "Lanzamiento", "en": "Launch" },
+        "titulo": {
+            "es": "¡TrAIner ya está en Google Play!",
+            "en": "TrAIner is now on Google Play!"
+        },
+        "resumen": {
+            "es": "La app ya está publicada y disponible para todos en la tienda de Google.",
+            "en": "The app is now published and available to everyone on Google Play."
+        },
+        "intro": {
+            "es": "Tenemos una gran noticia: TrAIner ya está disponible en Google Play, de forma pública, para que cualquier persona pueda descargarla y empezar a entrenar con su plan personalizado.",
+            "en": "We have great news: TrAIner is now available on Google Play, publicly, so anyone can download it and start training with a personalized plan."
+        },
+        "secciones": [
+            {
+                "titulo": { "es": "Qué significa para vos", "en": "What it means for you" },
+                "items": [
+                    { "es": "Instalás la app en tu celular Android con un toque, como cualquier otra aplicación.", "en": "You install the app on your Android phone with one tap, like any other app." },
+                    { "es": "Podés iniciar sesión con tu cuenta de siempre y seguir con tus planes de entrenamiento y alimentación.", "en": "You can sign in with your usual account and keep going with your training and meal plans." },
+                    { "es": "Las actualizaciones llegan a través de la tienda, y te vamos a avisar de las novedades acá, en esta campanita.", "en": "Updates arrive through the store, and we will let you know about what's new here, in this bell." },
+                    { "es": "Es pública: si un amigo o amiga quiere probarla, solo tiene que buscarla en Google Play.", "en": "It is public: if a friend wants to try it, they just need to look it up on Google Play." }
+                ]
+            },
+            {
+                "titulo": { "es": "Gracias por acompañarnos", "en": "Thank you for being with us" },
+                "items": [
+                    { "es": "Si la app te sirve, dejar una reseña en la tienda nos ayuda muchísimo a que más personas la encuentren.", "en": "If the app helps you, leaving a review on the store helps a lot so more people can find it." }
+                ]
+            }
+        ],
+        "cta": {
+            "texto": { "es": "Abrir en Google Play", "en": "Open on Google Play" },
+            "url": "https://play.google.com/store/apps/details?id=app.netlify.aipersonaltr.twa"
+        }
+    }
+]
