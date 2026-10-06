@@ -22,6 +22,7 @@ for (const [grupo, lista] of Object.entries(data)) {
 		for (const c of CAMPOS) if (typeof ex?.[c] !== "string" || !ex[c].trim()) errores.push(`${id}: falta o está vacío "${c}"`);
 		if (!Array.isArray(ex?.entorno) || !ex.entorno.length || ex.entorno.some((e) => !["casa", "gimnasio"].includes(e))) errores.push(`${id}: "entorno" debe ser un array no vacío con "casa" y/o "gimnasio"`);
 		if (typeof ex?.nombre_en !== "string" || !ex.nombre_en.trim()) errores.push(`${id}: falta "nombre_en"`);
+		if (typeof ex?.tecnica_en !== "string" || !ex.tecnica_en.trim()) errores.push(`${id}: falta "tecnica_en"`);
 		if (!NIVELES.includes(ex?.nivel)) errores.push(`${id}: "nivel" debe ser uno de ${NIVELES.join("/")}`);
 		if (!ex?.nombre) continue;
 		const k = norm(ex.nombre);

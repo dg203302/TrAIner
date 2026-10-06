@@ -5048,21 +5048,25 @@
             const numDias = Math.min(Math.max(diasSeleccionadosNombres.length, 1), 7);
             const splitSeleccionado = splitsPorCantidad[numDias] || splitsPorCantidad[3];
 
-            const isCasa = (lugar || "").toLowerCase().includes("casa");
+            const isCasa = !["gimnasio", "gym"].includes(String(lugar || "").trim().toLowerCase());
             const repsTarget = objetivo === "grasa" ? "12-15" : (intensidad === "alta" ? "6-10" : "8-12");
             const seriesTarget = intensidad === "alta" ? 4 : (intensidad === "baja" ? 3 : 4);
             const descansoSec = objetivo === "fuerza" ? 120 : 90;
 
+            // En casa solo entran ejercicios marcados como aptos para casa; nunca se "cuela" uno de gimnasio.
+            const aptoEntorno = (ex) => {
+                if (!isCasa) return true;
+                if (Array.isArray(ex.entorno)) return ex.entorno.includes("casa");
+                return !/polea|máquina|maquina|prensa|barra|predicador|dominadas|banco|hack|jalón|jalon/i.test(String(ex.nombre || ""));
+            };
+            const todosAptos = Object.values(ENTRENAMIENTOS_DB || {}).flat().filter(aptoEntorno);
+            const usoSemana = new Map(); // veces que se usó cada ejercicio en la semana, para variar entre días
+
+            // Solo se generan los días de entrenamiento elegidos (sin días de descanso).
             let diaSplitIdx = 0;
-            const configuracion_semanal = DIAS_CANONICOS.map(diaNombre => {
-                const estaSeleccionado = diasSeleccionadosNombres.includes(diaNombre);
-                if (!estaSeleccionado) {
-                    return {
-                        dia: diaNombre,
-                        enfoque: "Descanso activo / Recuperación",
-                        ejercicios: []
-                    };
-                }
+            const configuracion_semanal = [];
+            for (const diaNombre of DIAS_CANONICOS) {
+                if (!diasSeleccionadosNombres.includes(diaNombre)) continue;
 
                 const diaSplit = splitSeleccionado[diaSplitIdx % splitSeleccionado.length];
                 diaSplitIdx++;
@@ -5073,50 +5077,41 @@
 
                 let gIdx = 0;
                 let attempts = 0;
-                while (ejerciciosDia.length < ejerciciosPorDia && attempts < 50) {
+                while (ejerciciosDia.length < ejerciciosPorDia && attempts < 80) {
                     attempts++;
                     const grupoName = gruposTarget[gIdx % gruposTarget.length];
                     gIdx++;
 
-                    const poolGrupo = (ENTRENAMIENTOS_DB && ENTRENAMIENTOS_DB[grupoName]) || [];
-                    let candidatos = poolGrupo.filter(ex => {
-                        if (usedNames.has(ex.nombre)) return false;
-                        if (isCasa) {
-                            const norm = ex.nombre.toLowerCase();
-                            if (norm.includes("polea") || norm.includes("maquina") || norm.includes("prensa") || norm.includes("predicador")) {
-                                return false;
-                            }
-                        }
-                        return true;
+                    const poolGrupo = ((ENTRENAMIENTOS_DB && ENTRENAMIENTOS_DB[grupoName]) || []).filter(aptoEntorno);
+                    let candidatos = poolGrupo.filter(ex => !usedNames.has(ex.nombre));
+                    // Si ese grupo se quedó sin opciones aptas, se prueba con cualquier otro ejercicio apto del entorno.
+                    if (candidatos.length === 0) candidatos = todosAptos.filter(ex => !usedNames.has(ex.nombre));
+                    if (candidatos.length === 0) break;
+
+                    const minUso = Math.min(...candidatos.map(ex => usoSemana.get(ex.nombre) || 0));
+                    const menosUsados = candidatos.filter(ex => (usoSemana.get(ex.nombre) || 0) === minUso);
+                    const elegido = menosUsados[Math.floor(Math.random() * menosUsados.length)];
+                    usedNames.add(elegido.nombre);
+                    usoSemana.set(elegido.nombre, (usoSemana.get(elegido.nombre) || 0) + 1);
+                    ejerciciosDia.push({
+                        nombre: elegido.nombre,
+                        series: seriesTarget,
+                        repeticiones: repsTarget,
+                        descanso_segundos: descansoSec,
+                        descripcion: elegido.descripcion || "Ejecutar con rango de movimiento completo y control excéntrico.",
+                        tecnica: elegido.descripcion_detallada || elegido.descripcion || "Controlar la respiración y mantener postura firme.",
+                        sobrecarga: extractCatalogLine(elegido.descripcion_detallada, "Sobrecarga") || "Aumentar 1-2 repeticiones o 2.5 kg al dominar todas las series.",
+                        respiracion: extractCatalogLine(elegido.descripcion_detallada, "Respiración") || "Inhalar en fase excéntrica y exhalar en concéntrica.",
+                        gifUrl: elegido.gifUrl || ""
                     });
-
-                    if (candidatos.length === 0) {
-                        candidatos = poolGrupo.filter(ex => !usedNames.has(ex.nombre));
-                    }
-
-                    if (candidatos.length > 0) {
-                        const elegido = candidatos[Math.floor(Math.random() * candidatos.length)];
-                        usedNames.add(elegido.nombre);
-                        ejerciciosDia.push({
-                            nombre: elegido.nombre,
-                            series: seriesTarget,
-                            repeticiones: repsTarget,
-                            descanso_segundos: descansoSec,
-                            descripcion: elegido.descripcion || "Ejecutar con rango de movimiento completo y control excéntrico.",
-                            tecnica: elegido.descripcion_detallada || elegido.descripcion || "Controlar la respiración y mantener postura firme.",
-                            sobrecarga: "Aumentar 1-2 repeticiones o 2.5 kg al dominar todas las series.",
-                            respiracion: "Inhalar en fase excéntrica y exhalar en concéntrica.",
-                            gifUrl: elegido.gifUrl || ""
-                        });
-                    }
                 }
 
-                return {
+                configuracion_semanal.push({
                     dia: diaNombre,
                     enfoque: diaSplit.enfoque,
                     ejercicios: ejerciciosDia
-                };
-            });
+                });
+            }
 
             return {
                 plan_entrenamiento_hipertrofia: {
@@ -5187,7 +5182,7 @@
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            idioma: "es",
+                            idioma: window.UIIdioma?.getIdioma?.() || "es",
                             lugar: aiSelectedLugar,
                             objetivo: aiSelectedObjetivo,
                             intensidad: aiSelectedIntensidad,

@@ -44,7 +44,7 @@ const validatePlanShape = (obj) => {
 
 	const semanal = root.configuracion_semanal;
 	if (!Array.isArray(semanal)) return "Falta configuracion_semanal (array)";
-	if (semanal.length !== 7) return "configuracion_semanal debe tener 7 días";
+	if (semanal.length < 1 || semanal.length > 7) return "configuracion_semanal debe tener entre 1 y 7 días";
 
 	for (const dia of semanal) {
 		if (!dia || typeof dia !== "object") return "Cada día debe ser un objeto";
@@ -164,7 +164,41 @@ const canonicalDayKey = (dayLabel) => {
 	return stripAccents(dayLabel).toLowerCase();
 };
 
-const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, intensidadNorm, ejerciciosPorDiaObjetivo, diasSeleccionados, ejerciciosSeleccionados, catalogFlat }) => {
+// Palabras que delatan equipamiento de gimnasio (solo se usan si un ejercicio no trae el campo "entorno").
+const GYM_WORDS = /polea|maquina|prensa|barra|predicador|cable|smith|contractora|pec deck|hack|banco|dominadas|jalon|remo en t|rueda abdominal|hexagonal/;
+
+const GRUPOS_BASE = ["Pecho", "Espalda", "Piernas", "Hombros", "Brazos", "Abdomen / core"];
+
+// Grupos del catálogo que corresponden al enfoque de un día (en español o inglés).
+const gruposParaEnfoque = (enfoque) => {
+	const n = normalizeKey(enfoque);
+	const g = [];
+	const add = (...names) => names.forEach((x) => { if (!g.includes(x)) g.push(x); });
+	if (/cuerpo completo|full body|general/.test(n)) return [...GRUPOS_BASE];
+	if (/pecho|chest|empuje|push|torso|upper/.test(n)) add("Pecho");
+	if (/espalda|back|dorsal|tiron|pull|torso|upper/.test(n)) add("Espalda");
+	if (/hombro|shoulder|empuje|push|torso|upper/.test(n)) add("Hombros");
+	if (/biceps|brazo|arm|tiron|pull|torso|upper/.test(n)) add("Brazos");
+	if (/triceps|empuje|push|torso|upper/.test(n)) add("Tríceps");
+	if (/antebrazo|forearm/.test(n)) add("Antebrazos");
+	if (/pierna|leg|gluteo|glute|cuadricep|quad|femoral|hamstring|posterior/.test(n)) add("Piernas");
+	if (/abdomen|abs|core|abdominal/.test(n)) add("Abdomen / core");
+	if (/cardio|acondicionamiento|conditioning|hiit/.test(n)) add("Cardio / acondicionamiento");
+	return g.length ? g : [...GRUPOS_BASE];
+};
+
+// Divisiones de respaldo según cantidad de días (se usan si la IA no responde).
+const SPLITS_RESPALDO = {
+	1: [["Cuerpo Completo", "Full Body"]],
+	2: [["Torso Superior", "Upper Body"], ["Pierna y Core", "Legs and Core"]],
+	3: [["Empuje (Pecho, Hombro y Tríceps)", "Push (Chest, Shoulders and Triceps)"], ["Tirón (Espalda y Bíceps)", "Pull (Back and Biceps)"], ["Pierna y Abdomen", "Legs and Abs"]],
+	4: [["Torso Fuerza (Pecho y Espalda)", "Upper Strength (Chest and Back)"], ["Pierna y Abdomen", "Legs and Abs"], ["Torso Hipertrofia (Hombros y Brazos)", "Upper Hypertrophy (Shoulders and Arms)"], ["Pierna y Glúteos", "Legs and Glutes"]],
+	5: [["Pecho y Tríceps", "Chest and Triceps"], ["Espalda y Bíceps", "Back and Biceps"], ["Piernas (Enfoque Cuádriceps)", "Legs (Quad Focus)"], ["Hombros y Core", "Shoulders and Core"], ["Pierna Posterior y Brazos", "Hamstrings and Arms"]],
+	6: [["Empuje A (Pecho y Tríceps)", "Push A (Chest and Triceps)"], ["Tirón A (Espalda y Bíceps)", "Pull A (Back and Biceps)"], ["Pierna A (Cuádriceps)", "Legs A (Quads)"], ["Empuje B (Hombro y Pecho)", "Push B (Shoulders and Chest)"], ["Tirón B (Espalda dorsal)", "Pull B (Lats)"], ["Pierna B (Cadena posterior)", "Legs B (Posterior Chain)"]],
+	7: [["Empuje A", "Push A"], ["Tirón A", "Pull A"], ["Pierna A", "Legs A"], ["Empuje B", "Push B"], ["Tirón B", "Pull B"], ["Pierna B", "Legs B"], ["Acondicionamiento y Core", "Conditioning and Core"]],
+};
+
+const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, intensidadNorm, ejerciciosPorDiaObjetivo, diasSeleccionados, ejerciciosSeleccionados, catalogFlat, catalogGroups }) => {
 	if (!planObj || typeof planObj !== "object") return planObj;
 	const root = planObj.plan_entrenamiento_hipertrofia;
 	if (!root || typeof root !== "object") return planObj;
@@ -189,6 +223,7 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 	const selectedKeys = new Set(diasSeleccionados.map(canonicalDayKey));
 	const selectedExerciseKeySet = new Set(ejerciciosSeleccionados.map((e) => normalizeKey(e)));
 	const soloEjerciciosSeleccionados = ejerciciosSeleccionados.length > 0;
+	const hayCatalogo = Object.keys(catalogFlat).length > 0;
 
 	const isAllowedExerciseName = (name) => {
 		if (!soloEjerciciosSeleccionados) return true;
@@ -196,7 +231,15 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 		return k && selectedExerciseKeySet.has(k);
 	};
 
-
+	// ¿El ejercicio se puede hacer en el entorno elegido? En casa solo se admiten los marcados como aptos.
+	const isAllowedForEnv = (name) => {
+		if (!esCasa) return true;
+		const key = normalizeKey(name);
+		const entry = catalogFlat[key];
+		if (entry) return Array.isArray(entry.entorno) ? entry.entorno.includes("casa") : !GYM_WORDS.test(key);
+		// Fuera del catálogo: si hay catálogo, se descarta (la IA lo inventó); si no, se decide por palabras clave.
+		return hayCatalogo ? false : !GYM_WORDS.test(key);
+	};
 
 	const normalizeExercise = (ex) => {
 		if (!ex || typeof ex !== "object") return null;
@@ -220,91 +263,90 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 		};
 	};
 
+	const makeFallbackExercise = (nombre) => ({
+		nombre,
+		series: intensidadNorm === "baja" ? 3 : 4,
+		repeticiones: objetivo === "grasa" ? "12-15" : (intensidadNorm === "alta" ? "6-10" : "8-12"),
+		descanso_segundos: 90,
+	});
 
+	// Ejercicios del catálogo por grupo, ya filtrados por entorno.
+	const porGrupo = {};
+	if (catalogGroups && Object.keys(catalogGroups).length > 0) {
+		for (const [g, lista] of Object.entries(catalogGroups)) porGrupo[g] = lista.map((e) => e.nombre);
+	} else {
+		for (const ex of Object.values(catalogFlat)) if (ex?.grupo && ex?.nombre) (porGrupo[ex.grupo] = porGrupo[ex.grupo] || []).push(ex.nombre);
+	}
+	for (const g of Object.keys(porGrupo)) porGrupo[g] = porGrupo[g].filter(isAllowedForEnv);
 
+	const usoGlobal = new Map(); // nombre -> veces usado en la semana (para variar entre días)
+	const usar = (nombre) => usoGlobal.set(normalizeKey(nombre), (usoGlobal.get(normalizeKey(nombre)) || 0) + 1);
 
-	const allExercises = Object.values(catalogFlat).map(e => e.nombre);
-	const allExercisesCasa = Object.values(catalogFlat).filter(e => Array.isArray(e.entorno) ? e.entorno.includes("casa") : true).map(e => e.nombre);
-
-	const pickFallbackPool = () => {
-		if (soloEjerciciosSeleccionados) return ejerciciosSeleccionados;
-		const entornoKey = normalizeKey(lugar);
-		if (entornoKey.includes("casa")) {
-			return allExercisesCasa.filter((name) => {
-				const k = normalizeKey(name);
-				return !k.includes("polea") && !k.includes("maquina") && !k.includes("prensa") && !k.includes("barra") && !k.includes("predicador");
-			});
+	// Elige el ejercicio menos repetido de los grupos del día, rotando entre grupos.
+	const completarDia = (lista, grupos, diaIdx) => {
+		const existentes = new Set(lista.map((e) => normalizeKey(e.nombre)));
+		const grupoValidos = grupos.filter((g) => (porGrupo[g] || []).length > 0);
+		const orden = grupoValidos.length ? grupoValidos : Object.keys(porGrupo).filter((g) => porGrupo[g].length > 0);
+		if (!orden.length) return;
+		let g = diaIdx % orden.length;
+		let guard = ejerciciosPorDiaObjetivo * orden.length * 4 + 20;
+		while (lista.length < ejerciciosPorDiaObjetivo && guard-- > 0) {
+			const grupo = orden[g % orden.length];
+			g++;
+			const candidatos = (porGrupo[grupo] || []).filter((n) => !existentes.has(normalizeKey(n)));
+			if (!candidatos.length) continue;
+			let mejor = candidatos[0];
+			for (const n of candidatos) if ((usoGlobal.get(normalizeKey(n)) || 0) < (usoGlobal.get(normalizeKey(mejor)) || 0)) mejor = n;
+			lista.push(makeFallbackExercise(mejor));
+			existentes.add(normalizeKey(mejor));
+			usar(mejor);
 		}
-		return allExercises;
-	};
-	const fallbackPool = pickFallbackPool();
-
-
-	const makeFallbackExercise = (nombre) => {
-		const norm = normalizeKey(nombre);
-		const baseEx = catalogFlat[norm] || {};
-		return {
-			nombre,
-			series: 4,
-			repeticiones: "10-12",
-			descanso_segundos: 90,
-		};
 	};
 
-
-	const semanalFixed = ALL_DIAS.map((diaCanonical) => {
+	// Solo los días elegidos: los demás no aparecen en el plan.
+	const semanalFixed = [];
+	let diaIdx = 0;
+	for (const diaCanonical of ALL_DIAS) {
 		const key = canonicalDayKey(diaCanonical);
-		const isSelected = selectedKeys.has(key);
+		if (!selectedKeys.has(key)) continue;
+
 		const original = byDay.get(key);
 		const base = (original && typeof original === "object") ? original : { dia: diaCanonical };
-
-		base.dia = diaCanonical;
-		if (!isSelected) {
-			return { dia: diaCanonical, enfoque: t("Descanso", "Rest"), ejercicios: [] };
+		let enfoque = (typeof base.enfoque === "string" && base.enfoque.trim()) ? base.enfoque.trim() : t("Entrenamiento", "Training");
+		// Un día elegido para entrenar nunca es de descanso: si la IA lo rotuló así, se usa un enfoque de la división de respaldo.
+		if (/descanso|rest|recuper|libre|off/.test(normalizeKey(enfoque))) {
+			const split = SPLITS_RESPALDO[Math.min(Math.max(diasSeleccionados.length, 1), 7)];
+			enfoque = split[diaIdx % split.length][idiomaNorm === "en" ? 1 : 0];
 		}
 
-		const enfoque = (typeof base.enfoque === "string" && base.enfoque.trim()) ? base.enfoque.trim() : t("Entrenamiento", "Training");
-		const ejerciciosRaw = Array.isArray(base.ejercicios) ? base.ejercicios : [];
-		let ejerciciosNorm = ejerciciosRaw.map(normalizeExercise).filter(Boolean);
-		if (soloEjerciciosSeleccionados) {
-			ejerciciosNorm = ejerciciosNorm.filter((e) => isAllowedExerciseName(e.nombre));
-		}
+		let ejerciciosNorm = (Array.isArray(base.ejercicios) ? base.ejercicios : []).map(normalizeExercise).filter(Boolean);
+		if (soloEjerciciosSeleccionados) ejerciciosNorm = ejerciciosNorm.filter((e) => isAllowedExerciseName(e.nombre));
+		ejerciciosNorm = ejerciciosNorm.filter((e) => isAllowedForEnv(e.nombre));
+		// Sin repetidos dentro del día.
+		const vistos = new Set();
+		ejerciciosNorm = ejerciciosNorm.filter((e) => { const k = normalizeKey(e.nombre); if (vistos.has(k)) return false; vistos.add(k); return true; });
 
-		if (ejerciciosNorm.length > ejerciciosPorDiaObjetivo) {
-			ejerciciosNorm = ejerciciosNorm.slice(0, ejerciciosPorDiaObjetivo);
-		}
+		if (ejerciciosNorm.length > ejerciciosPorDiaObjetivo) ejerciciosNorm = ejerciciosNorm.slice(0, ejerciciosPorDiaObjetivo);
+		ejerciciosNorm.forEach((e) => usar(e.nombre));
+
 		if (ejerciciosNorm.length < ejerciciosPorDiaObjetivo) {
-			const existing = new Set(ejerciciosNorm.map((e) => normalizeKey(e.nombre)));
-
 			if (soloEjerciciosSeleccionados) {
-				const pool = Array.isArray(fallbackPool) ? fallbackPool : [];
-				if (pool.length > 0) {
-					let idx = 0;
-					const guard = ejerciciosPorDiaObjetivo * 20;
-					let steps = 0;
-					while (ejerciciosNorm.length < ejerciciosPorDiaObjetivo && steps < guard) {
-						const name = pool[idx % pool.length];
-						idx++;
-						steps++;
-						const k = normalizeKey(name);
-						if (existing.has(k) && existing.size < pool.length) continue;
-						ejerciciosNorm.push(makeFallbackExercise(name));
-						existing.add(k);
-					}
+				const pool = ejerciciosSeleccionados.filter(isAllowedForEnv);
+				const existentes = new Set(ejerciciosNorm.map((e) => normalizeKey(e.nombre)));
+				for (const name of pool) {
+					if (ejerciciosNorm.length >= ejerciciosPorDiaObjetivo) break;
+					if (existentes.has(normalizeKey(name))) continue;
+					ejerciciosNorm.push(makeFallbackExercise(name));
+					existentes.add(normalizeKey(name));
 				}
 			} else {
-				for (const name of fallbackPool) {
-					const k = normalizeKey(name);
-					if (existing.has(k)) continue;
-					ejerciciosNorm.push(makeFallbackExercise(name));
-					existing.add(k);
-					if (ejerciciosNorm.length >= ejerciciosPorDiaObjetivo) break;
-				}
+				completarDia(ejerciciosNorm, gruposParaEnfoque(enfoque), diaIdx);
 			}
 		}
 
-		return { dia: diaCanonical, enfoque, ejercicios: ejerciciosNorm };
-	});
+		semanalFixed.push({ dia: diaCanonical, enfoque, ejercicios: ejerciciosNorm });
+		diaIdx++;
+	}
 
 	root.configuracion_semanal = semanalFixed;
 	planObj.plan_entrenamiento_hipertrofia = root;
@@ -387,14 +429,15 @@ const generatePlanEntreno = async (payload, request) => {
 	const ALL_DIAS = idiomaNorm === "en" ? ALL_DIAS_EN : ALL_DIAS_ES;
 	const diaEjemplo = ALL_DIAS[0];
 
-	const entornoValue = String(lugar ?? "").toLowerCase() === "gimnasio" ? t("Gimnasio", "Gym") : t("Casa", "Home");
+	const lugarKey = normalizeKey(lugar);
+	const esCasa = !(lugarKey === "gimnasio" || lugarKey === "gym");
+	const entornoValue = esCasa ? t("Casa", "Home") : t("Gimnasio", "Gym");
 	const objetivoValue = String(objetivo ?? "").toLowerCase() === "grasa" ? t("grasa", "fat") : t("musculo", "muscle");
 	const progresionMetodoValue = t("Sobrecarga progresiva", "Progressive overload");
 	const descansoLabel = t("Descanso", "Rest");
 
 	// Catálogo por grupo (filtrado por entorno) construido desde entrenamientos.json; null si no hay catálogo.
 	const catalogoDinamico = (() => {
-		const esCasa = normalizeKey(lugar).includes("casa");
 		const porGrupo = {};
 		if (Object.keys(catalogGroups).length > 0) {
 			for (const [g, lista] of Object.entries(catalogGroups)) porGrupo[g] = lista;
@@ -432,13 +475,13 @@ Nombres de ejercicios: USA EXACTAMENTE los nombres literales de la lista proporc
 Días: ${idiomaNorm === "en" ? "Monday–Sunday" : "Lunes–Domingo"}.
 
 Esquema exacto:
-{"plan_entrenamiento_hipertrofia":{"usuario":{"edad":${Number(payload?.Edad) || 0},"estatura_cm":${Number(payload?.Altura) || 0},"peso_objetivo_kg":${Number(payload?.Peso_objetivo) || 0},"entorno":"${entornoValue}","objetivo":"${objetivoValue}","intensidad":"${intensidadNorm}","ejercicios_por_dia":${ejerciciosPorDiaObjetivo}},"configuracion_semanal":[{"dia":"${diaEjemplo}","enfoque":"<str>","ejercicios":[{"nombre":"<str>","series":4,"repeticiones":"10-12","descanso_segundos":90}]},"...6 días más..."],"progresion_sugerida":{"metodo":"${progresionMetodoValue}","descripcion":"<str>"}}}
+{"plan_entrenamiento_hipertrofia":{"usuario":{"edad":${Number(payload?.Edad) || 0},"estatura_cm":${Number(payload?.Altura) || 0},"peso_objetivo_kg":${Number(payload?.Peso_objetivo) || 0},"entorno":"${entornoValue}","objetivo":"${objetivoValue}","intensidad":"${intensidadNorm}","ejercicios_por_dia":${ejerciciosPorDiaObjetivo}},"configuracion_semanal":[{"dia":"${diaEjemplo}","enfoque":"<str>","ejercicios":[{"nombre":"<str>","series":4,"repeticiones":"10-12","descanso_segundos":90}]},"...resto de los días de entrenamiento..."],"progresion_sugerida":{"metodo":"${progresionMetodoValue}","descripcion":"<str>"}}}
 
 Reglas:
 - series y descanso_segundos: número. repeticiones: string.
-- configuracion_semanal: exactamente 7 días.
-- Días seleccionados → EXACTAMENTE ${ejerciciosPorDiaObjetivo} ejercicios, enfoque coherente.
-- Días NO seleccionados → enfoque "${descansoLabel}", ejercicios [].
+- configuracion_semanal: EXACTAMENTE ${diasSeleccionados.length} días, solo los de "Días de entrenamiento". NO incluyas días de descanso ni otros días.
+- Cada día → EXACTAMENTE ${ejerciciosPorDiaObjetivo} ejercicios, enfoque coherente y sin repetir ejercicios entre días salvo que sea necesario.
+- ${esCasa ? "Entorno CASA: usa SOLO ejercicios de la lista (ya son aptos para entrenar en casa, sin máquinas, poleas ni barras). No inventes ejercicios." : "Entorno GIMNASIO: puedes usar máquinas, poleas y barras. Usa solo ejercicios de la lista."}
 
 Días de entrenamiento: ${diasSeleccionadosJson}
 Entorno: ${entornoValue} | Objetivo: ${objetivoValue} | Edad: ${payload?.Edad} | Altura: ${payload?.Altura}cm | Peso actual: ${payload?.Peso_actual}kg | Peso objetivo: ${payload?.Peso_objetivo}kg
@@ -481,18 +524,10 @@ ${ejerciciosContexto}`;
 	}
 
 	if (!planObj || !planObj.plan_entrenamiento_hipertrofia) {
-		const defaultEnfoques = [
-			"Pecho, Hombro y Tríceps (Empuje)",
-			"Espalda, Bíceps y Core (Tirón)",
-			"Piernas y Abdomen",
-			"Torso Superior (Fuerza)",
-			"Pierna y Glúteo (Hipertrofia)",
-			"Hombro y Brazos",
-			"Acondicionamiento y Core"
-		];
+		const split = SPLITS_RESPALDO[Math.min(Math.max(diasSeleccionados.length, 1), 7)];
 		const semanalBase = diasSeleccionados.map((diaNombre, idx) => ({
 			dia: diaNombre,
-			enfoque: defaultEnfoques[idx % defaultEnfoques.length],
+			enfoque: split[idx % split.length][idiomaNorm === "en" ? 1 : 0],
 			ejercicios: []
 		}));
 
@@ -519,13 +554,14 @@ ${ejerciciosContexto}`;
 	planObj = normalizePlanWithSelectedDays({
 		planObj,
 		idiomaNorm,
-		lugar,
+		esCasa,
 		objetivo,
 		intensidadNorm,
 		ejerciciosPorDiaObjetivo,
 		diasSeleccionados,
 		ejerciciosSeleccionados,
-		catalogFlat
+		catalogFlat,
+		catalogGroups
 	});
 
 	const validationError = validatePlanShape(planObj);

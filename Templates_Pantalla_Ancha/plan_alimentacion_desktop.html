@@ -3271,7 +3271,7 @@
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            idioma: "es",
+                            idioma: window.UIIdioma?.getIdioma?.() || "es",
                             objetivo,
                             intensidad,
                             ...perfil
@@ -3317,7 +3317,7 @@
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             id_usuario: userId,
-                            idioma: "es",
+                            idioma: window.UIIdioma?.getIdioma?.() || "es",
                             plan_alimenta: planAlimentaToStore
                         })
                     }).catch(e => console.warn("Aviso guardando en backend /generar_plan_alimentacion:", e));

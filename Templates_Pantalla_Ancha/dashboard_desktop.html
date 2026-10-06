@@ -2204,7 +2204,7 @@
                         </div>
                         <div class="metric-right">
                             <span class="metric-big-num" id="metric-sessions-num">0</span>
-                            <span class="metric-unit" data-i18n-en="ses">ses</span>
+                            <span class="metric-unit" data-i18n-en="sess.">ses</span>
                         </div>
 
                         <svg class="card-top-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -2844,7 +2844,7 @@
             const rawPlan = userPlanesData?.Plan_entreno ?? localStorage.getItem("plan_entreno_usuario");
             const todayIdx = new Date().getDay();
             const todayNameNorm = DIAS_MAP[todayIdx];
-            const DIAS_INITIALS_ES = ["D", "L", "M", "X", "J", "V", "S"];
+            const DIAS_INITIALS_ES = window.UIIdioma?.getIdioma?.() === "en" ? ["S", "M", "T", "W", "T", "F", "S"] : ["D", "L", "M", "X", "J", "V", "S"];
             const dayInitial = DIAS_INITIALS_ES[todayIdx] || "D";
 
             const ringEl = document.getElementById("workout-ring-progress");
