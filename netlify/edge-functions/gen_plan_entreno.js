@@ -243,7 +243,8 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, 
 
 	const normalizeExercise = (ex) => {
 		if (!ex || typeof ex !== "object") return null;
-		const nombre = typeof ex.nombre === "string" ? ex.nombre : String(ex.nombre ?? "").trim();
+		// La IA puede devolver la marca "★" de la lista de básicos pegada al nombre.
+		const nombre = (typeof ex.nombre === "string" ? ex.nombre : String(ex.nombre ?? "")).replace(/\s*★\s*$/, "").trim();
 		if (!nombre) return null;
 
 		const norm = normalizeKey(nombre);
@@ -281,6 +282,39 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, 
 
 	const usoGlobal = new Map(); // nombre -> veces usado en la semana (para variar entre días)
 	const usar = (nombre) => usoGlobal.set(normalizeKey(nombre), (usoGlobal.get(normalizeKey(nombre)) || 0) + 1);
+	const uso = (nombre) => usoGlobal.get(normalizeKey(nombre)) || 0;
+
+	// Ejercicios básicos (los clásicos de cada grupo): el plan siempre incluye al menos uno por grupo principal del día.
+	const principalSet = new Set(Object.values(catalogFlat).filter((e) => e?.principal && e?.nombre).map((e) => normalizeKey(e.nombre)));
+	const grupoDeNombre = new Map();
+	for (const [g, lista] of Object.entries(porGrupo)) for (const n of lista) grupoDeNombre.set(normalizeKey(n), g);
+	const esBasico = (nombre) => principalSet.has(normalizeKey(nombre));
+
+	const asegurarBasicos = (lista, grupos) => {
+		if (!principalSet.size) return;
+		const existentes = new Set(lista.map((e) => normalizeKey(e.nombre)));
+		const nuevos = [];
+		for (const grupo of grupos.slice(0, 3)) {
+			const yaHay = lista.concat(nuevos).some((e) => esBasico(e.nombre) && grupoDeNombre.get(normalizeKey(e.nombre)) === grupo);
+			if (yaHay) continue;
+			let cands = (porGrupo[grupo] || []).filter((n) => esBasico(n) && !existentes.has(normalizeKey(n)));
+			// En gimnasio se prefieren los clásicos de gimnasio (barra, polea, máquina) a los que también sirven en casa.
+			if (!esCasa) {
+				const soloGym = cands.filter((n) => !(catalogFlat[normalizeKey(n)]?.entorno || []).includes("casa"));
+				if (soloGym.length) cands = soloGym;
+			}
+			if (!cands.length) continue;
+			let mejor = cands[0];
+			for (const n of cands) if (uso(n) < uso(mejor)) mejor = n;
+			nuevos.push(makeFallbackExercise(mejor));
+			existentes.add(normalizeKey(mejor));
+			usar(mejor);
+		}
+		lista.unshift(...nuevos);
+		// Los básicos van primero (compuestos al comienzo del día); el orden entre ellos se conserva.
+		lista.sort((a, b) => Number(esBasico(b.nombre)) - Number(esBasico(a.nombre)));
+		while (lista.length > ejerciciosPorDiaObjetivo) lista.pop();
+	};
 
 	// Elige el ejercicio menos repetido de los grupos del día, rotando entre grupos.
 	const completarDia = (lista, grupos, diaIdx) => {
@@ -314,7 +348,7 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, 
 		const base = (original && typeof original === "object") ? original : { dia: diaCanonical };
 		let enfoque = (typeof base.enfoque === "string" && base.enfoque.trim()) ? base.enfoque.trim() : t("Entrenamiento", "Training");
 		// Un día elegido para entrenar nunca es de descanso: si la IA lo rotuló así, se usa un enfoque de la división de respaldo.
-		if (/descanso|rest|recuper|libre|off/.test(normalizeKey(enfoque))) {
+		if (/descanso|\brest\b|recuper|libre|\boff\b/.test(normalizeKey(enfoque))) {
 			const split = SPLITS_RESPALDO[Math.min(Math.max(diasSeleccionados.length, 1), 7)];
 			enfoque = split[diaIdx % split.length][idiomaNorm === "en" ? 1 : 0];
 		}
@@ -328,6 +362,7 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, 
 
 		if (ejerciciosNorm.length > ejerciciosPorDiaObjetivo) ejerciciosNorm = ejerciciosNorm.slice(0, ejerciciosPorDiaObjetivo);
 		ejerciciosNorm.forEach((e) => usar(e.nombre));
+		if (!soloEjerciciosSeleccionados) asegurarBasicos(ejerciciosNorm, gruposParaEnfoque(enfoque));
 
 		if (ejerciciosNorm.length < ejerciciosPorDiaObjetivo) {
 			if (soloEjerciciosSeleccionados) {
@@ -448,7 +483,7 @@ const generatePlanEntreno = async (payload, request) => {
 		for (const [g, lista] of Object.entries(porGrupo)) {
 			const nombres = lista
 				.filter((ex) => !esCasa || !Array.isArray(ex.entorno) || ex.entorno.includes("casa"))
-				.map((ex) => ex.nombre);
+				.map((ex) => (ex.principal ? `${ex.nombre} ★` : ex.nombre));
 			if (nombres.length) lineas.push(`${g}: ${nombres.join(", ")}.`);
 		}
 		return lineas.length ? `Ejercicios disponibles por grupo (elige según entorno/objetivo):\n${lineas.join("\n")}` : null;
@@ -480,7 +515,7 @@ Esquema exacto:
 Reglas:
 - series y descanso_segundos: número. repeticiones: string.
 - configuracion_semanal: EXACTAMENTE ${diasSeleccionados.length} días, solo los de "Días de entrenamiento". NO incluyas días de descanso ni otros días.
-- Cada día → EXACTAMENTE ${ejerciciosPorDiaObjetivo} ejercicios, enfoque coherente y sin repetir ejercicios entre días salvo que sea necesario.
+- Cada día → EXACTAMENTE ${ejerciciosPorDiaObjetivo} ejercicios, enfoque coherente, empezando por los ejercicios básicos/compuestos del grupo del día (marcados con ★ en la lista) y sin repetir ejercicios entre días salvo que sea necesario.
 - ${esCasa ? "Entorno CASA: usa SOLO ejercicios de la lista (ya son aptos para entrenar en casa, sin máquinas, poleas ni barras). No inventes ejercicios." : "Entorno GIMNASIO: puedes usar máquinas, poleas y barras. Usa solo ejercicios de la lista."}
 
 Días de entrenamiento: ${diasSeleccionadosJson}

@@ -1976,6 +1976,18 @@
 
         .catalog-more-btn:hover { background: rgba(255, 255, 255, 0.05); }
 
+        .catalog-clear-filters {
+            border: none;
+            background: transparent;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+        }
+
         /* ── MODAL GLASSMORPHIC DE CONFIRMACIÓN / ALERTAS / SELECT ── */
         .glass-modal-backdrop {
             position: fixed;
@@ -3987,6 +3999,8 @@
             const backdrop = document.getElementById("modal-manual-edit-backdrop");
             renderManualEditorTabs();
             renderManualEditorContent();
+            window.PTCatalog?.limpiarFiltros();
+            if (window.PTCatalog) window.PTCatalog.state.special = null;
             renderCatalogFilterBtns();
             renderCatalogItems();
 
@@ -4322,7 +4336,16 @@
             const list = C.filter(ENTRENAMIENTOS_DB, { group: activeCatalogGroup, q });
 
             const countEl = document.getElementById("catalog-count");
-            if (countEl) countEl.textContent = C.T(`${list.length} ejercicios`, `${list.length} exercises`);
+            if (countEl) {
+                countEl.textContent = C.T(`${list.length} ejercicios`, `${list.length} exercises`);
+                if (C.hayFiltros()) {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "catalog-clear-filters";
+                    btn.textContent = C.T("Quitar filtros", "Clear filters");
+                    countEl.append(" · ", btn);
+                }
+            }
 
             if (list.length === 0) {
                 const sp = C.state.special;
@@ -4331,7 +4354,14 @@
                     : sp === "recent"
                         ? C.T("Aún no has añadido ejercicios.", "You haven't added any exercises yet.")
                         : C.T("No se encontraron ejercicios con estos filtros.", "No exercises match these filters.");
-                container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">${msg}</p>`;
+                let ayuda = "";
+                if (C.hayFiltros()) {
+                    const ocultos = C.contarSinFiltros(ENTRENAMIENTOS_DB, { group: activeCatalogGroup, q });
+                    ayuda = (ocultos > 0
+                        ? `<br>${C.T(`Hay ${ocultos} que coinciden pero están ocultos por los filtros activos.`, `${ocultos} match but are hidden by the active filters.`)}`
+                        : "") + `<br><button type="button" class="catalog-clear-filters">${C.T("Quitar filtros", "Clear filters")}</button>`;
+                }
+                container.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 12px;">${msg}${ayuda}</p>`;
                 return;
             }
 
@@ -5074,6 +5104,7 @@
                 const ejerciciosDia = [];
                 const gruposTarget = diaSplit.grupos;
                 const usedNames = new Set();
+                const gruposVistos = new Set();
 
                 let gIdx = 0;
                 let attempts = 0;
@@ -5084,6 +5115,17 @@
 
                     const poolGrupo = ((ENTRENAMIENTOS_DB && ENTRENAMIENTOS_DB[grupoName]) || []).filter(aptoEntorno);
                     let candidatos = poolGrupo.filter(ex => !usedNames.has(ex.nombre));
+                    // El primer ejercicio de cada grupo del día sale de los básicos (los clásicos), si hay disponibles.
+                    if (!gruposVistos.has(grupoName)) {
+                        gruposVistos.add(grupoName);
+                        let basicos = candidatos.filter(ex => ex.principal);
+                        // En gimnasio se prefieren los clásicos de gimnasio (barra, polea, máquina) a los que también sirven en casa.
+                        if (!isCasa) {
+                            const soloGym = basicos.filter(ex => !(ex.entorno || []).includes("casa"));
+                            if (soloGym.length) basicos = soloGym;
+                        }
+                        if (basicos.length) candidatos = basicos;
+                    }
                     // Si ese grupo se quedó sin opciones aptas, se prueba con cualquier otro ejercicio apto del entorno.
                     if (candidatos.length === 0) candidatos = todosAptos.filter(ex => !usedNames.has(ex.nombre));
                     if (candidatos.length === 0) break;
@@ -5380,9 +5422,20 @@
                 renderCatalogItems();
             });
 
+            // "Quitar filtros": vuelve a mostrar todos los ejercicios
+            const quitarFiltros = (e) => {
+                if (!e.target.closest(".catalog-clear-filters")) return false;
+                window.PTCatalog.limpiarFiltros();
+                renderCatalogFilterBtns();
+                renderCatalogItems();
+                return true;
+            };
+            document.getElementById("catalog-count")?.addEventListener("click", quitarFiltros);
+
             // Lista de ejercicios: añadir, favorito y "mostrar más" (un único listener delegado)
             document.getElementById("catalog-items-grid")?.addEventListener("click", (e) => {
                 const C = window.PTCatalog;
+                if (quitarFiltros(e)) return;
                 if (e.target.closest(".catalog-more-btn")) {
                     C.state.limit += C.PAGE_SIZE;
                     renderCatalogItems();

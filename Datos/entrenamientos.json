@@ -11,7 +11,8 @@
             ],
             "nombre_en": "Bench Press",
             "nivel": "intermedio",
-            "tecnica_en": "Retract your shoulder blades and keep your feet firmly on the floor. Lower the bar until it grazes your chest (sternum line), elbows at ~75° from your torso. Full range, no bouncing."
+            "tecnica_en": "Retract your shoulder blades and keep your feet firmly on the floor. Lower the bar until it grazes your chest (sternum line), elbows at ~75° from your torso. Full range, no bouncing.",
+            "principal": true
         },
         {
             "nombre": "Press de banca inclinado con barra",
@@ -24,7 +25,8 @@
             ],
             "nombre_en": "Incline Barbell Bench Press",
             "nivel": "intermedio",
-            "tecnica_en": "Incline bench at 30-45°. Grip slightly wider than shoulder width. Lower the bar in a controlled way to the upper chest (collarbone). Press the bar up in a vertical motion."
+            "tecnica_en": "Incline bench at 30-45°. Grip slightly wider than shoulder width. Lower the bar in a controlled way to the upper chest (collarbone). Press the bar up in a vertical motion.",
+            "principal": true
         },
         {
             "nombre": "Press de banca inclinado con mancuernas",
@@ -37,7 +39,8 @@
             ],
             "nombre_en": "Incline Dumbbell Press",
             "nivel": "intermedio",
-            "tecnica_en": "Bench at 30-45°. Press the dumbbells up and slightly inward. Control the descent for 2-3 sec; don't let your elbows drop below the plane of the bench."
+            "tecnica_en": "Bench at 30-45°. Press the dumbbells up and slightly inward. Control the descent for 2-3 sec; don't let your elbows drop below the plane of the bench.",
+            "principal": true
         },
         {
             "nombre": "Flexiones de brazos (peso corporal)",
@@ -51,7 +54,8 @@
             ],
             "nombre_en": "Push-Up",
             "nivel": "intermedio",
-            "tecnica_en": "Hands shoulder-width apart, body in a straight line from heels to head. Lower your chest until it almost touches the floor; elbows at ~45° from your torso."
+            "tecnica_en": "Hands shoulder-width apart, body in a straight line from heels to head. Lower your chest until it almost touches the floor; elbows at ~45° from your torso.",
+            "principal": true
         },
         {
             "nombre": "Aperturas con mancuernas",
@@ -64,7 +68,8 @@
             ],
             "nombre_en": "Dumbbell Fly",
             "nivel": "intermedio",
-            "tecnica_en": "Flat or incline bench. Lower the dumbbells in an arc with slightly bent elbows until you feel a stretch in your chest. Don't overextend the range, to protect your shoulders."
+            "tecnica_en": "Flat or incline bench. Lower the dumbbells in an arc with slightly bent elbows until you feel a stretch in your chest. Don't overextend the range, to protect your shoulders.",
+            "principal": true
         },
         {
             "nombre": "Fondos en paralelas (pecho bajo/tríceps)",
@@ -77,7 +82,8 @@
             ],
             "nombre_en": "Parallel Bar Dips",
             "nivel": "intermedio",
-            "tecnica_en": "To emphasize the chest: lean slightly forward, elbows out. Lower until your shoulders are below your elbows. Push up without locking your elbows."
+            "tecnica_en": "To emphasize the chest: lean slightly forward, elbows out. Lower until your shoulders are below your elbows. Push up without locking your elbows.",
+            "principal": true
         },
         {
             "nombre": "Cruce de poleas",
@@ -90,7 +96,8 @@
             ],
             "nombre_en": "High Cable Crossover",
             "nivel": "principiante",
-            "tecnica_en": "Cables at shoulder height or above. Bring your hands to the center and cross slightly, squeezing your chest at the end of the movement. Controlled movement throughout."
+            "tecnica_en": "Cables at shoulder height or above. Bring your hands to the center and cross slightly, squeezing your chest at the end of the movement. Controlled movement throughout.",
+            "principal": true
         },
         {
             "nombre": "Press de banca plano con mancuernas",
@@ -103,7 +110,8 @@
             ],
             "nombre_en": "Dumbbell Bench Press",
             "nivel": "intermedio",
-            "tecnica_en": "Lying on a flat bench, lower the dumbbells to chest level with your elbows at ~60-75° from your torso and press up, bringing them together without clanking. Shoulder blades retracted and feet firm on the floor."
+            "tecnica_en": "Lying on a flat bench, lower the dumbbells to chest level with your elbows at ~60-75° from your torso and press up, bringing them together without clanking. Shoulder blades retracted and feet firm on the floor.",
+            "principal": true
         },
         {
             "nombre": "Press de banca declinado con mancuernas",
@@ -222,7 +230,8 @@
             ],
             "nombre_en": "Incline Push-up",
             "nivel": "principiante",
-            "tecnica_en": "Place your hands on a stable bench, chair or step and keep your body in a straight line. Lower your chest toward the support and push. This is the easiest version of the push-up."
+            "tecnica_en": "Place your hands on a stable bench, chair or step and keep your body in a straight line. Lower your chest toward the support and push. This is the easiest version of the push-up.",
+            "principal": true
         },
         {
             "nombre": "Flexiones de rodillas",
@@ -428,7 +437,8 @@
             ],
             "nombre_en": "Pull-Up",
             "nivel": "intermedio",
-            "tecnica_en": "Overhand grip, hands shoulder-width apart. Start the movement by retracting your shoulder blades. Pull up until your chin clears the bar; lower in a controlled way."
+            "tecnica_en": "Overhand grip, hands shoulder-width apart. Start the movement by retracting your shoulder blades. Pull up until your chin clears the bar; lower in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Jalón al pecho en polea",
@@ -441,7 +451,8 @@
             ],
             "nombre_en": "Lat Pulldown",
             "nivel": "principiante",
-            "tecnica_en": "Overhand grip, shoulder-width apart. Lean back slightly (10-15°) and bring the bar to your collarbone, squeezing your lats. Control the return."
+            "tecnica_en": "Overhand grip, shoulder-width apart. Lean back slightly (10-15°) and bring the bar to your collarbone, squeezing your lats. Control the return.",
+            "principal": true
         },
         {
             "nombre": "Remo con barra",
@@ -454,7 +465,8 @@
             ],
             "nombre_en": "Barbell Bent Over Row",
             "nivel": "intermedio",
-            "tecnica_en": "Flat back, hip hinge to ~45°. Pull the bar toward your navel, elbows close to your body. Retract and depress your shoulder blades at the end. Don't round your lower back."
+            "tecnica_en": "Flat back, hip hinge to ~45°. Pull the bar toward your navel, elbows close to your body. Retract and depress your shoulder blades at the end. Don't round your lower back.",
+            "principal": true
         },
         {
             "nombre": "Remo unilateral con mancuerna",
@@ -468,7 +480,8 @@
             ],
             "nombre_en": "Dumbbell Row",
             "nivel": "intermedio",
-            "tecnica_en": "Support your hand and knee on the bench. Back parallel to the floor. Pull the dumbbell toward your hip, rotating your torso slightly. On the way down, fully extend your shoulder blade."
+            "tecnica_en": "Support your hand and knee on the bench. Back parallel to the floor. Pull the dumbbell toward your hip, rotating your torso slightly. On the way down, fully extend your shoulder blade.",
+            "principal": true
         },
         {
             "nombre": "Remo sentado en polea",
@@ -481,7 +494,8 @@
             ],
             "nombre_en": "Seated Cable Row",
             "nivel": "principiante",
-            "tecnica_en": "Sit upright and grab the cable with elbows close to your body. Pull until the handle touches your abdomen, squeezing your shoulder blades. Don't use torso momentum."
+            "tecnica_en": "Sit upright and grab the cable with elbows close to your body. Pull until the handle touches your abdomen, squeezing your shoulder blades. Don't use torso momentum.",
+            "principal": true
         },
         {
             "nombre": "Pull-over con mancuerna",
@@ -495,7 +509,8 @@
             ],
             "nombre_en": "Dumbbell Pullover",
             "nivel": "intermedio",
-            "tecnica_en": "Support only your upper back on a bench. Hold a dumbbell with both hands. With slightly bent elbows, lower the dumbbell behind your head in an arc until you feel the stretch. Raise it in a controlled way."
+            "tecnica_en": "Support only your upper back on a bench. Hold a dumbbell with both hands. With slightly bent elbows, lower the dumbbell behind your head in an arc until you feel the stretch. Raise it in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Remo en T",
@@ -508,7 +523,8 @@
             ],
             "nombre_en": "T-Bar Row",
             "nivel": "intermedio",
-            "tecnica_en": "Place one end of the bar in a corner. Grab the other end with a handle. Straight back and torso leaning at ~45°. Pull the bar toward your chest, keeping your elbows close and squeezing your back."
+            "tecnica_en": "Place one end of the bar in a corner. Grab the other end with a handle. Straight back and torso leaning at ~45°. Pull the bar toward your chest, keeping your elbows close and squeezing your back.",
+            "principal": true
         },
         {
             "nombre": "Hiperextensiones lumbares",
@@ -521,7 +537,8 @@
             ],
             "nombre_en": "Hyperextension",
             "nivel": "intermedio",
-            "tecnica_en": "Hips resting on the Roman chair. Lower your torso to ~90° and rise until your body is in a straight line (don't hyperextend). Glutes active as you rise."
+            "tecnica_en": "Hips resting on the Roman chair. Lower your torso to ~90° and rise until your body is in a straight line (don't hyperextend). Glutes active as you rise.",
+            "principal": true
         },
         {
             "nombre": "Dominadas supinas (chin-up)",
@@ -534,7 +551,8 @@
             ],
             "nombre_en": "Chin-Up",
             "nivel": "intermedio",
-            "tecnica_en": "Underhand grip at shoulder width. Pull up until your chin clears the bar, driving your elbows toward your hips, and lower without swinging. Greater biceps involvement."
+            "tecnica_en": "Underhand grip at shoulder width. Pull up until your chin clears the bar, driving your elbows toward your hips, and lower without swinging. Greater biceps involvement.",
+            "principal": true
         },
         {
             "nombre": "Dominadas con agarre neutro",
@@ -587,7 +605,8 @@
             ],
             "nombre_en": "V-bar Lat Pulldown",
             "nivel": "principiante",
-            "tecnica_en": "Sit with your torso leaning back slightly and pull the V-handle toward your chest, bringing your shoulder blades together. Return by stretching fully without losing tension."
+            "tecnica_en": "Sit with your torso leaning back slightly and pull the V-handle toward your chest, bringing your shoulder blades together. Return by stretching fully without losing tension.",
+            "principal": true
         },
         {
             "nombre": "Jalón con agarre estrecho",
@@ -798,7 +817,8 @@
             ],
             "nombre_en": "Table Inverted Row",
             "nivel": "principiante",
-            "tecnica_en": "Lying under a sturdy table, grab the edge and pull your chest toward it with your body straight. An excellent at-home option for the back."
+            "tecnica_en": "Lying under a sturdy table, grab the edge and pull your chest toward it with your body straight. An excellent at-home option for the back.",
+            "principal": true
         },
         {
             "nombre": "Remo invertido en barra baja",
@@ -853,7 +873,8 @@
             ],
             "nombre_en": "Deadlift",
             "nivel": "intermedio",
-            "tecnica_en": "Bar over the middle of your foot, grip shoulder-width, neutral back and chest up. Push the floor away with your legs and extend your hips without rounding your back."
+            "tecnica_en": "Bar over the middle of your foot, grip shoulder-width, neutral back and chest up. Push the floor away with your legs and extend your hips without rounding your back.",
+            "principal": true
         },
         {
             "nombre": "Rack pull (peso muerto desde soportes)",
@@ -962,7 +983,8 @@
             ],
             "nombre_en": "Barbell Squat",
             "nivel": "intermedio",
-            "tecnica_en": "Feet shoulder-width apart, toes slightly turned out. Lower while keeping your torso upright and your knees aligned with your feet. Minimum depth: thighs parallel to the floor."
+            "tecnica_en": "Feet shoulder-width apart, toes slightly turned out. Lower while keeping your torso upright and your knees aligned with your feet. Minimum depth: thighs parallel to the floor.",
+            "principal": true
         },
         {
             "nombre": "Prensa de piernas",
@@ -975,7 +997,8 @@
             ],
             "nombre_en": "Leg Press",
             "nivel": "principiante",
-            "tecnica_en": "Back and glutes against the backrest. Feet on the platform shoulder-width apart. Lower until your knees form ~90° without lifting your glutes off the seat."
+            "tecnica_en": "Back and glutes against the backrest. Feet on the platform shoulder-width apart. Lower until your knees form ~90° without lifting your glutes off the seat.",
+            "principal": true
         },
         {
             "nombre": "Zancadas / estocadas",
@@ -989,7 +1012,8 @@
             ],
             "nombre_en": "Barbell Lunge",
             "nivel": "intermedio",
-            "tecnica_en": "Take a wide step forward. The back knee almost touches the floor; the front knee should not go past your toes. Torso upright throughout the movement."
+            "tecnica_en": "Take a wide step forward. The back knee almost touches the floor; the front knee should not go past your toes. Torso upright throughout the movement.",
+            "principal": true
         },
         {
             "nombre": "Peso muerto rumano",
@@ -1002,7 +1026,8 @@
             ],
             "nombre_en": "Romanian Deadlift",
             "nivel": "intermedio",
-            "tecnica_en": "Slightly bent knees, hip hinge: lower the bar sliding it down your legs until you feel the stretch in your hamstrings. Neutral back at all times."
+            "tecnica_en": "Slightly bent knees, hip hinge: lower the bar sliding it down your legs until you feel the stretch in your hamstrings. Neutral back at all times.",
+            "principal": true
         },
         {
             "nombre": "Hip thrust (empuje de cadera)",
@@ -1016,7 +1041,8 @@
             ],
             "nombre_en": "Barbell Hip Thrusts",
             "nivel": "intermedio",
-            "tecnica_en": "Shoulders resting on the bench, bar over the crease of your hips. Push until your hips, thighs and torso form a straight line. Squeeze your glutes at the top."
+            "tecnica_en": "Shoulders resting on the bench, bar over the crease of your hips. Push until your hips, thighs and torso form a straight line. Squeeze your glutes at the top.",
+            "principal": true
         },
         {
             "nombre": "Extensión de cuádriceps en máquina",
@@ -1029,7 +1055,8 @@
             ],
             "nombre_en": "Leg Extension",
             "nivel": "principiante",
-            "tecnica_en": "Adjust the seat so your knee joint lines up with the machine's pivot. Extend fully and hold for 1 sec; lower in a controlled way (2-3 sec)."
+            "tecnica_en": "Adjust the seat so your knee joint lines up with the machine's pivot. Extend fully and hold for 1 sec; lower in a controlled way (2-3 sec).",
+            "principal": true
         },
         {
             "nombre": "Curl femoral tumbado o sentado",
@@ -1042,7 +1069,8 @@
             ],
             "nombre_en": "Leg Curl",
             "nivel": "principiante",
-            "tecnica_en": "Hips pressed against the bench. Curl to ~120-130° (peak hamstring contraction); extend slowly without locking your knee at the end."
+            "tecnica_en": "Hips pressed against the bench. Curl to ~120-130° (peak hamstring contraction); extend slowly without locking your knee at the end.",
+            "principal": true
         },
         {
             "nombre": "Elevación de talones",
@@ -1056,7 +1084,8 @@
             ],
             "nombre_en": "Standing Calf Raise With Dumbbell",
             "nivel": "principiante",
-            "tecnica_en": "Stand on the edge of a step. Lower your heel below the level of the step for maximum stretch; rise onto your toes as high as possible. Pause at the top for 1 sec."
+            "tecnica_en": "Stand on the edge of a step. Lower your heel below the level of the step for maximum stretch; rise onto your toes as high as possible. Pause at the top for 1 sec.",
+            "principal": true
         },
         {
             "nombre": "Sentadilla búlgara",
@@ -1070,7 +1099,8 @@
             ],
             "nombre_en": "Barbell Bulgarian Split Squat",
             "nivel": "intermedio",
-            "tecnica_en": "Rear foot resting on the bench, front foot far enough forward so your knee doesn't pass your toes. Lower in a controlled way until the back knee almost touches the floor."
+            "tecnica_en": "Rear foot resting on the bench, front foot far enough forward so your knee doesn't pass your toes. Lower in a controlled way until the back knee almost touches the floor.",
+            "principal": true
         },
         {
             "nombre": "Peso muerto sumo con barra",
@@ -1083,7 +1113,8 @@
             ],
             "nombre_en": "Sumo Deadlift",
             "nivel": "intermedio",
-            "tecnica_en": "Feet much wider than shoulder width, toes pointing out. Grip inside your legs. Keep your torso upright and lower your hips. Push the floor away with your legs, keeping the bar close to your shins."
+            "tecnica_en": "Feet much wider than shoulder width, toes pointing out. Grip inside your legs. Keep your torso upright and lower your hips. Push the floor away with your legs, keeping the bar close to your shins.",
+            "principal": true
         },
         {
             "nombre": "Step-ups con mancuernas",
@@ -1097,7 +1128,8 @@
             ],
             "nombre_en": "Dumbbell Step-Up",
             "nivel": "intermedio",
-            "tecnica_en": "Hold a dumbbell in each hand. Place one foot on a stable box. Push your body up mainly with the leg on the box, without pushing off much with the trailing leg. Lower in a controlled way."
+            "tecnica_en": "Hold a dumbbell in each hand. Place one foot on a stable box. Push your body up mainly with the leg on the box, without pushing off much with the trailing leg. Lower in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Sentadilla frontal con barra",
@@ -1257,7 +1289,8 @@
             ],
             "nombre_en": "Dumbbell Goblet Squat",
             "nivel": "principiante",
-            "tecnica_en": "Hold a dumbbell against your chest, feet shoulder-width apart. Lower between your knees with an upright torso and rise by pushing the floor away. Ideal for learning the squat."
+            "tecnica_en": "Hold a dumbbell against your chest, feet shoulder-width apart. Lower between your knees with an upright torso and rise by pushing the floor away. Ideal for learning the squat.",
+            "principal": true
         },
         {
             "nombre": "Sentadilla con peso corporal",
@@ -1271,7 +1304,8 @@
             ],
             "nombre_en": "Bodyweight Squat",
             "nivel": "principiante",
-            "tecnica_en": "Feet shoulder-width apart, push your hips back and down with a straight back and your knees in line with your feet. Rise by pushing the floor away. The foundation of any at-home training."
+            "tecnica_en": "Feet shoulder-width apart, push your hips back and down with a straight back and your knees in line with your feet. Rise by pushing the floor away. The foundation of any at-home training.",
+            "principal": true
         },
         {
             "nombre": "Sentadilla sumo con peso corporal",
@@ -1327,7 +1361,8 @@
             ],
             "nombre_en": "Bodyweight Lunge",
             "nivel": "principiante",
-            "tecnica_en": "Take a long step forward and lower until both knees form ~90° with an upright torso. Push through your front heel to return. Alternate legs."
+            "tecnica_en": "Take a long step forward and lower until both knees form ~90° with an upright torso. Push through your front heel to return. Alternate legs.",
+            "principal": true
         },
         {
             "nombre": "Zancada hacia atrás",
@@ -1453,7 +1488,8 @@
             ],
             "nombre_en": "Glute Bridge",
             "nivel": "principiante",
-            "tecnica_en": "Lying on your back with bent knees, raise your hips squeezing your glutes until your shoulders, hips and knees form a line. Lower slowly. Ideal for activating the glutes."
+            "tecnica_en": "Lying on your back with bent knees, raise your hips squeezing your glutes until your shoulders, hips and knees form a line. Lower slowly. Ideal for activating the glutes.",
+            "principal": true
         },
         {
             "nombre": "Elevación de cadera con mancuerna",
@@ -1827,7 +1863,8 @@
             ],
             "nombre_en": "Barbell Military Press (Overhead press)",
             "nivel": "intermedio",
-            "tecnica_en": "Standing or seated. Press the bar/dumbbells vertically overhead until your arms are almost extended. Don't arch your lower back when locking out."
+            "tecnica_en": "Standing or seated. Press the bar/dumbbells vertically overhead until your arms are almost extended. Don't arch your lower back when locking out.",
+            "principal": true
         },
         {
             "nombre": "Elevaciones laterales con mancuernas",
@@ -1841,7 +1878,8 @@
             ],
             "nombre_en": "Dumbbell Lateral Raise",
             "nivel": "principiante",
-            "tecnica_en": "Slightly bent elbows. Raise until your arms are parallel to the floor (no higher). A slight external rotation at the end: pinky slightly higher than thumb."
+            "tecnica_en": "Slightly bent elbows. Raise until your arms are parallel to the floor (no higher). A slight external rotation at the end: pinky slightly higher than thumb.",
+            "principal": true
         },
         {
             "nombre": "Pájaros / vuelos posteriores",
@@ -1855,7 +1893,8 @@
             ],
             "nombre_en": "Incline Dumbbell Reverse Fly",
             "nivel": "intermedio",
-            "tecnica_en": "Torso bent ~90°. Raise the dumbbells with slightly bent elbows until they line up with your shoulders, squeezing your rear delts."
+            "tecnica_en": "Torso bent ~90°. Raise the dumbbells with slightly bent elbows until they line up with your shoulders, squeezing your rear delts.",
+            "principal": true
         },
         {
             "nombre": "Elevaciones frontales",
@@ -1869,7 +1908,8 @@
             ],
             "nombre_en": "Two Arm Dumbbell Front Raise",
             "nivel": "principiante",
-            "tecnica_en": "Standing, dumbbells in front with a neutral or overhand grip. Raise to eye level (no higher). Avoid swinging your torso."
+            "tecnica_en": "Standing, dumbbells in front with a neutral or overhand grip. Raise to eye level (no higher). Avoid swinging your torso.",
+            "principal": true
         },
         {
             "nombre": "Face pull (salud del hombro)",
@@ -1882,7 +1922,8 @@
             ],
             "nombre_en": "Face Pull",
             "nivel": "principiante",
-            "tecnica_en": "High cable with a rope. Pull toward your face, separating the rope and externally rotating your shoulders. Elbows above the grip. Focus on the rear delts and rotator cuff."
+            "tecnica_en": "High cable with a rope. Pull toward your face, separating the rope and externally rotating your shoulders. Elbows above the grip. Focus on the rear delts and rotator cuff.",
+            "principal": true
         },
         {
             "nombre": "Press Arnold",
@@ -1896,7 +1937,8 @@
             ],
             "nombre_en": "Arnold Press",
             "nivel": "intermedio",
-            "tecnica_en": "Seated with dumbbells at shoulder level and palms facing you (supinated). As you press the dumbbells up, rotate your wrists so that at the top your palms face forward (pronated)."
+            "tecnica_en": "Seated with dumbbells at shoulder level and palms facing you (supinated). As you press the dumbbells up, rotate your wrists so that at the top your palms face forward (pronated).",
+            "principal": true
         },
         {
             "nombre": "Encogimientos de hombros con barra reversa",
@@ -2316,7 +2358,8 @@
             ],
             "nombre_en": "Standing Dumbbell Shoulder Press",
             "nivel": "intermedio",
-            "tecnica_en": "Standing with your feet hip-width apart, press the dumbbells from your shoulders overhead without arching your back and lower in a controlled way."
+            "tecnica_en": "Standing with your feet hip-width apart, press the dumbbells from your shoulders overhead without arching your back and lower in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Elevación lateral a una mano con mancuerna",
@@ -2358,7 +2401,8 @@
             ],
             "nombre_en": "Barbell Curl",
             "nivel": "principiante",
-            "tecnica_en": "Elbows tucked at your sides. Curl the bar in a controlled arc to peak contraction; lower slowly (2-3 sec). Don't use torso momentum."
+            "tecnica_en": "Elbows tucked at your sides. Curl the bar in a controlled arc to peak contraction; lower slowly (2-3 sec). Don't use torso momentum.",
+            "principal": true
         },
         {
             "nombre": "Curl martillo con mancuernas",
@@ -2372,7 +2416,8 @@
             ],
             "nombre_en": "Hammer Curl",
             "nivel": "principiante",
-            "tecnica_en": "Neutral grip (thumbs up). Elbows fixed at your sides. Curl up to the contraction and lower in a controlled way. Works the brachialis and brachioradialis in addition to the biceps."
+            "tecnica_en": "Neutral grip (thumbs up). Elbows fixed at your sides. Curl up to the contraction and lower in a controlled way. Works the brachialis and brachioradialis in addition to the biceps.",
+            "principal": true
         },
         {
             "nombre": "Curl predicador",
@@ -2385,7 +2430,8 @@
             ],
             "nombre_en": "EZ Bar Preacher Curl",
             "nivel": "principiante",
-            "tecnica_en": "Arms resting on the angled pad. Avoid swinging and fully locking out at the bottom to maintain tension. Focus on the lower part of the biceps."
+            "tecnica_en": "Arms resting on the angled pad. Avoid swinging and fully locking out at the bottom to maintain tension. Focus on the lower part of the biceps.",
+            "principal": true
         },
         {
             "nombre": "Curl de bíceps con mancuernas",
@@ -2399,7 +2445,8 @@
             ],
             "nombre_en": "Dumbbell Curl",
             "nivel": "principiante",
-            "tecnica_en": "Standing with a dumbbell in each hand and your elbows tucked at your torso, bend your elbows until your biceps contract and lower in a controlled way without swinging your body."
+            "tecnica_en": "Standing with a dumbbell in each hand and your elbows tucked at your torso, bend your elbows until your biceps contract and lower in a controlled way without swinging your body.",
+            "principal": true
         },
         {
             "nombre": "Curl inclinado con mancuernas",
@@ -2696,7 +2743,8 @@
             ],
             "nombre_en": "Lying Barbell Triceps Extension",
             "nivel": "intermedio",
-            "tecnica_en": "EZ bar, lying down. Elbows pointing at the ceiling, fixed. Lower the bar to your forehead or behind your head (greater stretch). Extend without fully locking out."
+            "tecnica_en": "EZ bar, lying down. Elbows pointing at the ceiling, fixed. Lower the bar to your forehead or behind your head (greater stretch). Extend without fully locking out.",
+            "principal": true
         },
         {
             "nombre": "Extensión de triceps en polea alta",
@@ -2709,7 +2757,8 @@
             ],
             "nombre_en": "One Arm Triceps Pushdown",
             "nivel": "principiante",
-            "tecnica_en": "Rope or bar on a high cable. Elbows fixed at your sides. Extend to peak triceps contraction; return in a controlled way."
+            "tecnica_en": "Rope or bar on a high cable. Elbows fixed at your sides. Extend to peak triceps contraction; return in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Fondos entre bancos",
@@ -2723,7 +2772,8 @@
             ],
             "nombre_en": "Chair Dips",
             "nivel": "intermedio",
-            "tecnica_en": "Hands on the bench behind you, feet on the front bench or on the floor. Lower until your elbows form 90°; push up without fully locking out. Torso upright to focus on the triceps."
+            "tecnica_en": "Hands on the bench behind you, feet on the front bench or on the floor. Lower until your elbows form 90°; push up without fully locking out. Torso upright to focus on the triceps.",
+            "principal": true
         },
         {
             "nombre": "Extensión de tríceps con mancuerna sobre la cabeza",
@@ -2737,7 +2787,8 @@
             ],
             "nombre_en": "Seated Dumbbell Triceps Extension",
             "nivel": "principiante",
-            "tecnica_en": "Seated or standing. Hold a dumbbell with both hands overhead. Elbows close to your ears; lower the dumbbell behind your head, controlling the stretch of the long head of the triceps."
+            "tecnica_en": "Seated or standing. Hold a dumbbell with both hands overhead. Elbows close to your ears; lower the dumbbell behind your head, controlling the stretch of the long head of the triceps.",
+            "principal": true
         },
         {
             "nombre": "Patada de tríceps con mancuerna",
@@ -2751,7 +2802,8 @@
             ],
             "nombre_en": "Dumbbell Kickback",
             "nivel": "principiante",
-            "tecnica_en": "Torso parallel to the floor, elbow raised to hip height. Extend your forearm back to peak contraction; return in a controlled way. Elbow fixed."
+            "tecnica_en": "Torso parallel to the floor, elbow raised to hip height. Extend your forearm back to peak contraction; return in a controlled way. Elbow fixed.",
+            "principal": true
         },
         {
             "nombre": "Jalón de tríceps con barra en polea",
@@ -3088,7 +3140,8 @@
             ],
             "nombre_en": "Wrist Curl",
             "nivel": "principiante",
-            "tecnica_en": "Forearms resting on the bench or your thighs. Curl your wrist through a full range; lower with control. Light weight, high reps."
+            "tecnica_en": "Forearms resting on the bench or your thighs. Curl your wrist through a full range; lower with control. Light weight, high reps.",
+            "principal": true
         },
         {
             "nombre": "Curl de muñeca con mancuerna",
@@ -3102,7 +3155,8 @@
             ],
             "nombre_en": "Dumbbell Wrist Curl",
             "nivel": "principiante",
-            "tecnica_en": "Same as with the bar, but allows a greater individual range of motion per wrist. Work one arm at a time to correct imbalances."
+            "tecnica_en": "Same as with the bar, but allows a greater individual range of motion per wrist. Work one arm at a time to correct imbalances.",
+            "principal": true
         },
         {
             "nombre": "Curl invertido con barra",
@@ -3115,7 +3169,8 @@
             ],
             "nombre_en": "Barbell Reverse Curl",
             "nivel": "principiante",
-            "tecnica_en": "Overhand grip (back of the hand up). Elbows fixed at your sides. Works the forearm extensors and brachioradialis. Keep your wrist neutral as you curl."
+            "tecnica_en": "Overhand grip (back of the hand up). Elbows fixed at your sides. Works the forearm extensors and brachioradialis. Keep your wrist neutral as you curl.",
+            "principal": true
         },
         {
             "nombre": "Farmer's walk (caminata del granjero)",
@@ -3129,7 +3184,8 @@
             ],
             "nombre_en": "Farmer's Walk",
             "nivel": "principiante",
-            "tecnica_en": "Heavy load in both hands. Straight back, shoulders back and down. Walk with medium, firm steps. Focus on grip and core stability."
+            "tecnica_en": "Heavy load in both hands. Straight back, shoulders back and down. Walk with medium, firm steps. Focus on grip and core stability.",
+            "principal": true
         },
         {
             "nombre": "Curl de muñeca inverso (agarre prono)",
@@ -3225,7 +3281,8 @@
             ],
             "nombre_en": "High Plank",
             "nivel": "principiante",
-            "tecnica_en": "Forearms and feet on the floor. Activate your core (pull your navel toward your spine). Body in a straight line; don't raise your hips or let them sag."
+            "tecnica_en": "Forearms and feet on the floor. Activate your core (pull your navel toward your spine). Body in a straight line; don't raise your hips or let them sag.",
+            "principal": true
         },
         {
             "nombre": "Crunch abdominal clásico",
@@ -3239,7 +3296,8 @@
             ],
             "nombre_en": "Crunches",
             "nivel": "principiante",
-            "tecnica_en": "Lying down, knees bent. Lift only your shoulders off the floor by curling your spine (not your hips). Squeeze your abs at the top; lower in a controlled way."
+            "tecnica_en": "Lying down, knees bent. Lift only your shoulders off the floor by curling your spine (not your hips). Squeeze your abs at the top; lower in a controlled way.",
+            "principal": true
         },
         {
             "nombre": "Elevación de piernas colgado o en suelo",
@@ -3253,7 +3311,8 @@
             ],
             "nombre_en": "Hanging Leg Raises",
             "nivel": "intermedio",
-            "tecnica_en": "Hanging from a bar: pelvis slightly tucked. Raise your legs straight (or bent) to horizontal or higher. Avoid swinging."
+            "tecnica_en": "Hanging from a bar: pelvis slightly tucked. Raise your legs straight (or bent) to horizontal or higher. Avoid swinging.",
+            "principal": true
         },
         {
             "nombre": "Giros rusos",
@@ -3267,7 +3326,8 @@
             ],
             "nombre_en": "Russian Twist",
             "nivel": "intermedio",
-            "tecnica_en": "Seated with your torso at ~45°, feet raised (optional). Rotate your torso from side to side with control; not just your arms. Use a plate or dumbbell to add resistance."
+            "tecnica_en": "Seated with your torso at ~45°, feet raised (optional). Rotate your torso from side to side with control; not just your arms. Use a plate or dumbbell to add resistance.",
+            "principal": true
         },
         {
             "nombre": "Rueda abdominal",
@@ -3859,7 +3919,8 @@
             ],
             "nombre_en": "Burpee With Push-Up",
             "nivel": "intermedio",
-            "tecnica_en": "Stand → squat down → plank → push-up (optional) → jump with your arms overhead. Keep your core engaged throughout the whole sequence."
+            "tecnica_en": "Stand → squat down → plank → push-up (optional) → jump with your arms overhead. Keep your core engaged throughout the whole sequence.",
+            "principal": true
         },
         {
             "nombre": "Saltos de tijera",
@@ -3873,7 +3934,8 @@
             ],
             "nombre_en": "Jumping jack",
             "nivel": "principiante",
-            "tecnica_en": "Feet together at the start. Jump, opening your legs and arms at the same time; land softly on the balls of your feet with slightly bent knees."
+            "tecnica_en": "Feet together at the start. Jump, opening your legs and arms at the same time; land softly on the balls of your feet with slightly bent knees.",
+            "principal": true
         },
         {
             "nombre": "Salto a la cuerda",
@@ -3887,7 +3949,8 @@
             ],
             "nombre_en": "Jump Rope",
             "nivel": "intermedio",
-            "tecnica_en": "Feet together or alternating, knees slightly bent. Your wrists turn the rope (not your shoulders). Land softly on the balls of your feet."
+            "tecnica_en": "Feet together or alternating, knees slightly bent. Your wrists turn the rope (not your shoulders). Land softly on the balls of your feet.",
+            "principal": true
         },
         {
             "nombre": "Correr (carrera continua)",

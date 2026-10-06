@@ -1302,7 +1302,8 @@
                 html += `<button type="button" class="exercises-more-btn" id="exercises-more-btn">${c.T("Mostrar más", "Show more")} (${list.length - shown.length})</button>`;
             }
             if (html === "") {
-                html = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">${c.T("No hay ejercicios con estos filtros.", "No exercises match these filters.")}</p>`;
+                const clear = c.hayFiltros() ? `<br><button type="button" class="exercises-more-btn" id="exercises-clear-filters" style="width:auto;padding:8px 16px;margin-top:10px;">${c.T("Quitar filtros", "Clear filters")}</button>` : "";
+                html = `<p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 20px 0;">${c.T("No hay ejercicios con estos filtros.", "No exercises match these filters.")}${clear}</p>`;
             }
 
             container.innerHTML = html;
@@ -1378,6 +1379,7 @@
             const grid = document.getElementById("exercises-grid-container");
             grid?.addEventListener("click", (e) => {
                 if (e.target.closest("#exercises-more-btn")) { visibleLimit += c.PAGE_SIZE; renderExercises(); return; }
+                if (e.target.closest("#exercises-clear-filters")) { c.limpiarFiltros(); renderFilterChips(); renderExercises(); return; }
                 const card = e.target.closest(".exercise-item-card");
                 if (card) openExerciseDetail(card.getAttribute("data-ex"));
             });

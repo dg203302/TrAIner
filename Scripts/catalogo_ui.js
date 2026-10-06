@@ -24,9 +24,12 @@
 	};
 	const NIVELES = { principiante: ["Principiante", "Beginner"], intermedio: ["Intermedio", "Intermediate"], avanzado: ["Avanzado", "Advanced"] };
 
+	// Los filtros de lugar y nivel NO se recuerdan entre visitas: siempre se empieza viendo todos los ejercicios.
+	// (Antes se guardaban y un filtro olvidado ocultaba ejercicios sin que el usuario lo notara.)
+	try { localStorage.removeItem(KEYS.env); localStorage.removeItem(KEYS.nivel); } catch { /* sin almacenamiento */ }
 	const state = {
-		env: ["all", "casa", "gimnasio"].includes(read(KEYS.env, "all")) ? read(KEYS.env, "all") : "all",
-		nivel: Object.keys(NIVELES).includes(read(KEYS.nivel, "all")) ? read(KEYS.nivel, "all") : "all",
+		env: "all",
+		nivel: "all",
 		special: null, // "fav" | "recent" | null
 		limit: PAGE_SIZE,
 	};
@@ -78,8 +81,10 @@
 		write(KEYS.recent, [name, ...recents().filter((x) => x !== name)].slice(0, 12));
 	};
 
-	const setEnv = (v) => { state.env = v; write(KEYS.env, v); state.limit = PAGE_SIZE; };
-	const setNivel = (v) => { state.nivel = v; write(KEYS.nivel, v); state.limit = PAGE_SIZE; };
+	const setEnv = (v) => { state.env = v; state.limit = PAGE_SIZE; };
+	const setNivel = (v) => { state.nivel = v; state.limit = PAGE_SIZE; };
+	const hayFiltros = () => state.env !== "all" || state.nivel !== "all";
+	const limpiarFiltros = () => { state.env = "all"; state.nivel = "all"; state.limit = PAGE_SIZE; };
 
 	// Texto en el que busca el buscador: nombre ES/EN, grupo, nivel y entorno. Todos los términos deben aparecer.
 	const haystack = (ex) => norm([ex.nombre, ex.nombre_en, ex.grupo, GRUPOS_EN[ex.grupo], ex.nivel, nivelLabel(ex.nivel), (ex.entorno || []).includes("casa") ? "casa home" : "gimnasio gym"].join(" "));
@@ -106,6 +111,13 @@
 			.map((ex) => ({ ...ex, _grupo: ex.grupo }));
 	};
 
+	// Cuántos ejercicios coincidirían si no hubiera filtros de lugar/nivel (para avisar de lo que está oculto).
+	const contarSinFiltros = (db, opts) => {
+		const e = state.env, n = state.nivel;
+		state.env = "all"; state.nivel = "all";
+		try { return filter(db, opts).length; } finally { state.env = e; state.nivel = n; }
+	};
+
 	const badgesHtml = (ex) => {
 		const casa = Array.isArray(ex.entorno) && ex.entorno.includes("casa");
 		const parts = [];
@@ -118,6 +130,6 @@
 
 	window.PTCatalog = {
 		PAGE_SIZE, state, norm, esc, T, isEn, groupLabel, displayName, nivelLabel, lookup, filter, buildIndex,
-		favs, recents, isFav, toggleFav, pushRecent, setEnv, setNivel, badgesHtml, fallbackSvg,
+		favs, recents, isFav, toggleFav, pushRecent, setEnv, setNivel, hayFiltros, limpiarFiltros, contarSinFiltros, badgesHtml, fallbackSvg,
 	};
 })();
