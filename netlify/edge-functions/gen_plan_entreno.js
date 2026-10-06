@@ -224,12 +224,13 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, lugar, objetivo, i
 
 
 	const allExercises = Object.values(catalogFlat).map(e => e.nombre);
+	const allExercisesCasa = Object.values(catalogFlat).filter(e => Array.isArray(e.entorno) ? e.entorno.includes("casa") : true).map(e => e.nombre);
 
 	const pickFallbackPool = () => {
 		if (soloEjerciciosSeleccionados) return ejerciciosSeleccionados;
 		const entornoKey = normalizeKey(lugar);
 		if (entornoKey.includes("casa")) {
-			return allExercises.filter((name) => {
+			return allExercisesCasa.filter((name) => {
 				const k = normalizeKey(name);
 				return !k.includes("polea") && !k.includes("maquina") && !k.includes("prensa") && !k.includes("barra") && !k.includes("predicador");
 			});
@@ -391,10 +392,29 @@ const generatePlanEntreno = async (payload, request) => {
 	const progresionMetodoValue = t("Sobrecarga progresiva", "Progressive overload");
 	const descansoLabel = t("Descanso", "Rest");
 
+	// Catálogo por grupo (filtrado por entorno) construido desde entrenamientos.json; null si no hay catálogo.
+	const catalogoDinamico = (() => {
+		const esCasa = normalizeKey(lugar).includes("casa");
+		const porGrupo = {};
+		if (Object.keys(catalogGroups).length > 0) {
+			for (const [g, lista] of Object.entries(catalogGroups)) porGrupo[g] = lista;
+		} else {
+			for (const ex of Object.values(catalogFlat)) if (ex?.grupo) (porGrupo[ex.grupo] = porGrupo[ex.grupo] || []).push(ex);
+		}
+		const lineas = [];
+		for (const [g, lista] of Object.entries(porGrupo)) {
+			const nombres = lista
+				.filter((ex) => !esCasa || !Array.isArray(ex.entorno) || ex.entorno.includes("casa"))
+				.map((ex) => ex.nombre);
+			if (nombres.length) lineas.push(`${g}: ${nombres.join(", ")}.`);
+		}
+		return lineas.length ? `Ejercicios disponibles por grupo (elige según entorno/objetivo):\n${lineas.join("\n")}` : null;
+	})();
+
 	// Lista de ejercicios disponibles solo si NO hay preferencias (para dar contexto de selección)
 	const ejerciciosContexto = ejerciciosSeleccionados.length > 0
 		? `Usa SOLO estos ejercicios (repite si es necesario): ${ejerciciosSeleccionadosJson}`
-		: `Ejercicios disponibles por grupo (elige según entorno/objetivo):
+		: catalogoDinamico || `Ejercicios disponibles por grupo (elige según entorno/objetivo):
 Pecho: Press de banca plano con barra, Press de banca inclinado con barra, Press de banca inclinado con mancuernas, Flexiones de brazos (peso corporal), Aperturas con mancuernas, Fondos en paralelas (pecho bajo/tríceps), Cruce de poleas.
 Espalda: Dominadas (peso corporal), Jalón al pecho en polea, Remo con barra, Remo unilateral con mancuerna, Remo sentado en polea, Pull-over con mancuerna, Remo en T, Hiperextensiones lumbares.
 Piernas: Sentadilla libre, Prensa de piernas, Zancadas / estocadas, Peso muerto rumano, Hip thrust (empuje de cadera), Extensión de cuádriceps en máquina, Curl femoral tumbado o sentado, Elevación de talones, Sentadilla búlgara, Peso muerto sumo con barra, Step-ups con mancuernas.
