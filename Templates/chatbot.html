@@ -713,6 +713,16 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/Styles/anuncio_fijo.css?v=1">
+    <style>
+        /* Chat: la franja del anuncio va por encima del campo de escritura (que ya está sobre la barra inferior). */
+        :root { --pt-ad-bottom: calc(64px + 32px + 56px + 10px + env(safe-area-inset-bottom, 12px)); }
+        body.has-fixed-ad .chat-messages { padding-bottom: calc(64px + 28px + 64px + env(safe-area-inset-bottom, 12px) + var(--pt-ad-h) + 8px); }
+        @media (max-width: 380px) {
+            :root { --pt-ad-bottom: calc(64px + 24px + 56px + 10px + env(safe-area-inset-bottom, 12px)); }
+        }
+    </style>
+    <script src="/Scripts/anuncio_fijo.js?v=1" defer></script>
 </head>
 
 <body>

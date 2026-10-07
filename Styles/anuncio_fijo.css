@@ -1,0 +1,67 @@
+/* Anuncio fijo (solo móvil): franja compacta justo encima de la barra de navegación inferior.
+   Solo cambia la posición y el tamaño del contenedor existente (.pt-ad-container); el anuncio es el mismo. */
+
+:root {
+	/* Distancia al borde inferior: 16px (margen de la barra) + 64px (barra) + 10px de separación. */
+	--pt-ad-bottom: calc(16px + 64px + 10px + env(safe-area-inset-bottom, 12px));
+	/* Alto de la franja; el script lo ajusta con la medida real. */
+	--pt-ad-h: 78px;
+}
+
+body .pt-ad-container {
+	position: fixed;
+	left: 50%;
+	bottom: var(--pt-ad-bottom);
+	transform: translateX(-50%);
+	width: calc(100% - 36px);
+	max-width: 380px;
+	margin: 0;
+	/* Por encima del contenido y por debajo de la pantalla de carga (90), del header (100) y del menú (1000). */
+	z-index: 80;
+	pointer-events: none;
+}
+
+body .pt-ad-card {
+	pointer-events: auto;
+	padding: 5px 10px 6px;
+	gap: 2px;
+	border-radius: 24px;
+	background: rgba(22, 25, 31, 0.86);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+body .pt-ad-header {
+	padding-bottom: 2px;
+	border-bottom: none;
+}
+
+body .pt-ad-tag { font-size: 9px; letter-spacing: 0.7px; }
+body .pt-ad-provider { font-size: 8.5px; }
+
+/* El banner (728x90) se escala para ocupar el ancho de la franja; el alto sale de esa escala. */
+body .pt-ad-slot-wrapper {
+	position: relative;
+	min-height: 0;
+	height: var(--pt-ad-slot-h, 44px);
+	border-radius: 14px;
+	overflow: hidden;
+}
+
+body .pt-ad-slot-wrapper iframe,
+body .pt-ad-slot-wrapper img {
+	position: absolute;
+	left: 0;
+	top: 0;
+	max-width: none !important;
+	width: 728px !important;
+	height: 90px !important;
+	margin: 0;
+	transform-origin: 0 0;
+	transform: scale(var(--pt-ad-scale, 0.47));
+}
+
+/* Deja espacio al final del contenido para que la franja no tape nada. */
+body.has-fixed-ad .app-container {
+	padding-bottom: calc(var(--nav-height, 78px) + 36px + env(safe-area-inset-bottom, 20px) + var(--pt-ad-h) + 12px);
+}
