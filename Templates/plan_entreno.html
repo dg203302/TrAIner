@@ -2346,7 +2346,8 @@
             width: 100vw;
             height: 100vh;
             background: #0c0d10;
-            z-index: 999999;
+            /* Por debajo del header (100), la barra lateral (120) y el menú inferior (1000): la carga se ve detrás de ellos. */
+            z-index: 90;
             display: flex;
             align-items: center;
             justify-content: center;
