@@ -21,6 +21,7 @@
 	const GRUPOS_EN = {
 		"Pecho": "Chest", "Espalda": "Back", "Piernas": "Legs", "Hombros": "Shoulders", "Brazos": "Arms",
 		"Tríceps": "Triceps", "Antebrazos": "Forearms", "Abdomen / core": "Abs / core", "Cardio / acondicionamiento": "Cardio / conditioning",
+		"Movilidad / estiramientos": "Mobility / stretching",
 	};
 	const NIVELES = { principiante: ["Principiante", "Beginner"], intermedio: ["Intermedio", "Intermediate"], avanzado: ["Avanzado", "Advanced"] };
 

@@ -16,7 +16,8 @@
     <!-- Scripts auxiliares -->
     <script src="/Scripts/ui_idioma.js"></script>
     <script src="/Scripts/ui_novedades.js?v=1"></script>
-    <script src="/Scripts/catalogo_ui.js?v=1"></script>
+    <script src="/Scripts/catalogo_ui.js?v=2"></script>
+    <script src="/Scripts/planes_multi.js?v=1"></script>
     <script src="/Scripts/spa_router.js"></script>
 
     <style>
@@ -365,6 +366,60 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+
+        /* ── SELECTOR DE PLANES (varios planes de entreno) ── */
+        .plan-switcher {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 2px 12px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .plan-switcher::-webkit-scrollbar {
+            display: none;
+        }
+
+        .plan-switch-chip {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 220px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary, #a9b0bd);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .plan-switch-chip > span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .plan-switch-chip svg {
+            flex: 0 0 auto;
+            opacity: 0.65;
+        }
+
+        .plan-switch-chip.is-active {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #0c0d10;
+        }
+
+        .plan-switch-chip.plan-switch-new {
+            border-style: dashed;
+            color: var(--accent, #9df3ff);
         }
 
         /* ── HERO CARD DEL PLAN DE ENTRENO ── */
@@ -3496,6 +3551,8 @@
         let isGeneratingPlan = false;
         let isLoggingWorkout = false;
         let isSavingManualPlan = false;
+        let planLibrary = { activoId: null, planes: [] }; // todos los planes del usuario (window.PTPlanes)
+        let creandoPlanNuevo = false; // el generador IA / editor manual abierto crea un plan aparte en vez de reemplazar el activo
 
         // ── SISTEMA DE MODALES, SELECT Y TOASTS GLASSMORPHIC ──
         let toastTimer = null;
@@ -3710,6 +3767,81 @@
                     }
                 };
 
+                btnCancel.addEventListener("click", onCancel);
+                btnConfirm.addEventListener("click", onConfirm);
+                backdrop.addEventListener("click", onBackdrop);
+
+                backdrop.classList.add("is-open");
+            });
+        }
+
+        function showGlassPrompt({ title, desc, value = "", maxLength = 28, confirmText = "Guardar", cancelText = "Cancelar" }) {
+            return new Promise((resolve) => {
+                const backdrop = document.getElementById("glass-modal-backdrop");
+                const titleEl = document.getElementById("glass-modal-title");
+                const descEl = document.getElementById("glass-modal-desc");
+                const iconWrap = document.getElementById("glass-modal-icon");
+                const slot = document.getElementById("glass-modal-custom-slot");
+                const btnCancel = document.getElementById("btn-modal-cancel");
+                const btnConfirm = document.getElementById("btn-modal-confirm");
+
+                if (!backdrop || !slot) {
+                    resolve(null);
+                    return;
+                }
+
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                btnConfirm.textContent = confirmText;
+                btnCancel.textContent = cancelText;
+
+                btnCancel.style.display = "block";
+                btnConfirm.style.flex = "1.2";
+
+                iconWrap.className = "glass-modal-icon-wrap";
+                btnConfirm.className = "btn-modal-confirm";
+                iconWrap.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                    </svg>
+                `;
+
+                slot.style.display = "block";
+                slot.innerHTML = `<input type="text" class="glass-modal-select" id="glass-modal-text-field" maxlength="${maxLength}" autocomplete="off" style="background-image: none; padding-right: 16px;">`;
+                const input = document.getElementById("glass-modal-text-field");
+                input.value = value;
+                setTimeout(() => { input.focus(); input.select(); }, 80);
+
+                const cleanup = () => {
+                    backdrop.classList.remove("is-open");
+                    slot.style.display = "none";
+                    slot.innerHTML = "";
+                    btnCancel.removeEventListener("click", onCancel);
+                    btnConfirm.removeEventListener("click", onConfirm);
+                    backdrop.removeEventListener("click", onBackdrop);
+                };
+
+                const onCancel = () => {
+                    cleanup();
+                    resolve(null);
+                };
+
+                const onConfirm = () => {
+                    const val = input.value;
+                    cleanup();
+                    resolve(val);
+                };
+
+                const onBackdrop = (e) => {
+                    if (e.target === backdrop) {
+                        cleanup();
+                        resolve(null);
+                    }
+                };
+
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") onConfirm();
+                });
                 btnCancel.addEventListener("click", onCancel);
                 btnConfirm.addEventListener("click", onConfirm);
                 backdrop.addEventListener("click", onBackdrop);
@@ -3984,8 +4116,134 @@
                 }
             }
 
-            planParsedDias = ordenarDiasPlan(parsePlanDias(planRaw));
+            planLibrary = window.PTPlanes.leer(planRaw);
+            aplicarPlanActivo();
+        }
+
+        // ── 4.1 VARIOS PLANES: el activo se muestra y edita como siempre; los demás esperan en la biblioteca ──
+        function diasDelPlanActivo() {
+            return ordenarDiasPlan(parsePlanDias(window.PTPlanes.activo(planLibrary)?.plan));
+        }
+
+        function aplicarPlanActivo() {
+            planParsedDias = diasDelPlanActivo();
             renderUI();
+        }
+
+        // Guarda la biblioteca completa (localStorage + Supabase + backend) y devuelve el texto guardado.
+        async function persistirPlanes(generadoConIa) {
+            const planStr = window.PTPlanes.serializar(planLibrary);
+            localStorage.setItem("plan_entreno_usuario", planStr);
+
+            const userId = currentUser?.id || localStorage.getItem("id_usuario");
+            if (!userId) return planStr;
+
+            try {
+                const fila = { ID_user: userId, Plan_entreno: planStr };
+                if (typeof generadoConIa === "boolean") fila.Generado_con_ia = generadoConIa;
+                await supabase.from("Planes").upsert(fila, { onConflict: "ID_user" });
+            } catch (e) {
+                console.warn("Error guardando planes en Supabase:", e);
+            }
+
+            try {
+                await fetch("/actualizar_cambios_plan", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ plan_entreno: planStr, id_usuario: userId })
+                });
+            } catch (e) {
+                console.warn("Error guardando cambios en /actualizar_cambios_plan:", e);
+            }
+            return planStr;
+        }
+
+        function planSwitcherHtml() {
+            if (planLibrary.planes.length === 0) return "";
+            const esc = window.PTCatalog.esc;
+            const chips = planLibrary.planes.map(p => {
+                const isAct = p.id === planLibrary.activoId;
+                return `
+                    <button type="button" class="plan-switch-chip ${isAct ? 'is-active' : ''}" data-plan-id="${esc(p.id)}" role="tab" aria-selected="${isAct}" ${isAct ? 'title="Renombrar plan"' : ''}>
+                        <span translate="no">${esc(p.nombre)}</span>
+                        ${isAct ? `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>` : ''}
+                    </button>`;
+            }).join("");
+            return `
+                <div class="plan-switcher" role="tablist" aria-label="Mis planes">
+                    ${chips}
+                    <button type="button" class="plan-switch-chip plan-switch-new" id="btn-plan-nuevo">+ Nuevo plan</button>
+                </div>`;
+        }
+
+        function bindPlanSwitcher(root) {
+            root.querySelectorAll(".plan-switch-chip[data-plan-id]").forEach(chip => {
+                chip.addEventListener("click", () => {
+                    const id = chip.getAttribute("data-plan-id");
+                    if (id === planLibrary.activoId) handleRenombrarPlan();
+                    else handleCambiarPlan(id);
+                });
+            });
+            root.querySelector("#btn-plan-nuevo")?.addEventListener("click", handleNuevoPlan);
+        }
+
+        function handleCambiarPlan(id) {
+            if (!window.PTPlanes.activar(planLibrary, id)) return;
+            selectedDayIndex = 0;
+            window.__dayManuallySelected = false;
+            aplicarPlanActivo();
+            persistirPlanes().catch(err => console.warn("Error guardando el plan activo:", err));
+        }
+
+        async function handleRenombrarPlan() {
+            const plan = window.PTPlanes.activo(planLibrary);
+            if (!plan) return;
+
+            const nombre = await showGlassPrompt({
+                title: "Renombrar plan",
+                desc: "Ponle un nombre para distinguirlo de tus otros planes.",
+                value: plan.nombre,
+                maxLength: window.PTPlanes.MAX_NOMBRE
+            });
+            if (nombre === null) return;
+
+            const motivo = window.PTPlanes.renombrar(planLibrary, plan.id, nombre);
+            if (motivo) {
+                showGlassToast(motivo === "repetido" ? "Ya tienes un plan con ese nombre" : "Escribe un nombre para el plan", "danger");
+                return;
+            }
+            renderUI();
+            persistirPlanes().catch(err => console.warn("Error guardando el nombre del plan:", err));
+        }
+
+        async function handleNuevoPlan() {
+            if (!window.PTPlanes.puedeCrear(planLibrary)) {
+                await showGlassAlert({
+                    iconType: "warning",
+                    title: "Límite de planes",
+                    desc: `Puedes tener hasta ${window.PTPlanes.MAX_PLANES} planes. Elimina uno para crear otro.`
+                });
+                return;
+            }
+
+            const OPCION_IA = "Generar con IA";
+            const OPCION_MANUAL = "Crear manualmente";
+            const modo = await showGlassSelect({
+                title: "Nuevo plan",
+                desc: "Se guarda aparte: tus otros planes no se modifican. ¿Cómo quieres crearlo?",
+                options: [OPCION_IA, OPCION_MANUAL],
+                confirmText: "Continuar",
+                cancelText: "Cancelar"
+            });
+            if (!modo) return;
+
+            creandoPlanNuevo = true;
+            if (modo === OPCION_MANUAL) {
+                planParsedDias = [];
+                await openManualEditorModal(0);
+            } else {
+                openAiGeneratorModal();
+            }
         }
 
         // ── 5. RENDERIZADO PRINCIPAL DE LA VISTA ──
@@ -4004,7 +4262,7 @@
                 if (dayActionContainer) dayActionContainer.style.display = "none";
                 exercisesContainer.innerHTML = "";
 
-                heroContainer.innerHTML = `
+                heroContainer.innerHTML = `${planSwitcherHtml()}
                     <div class="plan-empty-card">
                         <div class="plan-empty-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -4033,6 +4291,7 @@
                     </div>
                 `;
 
+                bindPlanSwitcher(heroContainer);
                 document.getElementById("btn-open-ai-empty")?.addEventListener("click", () => openAiGeneratorModal());
                 document.getElementById("btn-open-creator-empty")?.addEventListener("click", () => openManualEditorModal(0));
                 return;
@@ -4061,7 +4320,7 @@
                 }
             }
 
-            heroContainer.innerHTML = `
+            heroContainer.innerHTML = `${planSwitcherHtml()}
                 <div class="plan-hero-card">
                     <div class="plan-hero-top">
                         <span class="plan-badge-tag highlight" data-i18n-en="Active Routine">Rutina Activa</span>
@@ -4085,7 +4344,7 @@
                         </div>
                     </div>
                     <div class="plan-hero-body">
-                        <h2 class="plan-hero-title">Plan de Entrenamiento Semanal</h2>
+                        <h2 class="plan-hero-title" translate="no">${window.PTCatalog.esc(window.PTPlanes.activo(planLibrary)?.nombre || "Plan de Entrenamiento Semanal")}</h2>
                         <p class="plan-hero-desc">Rutina personalizada con progresión de series, cargas y GIFs.</p>
                         <div class="plan-meta-row">
                             <div class="plan-meta-item">
@@ -4101,6 +4360,7 @@
                 </div>
             `;
 
+            bindPlanSwitcher(heroContainer);
             document.getElementById("btn-hero-regen-ai")?.addEventListener("click", () => openAiGeneratorModal());
             document.getElementById("btn-hero-edit-manual")?.addEventListener("click", () => openManualEditorModal(selectedDayIndex));
             document.getElementById("btn-hero-delete")?.addEventListener("click", handleEliminarPlan);
@@ -4394,6 +4654,12 @@
             backdrop.setAttribute("aria-hidden", "true");
             const catBox = document.getElementById("catalog-picker-box");
             if (catBox) catBox.style.display = "none";
+
+            // Si se estaba creando un plan nuevo y se cerró sin guardar, se vuelve al plan activo.
+            if (creandoPlanNuevo) {
+                creandoPlanNuevo = false;
+                planParsedDias = diasDelPlanActivo();
+            }
         }
 
         function renderManualEditorTabs() {
@@ -4857,31 +5123,10 @@
                     }
                 };
 
-                const planStr = JSON.stringify(planObj);
-                localStorage.setItem("plan_entreno_usuario", planStr);
-
-                const userId = currentUser?.id || localStorage.getItem("id_usuario");
-                if (userId) {
-                    try {
-                        await supabase.from("Planes").upsert({
-                            ID_user: userId,
-                            Plan_entreno: planStr,
-                            Generado_con_ia: false
-                        }, { onConflict: "ID_user" });
-                    } catch (e) {
-                        console.warn("Error guardando plan en Supabase:", e);
-                    }
-                }
-
-                try {
-                    await fetch("/actualizar_cambios_plan", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ plan_entreno: planStr, id_usuario: userId })
-                    });
-                } catch (e) {
-                    console.warn("Error guardando cambios en /actualizar_cambios_plan:", e);
-                }
+                // Reemplaza el plan activo o, si se pidió un plan nuevo, lo añade aparte y lo activa.
+                window.PTPlanes.guardar(planLibrary, planObj, { nuevo: creandoPlanNuevo });
+                creandoPlanNuevo = false;
+                await persistirPlanes(false);
 
                 isSavingManualPlan = false;
                 closeManualEditorModal();
@@ -4910,9 +5155,12 @@
 
         // ── 11. ELIMINAR PLAN ──
         async function handleEliminarPlan() {
+            const planActivo = window.PTPlanes.activo(planLibrary);
             const confirmed = await showGlassConfirm({
                 title: "¿Eliminar plan de entreno?",
-                desc: "Esta acción borrará tu rutina actual. Podrás crear una nueva cuando quieras.",
+                desc: planActivo && planLibrary.planes.length > 1
+                    ? `Se borrará «${planActivo.nombre}». Tus otros planes no se modifican.`
+                    : "Esta acción borrará tu rutina actual. Podrás crear una nueva cuando quieras.",
                 iconType: "danger",
                 confirmText: "Sí, eliminar plan",
                 cancelText: "Cancelar",
@@ -4921,22 +5169,15 @@
 
             if (!confirmed) return;
 
-            localStorage.setItem("plan_entreno_usuario", "Ninguno");
-            const userId = currentUser?.id || localStorage.getItem("id_usuario");
-
-            try {
-                if (userId) {
-                    await supabase.from("Planes").update({ Plan_entreno: "Ninguno" }).eq("ID_user", userId);
-                }
-                await fetch("/actualizar_cambios_plan", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ plan_entreno: "Ninguno", id_usuario: userId })
-                });
-            } catch (e) { }
+            // Se elimina solo el plan activo; si quedan otros, pasa a mostrarse el vecino.
+            if (planActivo) window.PTPlanes.eliminar(planLibrary, planActivo.id);
+            else planLibrary = { activoId: null, planes: [] };
+            await persistirPlanes();
 
             showGlassToast("Plan de entrenamiento eliminado", "success");
-            cargarPlanEntreno();
+            selectedDayIndex = 0;
+            window.__dayManuallySelected = false;
+            aplicarPlanActivo();
         }
 
         // ── 12. REGISTRO DE ENTRENO CON RUEDAS DRUM PICKER IOS ──
@@ -5345,7 +5586,7 @@
             }
 
             // Título dinámico
-            const hasPlan = planParsedDias && planParsedDias.length > 0;
+            const hasPlan = !creandoPlanNuevo && planParsedDias && planParsedDias.length > 0;
             document.getElementById("ai-modal-title").textContent = hasPlan ? "Regenerar con IA" : "Generar con IA";
             document.getElementById("ai-modal-subtitle").textContent = hasPlan
                 ? "Reconfigura y genera una nueva rutina con inteligencia artificial"
@@ -5372,6 +5613,7 @@
             if (!backdrop) return;
             backdrop.classList.remove("is-open");
             backdrop.setAttribute("aria-hidden", "true");
+            creandoPlanNuevo = false;
         }
 
         function syncAiPillButtons() {
@@ -5467,7 +5709,11 @@
                 if (Array.isArray(ex.entorno)) return ex.entorno.includes("casa");
                 return !/polea|máquina|maquina|prensa|barra|predicador|dominadas|banco|hack|jalón|jalon/i.test(String(ex.nombre || ""));
             };
-            const todosAptos = Object.values(ENTRENAMIENTOS_DB || {}).flat().filter(aptoEntorno);
+            // La movilidad y los estiramientos no entran en el plan generado: se añaden a mano desde el catálogo.
+            const todosAptos = Object.entries(ENTRENAMIENTOS_DB || {})
+                .filter(([grupo]) => grupo !== "Movilidad / estiramientos")
+                .flatMap(([, lista]) => lista)
+                .filter(aptoEntorno);
             const usoSemana = new Map(); // veces que se usó cada ejercicio en la semana, para variar entre días
 
             // Solo se generan los días de entrenamiento elegidos (sin días de descanso).
@@ -5642,52 +5888,26 @@
                     });
                 }
 
-                const planToStore = typeof planEntrenoFinal === "object" ? JSON.stringify(planEntrenoFinal) : planEntrenoFinal;
+                // 3. Guardar en la biblioteca: reemplaza el plan activo o, si se pidió un plan nuevo, lo añade aparte y lo activa
+                if (!window.PTPlanes.guardar(planLibrary, planEntrenoFinal, { nuevo: creandoPlanNuevo })) {
+                    throw new Error("El plan generado no tiene un formato válido.");
+                }
+                creandoPlanNuevo = false;
+                selectedDayIndex = 0;
+                window.__dayManuallySelected = false;
 
-                // 3. Guardar en Backend (sin bloquear)
+                // 4. Sincronizar con Supabase Planes y el backend (que crea la fila del usuario si aún no existe)
+                const planToStore = await persistirPlanes(true);
                 fetch("/generar_plan_entreno", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         id_usuario: userId,
-                        plan_entreno: planEntrenoFinal,
+                        plan_entreno: planToStore,
                     }),
                 }).catch(e => console.warn("Aviso guardando en backend:", e));
 
-                // 4. Sincronizar con Supabase Planes
-                if (userId) {
-                    try {
-                        const { data: existingPlanes } = await supabase
-                            .from("Planes")
-                            .select("id")
-                            .eq("ID_user", userId)
-                            .limit(1);
-
-                        if (existingPlanes && existingPlanes.length > 0) {
-                            await supabase
-                                .from("Planes")
-                                .update({
-                                    Plan_entreno: planToStore,
-                                    Generado_con_ia: true
-                                })
-                                .eq("ID_user", userId);
-                        } else {
-                            await supabase
-                                .from("Planes")
-                                .insert({
-                                    ID_user: userId,
-                                    Plan_entreno: planToStore,
-                                    Plan_alimenta: "Proximamente",
-                                    Generado_con_ia: true
-                                });
-                        }
-                    } catch (dbErr) {
-                        console.warn("Aviso actualizando Supabase Planes:", dbErr);
-                    }
-                }
-
-                // 5. Guardar en localStorage
-                localStorage.setItem("plan_entreno_usuario", planToStore);
+                // 5. Preferencias del último plan generado
                 localStorage.setItem("plan_lugar", aiSelectedLugar);
                 localStorage.setItem("plan_objetivo", aiSelectedObjetivo);
                 localStorage.setItem("plan_intensidad", aiSelectedIntensidad);

@@ -1,5 +1,6 @@
 // Escribe "tecnica_en" en Datos/entrenamientos.json a partir de scripts_datos/tecnicas/*.js.
 // Los ejercicios nuevos se identifican por su índice de catálogo (primer campo de scripts_datos/nuevos/*.js); los originales, por nombre.
+// Las entradas de nuevos/*.js también pueden traer la técnica en inglés como sexto campo.
 // Uso: node scripts_datos/aplicar_tecnicas.js
 const fs = require("fs");
 const path = require("path");
@@ -8,12 +9,15 @@ const FILE = path.join(ROOT, "Datos", "entrenamientos.json");
 const data = JSON.parse(fs.readFileSync(FILE, "utf8"));
 
 const nombrePorIdx = new Map();
+const porNombre = new Map();
 const nuevosDir = path.join(__dirname, "nuevos");
 for (const f of fs.readdirSync(nuevosDir).filter((x) => x.endsWith(".js"))) {
-	for (const [idx, nombre] of require(path.join(nuevosDir, f))) nombrePorIdx.set(idx, nombre);
+	for (const [idx, nombre, , , , en] of require(path.join(nuevosDir, f))) {
+		nombrePorIdx.set(idx, nombre);
+		if (en) porNombre.set(nombre, en);
+	}
 }
 
-const porNombre = new Map();
 const tdir = path.join(__dirname, "tecnicas");
 for (const f of fs.readdirSync(tdir).filter((x) => x.endsWith(".js"))) {
 	for (const [clave, en] of require(path.join(tdir, f))) {

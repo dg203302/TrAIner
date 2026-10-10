@@ -1,6 +1,7 @@
 // Fusiona scripts_datos/nuevos/*.js en Datos/entrenamientos.json.
-// Cada entrada: [índice en scratch/fp_catalogo.json, nombre ES, grupo, técnica, código]
-//   código = sobrecarga (L carga, B corporal, I isométrico, R cardio, X banda) + respiración (p c t s k i r)
+// Cada entrada: [índice en scratch/fp_catalogo.json, nombre ES, grupo, técnica, código, técnica EN?, entorno?]
+//   código = sobrecarga (L carga, B corporal, I isométrico, R cardio, X banda, E estiramiento) + respiración (p c t s k i r)
+//   técnica EN (opcional): la aplica aplicar_tecnicas.js. entorno (opcional): "g" solo gimnasio / "c" también casa, si el equipo del catálogo no lo refleja.
 // Es idempotente: salta ejercicios cuyo nombre o GIF ya existan.
 // Uso: node scripts_datos/agregar_ejercicios.js [--dry]
 const fs = require("fs");
@@ -17,6 +18,7 @@ const SOBRECARGA = {
 	I: "Aumenta el tiempo bajo tensión (de 20 a 60 segundos) antes de pasar a una variante más difícil.",
 	R: "Aumenta duración, velocidad o intensidad un 5-10% por semana, manteniendo la técnica y la respiración controladas.",
 	X: "Usa una banda más gruesa o aumenta la tensión alejándote del anclaje cuando completes todas las reps con buena técnica durante 2 sesiones.",
+	E: "Mantén cada posición 20-30 segundos y gana rango poco a poco, semana a semana, sin rebotes ni dolor.",
 };
 const RESPIRACION = {
 	p: "Inhala al bajar; exhala al empujar.",
@@ -60,6 +62,12 @@ for (const lista of Object.values(data)) for (const ex of lista) {
 	if (!ex.nivel) ex.nivel = nivelDe(ex.nombre, ex.nombre_en);
 }
 
+// Grupos que no estaban en el catálogo original.
+for (const g of ["Movilidad / estiramientos"]) if (!data[g]) data[g] = [];
+
+// La movilidad y los estiramientos son de nivel principiante salvo que la heurística los marque como avanzados.
+const nivelFinal = (grupo, nivel) => (grupo === "Movilidad / estiramientos" && nivel !== "avanzado" ? "principiante" : nivel);
+
 const nombres = new Set(), gifs = new Set();
 for (const lista of Object.values(data)) for (const ex of lista) { nombres.add(norm(ex.nombre)); gifs.add(ex.gifUrl); }
 
@@ -67,7 +75,7 @@ const dir = path.join(__dirname, "nuevos");
 const entradas = fs.readdirSync(dir).filter((f) => f.endsWith(".js")).sort().flatMap((f) => require(path.join(dir, f)));
 let agregados = 0;
 const saltados = [];
-for (const [idx, nombre, grupo, tecnica, codigo] of entradas) {
+for (const [idx, nombre, grupo, tecnica, codigo, , entorno] of entradas) {
 	const src = catalogo[idx];
 	if (!src) { saltados.push(`${nombre}: índice ${idx} inexistente`); continue; }
 	if (!data[grupo]) { saltados.push(`${nombre}: grupo desconocido "${grupo}"`); continue; }
@@ -81,9 +89,9 @@ for (const [idx, nombre, grupo, tecnica, codigo] of entradas) {
 		descripcion: tecnica.length > 100 ? tecnica.slice(0, 100) + "..." : tecnica,
 		descripcion_detallada: `Técnica: ${tecnica}\nSobrecarga: ${SOBRECARGA[codigo[0]]}\nRespiración: ${RESPIRACION[codigo[1]]}`,
 		descripcion_guia: tecnica,
-		entorno: entornoDesde(src.equipo),
+		entorno: entorno === "g" ? ["gimnasio"] : entorno === "c" ? ["casa", "gimnasio"] : entornoDesde(src.equipo),
 		nombre_en: src.nombre,
-		nivel: nivelDe(nombre, src.nombre),
+		nivel: nivelFinal(grupo, nivelDe(nombre, src.nombre)),
 	});
 	nombres.add(norm(nombre)); gifs.add(src.gif); agregados++;
 }

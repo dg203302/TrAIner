@@ -1,5 +1,72 @@
 [
     {
+        "id": "2026-10-10-varios-planes-y-mil-ejercicios",
+        "fecha": "2026-10-10",
+        "icono": "dumbbell",
+        "etiqueta": {
+            "es": "Novedad",
+            "en": "New"
+        },
+        "titulo": {
+            "es": "Varios planes de entreno y más de 1000 ejercicios",
+            "en": "Multiple workout plans and over 1,000 exercises"
+        },
+        "resumen": {
+            "es": "Guardá hasta 10 planes por separado y elegí entre 1057 ejercicios, con una sección nueva de movilidad y estiramientos.",
+            "en": "Keep up to 10 separate plans and choose from 1,057 exercises, with a new mobility and stretching section."
+        },
+        "intro": {
+            "es": "Ahora podés tener más de un plan de entreno y el catálogo de ejercicios se triplicó.",
+            "en": "You can now have more than one workout plan, and the exercise library has more than tripled."
+        },
+        "secciones": [
+            {
+                "titulo": {
+                    "es": "Más de un plan de entreno",
+                    "en": "More than one workout plan"
+                },
+                "items": [
+                    {
+                        "es": "En Plan de Entreno vas a ver tus planes arriba de todo. Tocá «+ Nuevo plan» para crear otro con IA o a mano, sin perder los que ya tenías.",
+                        "en": "In Workout Plan you'll see your plans at the top. Tap “+ New plan” to create another one with AI or by hand, without losing the ones you already had."
+                    },
+                    {
+                        "es": "Tocá un plan para pasar a ese: el que tengas elegido es el que se muestra en el inicio y el que conoce tu entrenador IA.",
+                        "en": "Tap a plan to switch to it: the one you have selected is the one shown on the home screen and the one your AI coach knows about."
+                    },
+                    {
+                        "es": "Cada plan se edita, se regenera con IA y se elimina por separado. Tocá el plan elegido para cambiarle el nombre.",
+                        "en": "Each plan is edited, regenerated with AI and deleted separately. Tap the selected plan to rename it."
+                    },
+                    {
+                        "es": "Tu plan actual se conserva tal cual, con el nombre «Mi plan». Podés guardar hasta 10.",
+                        "en": "Your current plan is kept as it was, under the name “My plan”. You can keep up to 10."
+                    }
+                ]
+            },
+            {
+                "titulo": {
+                    "es": "1057 ejercicios",
+                    "en": "1,057 exercises"
+                },
+                "items": [
+                    {
+                        "es": "El catálogo pasó de 313 a 1057 ejercicios, todos con GIF, técnica, sobrecarga y respiración, en español y en inglés.",
+                        "en": "The library went from 313 to 1,057 exercises, all with a GIF, technique, overload and breathing, in Spanish and English."
+                    },
+                    {
+                        "es": "Hay muchas más opciones para cada grupo muscular: máquinas, poleas, mancuernas, kettlebell, bandas, TRX, fitball y peso corporal.",
+                        "en": "There are many more options for each muscle group: machines, cables, dumbbells, kettlebells, bands, TRX, stability ball and bodyweight."
+                    },
+                    {
+                        "es": "Sumamos el grupo «Movilidad / estiramientos», con estiramientos, rodillo de espuma y posturas de yoga para agregar a mano a tus días.",
+                        "en": "We added the “Mobility / stretching” group, with stretches, foam rolling and yoga poses to add by hand to your days."
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "id": "2026-10-06-ingles-y-planes",
         "fecha": "2026-10-06",
         "icono": "globe",

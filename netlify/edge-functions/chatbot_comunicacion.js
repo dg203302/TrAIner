@@ -4,7 +4,18 @@ const generateRespCHTBOT = async (payload, request) => {
     const idiomaNorm = String(payload?.idioma ?? "").trim().toLowerCase() === "en" ? "en" : "es";
     const idiomaLabel = idiomaNorm === "en" ? "English" : "Español";
 
-    const contexto_plan_entre = payload?.P_ent;
+    // Con varios planes guardados (Scripts/planes_multi.js) al modelo solo se le pasa el plan activo.
+    const soloPlanActivo = (raw) => {
+        try {
+            const obj = typeof raw === "string" ? JSON.parse(raw) : raw;
+            if (!obj || typeof obj !== "object" || Array.isArray(obj) || !("otros_planes" in obj)) return raw;
+            const { otros_planes: _otros, plan_meta: _meta, ...activo } = obj;
+            return JSON.stringify(activo);
+        } catch {
+            return raw;
+        }
+    };
+    const contexto_plan_entre = soloPlanActivo(payload?.P_ent);
     const contexto_plan_alim = payload?.P_alim;
     const userData = payload?.D_user || {};
     const consulta = payload?.consulta || "";

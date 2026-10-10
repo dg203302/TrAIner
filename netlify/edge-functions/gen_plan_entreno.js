@@ -198,6 +198,10 @@ const SPLITS_RESPALDO = {
 	7: [["Empuje A", "Push A"], ["Tirón A", "Pull A"], ["Pierna A", "Legs A"], ["Empuje B", "Push B"], ["Tirón B", "Pull B"], ["Pierna B", "Legs B"], ["Acondicionamiento y Core", "Conditioning and Core"]],
 };
 
+// La movilidad y los estiramientos se añaden a mano desde el catálogo; el generador arma el plan solo con ejercicios de trabajo.
+const GRUPOS_FUERA_DEL_PLAN = new Set(["Movilidad / estiramientos"]);
+const MAX_EJERCICIOS_PROMPT_POR_GRUPO = 22;
+
 const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, intensidadNorm, ejerciciosPorDiaObjetivo, diasSeleccionados, ejerciciosSeleccionados, catalogFlat, catalogGroups }) => {
 	if (!planObj || typeof planObj !== "object") return planObj;
 	const root = planObj.plan_entrenamiento_hipertrofia;
@@ -278,6 +282,7 @@ const normalizePlanWithSelectedDays = ({ planObj, idiomaNorm, esCasa, objetivo, 
 	} else {
 		for (const ex of Object.values(catalogFlat)) if (ex?.grupo && ex?.nombre) (porGrupo[ex.grupo] = porGrupo[ex.grupo] || []).push(ex.nombre);
 	}
+	for (const g of GRUPOS_FUERA_DEL_PLAN) delete porGrupo[g];
 	for (const g of Object.keys(porGrupo)) porGrupo[g] = porGrupo[g].filter(isAllowedForEnv);
 
 	const usoGlobal = new Map(); // nombre -> veces usado en la semana (para variar entre días)
@@ -481,8 +486,12 @@ const generatePlanEntreno = async (payload, request) => {
 		}
 		const lineas = [];
 		for (const [g, lista] of Object.entries(porGrupo)) {
-			const nombres = lista
-				.filter((ex) => !esCasa || !Array.isArray(ex.entorno) || ex.entorno.includes("casa"))
+			if (GRUPOS_FUERA_DEL_PLAN.has(g)) continue;
+			// Con ~1000 ejercicios no cabe todo el catálogo en el prompt: van los básicos y una muestra al azar del resto.
+			const aptos = lista.filter((ex) => !esCasa || !Array.isArray(ex.entorno) || ex.entorno.includes("casa"));
+			const basicos = aptos.filter((ex) => ex.principal);
+			const resto = aptos.filter((ex) => !ex.principal).sort(() => Math.random() - 0.5);
+			const nombres = basicos.concat(resto.slice(0, Math.max(0, MAX_EJERCICIOS_PROMPT_POR_GRUPO - basicos.length)))
 				.map((ex) => (ex.principal ? `${ex.nombre} ★` : ex.nombre));
 			if (nombres.length) lineas.push(`${g}: ${nombres.join(", ")}.`);
 		}
