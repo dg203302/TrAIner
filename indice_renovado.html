@@ -770,6 +770,59 @@
             max-width: 440px;
         }
 
+        /* Botón de Google Play (se oculta dentro de la app instalada) */
+        .btn-play-store {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px 9px 16px;
+            border-radius: 14px;
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-play-store:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn-play-store svg {
+            width: 22px;
+            height: 22px;
+            color: var(--accent);
+        }
+
+        .btn-play-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.15;
+        }
+
+        .btn-play-text small {
+            font-size: 10.5px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .btn-play-text strong {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .card-cta-banner .btn-play-store {
+            margin-top: 12px;
+        }
+
+        @media (display-mode: standalone), (display-mode: fullscreen) {
+            .btn-play-store {
+                display: none;
+            }
+        }
+
         .btn-cta-big {
             display: inline-flex;
             align-items: center;
@@ -875,11 +928,23 @@
                 semana a semana sin complicaciones.
             </p>
 
+            <a href="https://play.google.com/store/apps/details?id=app.netlify.aipersonaltr.twa" class="btn-play-store" target="_blank" rel="noopener"
+                aria-label="Descargar TrAIner en Google Play" data-i18n-en-aria-label="Get TrAIner on Google Play">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M4 2.5v19a1 1 0 0 0 1.5.87l16-9.5a1 1 0 0 0 0-1.74l-16-9.5A1 1 0 0 0 4 2.5z"></path>
+                </svg>
+                <span class="btn-play-text">
+                    <small data-i18n-en="Get it on">Disponible en</small>
+                    <strong>Google Play</strong>
+                </span>
+            </a>
+
             <nav class="quick-nav-pills" aria-label="Navegación de secciones">
                 <a href="#ejercicios" class="quick-pill" data-i18n-en="Workouts">⚡ Entrenamientos</a>
                 <a href="#alimentacion" class="quick-pill" data-i18n-en="Meal Plan">🥗 Nutrición</a>
                 <a href="#detalles" class="quick-pill" data-i18n-en="Features">🎯 Características</a>
                 <a href="/ejercicios/" class="quick-pill" data-i18n-en="Exercise guide">📚 Guía de ejercicios</a>
+                <a href="/rutinas/" class="quick-pill" data-i18n-en="Workout routines">🗓️ Rutinas</a>
                 <a href="#disclaimer_ia" class="quick-pill" data-i18n-en="Privacy">🔒 Privacidad</a>
             </nav>
         </section>
@@ -1152,6 +1217,16 @@
                     <path d="M5 12h14"></path>
                     <path d="m12 5 7 7-7 7"></path>
                 </svg>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=app.netlify.aipersonaltr.twa" class="btn-play-store" target="_blank" rel="noopener"
+                aria-label="Descargar TrAIner en Google Play" data-i18n-en-aria-label="Get TrAIner on Google Play">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M4 2.5v19a1 1 0 0 0 1.5.87l16-9.5a1 1 0 0 0 0-1.74l-16-9.5A1 1 0 0 0 4 2.5z"></path>
+                </svg>
+                <span class="btn-play-text">
+                    <small data-i18n-en="Get it on">Disponible en</small>
+                    <strong>Google Play</strong>
+                </span>
             </a>
         </section>
     </main>

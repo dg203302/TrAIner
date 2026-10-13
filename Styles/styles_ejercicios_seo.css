@@ -63,7 +63,7 @@ a {
     border-radius: 10px;
 }
 
-.seo-brand span {
+.seo-brand-name span {
     color: var(--accent);
 }
 
@@ -250,4 +250,44 @@ h2 {
 .seo-footer a {
     color: var(--text-secondary);
     margin: 0 8px;
+}
+
+.seo-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: var(--radius-inner);
+    overflow: hidden;
+    font-size: 14.5px;
+}
+
+.seo-table th,
+.seo-table td {
+    padding: 11px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-card);
+}
+
+.seo-table th {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-secondary);
+}
+
+.seo-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.seo-table td:not(:first-child),
+.seo-table th:not(:first-child) {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.seo-table a {
+    font-weight: 600;
+    text-decoration: none;
 }

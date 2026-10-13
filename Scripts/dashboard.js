@@ -2582,6 +2582,7 @@ function initDetallePorDiaPlan() {
                         return;
                     }
                     try { globalThis.PTBottomSheet?.close?.(); } catch { }
+                    window.PTResena?.entrenoCompletado();
 
                     Swal.fire({
                         toast: true,

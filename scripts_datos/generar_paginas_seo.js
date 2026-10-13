@@ -1,6 +1,6 @@
-// Genera las páginas públicas de ejercicios para buscadores, en español e inglés, más sitemap.xml y robots.txt.
+// Genera las páginas públicas de ejercicios y de rutinas para buscadores, en español e inglés, más sitemap.xml y robots.txt.
 // Uso: node scripts_datos/generar_paginas_seo.js   (Netlify lo corre en cada deploy; ver netlify.toml)
-// Salida (no se versiona): /ejercicios/<grupo>/<ejercicio>/, /en/exercises/<group>/<exercise>/, /sitemap.xml, /robots.txt
+// Salida (no se versiona): /ejercicios/<grupo>/<ejercicio>/, /rutinas/<rutina>/, /en/exercises/..., /en/workouts/..., /sitemap.xml, /robots.txt
 const fs = require("fs");
 const path = require("path");
 
@@ -31,7 +31,7 @@ const ENTORNOS = { casa: ["En casa", "At home"], gimnasio: ["Gimnasio", "Gym"] }
 
 const TXT = {
 	es: {
-		lang: "es", base: "/ejercicios/", inicio: "Inicio", ejercicios: "Ejercicios", otroIdioma: "English",
+		lang: "es", base: "/ejercicios/", baseRut: "/rutinas/", inicio: "Inicio", ejercicios: "Ejercicios", rutinas: "Rutinas", otroIdioma: "English",
 		tituloEj: (n) => `${n}: cómo se hace, técnica y respiración | TrAIner`,
 		tecnica: "Cómo se hace", sobrecarga: "Cómo progresar", respiracion: "Respiración",
 		altGif: (n) => `Cómo hacer ${n}: demostración del ejercicio`,
@@ -47,9 +47,31 @@ const TXT = {
 		descHub: (n) => `${n} ejercicios de gimnasio y en casa por grupo muscular, con demostración, técnica paso a paso, progresión y respiración.`,
 		cuenta: (n) => `${n} ejercicios`, privacidad: "Privacidad",
 		aviso: "Información general de entrenamiento. No reemplaza el consejo de un profesional de la salud.",
+		lugar: { casa: "en casa", gimnasio: "de gimnasio" },
+		equipo: { casa: "mancuernas y tu peso corporal", gimnasio: "barra, mancuernas, máquinas y poleas" },
+		nivelRut: ["principiante", "intermedio", "intermedio o avanzado"],
+		dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+		h1Rut: (n, lugar) => `Rutina de ${n} días ${lugar}`,
+		tituloRut: (n, lugar) => `Rutina de ${n} días ${lugar}: ejercicios, series y repeticiones | TrAIner`,
+		descRut: (n, lugar, total, equipo, nivel) => `Rutina de ${n} días ${lugar} con ${equipo}: ${total} ejercicios repartidos en ${n} sesiones de 45 a 60 minutos, con series, repeticiones y descansos. Nivel ${nivel}.`,
+		semanaTitulo: "Cómo organizar la semana",
+		semana: (dias, n) => `Entrena ${dias} y usa los demás días para descansar o hacer movilidad suave. Si no puedes esos días, cámbialos por otros, pero ${n >= 5 ? "deja al menos un día de descanso completo por semana" : "evita entrenar más de dos días seguidos"}.`,
+		diaTitulo: (i, dia, enfoque) => `Día ${i} · ${dia}: ${enfoque}`,
+		colEj: "Ejercicio", colSeries: "Series × reps", colDesc: "Descanso",
+		progTitulo: "Cómo progresar",
+		prog: "Empieza con un peso que te deje terminar todas las series con una o dos repeticiones de margen. Cuando llegues al tope del rango de repeticiones en todas las series durante dos sesiones seguidas, sube el peso lo mínimo posible. En los ejercicios con peso corporal, suma repeticiones o baja más lento antes de pasar a una variante más difícil.",
+		antesTitulo: "Antes de empezar",
+		antes: (url) => `Calienta de 5 a 10 minutos con movilidad articular y una o dos series livianas del primer ejercicio. Si necesitas ideas, mira los <a href="${url}">ejercicios de movilidad y estiramientos</a>. Si tienes una lesión o una condición de salud, consulta antes con un profesional.`,
+		ctaRutTitulo: "Adapta esta rutina a ti",
+		ctaRutTexto: "TrAIner arma con IA una rutina con tu objetivo, tus días y el equipo que tienes, y registra tu progreso. Es gratis.",
+		otrasRut: "Otras rutinas",
+		tituloHubRut: "Rutinas de entrenamiento en casa y de gimnasio | TrAIner",
+		h1HubRut: "Rutinas de entrenamiento",
+		descHubRut: "Rutinas de 2 a 6 días por semana para entrenar en casa o en el gimnasio, con ejercicios, series, repeticiones y descansos.",
+		itemRut: (n, total) => `${n} días · ${total} ejercicios`,
 	},
 	en: {
-		lang: "en", base: "/en/exercises/", inicio: "Home", ejercicios: "Exercises", otroIdioma: "Español",
+		lang: "en", base: "/en/exercises/", baseRut: "/en/workouts/", inicio: "Home", ejercicios: "Exercises", rutinas: "Workouts", otroIdioma: "Español",
 		tituloEj: (n) => `${n}: how to do it, form and breathing | TrAIner`,
 		tecnica: "How to do it", sobrecarga: "How to progress", respiracion: "Breathing",
 		altGif: (n) => `How to do ${n}: exercise demonstration`,
@@ -65,6 +87,28 @@ const TXT = {
 		descHub: (n) => `${n} gym and home exercises by muscle group, with a demo, step-by-step form, progression and breathing.`,
 		cuenta: (n) => `${n} exercises`, privacidad: "Privacy",
 		aviso: "General training information. Not a substitute for advice from a health professional.",
+		lugar: { casa: "home", gimnasio: "gym" },
+		equipo: { casa: "dumbbells and your bodyweight", gimnasio: "a barbell, dumbbells, machines and cables" },
+		nivelRut: ["beginner", "intermediate", "intermediate or advanced"],
+		dias: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+		h1Rut: (n, lugar) => `${n}-day ${lugar} workout plan`,
+		tituloRut: (n, lugar) => `${n}-day ${lugar} workout plan: exercises, sets and reps | TrAIner`,
+		descRut: (n, lugar, total, equipo, nivel) => `${n}-day ${lugar} workout plan with ${equipo}: ${total} exercises across ${n} sessions of 45 to 60 minutes, with sets, reps and rest times. ${nivel[0].toUpperCase()}${nivel.slice(1)} level.`,
+		semanaTitulo: "How to plan your week",
+		semana: (dias, n) => `Train on ${dias} and use the other days to rest or do light mobility work. If those days don't suit you, swap them for others, but ${n >= 5 ? "keep at least one full rest day a week" : "avoid training more than two days in a row"}.`,
+		diaTitulo: (i, dia, enfoque) => `Day ${i} · ${dia}: ${enfoque}`,
+		colEj: "Exercise", colSeries: "Sets × reps", colDesc: "Rest",
+		progTitulo: "How to progress",
+		prog: "Start with a weight that lets you finish every set with one or two reps in reserve. Once you hit the top of the rep range on every set for two sessions in a row, go up by the smallest weight jump available. On bodyweight exercises, add reps or slow down the lowering phase before moving to a harder variation.",
+		antesTitulo: "Before you start",
+		antes: (url) => `Warm up for 5 to 10 minutes with joint mobility and one or two light sets of the first exercise. If you need ideas, see the <a href="${url}">mobility and stretching exercises</a>. If you have an injury or a health condition, check with a professional first.`,
+		ctaRutTitulo: "Tailor this plan to you",
+		ctaRutTexto: "TrAIner uses AI to build a plan around your goal, your days and the equipment you have, and tracks your progress. It's free.",
+		otrasRut: "More workout plans",
+		tituloHubRut: "Home and gym workout plans | TrAIner",
+		h1HubRut: "Workout plans",
+		descHubRut: "Workout plans from 2 to 6 days a week for training at home or at the gym, with exercises, sets, reps and rest times.",
+		itemRut: (n, total) => `${n} days · ${total} exercises`,
 	},
 };
 
@@ -113,6 +157,101 @@ for (const [grupo, lista] of Object.entries(db)) {
 }
 const total = grupos.reduce((n, g) => n + g.ejercicios.length, 0);
 
+// ── Rutinas: una por cantidad de días y lugar, armadas con ejercicios del catálogo ──
+const [P, E, L, H, B, T, A, C] = ["Pecho", "Espalda", "Piernas", "Hombros", "Brazos", "Tríceps", "Antebrazos", "Abdomen / core"];
+// Por día: [enfoque ES, enfoque EN, [[grupo, cantidad], ...]]. Mismas divisiones que usa el generador de la app (SPLITS_RESPALDO).
+const DIVISIONES = {
+	2: [
+		["Torso superior", "Upper body", [[P, 2], [E, 2], [H, 1], [B, 1]]],
+		["Piernas y core", "Legs and core", [[L, 4], [C, 2]]],
+	],
+	3: [
+		["Empuje (pecho, hombros y tríceps)", "Push (chest, shoulders and triceps)", [[P, 3], [H, 2], [T, 1]]],
+		["Tirón (espalda y bíceps)", "Pull (back and biceps)", [[E, 4], [B, 2]]],
+		["Piernas y abdomen", "Legs and abs", [[L, 4], [C, 2]]],
+	],
+	4: [
+		["Pecho y espalda", "Chest and back", [[P, 3], [E, 3]]],
+		["Piernas y abdomen", "Legs and abs", [[L, 4], [C, 2]]],
+		["Hombros y brazos", "Shoulders and arms", [[H, 2], [B, 2], [T, 2]]],
+		["Piernas y glúteos", "Legs and glutes", [[L, 5], [C, 1]]],
+	],
+	5: [
+		["Pecho y tríceps", "Chest and triceps", [[P, 4], [T, 2]]],
+		["Espalda y bíceps", "Back and biceps", [[E, 4], [B, 2]]],
+		["Piernas", "Legs", [[L, 5], [C, 1]]],
+		["Hombros y core", "Shoulders and core", [[H, 4], [C, 2]]],
+		["Piernas y brazos", "Legs and arms", [[L, 3], [B, 2], [T, 1]]],
+	],
+	6: [
+		["Empuje A (pecho y tríceps)", "Push A (chest and triceps)", [[P, 3], [H, 1], [T, 2]]],
+		["Tirón A (espalda y bíceps)", "Pull A (back and biceps)", [[E, 4], [B, 2]]],
+		["Piernas A", "Legs A", [[L, 5], [C, 1]]],
+		["Empuje B (hombros y pecho)", "Push B (shoulders and chest)", [[H, 3], [P, 2], [T, 1]]],
+		["Tirón B (espalda y antebrazos)", "Pull B (back and forearms)", [[E, 4], [B, 1], [A, 1]]],
+		["Piernas B", "Legs B", [[L, 5], [C, 1]]],
+	],
+};
+const DIAS_SEMANA = { 2: [0, 3], 3: [0, 2, 4], 4: [0, 1, 3, 4], 5: [0, 1, 2, 3, 4], 6: [0, 1, 2, 3, 4, 5] };
+// Orden de preferencia por grupo; el resto del grupo sigue en el orden del catálogo (primero los marcados como principales).
+const PRIORIDAD = {
+	gimnasio: {
+		[P]: ["Press de banca plano con barra", "Press de banca inclinado con mancuernas", "Aperturas con mancuernas", "Fondos en paralelas (pecho bajo/tríceps)", "Cruce de poleas", "Press de banca plano con mancuernas"],
+		[E]: ["Dominadas (peso corporal)", "Remo con barra", "Jalón al pecho en polea", "Remo sentado en polea", "Remo unilateral con mancuerna", "Hiperextensiones lumbares"],
+		[L]: ["Sentadilla libre", "Peso muerto rumano", "Prensa de piernas", "Curl femoral tumbado o sentado", "Elevación de talones", "Hip thrust (empuje de cadera)", "Sentadilla búlgara", "Extensión de cuádriceps en máquina", "Zancadas / estocadas"],
+		[H]: ["Press militar con barra o mancuernas", "Elevaciones laterales con mancuernas", "Face pull (salud del hombro)", "Press Arnold", "Pájaros / vuelos posteriores"],
+	},
+	casa: {
+		[L]: ["Sentadilla goblet con mancuerna", "Zancada con peso corporal", "Puente de glúteos", "Elevación de talones", "Step-ups con mancuernas", "Sentadilla con peso corporal"],
+		[H]: ["Press de hombros de pie con mancuernas", "Elevaciones laterales con mancuernas", "Pájaros / vuelos posteriores", "Press Arnold"],
+	},
+};
+const POR_TIEMPO = /plancha|farmer/i;
+// En las rutinas de casa se evitan los ejercicios cuyo nombre original pide barra, polea o máquina.
+const EQUIPO_GIMNASIO = /barbell|cable|machine|lever|smith/i;
+
+const porNombre = new Map(grupos.flatMap((g) => g.ejercicios.map((ej) => [ej.es.nombre, ej])));
+const candidatos = (grupo, lugar) => {
+	const g = grupos.find((x) => x.es.nombre === grupo);
+	const aptos = g.ejercicios.filter((ej) => lugar === "gimnasio" || (ej.entorno.includes("casa") && !EQUIPO_GIMNASIO.test(ej.en.nombre)));
+	const primero = (PRIORIDAD[lugar][grupo] || []).map((nombre) => {
+		const ej = porNombre.get(nombre);
+		if (!ej || !aptos.includes(ej)) throw new Error(`PRIORIDAD: "${nombre}" no está en el catálogo de ${grupo} para ${lugar}`);
+		return ej;
+	});
+	return [...new Set([...primero, ...aptos.filter((ej) => ej.principal), ...aptos.filter((ej) => ej.nivel !== "avanzado")])];
+};
+
+const rutinas = [];
+for (const lugar of ["casa", "gimnasio"]) {
+	for (const n of Object.keys(DIVISIONES).map(Number)) {
+		const puntero = {};
+		const dias = DIVISIONES[n].map(([enfoqueEs, enfoqueEn, bloques], i) => {
+			const ejercicios = [];
+			for (const [grupo, cantidad] of bloques) {
+				const lista = candidatos(grupo, lugar);
+				for (let k = 0; k < cantidad; k++) {
+					const ej = lista[(puntero[grupo] = (puntero[grupo] ?? -1) + 1) % lista.length];
+					const accesorio = grupo === C || grupo === A;
+					const fuerte = ejercicios.length < 2 && !accesorio;
+					ejercicios.push({
+						ej,
+						series: POR_TIEMPO.test(ej.es.nombre) ? "3 × 30-45 s" : accesorio ? "3 × 12-15" : fuerte ? "4 × 8-10" : "3 × 10-12",
+						descanso: accesorio ? "45 s" : fuerte ? "90 s" : "60 s",
+					});
+				}
+			}
+			return { dia: DIAS_SEMANA[n][i], es: enfoqueEs, en: enfoqueEn, ejercicios };
+		});
+		rutinas.push({
+			n, lugar, dias, nivel: n <= 3 ? 0 : n === 4 ? 1 : 2,
+			totalEj: dias.reduce((t, d) => t + d.ejercicios.length, 0),
+			es: { url: `${TXT.es.baseRut}rutina-${n}-dias-${lugar === "casa" ? "en-casa" : "gimnasio"}/` },
+			en: { url: `${TXT.en.baseRut}${n}-day-${lugar === "casa" ? "home" : "gym"}-workout/` },
+		});
+	}
+}
+
 // ── Plantillas ──
 const otro = (lang) => (lang === "es" ? "en" : "es");
 
@@ -153,9 +292,10 @@ const layout = (lang, { titulo, descripcion, url, urlOtro, migas, cuerpo }) => {
 
 <body>
     <header class="seo-nav">
-        <a href="/" class="seo-brand"><img src="/Icons/2.png" alt="" width="32" height="32">Tr<span>AI</span>ner</a>
+        <a href="/" class="seo-brand"><img src="/Icons/2.png" alt="" width="32" height="32"><span class="seo-brand-name">Tr<span>AI</span>ner</span></a>
         <nav class="seo-nav-links">
             <a href="${t.base}">${t.ejercicios}</a>
+            <a href="${t.baseRut}">${t.rutinas}</a>
             <a href="${urlOtro}" hreflang="${otro(lang)}" lang="${otro(lang)}">${t.otroIdioma}</a>
         </nav>
     </header>
@@ -167,7 +307,7 @@ ${cuerpo}
     </main>
     <footer class="seo-footer">
         <p>${t.aviso}</p>
-        <p><a href="/">TrAIner</a><a href="${t.base}">${t.ejercicios}</a><a href="/privacy.html">${t.privacidad}</a></p>
+        <p><a href="/">TrAIner</a><a href="${t.base}">${t.ejercicios}</a><a href="${t.baseRut}">${t.rutinas}</a><a href="/privacy.html">${t.privacidad}</a></p>
     </footer>
 </body>
 
@@ -175,11 +315,11 @@ ${cuerpo}
 `;
 };
 
-const cta = (lang) => {
+const cta = (lang, titulo = TXT[lang].ctaTitulo, texto = TXT[lang].ctaTexto) => {
 	const t = TXT[lang];
 	return `        <aside class="seo-cta">
-            <h2>${t.ctaTitulo}</h2>
-            <p>${t.ctaTexto}</p>
+            <h2>${titulo}</h2>
+            <p>${texto}</p>
             <div class="seo-cta-actions">
                 <a class="seo-btn" href="/">${t.ctaWeb}</a>
                 <a class="seo-btn seo-btn-ghost" href="${PLAY_URL}" rel="noopener">${t.ctaPlay}</a>
@@ -254,6 +394,73 @@ ${cta(lang)}`;
 	});
 };
 
+const enumerar = (lang, items) => new Intl.ListFormat(lang, { type: "conjunction" }).format(items);
+const tituloRutina = (lang, r) => TXT[lang].h1Rut(r.n, TXT[lang].lugar[r.lugar]);
+const itemRutina = (lang, r) => `            <li><a href="${r[lang].url}">${esc(tituloRutina(lang, r))}<small>${TXT[lang].itemRut(r.n, r.totalEj)}</small></a></li>`;
+
+const paginaRutina = (lang, r) => {
+	const t = TXT[lang];
+	const titulo = tituloRutina(lang, r);
+	// En español los días van en minúscula dentro de la frase; en inglés conservan la mayúscula.
+	const diasTxt = enumerar(lang, r.dias.map((d) => (lang === "es" ? t.dias[d.dia].toLowerCase() : t.dias[d.dia])));
+	const descripcion = t.descRut(r.n, t.lugar[r.lugar], r.totalEj, t.equipo[r.lugar], t.nivelRut[r.nivel]);
+	const movilidad = grupos.find((g) => g.es.nombre === "Movilidad / estiramientos");
+	const cuerpo = `        <h1>${esc(titulo)}</h1>
+        <p class="seo-lead">${esc(descripcion)}</p>
+        <section class="seo-card">
+            <h2>${t.semanaTitulo}</h2>
+            <p>${esc(t.semana(diasTxt, r.n))}</p>
+        </section>
+${r.dias.map((d, i) => `        <section class="seo-section">
+            <h2>${esc(t.diaTitulo(i + 1, t.dias[d.dia], d[lang]))}</h2>
+            <table class="seo-table">
+                <thead>
+                    <tr><th>${t.colEj}</th><th>${t.colSeries}</th><th>${t.colDesc}</th></tr>
+                </thead>
+                <tbody>
+${d.ejercicios.map((x) => `                    <tr><td><a href="${x.ej[lang].url}">${esc(x.ej[lang].nombre)}</a></td><td>${x.series}</td><td>${x.descanso}</td></tr>`).join("\n")}
+                </tbody>
+            </table>
+        </section>`).join("\n")}
+        <section class="seo-card seo-section">
+            <h2>${t.progTitulo}</h2>
+            <p>${esc(t.prog)}</p>
+        </section>
+        <section class="seo-card">
+            <h2>${t.antesTitulo}</h2>
+            <p>${t.antes(movilidad[lang].url)}</p>
+        </section>
+${cta(lang, t.ctaRutTitulo, t.ctaRutTexto)}
+        <section class="seo-section">
+            <h2>${t.otrasRut}</h2>
+            <ul class="seo-list">
+${rutinas.filter((o) => o !== r).map((o) => itemRutina(lang, o)).join("\n")}
+            </ul>
+        </section>`;
+	return layout(lang, {
+		titulo: t.tituloRut(r.n, t.lugar[r.lugar]), descripcion: recortar(descripcion, 160),
+		url: r[lang].url, urlOtro: r[otro(lang)].url,
+		migas: [[t.inicio, "/"], [t.rutinas, t.baseRut], [titulo, r[lang].url]],
+		cuerpo,
+	});
+};
+
+const paginaHubRutinas = (lang) => {
+	const t = TXT[lang];
+	const cuerpo = `        <h1>${t.h1HubRut}</h1>
+        <p class="seo-lead">${esc(t.descHubRut)}</p>
+        <ul class="seo-list">
+${rutinas.map((r) => itemRutina(lang, r)).join("\n")}
+        </ul>
+${cta(lang, t.ctaRutTitulo, t.ctaRutTexto)}`;
+	return layout(lang, {
+		titulo: t.tituloHubRut, descripcion: t.descHubRut,
+		url: t.baseRut, urlOtro: TXT[otro(lang)].baseRut,
+		migas: [[t.inicio, "/"], [t.rutinas, t.baseRut]],
+		cuerpo,
+	});
+};
+
 // ── Escritura ──
 const escribir = (url, html) => {
 	const dir = path.join(ROOT, ...url.split("/").filter(Boolean));
@@ -264,6 +471,8 @@ const escribir = (url, html) => {
 // Se regenera desde cero para que no queden páginas de ejercicios renombrados o eliminados.
 fs.rmSync(path.join(ROOT, "ejercicios"), { recursive: true, force: true });
 fs.rmSync(path.join(ROOT, "en", "exercises"), { recursive: true, force: true });
+fs.rmSync(path.join(ROOT, "rutinas"), { recursive: true, force: true });
+fs.rmSync(path.join(ROOT, "en", "workouts"), { recursive: true, force: true });
 
 const entradas = []; // [url es, url en]
 for (const lang of ["es", "en"]) {
@@ -272,7 +481,11 @@ for (const lang of ["es", "en"]) {
 		escribir(g[lang].url, paginaGrupo(lang, g));
 		g.ejercicios.forEach((ej, i) => escribir(ej[lang].url, paginaEjercicio(lang, g, ej, i)));
 	}
+	escribir(TXT[lang].baseRut, paginaHubRutinas(lang));
+	for (const r of rutinas) escribir(r[lang].url, paginaRutina(lang, r));
 }
+entradas.push([TXT.es.baseRut, TXT.en.baseRut]);
+for (const r of rutinas) entradas.push([r.es.url, r.en.url]);
 entradas.push([TXT.es.base, TXT.en.base]);
 for (const g of grupos) {
 	entradas.push([g.es.url, g.en.url]);
@@ -302,5 +515,5 @@ ${entradas.flatMap(([es, en]) => [nodoUrl(es, es, en), nodoUrl(en, es, en)]).joi
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap);
 fs.writeFileSync(path.join(ROOT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 
-console.log(`Páginas generadas: ${entradas.length * 2} (${total} ejercicios x 2 idiomas + índices). Sitio: ${SITE}`);
+console.log(`Páginas generadas: ${entradas.length * 2} (${total} ejercicios y ${rutinas.length} rutinas x 2 idiomas + índices). Sitio: ${SITE}`);
 if (sinTraduccion) console.warn(`Aviso: ${sinTraduccion} ejercicios tienen sobrecarga o respiración sin traducción al inglés; esas secciones se omiten en su página en inglés.`);
