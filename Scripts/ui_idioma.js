@@ -92,9 +92,26 @@
 	// ───────────────────────── Preferencia de idioma ─────────────────────────
 	const normalizeLang = (value) => (String(value).toLowerCase() === EN ? EN : ES);
 
+	// Sin preferencia guardada se usa el idioma del dispositivo: español si lo es, inglés para cualquier otro.
+	// A los rastreadores (Googlebot navega en inglés) se les sirve siempre el español original para no alterar lo indexado.
+	const ES_BOT = /bot|crawl|spider|slurp|lighthouse|headless|facebookexternalhit|whatsapp|preview/i;
+	let detectado = null;
+	const detectarIdioma = () => {
+		if (detectado) return detectado;
+		detectado = ES;
+		try {
+			if (!ES_BOT.test(navigator.userAgent || "")) {
+				const lang = String((navigator.languages && navigator.languages[0]) || navigator.language || "").toLowerCase();
+				if (lang && !lang.startsWith("es")) detectado = EN;
+			}
+		} catch { /* sin datos del navegador: español */ }
+		return detectado;
+	};
+
 	const getIdioma = () => {
 		try {
-			return normalizeLang(localStorage.getItem(STORAGE_KEY));
+			const guardado = localStorage.getItem(STORAGE_KEY);
+			return guardado ? normalizeLang(guardado) : detectarIdioma();
 		} catch {
 			return ES;
 		}
