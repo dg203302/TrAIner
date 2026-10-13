@@ -18,6 +18,7 @@
     <script src="/Scripts/ui_novedades.js?v=1"></script>
     <script src="/Scripts/catalogo_ui.js?v=2"></script>
     <script src="/Scripts/planes_multi.js?v=1"></script>
+    <script src="/Scripts/exportar_plan.js?v=1"></script>
     <script src="/Scripts/ui_resena.js?v=1"></script>
     <script src="/Scripts/spa_router.js"></script>
 
@@ -3877,6 +3878,19 @@
             }
         }
 
+        // Exporta el plan activo (todos sus días) a PDF con window.PTExportPlan.
+        async function handleExportarPlan() {
+            const plan = window.PTPlanes.activo(planLibrary);
+            if (!plan || !planParsedDias?.length) return;
+            showGlassToast("Preparando PDF...", "info");
+            try {
+                await window.PTExportPlan.exportar({ nombre: plan.nombre, dias: planParsedDias, buscar: findExerciseData });
+            } catch (err) {
+                console.warn("Error exportando el plan:", err);
+                showGlassToast("No se pudo exportar el plan", "danger");
+            }
+        }
+
         // ── 5. RENDERIZADO PRINCIPAL DE LA VISTA ──
         function renderUI() {
             const heroContainer = document.getElementById("plan-hero-container");
@@ -3958,6 +3972,13 @@
                                     <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
                                 </svg>
                             </button>
+                            <button type="button" class="btn-icon-hero" id="btn-hero-export-pdf" title="Exportar a PDF" aria-label="Exportar a PDF">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </button>
                             <button type="button" class="btn-icon-hero" id="btn-hero-edit-manual" title="Editar Rutina Manualmente" aria-label="Editar">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
@@ -3992,6 +4013,7 @@
             document.getElementById("btn-hero-regen-ai")?.addEventListener("click", () => openAiGeneratorModal());
             document.getElementById("btn-hero-edit-manual")?.addEventListener("click", () => openManualEditorModal(selectedDayIndex));
             document.getElementById("btn-hero-delete")?.addEventListener("click", handleEliminarPlan);
+            document.getElementById("btn-hero-export-pdf")?.addEventListener("click", handleExportarPlan);
 
             renderDaysPills();
             renderActiveDayView();
