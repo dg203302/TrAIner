@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "netlify dev -d . --framework #static",
-    "serve": "npx serve ."
+    "serve": "npx serve .",
+    "seo": "node scripts_datos/generar_paginas_seo.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.91.1"

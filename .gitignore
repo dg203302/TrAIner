@@ -3,3 +3,8 @@ elementos_depreciados
 .env
 node_modules
 archivos_viejos
+# Salida de scripts_datos/generar_paginas_seo.js (Netlify la genera en cada deploy)
+/ejercicios
+/en
+/sitemap.xml
+/robots.txt

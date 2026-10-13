@@ -153,6 +153,8 @@ module.exports = [
 	["Inicio", "Home"],
 	["Inicio · TrAIner", "Home · TrAIner"],
 	["Bienvenido · TrAIner", "Welcome · TrAIner"],
+	["TrAIner: rutinas de gym y en casa con IA", "TrAIner: AI gym and home workout plans"],
+	["Guía de ejercicios", "Exercise guide"],
 	["¡Bienvenido!", "Welcome!"],
 	["Calendario · TrAIner", "Calendar · TrAIner"],
 	["Chat · TrAIner", "Chat · TrAIner"],
